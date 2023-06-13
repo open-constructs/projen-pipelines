@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { copyFileSync, existsSync, readFileSync, writeFileSync, rmSync } from 'fs';
 import { join } from 'path';
 import * as stdVer from 'standard-version';

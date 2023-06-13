@@ -5,7 +5,7 @@ const project = new cdk.JsiiProject({
   authorAddress: 'info@taimos.de',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.0.0',
-  name: '@taimos-internal/projen-pipelines',
+  name: 'projen-pipelines',
   projenrcTs: true,
   repositoryUrl: 'https://github.com/taimos/projen-pipelines.git',
   licensed: true,
@@ -34,7 +34,6 @@ const project = new cdk.JsiiProject({
     'pipelines-release': 'lib/release.js',
   },
   releaseToNpm: true,
-  // projenDevDependency: true,
   copyrightOwner: 'Taimos GmbH',
   copyrightPeriod: '2023',
   tsconfig: {
@@ -43,9 +42,5 @@ const project = new cdk.JsiiProject({
     },
   },
 });
-
-project.npmrc.addRegistry('https://taimos-292004443359.d.codeartifact.eu-central-1.amazonaws.com/npm/main/', '@taimos-assembly');
-project.npmrc.addConfig('//taimos-292004443359.d.codeartifact.eu-central-1.amazonaws.com/npm/main/:_authToken', '${CODEARTIFACT_AUTH_TOKEN}');
-project.npmrc.addConfig('//taimos-292004443359.d.codeartifact.eu-central-1.amazonaws.com/npm/main/:always-auth', 'true');
 
 project.synth();
