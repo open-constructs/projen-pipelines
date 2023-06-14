@@ -6,6 +6,12 @@
 
 ### CDKPipelineOptions <a name="CDKPipelineOptions" id="projen-pipelines.CDKPipelineOptions"></a>
 
+The CDKPipelineOptions interface is designed to provide configuration options for a CDK (Cloud Development Kit) pipeline.
+
+It allows the definition
+of settings such as the stack prefix and package namespace to be used in the
+AWS stack, along with the environments configuration to be used.
+
 #### Initializer <a name="Initializer" id="projen-pipelines.CDKPipelineOptions.Initializer"></a>
 
 ```typescript
@@ -18,9 +24,9 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.CDKPipelineOptions.property.environments">environments</a></code> | <code><a href="#projen-pipelines.EnvironmentMap">EnvironmentMap</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.CDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.CDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.environments">environments</a></code> | <code><a href="#projen-pipelines.EnvironmentMap">EnvironmentMap</a></code> | This is a map of environments to be used in the pipeline. |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 
 ---
 
@@ -32,6 +38,12 @@ public readonly environments: EnvironmentMap;
 
 - *Type:* <a href="#projen-pipelines.EnvironmentMap">EnvironmentMap</a>
 
+This is a map of environments to be used in the pipeline.
+
+It allows the
+pipeline to deploy to different environments based on the stage of the
+deployment process, whether that's a personal, feature, dev, or prod stage.
+
 ---
 
 ##### `pkgNamespace`<sup>Required</sup> <a name="pkgNamespace" id="projen-pipelines.CDKPipelineOptions.property.pkgNamespace"></a>
@@ -41,6 +53,11 @@ public readonly pkgNamespace: string;
 ```
 
 - *Type:* string
+
+This field determines the NPM namespace to be used when packaging CDK cloud assemblies.
+
+A namespace helps group related resources together, providing
+better organization and ease of management.
 
 ---
 
@@ -52,9 +69,15 @@ public readonly stackPrefix: string;
 
 - *Type:* string
 
+This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation.
+
 ---
 
 ### Environment <a name="Environment" id="projen-pipelines.Environment"></a>
+
+The Environment interface is designed to hold AWS related information for a specific deployment environment within your infrastructure.
+
+Each environment requires a specific account and region for its resources.
 
 #### Initializer <a name="Initializer" id="projen-pipelines.Environment.Initializer"></a>
 
@@ -68,8 +91,8 @@ const environment: Environment = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.Environment.property.account">account</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.Environment.property.region">region</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.Environment.property.account">account</a></code> | <code>string</code> | The AWS Account ID associated with the environment. |
+| <code><a href="#projen-pipelines.Environment.property.region">region</a></code> | <code>string</code> | The AWS Region for the environment. |
 
 ---
 
@@ -81,6 +104,12 @@ public readonly account: string;
 
 - *Type:* string
 
+The AWS Account ID associated with the environment.
+
+It's important because
+different services or features could have distinct permissions and settings
+in different accounts.
+
 ---
 
 ##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.Environment.property.region"></a>
@@ -91,9 +120,20 @@ public readonly region: string;
 
 - *Type:* string
 
+The AWS Region for the environment.
+
+This determines where your resources
+are created and where your application will run. It can affect latency,
+availability, and pricing.
+
 ---
 
 ### EnvironmentMap <a name="EnvironmentMap" id="projen-pipelines.EnvironmentMap"></a>
+
+The EnvironmentMap interface is used to maintain a mapping of different types of environments used in the application.
+
+Each type of environment - personal,
+feature, dev, and prod, represents a different stage of development or usage.
 
 #### Initializer <a name="Initializer" id="projen-pipelines.EnvironmentMap.Initializer"></a>
 
@@ -107,10 +147,10 @@ const environmentMap: EnvironmentMap = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.EnvironmentMap.property.dev">dev</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.EnvironmentMap.property.feature">feature</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.EnvironmentMap.property.personal">personal</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.EnvironmentMap.property.prod">prod</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.EnvironmentMap.property.dev">dev</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | The dev environment is a shared environment where developers integrate their feature changes. |
+| <code><a href="#projen-pipelines.EnvironmentMap.property.feature">feature</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | The feature environment is typically used for developing specific features in isolation from the main codebase. |
+| <code><a href="#projen-pipelines.EnvironmentMap.property.personal">personal</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | The personal environment is usually used for individual development and testing, allowing developers to freely test and experiment without affecting the shared development environment. |
+| <code><a href="#projen-pipelines.EnvironmentMap.property.prod">prod</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | The prod environment is where the live, user-facing application runs. |
 
 ---
 
@@ -122,6 +162,11 @@ public readonly dev: Environment;
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
 
+The dev environment is a shared environment where developers integrate their feature changes.
+
+It represents the latest version of the application
+but may not be as stable as the production environment.
+
 ---
 
 ##### `feature`<sup>Required</sup> <a name="feature" id="projen-pipelines.EnvironmentMap.property.feature"></a>
@@ -131,6 +176,12 @@ public readonly feature: Environment;
 ```
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
+
+The feature environment is typically used for developing specific features in isolation from the main codebase.
+
+This allows developers to work on
+individual features without impacting the stability of the dev or prod
+environments.
 
 ---
 
@@ -142,6 +193,8 @@ public readonly personal: Environment;
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
 
+The personal environment is usually used for individual development and testing, allowing developers to freely test and experiment without affecting the shared development environment.
+
 ---
 
 ##### `prod`<sup>Required</sup> <a name="prod" id="projen-pipelines.EnvironmentMap.property.prod"></a>
@@ -152,11 +205,19 @@ public readonly prod: Environment;
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
 
+The prod environment is where the live, user-facing application runs.
+
+It should be stable and only receive thoroughly tested changes.
+
 ---
 
 ## Classes <a name="Classes" id="Classes"></a>
 
 ### CDKPipeline <a name="CDKPipeline" id="projen-pipelines.CDKPipeline"></a>
+
+The CDKPipeline class extends the Component class and sets up the necessary configuration for deploying AWS CDK (Cloud Development Kit) applications across multiple stages.
+
+It also manages tasks such as publishing CDK assets, bumping version based on git tags, and cleaning up conflicting tasks.
 
 #### Initializers <a name="Initializers" id="projen-pipelines.CDKPipeline.Initializer"></a>
 
