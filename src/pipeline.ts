@@ -1,4 +1,4 @@
-import { TextFile, awscdk } from 'projen';
+import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
 
 export interface Environment {
@@ -19,21 +19,22 @@ export interface CDKPipelineOptions {
   readonly environments: EnvironmentMap;
 }
 
-export class CDKPipeline {
+export class CDKPipeline extends Component {
 
-  constructor(private project: awscdk.AwsCdkTypeScriptApp, private props: CDKPipelineOptions) {
+  constructor(private app: awscdk.AwsCdkTypeScriptApp, private props: CDKPipelineOptions) {
+    super(app);
 
-    this.project.addDevDeps(
+    this.app.addDevDeps(
       '@types/standard-version',
       'standard-version',
       'cdk-assets',
     );
-    // this.project.addDeps(
+    // this.app.addDeps(
     // );
 
     // Remove assembly before synth
-    this.project.tasks.tryFind('synth')?.prependExec(`rm -rf ${this.project.cdkConfig.cdkout}`);
-    this.project.tasks.tryFind('synth:silent')?.prependExec(`rm -rf ${this.project.cdkConfig.cdkout}`);
+    this.project.tasks.tryFind('synth')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
+    this.project.tasks.tryFind('synth:silent')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
 
     // Remove conflicting tasks
     this.project.removeTask('deploy');
@@ -54,7 +55,7 @@ export class CDKPipeline {
   }
 
   private createApplicationEntrypoint() {
-    const appFile = new TextFile(this.project, `${this.project.srcdir}/app.ts`);
+    const appFile = new TextFile(this.project, `${this.app.srcdir}/app.ts`);
     appFile.addLine(`// ${PROJEN_MARKER}
 /* eslint-disable object-curly-spacing */
 /* eslint-disable comma-spacing */
@@ -102,10 +103,10 @@ export class PipelineApp extends App {
     this.project.addTask('publish:assets', {
       steps: [
         {
-          exec: `npx cdk-assets -p ${this.project.cdkConfig.cdkout}/${this.props.stackPrefix}-dev.assets.json publish`,
+          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.props.stackPrefix}-dev.assets.json publish`,
         },
         {
-          exec: `npx cdk-assets -p ${this.project.cdkConfig.cdkout}/${this.props.stackPrefix}-prod.assets.json publish`,
+          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.props.stackPrefix}-prod.assets.json publish`,
         },
       ],
     });
@@ -124,14 +125,14 @@ export class PipelineApp extends App {
     this.project.addTask('release:push-assembly', {
       steps: [
         {
-          exec: `pipelines-release create-manifest "${this.project.cdkConfig.cdkout}"  "${this.props.pkgNamespace}"`,
+          exec: `pipelines-release create-manifest "${this.app.cdkConfig.cdkout}"  "${this.props.pkgNamespace}"`,
         },
         {
-          cwd: this.project.cdkConfig.cdkout,
+          cwd: this.app.cdkConfig.cdkout,
           exec: 'npm version --no-git-tag-version from-git',
         },
         {
-          cwd: this.project.cdkConfig.cdkout,
+          cwd: this.app.cdkConfig.cdkout,
           exec: 'npm publish',
         },
       ],
@@ -167,10 +168,10 @@ export class PipelineApp extends App {
 
   private createPipelineStage(stageName: string) {
     this.project.addTask(`deploy:${stageName}`, {
-      exec: `cdk --app ${this.project.cdkConfig.cdkout} --progress events --require-approval never deploy ${this.props.stackPrefix}-${stageName}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} --progress events --require-approval never deploy ${this.props.stackPrefix}-${stageName}`,
     });
     this.project.addTask(`diff:${stageName}`, {
-      exec: `cdk --app ${this.project.cdkConfig.cdkout} diff ${this.props.stackPrefix}-${stageName}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${this.props.stackPrefix}-${stageName}`,
     });
   }
 }

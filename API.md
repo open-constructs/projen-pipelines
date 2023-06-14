@@ -163,17 +163,17 @@ public readonly prod: Environment;
 ```typescript
 import { CDKPipeline } from 'projen-pipelines'
 
-new CDKPipeline(project: AwsCdkTypeScriptApp, props: CDKPipelineOptions)
+new CDKPipeline(app: AwsCdkTypeScriptApp, props: CDKPipelineOptions)
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.CDKPipeline.Initializer.parameter.project">project</a></code> | <code>projen.awscdk.AwsCdkTypeScriptApp</code> | *No description.* |
+| <code><a href="#projen-pipelines.CDKPipeline.Initializer.parameter.app">app</a></code> | <code>projen.awscdk.AwsCdkTypeScriptApp</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipeline.Initializer.parameter.props">props</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 
 ---
 
-##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.CDKPipeline.Initializer.parameter.project"></a>
+##### `app`<sup>Required</sup> <a name="app" id="projen-pipelines.CDKPipeline.Initializer.parameter.app"></a>
 
 - *Type:* projen.awscdk.AwsCdkTypeScriptApp
 
@@ -185,8 +185,60 @@ new CDKPipeline(project: AwsCdkTypeScriptApp, props: CDKPipelineOptions)
 
 ---
 
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.CDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.CDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.CDKPipeline.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.CDKPipeline.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.CDKPipeline.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
 
 
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.CDKPipeline.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
 
 
 
