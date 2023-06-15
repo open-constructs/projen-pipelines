@@ -13,7 +13,7 @@ With this library, you can handle complex deployment scenarios with less code an
 
 ### Installation
 
-To install the package, add teh package `projen-pipelines` to your projects devDeps in your projen configuration file.
+To install the package, add the package `projen-pipelines` to your projects devDeps in your projen configuration file.
 
 
 After installing the package, you can import and use the constructs to define your CDK Pipelines.

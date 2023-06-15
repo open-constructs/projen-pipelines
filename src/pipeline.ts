@@ -1,5 +1,6 @@
 import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
+import { BaseEngine, GitHubEngine, GithubEngineConfig } from './engine';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -58,17 +59,43 @@ export interface EnvironmentMap {
 }
 
 /**
+ * The CI/CD tooling used to run your pipeline.
+ * The component will render workflows for the given system
+ */
+export enum PipelineEngine {
+  /** Create GitHub actions */
+  GITHUB,
+  /** Create a .gitlab-ci.yaml file */
+  GITLAB,
+  // /** Create AWS CodeCatalyst workflows */
+  // CODE_CATALYST,
+}
+
+/**
+ * Describes the type of pipeline that will be created
+ */
+export enum DeploymentType {
+  /** Deploy every commit as far as possible; hopefully into production */
+  CONTINUOUS_DEPLOYMENT,
+  /** Build every commit and prepare all assets for a later deployment */
+  CONTINUOUS_DELIVERY,
+}
+
+/**
  * The CDKPipelineOptions interface is designed to provide configuration
  * options for a CDK (Cloud Development Kit) pipeline. It allows the definition
  * of settings such as the stack prefix and package namespace to be used in the
  * AWS stack, along with the environments configuration to be used.
  */
 export interface CDKPipelineOptions {
+
   /**
    * This field is used to define a prefix for the AWS Stack resources created
    * during the pipeline's operation.
+   *
+   * @default project name
    */
-  readonly stackPrefix: string;
+  readonly stackPrefix?: string;
 
   /**
    * This field determines the NPM namespace to be used when packaging CDK cloud
@@ -83,6 +110,30 @@ export interface CDKPipelineOptions {
    * deployment process, whether that's a personal, feature, dev, or prod stage.
    */
   readonly environments: EnvironmentMap;
+
+  /**
+   * This field specifies the type of pipeline to create. If set to CONTINUOUS_DEPLOYMENT,
+   * every commit is deployed as far as possible, hopefully into production. If set to
+   * CONTINUOUS_DELIVERY, every commit is built and all assets are prepared for a later deployment.
+   *
+   * @default CONTINUOUS_DELIVERY
+   */
+  readonly deploymentType?: DeploymentType;
+
+  /**
+   * This field determines the CI/CD tooling that will be used to run the pipeline. The component
+   * will render workflows for the given system. Options include GitHub and GitLab.
+   *
+   * @default - tries to derive it from the projects configuration
+   */
+  readonly engine?: PipelineEngine;
+
+  readonly githubConfig?: GithubEngineConfig;
+
+  readonly preInstallCommands?: string[];
+  readonly preSynthCommands?: string[];
+  readonly postSynthCommands?: string[];
+
 }
 
 /**
@@ -90,6 +141,9 @@ export interface CDKPipelineOptions {
  * It also manages tasks such as publishing CDK assets, bumping version based on git tags, and cleaning up conflicting tasks.
  */
 export class CDKPipeline extends Component {
+
+  public readonly stackPrefix: string;
+  public readonly engine: BaseEngine;
 
   constructor(private app: awscdk.AwsCdkTypeScriptApp, private props: CDKPipelineOptions) {
     super(app);
@@ -103,6 +157,17 @@ export class CDKPipeline extends Component {
     // this.app.addDeps(
     // );
 
+    this.stackPrefix = props.stackPrefix ?? app.name;
+
+    // Create engine instance to use
+    switch (props.engine) {
+      case PipelineEngine.GITHUB:
+        this.engine = new GitHubEngine(app, props, this);
+        break;
+      default:
+        throw new Error('Invalid engine');
+    }
+
     // Removes the compiled cloud assembly before each synth
     this.project.tasks.tryFind('synth')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
     this.project.tasks.tryFind('synth:silent')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
@@ -112,6 +177,8 @@ export class CDKPipeline extends Component {
     this.project.removeTask('diff');
     this.project.removeTask('destroy');
     this.project.removeTask('watch');
+
+    this.createSynthStage();
 
     // Creates different deployment stages
     this.createPersonalStage();
@@ -124,6 +191,26 @@ export class CDKPipeline extends Component {
 
     // Creates a specialized CDK App class
     this.createApplicationEntrypoint();
+
+  }
+
+  private createSynthStage() {
+    this.engine.createSynth({
+      commands: [
+        ...(this.props.preInstallCommands ?? []),
+        `npx projen ${this.app.package.installCiTask.name}`,
+        ...(this.props.preSynthCommands ?? []),
+        'npx projen build',
+        ...(this.props.postSynthCommands ?? []),
+      ],
+    });
+    this.engine.createAssetUpload({
+      commands: [
+        ...(this.props.preInstallCommands ?? []),
+        `npx projen ${this.app.package.installCiTask.name}`,
+        'npx projen publish:assets',
+      ],
+    });
   }
 
   /**
@@ -133,17 +220,13 @@ export class CDKPipeline extends Component {
   private createApplicationEntrypoint() {
     const appFile = new TextFile(this.project, `${this.app.srcdir}/app.ts`);
     appFile.addLine(`// ${PROJEN_MARKER}
-/* eslint-disable object-curly-spacing */
-/* eslint-disable comma-spacing */
-/* eslint-disable quotes */
-/* eslint-disable key-spacing */
-/* eslint-disable quote-props */
+/* eslint-disable */
 import { App, AppProps, Stack, StackProps } from 'aws-cdk-lib';
 
 /**
  * PipelineAppProps is an extension of AppProps, which is part of the AWS CDK core.
  * It includes optional functions to provide AWS Stacks for different stages.
- * 
+ *
  * Use these functions to instantiate your application stacks with the parameters for
  * each stage
  */
@@ -171,7 +254,7 @@ export interface PipelineAppStackProps extends StackProps {
 
 /**
  * The PipelineApp class extends the App class from AWS CDK and overrides the constructor to support
- * different stages of the application (development, production, personal, feature) by invoking the provided 
+ * different stages of the application (development, production, personal, feature) by invoking the provided
  * stack-providing functions from the props.
  */
 export class PipelineApp extends App {
@@ -180,24 +263,24 @@ export class PipelineApp extends App {
 
     // If a function is provided for creating a development stack, it is called with necessary arguments.
     if (props.provideDevStack) {
-      props.provideDevStack(this, '${this.props.stackPrefix}-dev', { env: ${JSON.stringify(this.props.environments.dev)}, stackName: '${this.props.stackPrefix}-dev', stageName: 'dev' });
+      props.provideDevStack(this, '${this.stackPrefix}-dev', { env: ${JSON.stringify(this.props.environments.dev)}, stackName: '${this.stackPrefix}-dev', stageName: 'dev' });
     }
 
     // If a function is provided for creating a production stack, it is called with necessary arguments.
     if (props.provideProdStack) {
-      props.provideProdStack(this, '${this.props.stackPrefix}-prod', { env: ${JSON.stringify(this.props.environments.prod)}, stackName: '${this.props.stackPrefix}-prod', stageName: 'prod' });
+      props.provideProdStack(this, '${this.stackPrefix}-prod', { env: ${JSON.stringify(this.props.environments.prod)}, stackName: '${this.stackPrefix}-prod', stageName: 'prod' });
     }
 
     // If the environment variable USER is set and a function is provided for creating a personal stack, it is called with necessary arguments.
     if (props.providePersonalStack && process.env.USER) {
       const stageName = 'personal-' + process.env.USER.toLowerCase().replace(/\\\//g, '-');
-      props.providePersonalStack(this, '${this.props.stackPrefix}-personal', { env: ${JSON.stringify(this.props.environments.personal)}, stackName: \`${this.props.stackPrefix}-\${stageName}\`, stageName });
+      props.providePersonalStack(this, '${this.stackPrefix}-personal', { env: ${JSON.stringify(this.props.environments.personal)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
     }
 
     // If the environment variable BRANCH is set and a function is provided for creating a feature stack, it is called with necessary arguments.
     if (props.provideFeatureStack && process.env.BRANCH) {
       const stageName = 'feature-' + process.env.BRANCH.toLowerCase().replace(/\\\//g, '-');
-      props.provideFeatureStack(this, '${this.props.stackPrefix}-feature', { env: ${JSON.stringify(this.props.environments.feature)}, stackName: \`${this.props.stackPrefix}-\${stageName}\`, stageName });
+      props.provideFeatureStack(this, '${this.stackPrefix}-feature', { env: ${JSON.stringify(this.props.environments.feature)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
     }
   }
 }
@@ -213,10 +296,10 @@ export class PipelineApp extends App {
     this.project.addTask('publish:assets', {
       steps: [
         {
-          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.props.stackPrefix}-dev.assets.json publish`,
+          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-dev.assets.json publish`,
         },
         {
-          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.props.stackPrefix}-prod.assets.json publish`,
+          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-prod.assets.json publish`,
         },
       ],
     });
@@ -255,16 +338,16 @@ export class PipelineApp extends App {
    */
   private createPersonalStage() {
     this.project.addTask('deploy:personal', {
-      exec: `cdk deploy ${this.props.stackPrefix}-personal`,
+      exec: `cdk deploy ${this.stackPrefix}-personal`,
     });
     this.project.addTask('watch:personal', {
-      exec: `cdk deploy --watch --hotswap ${this.props.stackPrefix}-personal`,
+      exec: `cdk deploy --watch --hotswap ${this.stackPrefix}-personal`,
     });
     this.project.addTask('diff:personal', {
-      exec: `cdk diff ${this.props.stackPrefix}-personal`,
+      exec: `cdk diff ${this.stackPrefix}-personal`,
     });
     this.project.addTask('destroy:personal', {
-      exec: `cdk destroy ${this.props.stackPrefix}-personal`,
+      exec: `cdk destroy ${this.stackPrefix}-personal`,
     });
   }
 
@@ -274,13 +357,13 @@ export class PipelineApp extends App {
    */
   private createFeatureStage() {
     this.project.addTask('deploy:feature', {
-      exec: `cdk --progress events --require-approval never deploy ${this.props.stackPrefix}-feature`,
+      exec: `cdk --progress events --require-approval never deploy ${this.stackPrefix}-feature`,
     });
     this.project.addTask('diff:feature', {
-      exec: `cdk diff ${this.props.stackPrefix}-feature`,
+      exec: `cdk diff ${this.stackPrefix}-feature`,
     });
     this.project.addTask('destroy:feature', {
-      exec: `cdk destroy ${this.props.stackPrefix}-feature`,
+      exec: `cdk destroy ${this.stackPrefix}-feature`,
     });
   }
 
@@ -290,10 +373,18 @@ export class PipelineApp extends App {
    */
   private createPipelineStage(stageName: string) {
     this.project.addTask(`deploy:${stageName}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} --progress events --require-approval never deploy ${this.props.stackPrefix}-${stageName}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} --progress events --require-approval never deploy ${this.stackPrefix}-${stageName}`,
     });
     this.project.addTask(`diff:${stageName}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${this.props.stackPrefix}-${stageName}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${this.stackPrefix}-${stageName}`,
+    });
+
+    this.engine.createDeployment({
+      stageName,
+      env: this.props.environments[stageName as keyof EnvironmentMap],
+      commands: [
+        `npx projen deploy:${stageName}`,
+      ],
     });
   }
 }
