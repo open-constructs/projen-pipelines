@@ -1,13 +1,16 @@
-import { cdk, github, javascript } from 'projen';
+import { github, javascript, typescript } from 'projen';
 
-const project = new cdk.JsiiProject({
-  author: 'Taimos GmbH',
-  authorAddress: 'info@taimos.de',
+const project = new typescript.TypeScriptProject({
+  authorName: 'Taimos GmbH',
+  authorEmail: 'info@taimos.de',
+  authorOrganization: true,
+  authorUrl: 'https://taimos.de',
+  copyrightOwner: 'Taimos GmbH',
+  copyrightPeriod: '2021',
   defaultReleaseBranch: 'main',
-  jsiiVersion: '~5.0.0',
   name: 'projen-pipelines',
   projenrcTs: true,
-  repositoryUrl: 'https://github.com/taimos/projen-pipelines.git',
+  repository: 'https://github.com/taimos/projen-pipelines.git',
   licensed: true,
   license: 'Apache-2.0',
   devDeps: [
@@ -17,12 +20,10 @@ const project = new cdk.JsiiProject({
   ],
   deps: [
     'projen',
+    'standard-version',
   ],
   peerDeps: [
     'projen',
-  ],
-  bundledDeps: [
-    'standard-version',
   ],
   autoApproveUpgrades: true,
   autoApproveOptions: { allowedUsernames: ['hoegertn', 'taimos-projen[bot]'], secret: 'GITHUB_TOKEN' },
@@ -30,17 +31,25 @@ const project = new cdk.JsiiProject({
   githubOptions: {
     projenCredentials: github.GithubCredentials.fromApp(),
   },
+  keywords: [
+    'aws',
+    'cdk',
+  ],
   bin: {
     'pipelines-release': 'lib/release.js',
   },
   releaseToNpm: true,
-  copyrightOwner: 'Taimos GmbH',
-  copyrightPeriod: '2023',
+  gitpod: true,
   tsconfig: {
     compilerOptions: {
       esModuleInterop: true,
     },
   },
+});
+
+project.gitpod?.addCustomTask({
+  init: 'yarn install --check-files --frozen-lockfile',
+  command: 'npx projen build',
 });
 
 project.synth();

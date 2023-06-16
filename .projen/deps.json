@@ -58,23 +58,6 @@
       "type": "build"
     },
     {
-      "name": "jsii-diff",
-      "type": "build"
-    },
-    {
-      "name": "jsii-docgen",
-      "type": "build"
-    },
-    {
-      "name": "jsii-pacmak",
-      "type": "build"
-    },
-    {
-      "name": "jsii",
-      "version": "~5.0.0",
-      "type": "build"
-    },
-    {
       "name": "npm-check-updates",
       "version": "^16",
       "type": "build"
@@ -101,15 +84,15 @@
       "type": "build"
     },
     {
-      "name": "standard-version",
-      "type": "bundled"
-    },
-    {
       "name": "projen",
       "type": "peer"
     },
     {
       "name": "projen",
+      "type": "runtime"
+    },
+    {
+      "name": "standard-version",
       "type": "runtime"
     }
   ],
