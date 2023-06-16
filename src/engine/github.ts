@@ -35,7 +35,7 @@ export class GitHubEngine extends BaseEngine {
   public createSynth(options: SynthStageOptions): void {
     const steps: JobStep[] = [{
       name: 'Checkout',
-      uses: 'actions/checkout@v2',
+      uses: 'actions/checkout@v3',
     }];
 
     if (this.props.githubConfig?.awsRoleArnForSynth) {
@@ -55,7 +55,7 @@ export class GitHubEngine extends BaseEngine {
     })));
 
     steps.push({
-      uses: 'actions/upload-artifact@v2',
+      uses: 'actions/upload-artifact@v3',
       with: {
         name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
@@ -84,7 +84,13 @@ export class GitHubEngine extends BaseEngine {
       permissions: { idToken: JobPermission.WRITE, contents: this.needsVersionedArtifacts ? JobPermission.WRITE : JobPermission.READ },
       steps: [{
         name: 'Checkout',
-        uses: 'actions/checkout@v2',
+        uses: 'actions/checkout@v3',
+        with: {
+          'fetch-depth': 0,
+        },
+      }, {
+        name: 'Setup GIT identity',
+        run: 'git config --global user.name "projen pipeline" && git config --global user.email "info@taimos.de"',
       }, {
         name: 'AWS Credentials',
         uses: 'aws-actions/configure-aws-credentials@master',
@@ -94,7 +100,7 @@ export class GitHubEngine extends BaseEngine {
           'aws-region': 'us-east-1',
         },
       }, {
-        uses: 'actions/download-artifact@v2',
+        uses: 'actions/download-artifact@v3',
         with: {
           name: 'cloud-assembly',
           path: `${this.app.cdkConfig.cdkout}/`,
@@ -122,7 +128,7 @@ export class GitHubEngine extends BaseEngine {
         permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
         steps: [{
           name: 'Checkout',
-          uses: 'actions/checkout@v2',
+          uses: 'actions/checkout@v3',
         }, {
           name: 'AWS Credentials',
           uses: 'aws-actions/configure-aws-credentials@master',
@@ -155,7 +161,7 @@ export class GitHubEngine extends BaseEngine {
         permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
         steps: [{
           name: 'Checkout',
-          uses: 'actions/checkout@v2',
+          uses: 'actions/checkout@v3',
         }, {
           name: 'AWS Credentials',
           uses: 'aws-actions/configure-aws-credentials@master',
@@ -165,7 +171,7 @@ export class GitHubEngine extends BaseEngine {
             'aws-region': options.config.env.region,
           },
         }, {
-          uses: 'actions/download-artifact@v2',
+          uses: 'actions/download-artifact@v3',
           with: {
             name: 'cloud-assembly',
             path: `${this.app.cdkConfig.cdkout}/`,
