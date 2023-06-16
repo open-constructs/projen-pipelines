@@ -49,7 +49,7 @@ export enum DeploymentType {
 export interface DeploymentStage {
   readonly name: string;
   readonly env: Environment;
-  readonly manualApproval?: boolean;
+  // readonly manualApproval?: boolean;
 
 }
 
