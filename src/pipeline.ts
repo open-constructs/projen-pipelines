@@ -49,8 +49,7 @@ export enum DeploymentType {
 export interface DeploymentStage {
   readonly name: string;
   readonly env: Environment;
-  // readonly manualApproval?: boolean;
-
+  readonly manualApproval?: boolean;
 }
 
 /**
@@ -189,6 +188,10 @@ export class CDKPipeline extends Component {
         ...(this.props.preInstallCommands ?? []),
         `npx projen ${this.app.package.installCiTask.name}`,
         'npx projen publish:assets',
+        ...(this.engine.needsVersionedArtifacts ? [
+          'npx projen bump',
+          'npx projen release:push-assembly',
+        ] : []),
       ],
     });
   }
@@ -366,11 +369,12 @@ ${appCode}
     });
 
     this.engine.createDeployment({
-      stageName: stage.name,
-      env: stage.env,
-      commands: [
+      config: stage,
+      installCommands: [
         ...(this.props.preInstallCommands ?? []),
         `npx projen ${this.app.package.installCiTask.name}`,
+      ],
+      deployCommands: [
         // TODO pre deploy steps
         `npx projen deploy:${stage.name}`,
         // TODO post deploy steps

@@ -13,6 +13,8 @@ export interface GithubEngineConfig {
 
 export class GitHubEngine extends BaseEngine {
 
+  public readonly needsVersionedArtifacts: boolean;
+
   private deploymentWorkflow: GithubWorkflow;
   private deploymentStages: string[] = [];
 
@@ -26,6 +28,8 @@ export class GitHubEngine extends BaseEngine {
       },
       workflowDispatch: {},
     });
+
+    this.needsVersionedArtifacts = this.props.stages.find(s => s.manualApproval === true) !== undefined;
   }
 
   public createSynth(options: SynthStageOptions): void {
@@ -54,7 +58,7 @@ export class GitHubEngine extends BaseEngine {
       uses: 'actions/upload-artifact@v2',
       with: {
         name: 'cloud-assembly',
-        path: 'cdk.out/',
+        path: `${this.app.cdkConfig.cdkout}/`,
       },
     });
 
@@ -77,7 +81,7 @@ export class GitHubEngine extends BaseEngine {
       env: {
         CI: 'true',
       },
-      permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
+      permissions: { idToken: JobPermission.WRITE, contents: this.needsVersionedArtifacts ? JobPermission.WRITE : JobPermission.READ },
       steps: [{
         name: 'Checkout',
         uses: 'actions/checkout@v2',
@@ -93,7 +97,7 @@ export class GitHubEngine extends BaseEngine {
         uses: 'actions/download-artifact@v2',
         with: {
           name: 'cloud-assembly',
-          path: 'cdk.out/',
+          path: `${this.app.cdkConfig.cdkout}/`,
         },
       },
       ...options.commands.map(cmd => ({
@@ -103,36 +107,78 @@ export class GitHubEngine extends BaseEngine {
   }
 
   public createDeployment(options: DeployStageOptions): void {
-    this.deploymentWorkflow.addJob(`deploy-${options.stageName}`, {
-      name: `Deploy stage ${options.stageName} to AWS`,
-      needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
-      runsOn: ['ubuntu-latest'],
-      env: {
-        CI: 'true',
-      },
-      permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
-      steps: [{
-        name: 'Checkout',
-        uses: 'actions/checkout@v2',
-      }, {
-        name: 'AWS Credentials',
-        uses: 'aws-actions/configure-aws-credentials@master',
-        with: {
-          'role-to-assume': this.props.githubConfig?.awsRoleArnForDeployment?.[options.stageName] ?? this.props.githubConfig?.defaultAwsRoleArn,
-          'role-session-name': 'GitHubAction',
-          'aws-region': options.env.region,
+    if (options.config.manualApproval === true) {
+      // Create new workflow for deployment
+      const stageWorkflow = this.app.github!.addWorkflow(`release-${options.config.name}`);
+      stageWorkflow.on({
+        workflowDispatch: {},
+      });
+      stageWorkflow.addJob('deploy', {
+        name: `Release stage ${options.config.name} to AWS`,
+        runsOn: ['ubuntu-latest'],
+        env: {
+          CI: 'true',
         },
-      }, {
-        uses: 'actions/download-artifact@v2',
-        with: {
-          name: 'cloud-assembly',
-          path: 'cdk.out/',
+        permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
+        steps: [{
+          name: 'Checkout',
+          uses: 'actions/checkout@v2',
+        }, {
+          name: 'AWS Credentials',
+          uses: 'aws-actions/configure-aws-credentials@master',
+          with: {
+            'role-to-assume': this.props.githubConfig?.awsRoleArnForDeployment?.[options.config.name] ?? this.props.githubConfig?.defaultAwsRoleArn,
+            'role-session-name': 'GitHubAction',
+            'aws-region': options.config.env.region,
+          },
         },
-      },
-      ...options.commands.map(cmd => ({
-        run: cmd,
-      }))],
-    });
-    this.deploymentStages.push(options.stageName);
+        ...options.installCommands.map(cmd => ({
+          run: cmd,
+        })),
+        {
+          run: `yarn add ${this.props.pkgNamespace}/${this.app.name} && mv ./node_modules/${this.props.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`,
+        },
+        ...options.deployCommands.map(cmd => ({
+          run: cmd,
+        }))],
+      });
+
+    } else {
+      // Add deployment to CI/CD workflow
+      this.deploymentWorkflow.addJob(`deploy-${options.config.name}`, {
+        name: `Deploy stage ${options.config.name} to AWS`,
+        needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
+        runsOn: ['ubuntu-latest'],
+        env: {
+          CI: 'true',
+        },
+        permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
+        steps: [{
+          name: 'Checkout',
+          uses: 'actions/checkout@v2',
+        }, {
+          name: 'AWS Credentials',
+          uses: 'aws-actions/configure-aws-credentials@master',
+          with: {
+            'role-to-assume': this.props.githubConfig?.awsRoleArnForDeployment?.[options.config.name] ?? this.props.githubConfig?.defaultAwsRoleArn,
+            'role-session-name': 'GitHubAction',
+            'aws-region': options.config.env.region,
+          },
+        }, {
+          uses: 'actions/download-artifact@v2',
+          with: {
+            name: 'cloud-assembly',
+            path: `${this.app.cdkConfig.cdkout}/`,
+          },
+        },
+        ...options.installCommands.map(cmd => ({
+          run: cmd,
+        })),
+        ...options.deployCommands.map(cmd => ({
+          run: cmd,
+        }))],
+      });
+      this.deploymentStages.push(options.config.name);
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { awscdk } from 'projen';
-import { CDKPipeline, CDKPipelineOptions, Environment } from '../pipeline';
+import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from '../pipeline';
 
 export interface SynthStageOptions {
   readonly commands: string[];
@@ -10,15 +10,17 @@ export interface AssetUploadStageOptions {
 }
 
 export interface DeployStageOptions {
-  readonly stageName: string;
-  readonly commands: string[];
-  readonly env: Environment;
+  readonly config: DeploymentStage;
+  readonly installCommands: string[];
+  readonly deployCommands: string[];
 }
 
 export abstract class BaseEngine {
+
+  public abstract readonly needsVersionedArtifacts: boolean;
+
   constructor(protected app: awscdk.AwsCdkTypeScriptApp, protected props: CDKPipelineOptions, protected pipeline: CDKPipeline) {
-
-
+    //
   }
 
   abstract createSynth(options: SynthStageOptions): void;
