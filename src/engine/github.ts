@@ -117,7 +117,14 @@ export class GitHubEngine extends BaseEngine {
       // Create new workflow for deployment
       const stageWorkflow = this.app.github!.addWorkflow(`release-${options.config.name}`);
       stageWorkflow.on({
-        workflowDispatch: {},
+        workflowDispatch: {
+          inputs: {
+            version: {
+              description: 'Package version',
+              required: true,
+            },
+          },
+        },
       });
       stageWorkflow.addJob('deploy', {
         name: `Release stage ${options.config.name} to AWS`,
@@ -142,7 +149,7 @@ export class GitHubEngine extends BaseEngine {
           run: cmd,
         })),
         {
-          run: `yarn add ${this.props.pkgNamespace}/${this.app.name} && mv ./node_modules/${this.props.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`,
+          run: `yarn add ${this.props.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}} && mv ./node_modules/${this.props.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`,
         },
         ...options.deployCommands.map(cmd => ({
           run: cmd,
