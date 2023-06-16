@@ -59,6 +59,14 @@ export class GitHubEngine extends BaseEngine {
       run: cmd,
     })));
 
+    steps.push({
+      uses: 'actions/upload-artifact@v2',
+      with: {
+        name: 'cloud-assembly',
+        path: 'cdk.out/',
+      },
+    });
+
     this.deploymentWorkflow.addJob('synth', {
       name: 'Synth CDK application',
       runsOn: ['ubuntu-latest'],
@@ -84,6 +92,11 @@ export class GitHubEngine extends BaseEngine {
           'role-session-name': 'GitHubAction',
           'aws-region': 'us-east-1',
         },
+      }, {
+        uses: 'actions/download-artifact@v2',
+        with: {
+          name: 'cloud-assembly',
+        },
       },
       ...options.commands.map(cmd => ({
         run: cmd,
@@ -107,6 +120,11 @@ export class GitHubEngine extends BaseEngine {
           'role-to-assume': this.props.githubConfig?.awsRoleArnForDeployment?.[options.stageName as keyof RoleMap] ?? this.props.githubConfig?.defaultAwsRoleArn,
           'role-session-name': 'GitHubAction',
           'aws-region': options.env.region,
+        },
+      }, {
+        uses: 'actions/download-artifact@v2',
+        with: {
+          name: 'cloud-assembly',
         },
       },
       ...options.commands.map(cmd => ({
