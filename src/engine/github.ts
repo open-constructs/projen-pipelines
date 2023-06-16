@@ -96,6 +96,7 @@ export class GitHubEngine extends BaseEngine {
         uses: 'actions/download-artifact@v2',
         with: {
           name: 'cloud-assembly',
+          path: 'cdk.out/',
         },
       },
       ...options.commands.map(cmd => ({
@@ -125,6 +126,7 @@ export class GitHubEngine extends BaseEngine {
         uses: 'actions/download-artifact@v2',
         with: {
           name: 'cloud-assembly',
+          path: 'cdk.out/',
         },
       },
       ...options.commands.map(cmd => ({

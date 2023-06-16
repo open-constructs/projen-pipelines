@@ -383,6 +383,8 @@ export class PipelineApp extends App {
       stageName,
       env: this.props.environments[stageName as keyof EnvironmentMap],
       commands: [
+        ...(this.props.preInstallCommands ?? []),
+        `npx projen ${this.app.package.installCiTask.name}`,
         `npx projen deploy:${stageName}`,
       ],
     });
