@@ -4,17 +4,11 @@ import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import { AssetUploadStageOptions, BaseEngine, DeployStageOptions, SynthStageOptions } from './base';
 import { CDKPipeline, CDKPipelineOptions } from '../pipeline';
 
-export interface RoleMap {
-  readonly feature?: string;
-  readonly dev?: string;
-  readonly prod?: string;
-}
-
 export interface GithubEngineConfig {
   readonly defaultAwsRoleArn?: string;
   readonly awsRoleArnForSynth?: string;
   readonly awsRoleArnForAssetPublishing?: string;
-  readonly awsRoleArnForDeployment?: RoleMap;
+  readonly awsRoleArnForDeployment?: { [stage: string]: string };
 }
 
 export class GitHubEngine extends BaseEngine {
@@ -38,9 +32,6 @@ export class GitHubEngine extends BaseEngine {
     const steps: JobStep[] = [{
       name: 'Checkout',
       uses: 'actions/checkout@v2',
-      env: {
-        CI: 'true',
-      },
     }];
 
     if (this.props.githubConfig?.awsRoleArnForSynth) {
@@ -70,6 +61,9 @@ export class GitHubEngine extends BaseEngine {
     this.deploymentWorkflow.addJob('synth', {
       name: 'Synth CDK application',
       runsOn: ['ubuntu-latest'],
+      env: {
+        CI: 'true',
+      },
       permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
       steps,
     });
@@ -80,6 +74,9 @@ export class GitHubEngine extends BaseEngine {
       name: 'Publish assets to AWS',
       needs: ['synth'],
       runsOn: ['ubuntu-latest'],
+      env: {
+        CI: 'true',
+      },
       permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
       steps: [{
         name: 'Checkout',
@@ -110,6 +107,9 @@ export class GitHubEngine extends BaseEngine {
       name: `Deploy stage ${options.stageName} to AWS`,
       needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
       runsOn: ['ubuntu-latest'],
+      env: {
+        CI: 'true',
+      },
       permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
       steps: [{
         name: 'Checkout',
@@ -118,7 +118,7 @@ export class GitHubEngine extends BaseEngine {
         name: 'AWS Credentials',
         uses: 'aws-actions/configure-aws-credentials@master',
         with: {
-          'role-to-assume': this.props.githubConfig?.awsRoleArnForDeployment?.[options.stageName as keyof RoleMap] ?? this.props.githubConfig?.defaultAwsRoleArn,
+          'role-to-assume': this.props.githubConfig?.awsRoleArnForDeployment?.[options.stageName] ?? this.props.githubConfig?.defaultAwsRoleArn,
           'role-session-name': 'GitHubAction',
           'aws-region': options.env.region,
         },

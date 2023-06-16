@@ -24,41 +24,6 @@ export interface Environment {
 }
 
 /**
- * The EnvironmentMap interface is used to maintain a mapping of different types
- * of environments used in the application. Each type of environment - personal,
- * feature, dev, and prod, represents a different stage of development or usage.
- */
-export interface EnvironmentMap {
-  /**
-   * The personal environment is usually used for individual development and
-   * testing, allowing developers to freely test and experiment without
-   * affecting the shared development environment.
-   */
-  readonly personal: Environment;
-
-  /**
-   * The feature environment is typically used for developing specific features
-   * in isolation from the main codebase. This allows developers to work on
-   * individual features without impacting the stability of the dev or prod
-   * environments.
-   */
-  readonly feature: Environment;
-
-  /**
-   * The dev environment is a shared environment where developers integrate
-   * their feature changes. It represents the latest version of the application
-   * but may not be as stable as the production environment.
-   */
-  readonly dev: Environment;
-
-  /**
-   * The prod environment is where the live, user-facing application runs.
-   * It should be stable and only receive thoroughly tested changes.
-   */
-  readonly prod: Environment;
-}
-
-/**
  * The CI/CD tooling used to run your pipeline.
  * The component will render workflows for the given system
  */
@@ -79,6 +44,13 @@ export enum DeploymentType {
   CONTINUOUS_DEPLOYMENT,
   /** Build every commit and prepare all assets for a later deployment */
   CONTINUOUS_DELIVERY,
+}
+
+export interface DeploymentStage {
+  readonly name: string;
+  readonly env: Environment;
+  readonly manualApproval?: boolean;
+
 }
 
 /**
@@ -104,12 +76,15 @@ export interface CDKPipelineOptions {
    */
   readonly pkgNamespace: string;
 
-  /**
-   * This is a map of environments to be used in the pipeline. It allows the
-   * pipeline to deploy to different environments based on the stage of the
-   * deployment process, whether that's a personal, feature, dev, or prod stage.
-   */
-  readonly environments: EnvironmentMap;
+  readonly stages: DeploymentStage[];
+
+  readonly personalStage?: {
+    readonly env: Environment;
+  };
+
+  readonly featureStages?: {
+    readonly env: Environment;
+  };
 
   /**
    * This field specifies the type of pipeline to create. If set to CONTINUOUS_DEPLOYMENT,
@@ -181,10 +156,15 @@ export class CDKPipeline extends Component {
     this.createSynthStage();
 
     // Creates different deployment stages
-    this.createPersonalStage();
-    this.createFeatureStage();
-    this.createPipelineStage('dev');
-    this.createPipelineStage('prod');
+    if (props.personalStage) {
+      this.createPersonalStage();
+    }
+    if (props.featureStages) {
+      this.createFeatureStage();
+    }
+    for (const stage of props.stages) {
+      this.createPipelineStage(stage);
+    }
 
     // Creates tasks to handle the release process
     this.createReleaseTasks();
@@ -218,6 +198,46 @@ export class CDKPipeline extends Component {
    * necessary to set up the pipeline and define the AWS CDK stacks for different environments.
    */
   private createApplicationEntrypoint() {
+    let propsCode = '';
+    let appCode = '';
+
+    if (this.props.personalStage) {
+      propsCode += `  /** This function will be used to generate a personal stack. */
+  providePersonalStack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
+`;
+      appCode += `    // If the environment variable USER is set and a function is provided for creating a personal stack, it is called with necessary arguments.
+    if (props.providePersonalStack && process.env.USER) {
+      const stageName = 'personal-' + process.env.USER.toLowerCase().replace(/\\\//g, '-');
+      props.providePersonalStack(this, '${this.stackPrefix}-personal', { env: ${JSON.stringify(this.props.personalStage.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
+    }
+`;
+    }
+
+    if (this.props.featureStages) {
+      propsCode += `  /** This function will be used to generate a feature stack. */
+  provideFeatureStack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
+`;
+      appCode += `    // If the environment variable BRANCH is set and a function is provided for creating a feature stack, it is called with necessary arguments.
+    if (props.provideFeatureStack && process.env.BRANCH) {
+      const stageName = 'feature-' + process.env.BRANCH.toLowerCase().replace(/\\\//g, '-');
+      props.provideFeatureStack(this, '${this.stackPrefix}-feature', { env: ${JSON.stringify(this.props.featureStages.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
+    }
+`;
+    }
+
+    for (const stage of this.props.stages) {
+      const nameUpperFirst = `${stage.name.charAt(0).toUpperCase()}${stage.name.substring(1)}`;
+
+      propsCode += `  /** This function will be used to generate a ${stage.name} stack. */
+  provide${nameUpperFirst}Stack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
+`;
+      appCode += `    // If a function is provided for creating a ${stage.name} stack, it is called with necessary arguments.
+    if (props.provide${nameUpperFirst}Stack) {
+      props.provide${nameUpperFirst}Stack(this, '${this.stackPrefix}-${stage.name}', { env: ${JSON.stringify(stage.env)}, stackName: '${this.stackPrefix}-${stage.name}', stageName: '${stage.name}' });
+    }
+`;
+    }
+
     const appFile = new TextFile(this.project, `${this.app.srcdir}/app.ts`);
     appFile.addLine(`// ${PROJEN_MARKER}
 /* eslint-disable */
@@ -231,17 +251,7 @@ import { App, AppProps, Stack, StackProps } from 'aws-cdk-lib';
  * each stage
  */
 export interface PipelineAppProps extends AppProps {
-  /** This optional function, if provided, will be used to generate a development stack. */
-  provideDevStack?: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
-
-  /** This optional function, if provided, will be used to generate a production stack. */
-  provideProdStack?: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
-
-  /** This optional function, if provided, will be used to generate a personal stack. */
-  providePersonalStack?: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
-
-  /** This optional function, if provided, will be used to generate a feature stack. */
-  provideFeatureStack?: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
+${propsCode}
 }
 
 /**
@@ -261,27 +271,8 @@ export class PipelineApp extends App {
   constructor(props: PipelineAppProps) {
     super(props);
 
-    // If a function is provided for creating a development stack, it is called with necessary arguments.
-    if (props.provideDevStack) {
-      props.provideDevStack(this, '${this.stackPrefix}-dev', { env: ${JSON.stringify(this.props.environments.dev)}, stackName: '${this.stackPrefix}-dev', stageName: 'dev' });
-    }
+${appCode}
 
-    // If a function is provided for creating a production stack, it is called with necessary arguments.
-    if (props.provideProdStack) {
-      props.provideProdStack(this, '${this.stackPrefix}-prod', { env: ${JSON.stringify(this.props.environments.prod)}, stackName: '${this.stackPrefix}-prod', stageName: 'prod' });
-    }
-
-    // If the environment variable USER is set and a function is provided for creating a personal stack, it is called with necessary arguments.
-    if (props.providePersonalStack && process.env.USER) {
-      const stageName = 'personal-' + process.env.USER.toLowerCase().replace(/\\\//g, '-');
-      props.providePersonalStack(this, '${this.stackPrefix}-personal', { env: ${JSON.stringify(this.props.environments.personal)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
-    }
-
-    // If the environment variable BRANCH is set and a function is provided for creating a feature stack, it is called with necessary arguments.
-    if (props.provideFeatureStack && process.env.BRANCH) {
-      const stageName = 'feature-' + process.env.BRANCH.toLowerCase().replace(/\\\//g, '-');
-      props.provideFeatureStack(this, '${this.stackPrefix}-feature', { env: ${JSON.stringify(this.props.environments.feature)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
-    }
   }
 }
 `);
@@ -294,14 +285,9 @@ export class PipelineApp extends App {
   private createReleaseTasks() {
     // Task to publish the CDK assets to all accounts
     this.project.addTask('publish:assets', {
-      steps: [
-        {
-          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-dev.assets.json publish`,
-        },
-        {
-          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-prod.assets.json publish`,
-        },
-      ],
+      steps: this.props.stages.map(stage => ({
+        exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-${stage.name}.assets.json publish`,
+      })),
     });
 
     this.project.addTask('bump', {
@@ -369,23 +355,25 @@ export class PipelineApp extends App {
 
   /**
    * This method sets up tasks for the general pipeline stages (dev, prod), including deployment and comparing changes (diff).
-   * @param {string} stageName - The name of the stage (e.g., 'dev', 'prod')
+   * @param {DeployStageOptions} stage - The stage to create
    */
-  private createPipelineStage(stageName: string) {
-    this.project.addTask(`deploy:${stageName}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} --progress events --require-approval never deploy ${this.stackPrefix}-${stageName}`,
+  private createPipelineStage(stage: DeploymentStage) {
+    this.project.addTask(`deploy:${stage.name}`, {
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} --progress events --require-approval never deploy ${this.stackPrefix}-${stage.name}`,
     });
-    this.project.addTask(`diff:${stageName}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${this.stackPrefix}-${stageName}`,
+    this.project.addTask(`diff:${stage.name}`, {
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${this.stackPrefix}-${stage.name}`,
     });
 
     this.engine.createDeployment({
-      stageName,
-      env: this.props.environments[stageName as keyof EnvironmentMap],
+      stageName: stage.name,
+      env: stage.env,
       commands: [
         ...(this.props.preInstallCommands ?? []),
         `npx projen ${this.app.package.installCiTask.name}`,
-        `npx projen deploy:${stageName}`,
+        // TODO pre deploy steps
+        `npx projen deploy:${stage.name}`,
+        // TODO post deploy steps
       ],
     });
   }
