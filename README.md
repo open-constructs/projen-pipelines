@@ -10,7 +10,9 @@ This library provides high-level abstractions for defining multi-environment and
 With this library, you can handle complex deployment scenarios with less code and manage your AWS infrastructure in a more efficient and straightforward way.
 ## How Projen Pipelines work
 ![High level Projen Pipelines Overview](documentation/overview.png)
+Under the hood, after you defined the pipeline and selected target engine that you want to work on, we are using code generation methods that will create - in your project - the required CI/CD pipeline.
 
+We are considering to allow selecting multiple engines going forward - please let us know if this is a feature you would use or not!
 
 ## Getting Started
 
