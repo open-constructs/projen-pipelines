@@ -8,6 +8,11 @@ It is specifically designed to work with the projen project configuration engine
 
 This library provides high-level abstractions for defining multi-environment and multi-account AWS CDK applications with ease.
 With this library, you can handle complex deployment scenarios with less code and manage your AWS infrastructure in a more efficient and straightforward way.
+## How Projen Pipelines work
+![High level Projen Pipelines Overview](documentation/overview.png)
+Under the hood, after you defined the pipeline and selected target engine that you want to work on, we are using code generation methods that will create - in your project - the required CI/CD pipeline.
+
+We are considering to allow selecting multiple engines going forward - please let us know if this is a feature you would use or not!
 
 ## Getting Started
 
@@ -116,6 +121,13 @@ Remember that these tasks are created and managed automatically by the `CDKPipel
 
 
 ## Contributing
+### By raising feature requests or issues
+Use the Github integrated "[Issues](https://github.com/taimos/projen-pipelines/issues/new)" view to create an item that you would love to have added to our open source project.
+
+***No request is too big or too small*** - get your thoughts created and we'll get back to you if we have questions!
+
+
+### By committing code
 
 We welcome all contributions to Projen Pipelines! Here's how you can get started:
 
