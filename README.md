@@ -15,10 +15,12 @@ Under the hood, after you defined the pipeline and selected target engine that y
 We are considering to allow selecting multiple engines going forward - please let us know if this is a feature you would use or not!
 
 ## Getting Started
+### Pre-Requisites
+This module works on a `projen` projects and it requires you do use the _latest version_ of Projen.
 
 ### Installation
 
-To install the package, add the package `projen-pipelines` to your projects devDeps in your projen configuration file.
+To install the package, add the package `projen-pipelines` to your projects devDeps in your projen configuration file (`.projen.ts`).
 
 
 After installing the package, you can import and use the constructs to define your CDK Pipelines.
