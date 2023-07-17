@@ -34,6 +34,9 @@ const project = new typescript.TypeScriptProject({
   keywords: [
     'aws',
     'cdk',
+    'projen',
+    'cicd',
+    'pipelines',
   ],
   bin: {
     'pipelines-release': 'lib/release.js',

@@ -63,7 +63,10 @@
   },
   "keywords": [
     "aws",
-    "cdk"
+    "cdk",
+    "cicd",
+    "pipelines",
+    "projen"
   ],
   "main": "lib/index.js",
   "license": "Apache-2.0",

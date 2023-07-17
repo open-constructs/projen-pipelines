@@ -1,6 +1,6 @@
 import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
-import { BaseEngine, GitHubEngine, GithubEngineConfig } from './engine';
+import { BaseEngine, CodeCatalystEngine, CodeCatalystEngineConfig, GitHubEngine, GithubEngineConfig } from './engine';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -33,7 +33,7 @@ export enum PipelineEngine {
   /** Create a .gitlab-ci.yaml file */
   GITLAB,
   // /** Create AWS CodeCatalyst workflows */
-  // CODE_CATALYST,
+  CODE_CATALYST,
 }
 
 /**
@@ -104,6 +104,8 @@ export interface CDKPipelineOptions {
 
   readonly githubConfig?: GithubEngineConfig;
 
+  readonly codecatalystConfig?: CodeCatalystEngineConfig;
+
   readonly preInstallCommands?: string[];
   readonly preSynthCommands?: string[];
   readonly postSynthCommands?: string[];
@@ -137,6 +139,9 @@ export class CDKPipeline extends Component {
     switch (props.engine) {
       case PipelineEngine.GITHUB:
         this.engine = new GitHubEngine(app, props, this);
+        break;
+      case PipelineEngine.CODE_CATALYST:
+        this.engine = new CodeCatalystEngine(app, props, this);
         break;
       default:
         throw new Error('Invalid engine');
