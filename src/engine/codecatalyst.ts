@@ -18,6 +18,7 @@ export class CodeCatalystEngine extends BaseEngine {
 
   private deploymentWorkflow: CodeCatalystWorkflow;
   private deploymentStages: string[] = [];
+  public readonly codecatalyst: CodeCatalyst | undefined;
 
   constructor(app: awscdk.AwsCdkTypeScriptApp, props: CDKPipelineOptions, pipeline: CDKPipeline) {
     super(app, props, pipeline);
@@ -25,7 +26,9 @@ export class CodeCatalystEngine extends BaseEngine {
     //app._addComponent(codecatalyst)
 
     // this.deploymentWorkflow = this.app.github!.addWorkflow('deploy');
-    this.deploymentWorkflow = new CodeCatalystWorkflow(new CodeCatalyst(), 'workflow');
+    this.codecatalyst = new CodeCatalyst();
+    this.deploymentWorkflow = new CodeCatalystWorkflow(this.codecatalyst, 'workflow');
+    console.log('Executing CodeCatalystEngine');
 
     this.deploymentWorkflow.on({
       push: {
@@ -120,7 +123,7 @@ export class CodeCatalystEngine extends BaseEngine {
   public createDeployment(options: DeployStageOptions): void {
     if (options.config.manualApproval === true) {
       // Create new workflow for deployment
-      const stageWorkflow = this.app.github!.addWorkflow(`release-${options.config.name}`);
+      const stageWorkflow = this.codecatalyst!.addWorkflow(`release-${options.config.name}`);
       stageWorkflow.on({
         workflowDispatch: {
           inputs: {

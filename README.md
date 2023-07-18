@@ -42,16 +42,17 @@ const app = new awscdk.AwsCdkTypeScriptApp({
     'projen-pipelines',
   ],
 });
-
 // Create the pipeline
 new CDKPipeline(app, {
   stackPrefix: 'MyApp',
   pkgNamespace: '@company-assemblies',
-  environments: {
-    dev: { account: '111111111111', region: 'eu-central-1' },
-    prod: { account: '222222222222', region: 'eu-central-1' },
-  },
+  engine: PipelineEngine.CODE_CATALYST,
+  stages: [
+    {name: "dev", env:  { account: '111111111111', region: 'eu-central-1' },manualApproval: false },
+    { name: "prod", env:  { account: '222222222222', region: 'eu-central-1' },manualApproval: true }
+  ],
 });
+
 ```
 
 After running projen (`npx projen`) a new file called `src/app.ts` will be created and contain a specialized CDK App class for your project.
@@ -150,6 +151,22 @@ git checkout -b my-branch
 4. **Make your Changes**: Make your changes, additions, or fixes to the codebase. Remember to follow the existing code style.
 
 5. **Test your Changes**: Before committing your changes, make sure to test them to ensure they work as expected and do not introduce bugs.
+
+Testing your changes can be difficult - you will need to have an example project for the engine that you are working on (we do currently not have that automated).
+We advice to use [yalc](https://github.com/wclr/yalc) for testing, the way that you do that is - after installing `yalc`, than on the "source" repository (your local repository of `projen-pielines`), you execute:
+```bash
+npx yalc push --replace
+```
+In you "test project" you then execute 
+
+```bash
+npx yalc link projen-pipelines
+```
+If you now, on the test-project, execute 
+```bash
+npx projen build
+```
+you will be able to test against your local version of the code.
 
 6. **Commit your Changes**: Commit your changes with a descriptive commit message using conventional commit messages.
 

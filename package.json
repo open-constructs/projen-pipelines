@@ -25,6 +25,7 @@
     "unbump": "npx projen unbump",
     "upgrade": "npx projen upgrade",
     "watch": "npx projen watch",
+    "yacl-publish": "npx projen yacl-publish",
     "projen": "npx projen"
   },
   "author": {
@@ -58,6 +59,7 @@
     "projen": "^0.71.129"
   },
   "dependencies": {
+    "case": "^1.6.3",
     "projen": "^0.71.129",
     "standard-version": "^9.5.0"
   },

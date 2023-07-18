@@ -41,6 +41,7 @@ export class GitHubEngine extends BaseEngine {
     if (this.props.githubConfig?.awsRoleArnForSynth) {
       steps.push({
         name: 'AWS Credentials',
+        // FIXME fix version for aws-credentials
         uses: 'aws-actions/configure-aws-credentials@master',
         with: {
           'role-to-assume': this.props.githubConfig.awsRoleArnForSynth,

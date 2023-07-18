@@ -88,6 +88,10 @@
       "type": "peer"
     },
     {
+      "name": "case",
+      "type": "runtime"
+    },
+    {
       "name": "projen",
       "type": "runtime"
     },

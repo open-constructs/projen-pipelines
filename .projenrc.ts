@@ -21,6 +21,7 @@ const project = new typescript.TypeScriptProject({
   deps: [
     'projen',
     'standard-version',
+    'case',
   ],
   peerDeps: [
     'projen',
@@ -54,5 +55,12 @@ project.gitpod?.addCustomTask({
   init: 'yarn install --check-files --frozen-lockfile',
   command: 'npx projen build',
 });
+
+
+const yacl_publish = project.addTask('yacl-publish', {
+  description: 'publishes to local yacl repostory',
+  exec: 'npx projen build',
+});
+yacl_publish.exec('npx yalc push --replace');
 
 project.synth();

@@ -263,6 +263,18 @@
           "exec": "tsc --build -w"
         }
       ]
+    },
+    "yacl-publish": {
+      "name": "yacl-publish",
+      "description": "publishes to local yacl repostory",
+      "steps": [
+        {
+          "exec": "npx projen build"
+        },
+        {
+          "exec": "npx yalc push --replace"
+        }
+      ]
     }
   },
   "env": {
