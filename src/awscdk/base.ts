@@ -167,7 +167,7 @@ export abstract class CDKPipeline extends Component {
         commands.push(`yarn add ${packageName}`);
         break;
       case NodePackageManager.NPM:
-        commands.push(`yarn add ${packageName}`);
+        commands.push(`npm install ${packageName}`);
         break;
       default:
         throw new Error('No install scripts for packageManager: ' + this.app.package.packageManager);
