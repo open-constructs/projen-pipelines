@@ -1,6 +1,6 @@
 import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
-import { BaseEngine, GitHubEngine, GithubEngineConfig } from './engine';
+import { NodePackageManager } from 'projen/lib/javascript';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -94,16 +94,6 @@ export interface CDKPipelineOptions {
    */
   readonly deploymentType?: DeploymentType;
 
-  /**
-   * This field determines the CI/CD tooling that will be used to run the pipeline. The component
-   * will render workflows for the given system. Options include GitHub and GitLab.
-   *
-   * @default - tries to derive it from the projects configuration
-   */
-  readonly engine?: PipelineEngine;
-
-  readonly githubConfig?: GithubEngineConfig;
-
   readonly preInstallCommands?: string[];
   readonly preSynthCommands?: string[];
   readonly postSynthCommands?: string[];
@@ -114,12 +104,11 @@ export interface CDKPipelineOptions {
  * The CDKPipeline class extends the Component class and sets up the necessary configuration for deploying AWS CDK (Cloud Development Kit) applications across multiple stages.
  * It also manages tasks such as publishing CDK assets, bumping version based on git tags, and cleaning up conflicting tasks.
  */
-export class CDKPipeline extends Component {
+export abstract class CDKPipeline extends Component {
 
   public readonly stackPrefix: string;
-  public readonly engine: BaseEngine;
 
-  constructor(private app: awscdk.AwsCdkTypeScriptApp, private props: CDKPipelineOptions) {
+  constructor(protected app: awscdk.AwsCdkTypeScriptApp, private baseOptions: CDKPipelineOptions) {
     super(app);
 
     // Add development dependencies
@@ -131,16 +120,7 @@ export class CDKPipeline extends Component {
     // this.app.addDeps(
     // );
 
-    this.stackPrefix = props.stackPrefix ?? app.name;
-
-    // Create engine instance to use
-    switch (props.engine) {
-      case PipelineEngine.GITHUB:
-        this.engine = new GitHubEngine(app, props, this);
-        break;
-      default:
-        throw new Error('Invalid engine');
-    }
+    this.stackPrefix = baseOptions.stackPrefix ?? app.name;
 
     // Removes the compiled cloud assembly before each synth
     this.project.tasks.tryFind('synth')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
@@ -152,16 +132,14 @@ export class CDKPipeline extends Component {
     this.project.removeTask('destroy');
     this.project.removeTask('watch');
 
-    this.createSynthStage();
-
     // Creates different deployment stages
-    if (props.personalStage) {
+    if (baseOptions.personalStage) {
       this.createPersonalStage();
     }
-    if (props.featureStages) {
+    if (baseOptions.featureStages) {
       this.createFeatureStage();
     }
-    for (const stage of props.stages) {
+    for (const stage of baseOptions.stages) {
       this.createPipelineStage(stage);
     }
 
@@ -173,27 +151,60 @@ export class CDKPipeline extends Component {
 
   }
 
-  private createSynthStage() {
-    this.engine.createSynth({
-      commands: [
-        ...(this.props.preInstallCommands ?? []),
-        `npx projen ${this.app.package.installCiTask.name}`,
-        ...(this.props.preSynthCommands ?? []),
-        'npx projen build',
-        ...(this.props.postSynthCommands ?? []),
-      ],
-    });
-    this.engine.createAssetUpload({
-      commands: [
-        ...(this.props.preInstallCommands ?? []),
-        `npx projen ${this.app.package.installCiTask.name}`,
-        'npx projen publish:assets',
-        ...(this.engine.needsVersionedArtifacts ? [
-          'npx projen bump',
-          'npx projen release:push-assembly',
-        ] : []),
-      ],
-    });
+  protected getInstallCommands(): string[] {
+    return [
+      ...(this.baseOptions.preInstallCommands ?? []),
+      `npx projen ${this.app.package.installCiTask.name}`,
+    ];
+  }
+
+  protected getInstallPackageCommands(packageName: string, runPreInstallCommands: boolean = false): string[] {
+    const commands = runPreInstallCommands ? this.baseOptions.preInstallCommands ?? [] : [];
+
+    switch (this.app.package.packageManager) {
+      case NodePackageManager.YARN:
+      case NodePackageManager.YARN2:
+        commands.push(`yarn add ${packageName}`);
+        break;
+      case NodePackageManager.NPM:
+        commands.push(`npm install ${packageName}`);
+        break;
+      default:
+        throw new Error('No install scripts for packageManager: ' + this.app.package.packageManager);
+    }
+    return commands;
+  }
+
+  protected getSynthCommands(): string[] {
+    return [
+      ...this.getInstallCommands(),
+      ...(this.baseOptions.preSynthCommands ?? []),
+      'npx projen build',
+      ...(this.baseOptions.postSynthCommands ?? []),
+    ];
+  }
+
+  protected getAssetUploadCommands(needsVersionedArtifacts: boolean): string[] {
+    return [
+      ...this.getInstallCommands(),
+      'npx projen publish:assets',
+      ...(needsVersionedArtifacts ? [
+        'npx projen bump',
+        'npx projen release:push-assembly',
+      ] : []),
+    ];
+  }
+
+  protected getDeployCommands(stageName: string): string[] {
+    return [
+      `npx projen deploy:${stageName}`,
+    ];
+  }
+
+  protected getDiffCommands(stageName: string): string[] {
+    return [
+      `npx projen diff:${stageName}`,
+    ];
   }
 
   /**
@@ -204,31 +215,31 @@ export class CDKPipeline extends Component {
     let propsCode = '';
     let appCode = '';
 
-    if (this.props.personalStage) {
+    if (this.baseOptions.personalStage) {
       propsCode += `  /** This function will be used to generate a personal stack. */
   providePersonalStack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
 `;
       appCode += `    // If the environment variable USER is set and a function is provided for creating a personal stack, it is called with necessary arguments.
     if (props.providePersonalStack && process.env.USER) {
       const stageName = 'personal-' + process.env.USER.toLowerCase().replace(/\\\//g, '-');
-      props.providePersonalStack(this, '${this.stackPrefix}-personal', { env: ${JSON.stringify(this.props.personalStage.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
+      props.providePersonalStack(this, '${this.stackPrefix}-personal', { env: ${JSON.stringify(this.baseOptions.personalStage.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
     }
 `;
     }
 
-    if (this.props.featureStages) {
+    if (this.baseOptions.featureStages) {
       propsCode += `  /** This function will be used to generate a feature stack. */
   provideFeatureStack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
 `;
       appCode += `    // If the environment variable BRANCH is set and a function is provided for creating a feature stack, it is called with necessary arguments.
     if (props.provideFeatureStack && process.env.BRANCH) {
       const stageName = 'feature-' + process.env.BRANCH.toLowerCase().replace(/\\\//g, '-');
-      props.provideFeatureStack(this, '${this.stackPrefix}-feature', { env: ${JSON.stringify(this.props.featureStages.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
+      props.provideFeatureStack(this, '${this.stackPrefix}-feature', { env: ${JSON.stringify(this.baseOptions.featureStages.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
     }
 `;
     }
 
-    for (const stage of this.props.stages) {
+    for (const stage of this.baseOptions.stages) {
       const nameUpperFirst = `${stage.name.charAt(0).toUpperCase()}${stage.name.substring(1)}`;
 
       propsCode += `  /** This function will be used to generate a ${stage.name} stack. */
@@ -288,7 +299,7 @@ ${appCode}
   private createReleaseTasks() {
     // Task to publish the CDK assets to all accounts
     this.project.addTask('publish:assets', {
-      steps: this.props.stages.map(stage => ({
+      steps: this.baseOptions.stages.map(stage => ({
         exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-${stage.name}.assets.json publish`,
       })),
     });
@@ -307,7 +318,7 @@ ${appCode}
     this.project.addTask('release:push-assembly', {
       steps: [
         {
-          exec: `pipelines-release create-manifest "${this.app.cdkConfig.cdkout}"  "${this.props.pkgNamespace}"`,
+          exec: `pipelines-release create-manifest "${this.app.cdkConfig.cdkout}"  "${this.baseOptions.pkgNamespace}"`,
         },
         {
           cwd: this.app.cdkConfig.cdkout,
@@ -366,19 +377,6 @@ ${appCode}
     });
     this.project.addTask(`diff:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${this.stackPrefix}-${stage.name}`,
-    });
-
-    this.engine.createDeployment({
-      config: stage,
-      installCommands: [
-        ...(this.props.preInstallCommands ?? []),
-        `npx projen ${this.app.package.installCiTask.name}`,
-      ],
-      deployCommands: [
-        // TODO pre deploy steps
-        `npx projen deploy:${stage.name}`,
-        // TODO post deploy steps
-      ],
     });
   }
 }
