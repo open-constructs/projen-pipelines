@@ -36,15 +36,15 @@ export enum PipelineEngine {
   // CODE_CATALYST,
 }
 
-/**
- * Describes the type of pipeline that will be created
- */
-export enum DeploymentType {
-  /** Deploy every commit as far as possible; hopefully into production */
-  CONTINUOUS_DEPLOYMENT,
-  /** Build every commit and prepare all assets for a later deployment */
-  CONTINUOUS_DELIVERY,
-}
+// /**
+//  * Describes the type of pipeline that will be created
+//  */
+// export enum DeploymentType {
+//   /** Deploy every commit as far as possible; hopefully into production */
+//   CONTINUOUS_DEPLOYMENT,
+//   /** Build every commit and prepare all assets for a later deployment */
+//   CONTINUOUS_DELIVERY,
+// }
 
 export interface DeploymentStage {
   readonly name: string;
@@ -85,14 +85,14 @@ export interface CDKPipelineOptions {
     readonly env: Environment;
   };
 
-  /**
-   * This field specifies the type of pipeline to create. If set to CONTINUOUS_DEPLOYMENT,
-   * every commit is deployed as far as possible, hopefully into production. If set to
-   * CONTINUOUS_DELIVERY, every commit is built and all assets are prepared for a later deployment.
-   *
-   * @default CONTINUOUS_DELIVERY
-   */
-  readonly deploymentType?: DeploymentType;
+  // /**
+  //  * This field specifies the type of pipeline to create. If set to CONTINUOUS_DEPLOYMENT,
+  //  * every commit is deployed as far as possible, hopefully into production. If set to
+  //  * CONTINUOUS_DELIVERY, every commit is built and all assets are prepared for a later deployment.
+  //  *
+  //  * @default CONTINUOUS_DELIVERY
+  //  */
+  // readonly deploymentType?: DeploymentType;
 
   readonly preInstallCommands?: string[];
   readonly preSynthCommands?: string[];
