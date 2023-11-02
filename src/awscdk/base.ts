@@ -164,6 +164,8 @@ export abstract class CDKPipeline extends Component {
     switch (this.app.package.packageManager) {
       case NodePackageManager.YARN:
       case NodePackageManager.YARN2:
+      case NodePackageManager.YARN_BERRY:
+      case NodePackageManager.YARN_CLASSIC:
         commands.push(`yarn add ${packageName}`);
         break;
       case NodePackageManager.NPM:
