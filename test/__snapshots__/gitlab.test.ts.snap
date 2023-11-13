@@ -137,7 +137,7 @@ exports[`Gitlab snapshot 2`] = `
   },
   "devDependencies": {
     "@types/jest": "*",
-    "@types/node": "^16",
+    "@types/node": "^18",
     "@types/standard-version": "*",
     "@typescript-eslint/eslint-plugin": "^6",
     "@typescript-eslint/parser": "^6",
@@ -145,7 +145,6 @@ exports[`Gitlab snapshot 2`] = `
     "cdk-assets": "*",
     "esbuild": "*",
     "eslint": "^8",
-    "eslint-import-resolver-node": "*",
     "eslint-import-resolver-typescript": "*",
     "eslint-plugin-import": "*",
     "jest": "*",
