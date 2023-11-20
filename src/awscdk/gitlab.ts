@@ -44,7 +44,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
     }
   }
 
-  private setupSnippets() {
+  protected setupSnippets() {
     this.config.addJobs({
       '.artifacts_cdk': {
         artifacts: {
@@ -88,7 +88,7 @@ awslogin() {
     });
   }
 
-  private createSynth(): void {
+  protected createSynth(): void {
     const script = ['echo "Running CDK synth"'];
     if (this.options.iamRoleArns?.synth) {
       script.push(`awslogin '${this.options.iamRoleArns.synth}'`);
@@ -105,7 +105,7 @@ awslogin() {
     });
   }
 
-  public createAssetUpload(): void {
+  protected createAssetUpload(): void {
     const script = ['echo "Publish assets to AWS"'];
     if (this.options.iamRoleArns?.assetPublishing) {
       script.push(`awslogin '${this.options.iamRoleArns.assetPublishing}'`);
@@ -123,7 +123,7 @@ awslogin() {
     });
   }
 
-  public createDeployment(stage: DeploymentStage): void {
+  protected createDeployment(stage: DeploymentStage): void {
     const script = [];
     script.push(`awslogin '${this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default}'`);
     script.push(...this.getInstallCommands());

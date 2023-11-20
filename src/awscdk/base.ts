@@ -213,7 +213,7 @@ export abstract class CDKPipeline extends Component {
    * This method generates the entry point for the application, including interfaces and classes
    * necessary to set up the pipeline and define the AWS CDK stacks for different environments.
    */
-  private createApplicationEntrypoint() {
+  protected createApplicationEntrypoint() {
     let propsCode = '';
     let appCode = '';
 
@@ -298,7 +298,7 @@ ${appCode}
    * This method sets up tasks to publish CDK assets to all accounts and handle versioning, including bumping the version
    * based on the latest git tag and pushing the CDK assembly to the package repository.
    */
-  private createReleaseTasks() {
+  protected createReleaseTasks() {
     // Task to publish the CDK assets to all accounts
     this.project.addTask('publish:assets', {
       steps: this.baseOptions.stages.map(stage => ({
@@ -338,7 +338,7 @@ ${appCode}
    * This method sets up tasks for the personal deployment stage, including deployment, watching for changes,
    * comparing changes (diff), and destroying the stack when no longer needed.
    */
-  private createPersonalStage() {
+  protected createPersonalStage() {
     this.project.addTask('deploy:personal', {
       exec: `cdk deploy ${this.stackPrefix}-personal`,
     });
@@ -357,7 +357,7 @@ ${appCode}
    * This method sets up tasks for the feature deployment stage, including deployment, comparing changes (diff),
    * and destroying the stack when no longer needed.
    */
-  private createFeatureStage() {
+  protected createFeatureStage() {
     this.project.addTask('deploy:feature', {
       exec: `cdk --progress events --require-approval never deploy ${this.stackPrefix}-feature`,
     });
@@ -373,7 +373,7 @@ ${appCode}
    * This method sets up tasks for the general pipeline stages (dev, prod), including deployment and comparing changes (diff).
    * @param {DeployStageOptions} stage - The stage to create
    */
-  private createPipelineStage(stage: DeploymentStage) {
+  protected createPipelineStage(stage: DeploymentStage) {
     this.project.addTask(`deploy:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} --progress events --require-approval never deploy ${this.stackPrefix}-${stage.name}`,
     });
