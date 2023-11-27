@@ -149,7 +149,6 @@ exports[`Gitlab snapshot 2`] = `
     "eslint-plugin-import": "*",
     "jest": "*",
     "jest-junit": "^15",
-    "npm-check-updates": "^16",
     "projen": "*",
     "standard-version": "*",
     "ts-jest": "*",
