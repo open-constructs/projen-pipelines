@@ -52,6 +52,10 @@ export interface DeploymentStage {
   readonly manualApproval?: boolean;
 }
 
+export interface StageOptions {
+  readonly env: Environment;
+}
+
 /**
  * The CDKPipelineOptions interface is designed to provide configuration
  * options for a CDK (Cloud Development Kit) pipeline. It allows the definition
@@ -77,13 +81,9 @@ export interface CDKPipelineOptions {
 
   readonly stages: DeploymentStage[];
 
-  readonly personalStage?: {
-    readonly env: Environment;
-  };
+  readonly personalStage?: StageOptions;
 
-  readonly featureStages?: {
-    readonly env: Environment;
-  };
+  readonly featureStages?: StageOptions;
 
   // /**
   //  * This field specifies the type of pipeline to create. If set to CONTINUOUS_DEPLOYMENT,
@@ -151,14 +151,14 @@ export abstract class CDKPipeline extends Component {
 
   }
 
-  protected getInstallCommands(): string[] {
+  protected renderInstallCommands(): string[] {
     return [
       ...(this.baseOptions.preInstallCommands ?? []),
       `npx projen ${this.app.package.installCiTask.name}`,
     ];
   }
 
-  protected getInstallPackageCommands(packageName: string, runPreInstallCommands: boolean = false): string[] {
+  protected renderInstallPackageCommands(packageName: string, runPreInstallCommands: boolean = false): string[] {
     const commands = runPreInstallCommands ? this.baseOptions.preInstallCommands ?? [] : [];
 
     switch (this.app.package.packageManager) {
@@ -177,9 +177,9 @@ export abstract class CDKPipeline extends Component {
     return commands;
   }
 
-  protected getSynthCommands(): string[] {
+  protected renderSynthCommands(): string[] {
     return [
-      ...this.getInstallCommands(),
+      ...this.renderInstallCommands(),
       ...(this.baseOptions.preSynthCommands ?? []),
       'npx projen build',
       ...(this.baseOptions.postSynthCommands ?? []),
@@ -188,7 +188,7 @@ export abstract class CDKPipeline extends Component {
 
   protected getAssetUploadCommands(needsVersionedArtifacts: boolean): string[] {
     return [
-      ...this.getInstallCommands(),
+      ...this.renderInstallCommands(),
       'npx projen publish:assets',
       ...(needsVersionedArtifacts ? [
         'npx projen bump',
@@ -197,13 +197,13 @@ export abstract class CDKPipeline extends Component {
     ];
   }
 
-  protected getDeployCommands(stageName: string): string[] {
+  protected renderDeployCommands(stageName: string): string[] {
     return [
       `npx projen deploy:${stageName}`,
     ];
   }
 
-  protected getDiffCommands(stageName: string): string[] {
+  protected renderDiffCommands(stageName: string): string[] {
     return [
       `npx projen diff:${stageName}`,
     ];

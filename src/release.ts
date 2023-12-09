@@ -2,7 +2,7 @@
 
 import { copyFileSync, existsSync, readFileSync, writeFileSync, rmSync } from 'fs';
 import { join } from 'path';
-import stdVer from 'standard-version';
+import * as stdVer from 'standard-version';
 
 function createManifest(outDir: string, namespace: string) {
   const projectInfo = JSON.parse(readFileSync(join('package.json')).toString('utf-8'));
