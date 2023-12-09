@@ -3,14 +3,15 @@ import { GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
+export interface GithubIamRoleConfig {
+  readonly default?: string;
+  readonly synth?: string;
+  readonly assetPublishing?: string;
+  readonly deployment?: { [stage: string]: string };
+}
 
 export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
-  readonly iamRoleArns: {
-    readonly default?: string;
-    readonly synth?: string;
-    readonly assetPublishing?: string;
-    readonly deployment?: { [stage: string]: string };
-  };
+  readonly iamRoleArns: GithubIamRoleConfig;
 }
 
 export class GithubCDKPipeline extends CDKPipeline {
@@ -60,7 +61,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
     }
 
-    steps.push(...this.getSynthCommands().map(cmd => ({
+    steps.push(...this.renderSynthCommands().map(cmd => ({
       run: cmd,
     })));
 
@@ -155,16 +156,16 @@ export class GithubCDKPipeline extends CDKPipeline {
             'aws-region': stage.env.region,
           },
         },
-        ...this.getInstallCommands().map(cmd => ({
+        ...this.renderInstallCommands().map(cmd => ({
           run: cmd,
         })),
-        ...this.getInstallPackageCommands(`${this.options.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`).map(cmd => ({
+        ...this.renderInstallPackageCommands(`${this.options.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`).map(cmd => ({
           run: cmd,
         })),
         {
           run: `mv ./node_modules/${this.options.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`,
         },
-        ...this.getDeployCommands(stage.name).map(cmd => ({
+        ...this.renderDeployCommands(stage.name).map(cmd => ({
           run: cmd,
         }))],
       });
@@ -197,10 +198,10 @@ export class GithubCDKPipeline extends CDKPipeline {
             path: `${this.app.cdkConfig.cdkout}/`,
           },
         },
-        ...this.getInstallCommands().map(cmd => ({
+        ...this.renderInstallCommands().map(cmd => ({
           run: cmd,
         })),
-        ...this.getDeployCommands(stage.name).map(cmd => ({
+        ...this.renderDeployCommands(stage.name).map(cmd => ({
           run: cmd,
         }))],
       });
