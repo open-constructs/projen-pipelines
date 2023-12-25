@@ -52,10 +52,10 @@
     "jest-junit": "^15",
     "jsii": "1.x",
     "jsii-diff": "^1.93.0",
-    "jsii-docgen": "^10.2.5",
+    "jsii-docgen": "^10.3.2",
     "jsii-pacmak": "^1.93.0",
     "jsii-rosetta": "1.x",
-    "projen": "^0.77.6",
+    "projen": "^0.78.2",
     "standard-version": "^9",
     "ts-jest": "^27",
     "ts-node": "^10.9.2",
@@ -63,10 +63,10 @@
   },
   "peerDependencies": {
     "constructs": "^10.3.0",
-    "projen": "^0.77.6"
+    "projen": "^0.78.2"
   },
   "dependencies": {
-    "projen": "^0.77.6",
+    "projen": "^0.78.2",
     "standard-version": "^9.5.0"
   },
   "bundledDependencies": [
