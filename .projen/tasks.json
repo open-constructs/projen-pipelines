@@ -263,13 +263,13 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/fs-extra,@types/jest,@types/node,@types/standard-version,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,constructs,eslint-import-resolver-typescript,eslint-plugin-import,eslint,fs-extra,jest-junit,jest,jsii-diff,jsii-docgen,jsii-pacmak,projen,standard-version,ts-jest,ts-node,typescript"
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@amazon-codecatalyst/blueprint-util.cli,@amazon-codecatalyst/blueprint-util.projen-blueprint,@types/fs-extra,@types/jest,@types/node,@types/standard-version,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,constructs,eslint-import-resolver-typescript,eslint-plugin-import,eslint,fs-extra,jest-junit,jest,jsii-diff,jsii-docgen,jsii-pacmak,projen,standard-version,ts-jest,ts-node,typescript,@amazon-codecatalyst/blueprint-component.dev-environments,@amazon-codecatalyst/blueprint-component.environments,@amazon-codecatalyst/blueprint-component.source-repositories,@amazon-codecatalyst/blueprint-component.workflows,@amazon-codecatalyst/blueprints.blueprint"
         },
         {
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade @types/fs-extra @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-import-resolver-typescript eslint-plugin-import eslint fs-extra jest-junit jest jsii-diff jsii-docgen jsii-pacmak projen standard-version ts-jest ts-node typescript"
+          "exec": "yarn upgrade @amazon-codecatalyst/blueprint-util.cli @amazon-codecatalyst/blueprint-util.projen-blueprint @types/fs-extra @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-import-resolver-typescript eslint-plugin-import eslint fs-extra jest-junit jest jsii-diff jsii-docgen jsii-pacmak projen standard-version ts-jest ts-node typescript @amazon-codecatalyst/blueprint-component.dev-environments @amazon-codecatalyst/blueprint-component.environments @amazon-codecatalyst/blueprint-component.source-repositories @amazon-codecatalyst/blueprint-component.workflows @amazon-codecatalyst/blueprints.blueprint"
         },
         {
           "exec": "npx projen"

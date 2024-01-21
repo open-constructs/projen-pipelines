@@ -1,0 +1,9 @@
+{
+  "environment": {
+    "name": "DEFAULT_ENVIRONMENT_NAME",
+    "environmentType": "PRODUCTION"
+  },
+  "sourceRepository": "source",
+  "mainApiId": "generatedMainApiId",
+  "subApiPath": "subapi"
+}

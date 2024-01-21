@@ -17,9 +17,16 @@ const project = new cdk.JsiiProject({
     'fs-extra',
     '@types/fs-extra',
     '@types/standard-version',
+    '@amazon-codecatalyst/blueprint-util.projen-blueprint',
+    '@amazon-codecatalyst/blueprint-util.cli',
   ],
   deps: [
     'projen',
+    '@amazon-codecatalyst/blueprints.blueprint',
+    '@amazon-codecatalyst/blueprint-component.workflows',
+    '@amazon-codecatalyst/blueprint-component.source-repositories',
+    '@amazon-codecatalyst/blueprint-component.dev-environments',
+    '@amazon-codecatalyst/blueprint-component.environments',
   ],
   bundledDeps: [
     'standard-version',
