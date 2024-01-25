@@ -1,9 +1,9 @@
 import { SampleWorkspaces, Workspace, WorkspaceDefinition } from '@amazon-codecatalyst/blueprint-component.dev-environments';
 import { Environment, EnvironmentDefinition, AccountConnection, Role } from '@amazon-codecatalyst/blueprint-component.environments';
-import { SourceRepository, SourceFile, SubstitionAsset, File } from '@amazon-codecatalyst/blueprint-component.source-repositories';
+import { SourceRepository, SourceFile, File } from '@amazon-codecatalyst/blueprint-component.source-repositories';
 import { Workflow, WorkflowBuilder, convertToWorkflowEnvironment } from '@amazon-codecatalyst/blueprint-component.workflows';
 import { MergeStrategies, Blueprint as ParentBlueprint, Options as ParentOptions } from '@amazon-codecatalyst/blueprints.blueprint';
-import defaults from './defaults.json';
+//import defaults from './defaults.json';
 
 /**
  * This is the 'Options' interface. The 'Options' interface is interpreted by the wizard to dynamically generate a selection UI.
@@ -61,11 +61,11 @@ export interface Options extends ParentOptions {
 export class Blueprint extends ParentBlueprint {
   constructor(options_: Options) {
     super(options_);
-    console.log(defaults);
+    //console.log(defaults);
     // helpful typecheck for defaults
     const typeCheck: Options = {
       outdir: this.outdir,
-      ...defaults,
+      //...defaults,
       mainApiId: 'TBD',
       subApiPath: 'sub-path',
     };
@@ -77,7 +77,7 @@ export class Blueprint extends ParentBlueprint {
       throw new Error('Illegal State: More than one repository in current project found: '+repositories);
     }
     if (repositories.length==0) {
-      console.error('Illegal State: This Custom Blue Print cannot be applied on a project without source repository: '+repositories);
+      console.warn('Illegal State: This Custom Blue Print cannot be applied on a project without source repository: '+repositories);
       //throw new Error('Illegal State: This Custom Blue Print cannot be applied on a project without source repository: '+repositories);
       repositories[0] = 'source';
     }
@@ -86,14 +86,14 @@ export class Blueprint extends ParentBlueprint {
 
     // add some code to my repository by copying everything in static-assets
 
-    SubstitionAsset.findAll('*.md').forEach(asset => {
+    /*SubstitionAsset.findAll('*.md').forEach(asset => {
       new SourceFile(repository, asset.path(), asset.substitute({ subApiPath: options.subApiPath }).toString());
     });
-    SubstitionAsset.findAll('**/constructs/*.ts').forEach(asset => {
+    SubstitionAsset.findAll('**./constructs/*.ts').forEach(asset => {
       new SourceFile(repository, 'src/'+asset.path(), asset.substitute({ mainApiId: options.mainApiId }).toString());
-    });
-    new File(repository, 'src/'+options.subApiPath+'-stack.ts', Buffer.from(new SubstitionAsset('sub-api-stack.ts').substitute({ subApiPath: options.subApiPath })));
-    new File(repository, 'src/lambda/'+options.subApiPath+'-lambda.ts', Buffer.from(new SubstitionAsset('lambda/subapi-lambda.ts').substitute({ subApiPath: options.subApiPath })));
+    });*/
+    //new File(repository, 'src/'+options.subApiPath+'-stack.ts', Buffer.from(new SubstitionAsset('sub-api-stack.ts').substitute({ subApiPath: options.subApiPath })));
+    //new File(repository, 'src/lambda/'+options.subApiPath+'-lambda.ts', Buffer.from(new SubstitionAsset('lambda/subapi-lambda.ts').substitute({ subApiPath: options.subApiPath })));
 
     this.addToBinaryExecutionFile(repository, options.subApiPath);
 
@@ -152,7 +152,7 @@ export class Blueprint extends ParentBlueprint {
     this.updateAddedBluePrintsFile(repository, options);
 
   }
-  addToBinaryExecutionFile(repository: SourceRepository, subApiPath: string) {
+  addToBinaryExecutionFile(repository: SourceRepository, subApiPath?: string) {
     var buff = repository.getFiles()['api-gateway-bin.ts'];
     if (buff==null) {
       console.log('api-gateway-bin.ts not found, please manually add the stack to your main stack.');

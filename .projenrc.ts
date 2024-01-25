@@ -5,7 +5,7 @@ const project = new cdk.JsiiProject({
   authorAddress: 'info@taimos.de',
   authorOrganization: true,
   copyrightOwner: 'Taimos GmbH',
-  copyrightPeriod: '2021',
+  copyrightPeriod: '2024',
   defaultReleaseBranch: 'main',
   name: 'projen-pipelines',
   projenrcTs: true,
@@ -22,14 +22,14 @@ const project = new cdk.JsiiProject({
   ],
   deps: [
     'projen',
+  ],
+  bundledDeps: [
+    'standard-version',
     '@amazon-codecatalyst/blueprints.blueprint',
     '@amazon-codecatalyst/blueprint-component.workflows',
     '@amazon-codecatalyst/blueprint-component.source-repositories',
     '@amazon-codecatalyst/blueprint-component.dev-environments',
     '@amazon-codecatalyst/blueprint-component.environments',
-  ],
-  bundledDeps: [
-    'standard-version',
   ],
   peerDeps: [
     'projen',
@@ -44,6 +44,7 @@ const project = new cdk.JsiiProject({
   keywords: [
     'aws',
     'cdk',
+    'projen',
   ],
   bin: {
     'pipelines-release': 'lib/release.js',
@@ -56,6 +57,8 @@ const project = new cdk.JsiiProject({
     },
   },
 });
+
+project.package.addPackageResolutions('projen@0.79.3');
 
 project.gitpod?.addCustomTask({
   init: 'yarn install --check-files --frozen-lockfile',

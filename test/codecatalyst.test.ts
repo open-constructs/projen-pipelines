@@ -2,7 +2,7 @@ import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk';
 import { synthSnapshot } from 'projen/lib/util/synth';
 import { CodeCatalystCDKPipeline } from '../src';
 
-test('Github snapshot', () => {
+test('CodeCatalyst snapshot', () => {
   const p = new AwsCdkTypeScriptApp({
     cdkVersion: '2.102.0',
     defaultReleaseBranch: 'main',
@@ -36,7 +36,7 @@ test('Github snapshot', () => {
   });
 
   const snapshot = synthSnapshot(p);
-  expect(snapshot['.github/workflows/deploy-codecatalyst.yml']).toMatchSnapshot();
-  expect(snapshot['.github/workflows/release-prod-codecatalyst.yml']).toMatchSnapshot();
+  expect(snapshot['.codecatalyst/workflows/deploy-codecatalyst.yml']).toMatchSnapshot();
+  expect(snapshot['.codecatalyst/workflows/release-prod-codecatalyst.yml']).toMatchSnapshot();
   expect(snapshot['package.json']).toMatchSnapshot();
 });
