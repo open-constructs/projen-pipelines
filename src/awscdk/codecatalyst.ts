@@ -1,6 +1,5 @@
-import { SourceRepository } from '@amazon-codecatalyst/blueprint-component.source-repositories';
-import { Workflow, WorkflowBuilder } from '@amazon-codecatalyst/blueprint-component.workflows';
-import { awscdk } from 'projen';
+import { WorkflowBuilder } from '@amazon-codecatalyst/blueprint-component.workflows';
+import { YamlFile, awscdk } from 'projen';
 //import { GithubWorkflow } from 'projen/lib/github';
 //import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
@@ -24,8 +23,7 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
 
   public readonly needsVersionedArtifacts: boolean;
 
-  private deploymentWorkflow: Workflow;
-  //private deploymentStages: string[] = [];
+  //private deploymentWorkflow: Workflow;
   private bp: Blueprint = new Blueprint({ outdir: '../.codecatalyst/workflows' });
 
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: CodeCatalystCDKPipelineOptions) {
@@ -55,25 +53,13 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
     });
 
     // write a workflow to my repository
-    const repository = new SourceRepository(this.bp, { title: 'test' });
-    console.log(repository.getFiles());
-    /*repository.getFiles().array.forEach(element => {
-      console.log("file: "+element);
-    });*/
-
-    this.deploymentWorkflow = new Workflow(this.bp, repository, workflowBuilder.getDefinition());
-    console.log(workflowBuilder.getDefinition());
-    console.log(this.deploymentWorkflow);
     this.needsVersionedArtifacts = this.options.stages.find(s => s.manualApproval === true) !== undefined;
-    this.deploymentWorkflow.synthesize();
-    console.log(repository.getFiles());
+    const yml = new YamlFile(this, '../.codecatalyst/workflows/deploy.yaml', {
+      obj: workflowBuilder.getDefinition(),
 
-
-    // output object type of repository.getFiles() to console
-
-    // console.log(repository.getFiles().buwffer);
-    // console.log(repository.getFiles()[0]);
-    // console.log(repository.getFiles()[1]);
+    });
+    console.log(yml.absolutePath);
+    yml.synthesize();
 
     const workflowBuilder2 = new WorkflowBuilder(this.bp);
     workflowBuilder2.setName('deploy2');
@@ -98,13 +84,13 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
       output: {},
     });
 
-    const wf = new Workflow(this.bp, repository, workflowBuilder2.getDefinition());
+    const yml2 = new YamlFile(this, '.codecatalyst/workflows/deploy2.yaml', {
+      obj: workflowBuilder2.getDefinition(),
 
-    wf.synthesize();
-    //console.log(repository.getFiles());
-    // console.log(repository.getFiles().buffer);
-    // console.log(repository.getFiles()[0]);
-    // console.log(repository.getFiles()[1]);
+    });
+    console.log(yml2.absolutePath);
+
+    yml2.synthesize();
 
     this.createSynth();
 
@@ -113,12 +99,6 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
     for (const stage of options.stages) {
       this.createDeployment(stage);
     }
-
-    repository.synthesize();
-
-    console.log(repository.getFiles());
-    console.log(typeof repository.getFiles());
-
   }
 
   private createSynth(): void {
