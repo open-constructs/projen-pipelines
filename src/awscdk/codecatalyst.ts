@@ -1,10 +1,7 @@
 import { WorkflowBuilder } from '@amazon-codecatalyst/blueprint-component.workflows';
 import { YamlFile, awscdk } from 'projen';
-//import { GithubWorkflow } from 'projen/lib/github';
-//import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
-//import { Blueprint as ParentBlueprint } from '@amazon-codecatalyst/blueprints.blueprint';
 import { Blueprint } from './codecatalyst/blueprint';
 
 
@@ -54,7 +51,7 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
 
     // write a workflow to my repository
     this.needsVersionedArtifacts = this.options.stages.find(s => s.manualApproval === true) !== undefined;
-    const yml = new YamlFile(this, '../.codecatalyst/workflows/deploy.yaml', {
+    const yml = new YamlFile(this, '.codecatalyst/workflows/deploy.yaml', {
       obj: workflowBuilder.getDefinition(),
 
     });
