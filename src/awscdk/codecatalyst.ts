@@ -20,74 +20,18 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
 
   public readonly needsVersionedArtifacts: boolean;
 
-  //private deploymentWorkflow: Workflow;
+  private deploymentWorkflowBuilder: WorkflowBuilder;
   private bp: Blueprint = new Blueprint({ outdir: '.codecatalyst/workflows' });
 
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: CodeCatalystCDKPipelineOptions) {
     super(app, options);
 
-    const workflowBuilder = new WorkflowBuilder(this.bp);
-    workflowBuilder.setName('deploy');
-    workflowBuilder.addBranchTrigger(['main']);
+    this.deploymentWorkflowBuilder = new WorkflowBuilder(this.bp);
 
-    /**
-     * We can use a build action to execute some arbitrary steps
-     */
-    workflowBuilder.addBuildAction({
-      actionName: 'do-something-in-an-action',
-      input: {
-        Sources: ['WorkflowSource'],
-      },
-      steps: [
-        'ls -la',
-        'echo "Hello world from a workflow!"',
-        'echo "If theres an account connection, I can execute in the context of that account"',
-        'aws sts get-caller-identity',
-      ],
-      // is there is an environment, connect it to the workflow
-      //environment: environment && convertToWorkflowEnvironment(environment),
-      output: {},
-    });
+    this.deploymentWorkflowBuilder.setName('deploy');
+    this.deploymentWorkflowBuilder.addBranchTrigger(['main']);
 
-    // write a workflow to my repository
     this.needsVersionedArtifacts = this.options.stages.find(s => s.manualApproval === true) !== undefined;
-    const yml = new YamlFile(this, '.codecatalyst/workflows/deploy.yaml', {
-      obj: workflowBuilder.getDefinition(),
-
-    });
-    console.log(yml.absolutePath);
-    yml.synthesize();
-
-    const workflowBuilder2 = new WorkflowBuilder(this.bp);
-    workflowBuilder2.setName('deploy2');
-    workflowBuilder2.addBranchTrigger(['main']);
-
-    /**
-     * We can use a build action to execute some arbitrary steps
-     */
-    workflowBuilder2.addBuildAction({
-      actionName: 'do-something-in-an-action',
-      input: {
-        Sources: ['WorkflowSource'],
-      },
-      steps: [
-        'ls -la',
-        'echo "Hello world from a workflow2!"',
-        'echo "If theres an account connection, I can execute in the context of that account"',
-        'aws sts get-caller-identity',
-      ],
-      // is there is an environment, connect it to the workflow
-      //environment: environment && convertToWorkflowEnvironment(environment),
-      output: {},
-    });
-
-    const yml2 = new YamlFile(this, '.codecatalyst/workflows/deploy2.yaml', {
-      obj: workflowBuilder2.getDefinition(),
-
-    });
-    console.log(yml2.absolutePath);
-
-    yml2.synthesize();
 
     this.createSynth();
 
@@ -96,94 +40,110 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
     for (const stage of options.stages) {
       this.createDeployment(stage);
     }
+
+    const yml = new YamlFile(this, '.codecatalyst/workflows/deploy.yaml', {
+      obj: this.deploymentWorkflowBuilder.getDefinition(),
+
+    });
+    yml.synthesize();
+
+
   }
 
   private createSynth(): void {
-    /*
-    const steps: JobStep[] = [{
-      name: 'Checkout',
-      uses: 'actions/checkout@v3',
-    }];
 
-    if (this.options.iamRoleArns?.synth) {
-      steps.push({
-        name: 'AWS Credentials',
-        uses: 'aws-actions/configure-aws-credentials@master',
-        with: {
-          'role-to-assume': this.options.iamRoleArns.synth,
-          'role-session-name': 'GitHubAction',
-          'aws-region': 'us-east-1',
+    const cmds: string[] = [];
+    cmds.push(...this.renderSynthCommands());
+    this.deploymentWorkflowBuilder.addBuildAction({
+      actionName: 'Synth CDK application',
+      input: {
+        Sources: ['WorkflowSource'],
+        Variables: {
+          CI: 'true',
         },
-      });
-    }
+      },
+      steps:
+        cmds,
+      // FIXME is there is an environment, connect it to the workflow
+      // needs to react on this.options.iamRoleArns?.synth
+      //environment: environment && convertToWorkflowEnvironment(environment),
 
-    steps.push(...this.renderSynthCommands().map(cmd => ({
-      run: cmd,
-    })));
+      // FIXME what about the permissions?
+      // permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
 
-    steps.push({
+      output: {},
+    });
+
+    /*
+not required because codecatalyst automatically uploads artifacts
+steps.push({
       uses: 'actions/upload-artifact@v3',
       with: {
         name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
       },
     });
-
-    this.deploymentWorkflow.addJob('synth', {
-      name: 'Synth CDK application',
-      runsOn: ['ubuntu-latest'],
-      env: {
-        CI: 'true',
-      },
-      permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
-      steps,
-    });
     */
   }
 
   public createAssetUpload(): void {
-    /*
-    this.deploymentWorkflow.addJob('assetUpload', {
-      name: 'Publish assets to AWS',
-      needs: ['synth'],
-      runsOn: ['ubuntu-latest'],
-      env: {
-        CI: 'true',
-      },
-      permissions: { idToken: JobPermission.WRITE, contents: this.needsVersionedArtifacts ? JobPermission.WRITE : JobPermission.READ },
-      steps: [{
-        name: 'Checkout',
-        uses: 'actions/checkout@v3',
-        with: {
-          'fetch-depth': 0,
-        },
-      }, {
-        name: 'Setup GIT identity',
-        run: 'git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"',
-      }, {
-        name: 'AWS Credentials',
-        uses: 'aws-actions/configure-aws-credentials@master',
-        with: {
-          'role-to-assume': this.options.iamRoleArns?.assetPublishing ?? this.options.iamRoleArns?.default,
-          'role-session-name': 'GitHubAction',
-          'aws-region': 'us-east-1',
-        },
-      }, {
-        uses: 'actions/download-artifact@v3',
-        with: {
-          name: 'cloud-assembly',
-          path: `${this.app.cdkConfig.cdkout}/`,
+
+    const cmds: string[] = [];
+    cmds.push(...this.getAssetUploadCommands(this.needsVersionedArtifacts));
+    this.deploymentWorkflowBuilder.addBuildAction({
+      actionName: 'Publish assets to AWS',
+      dependsOn: ['Synth CDK application'],
+      input: {
+        Sources: ['WorkflowSource'],
+        Variables: {
+          CI: 'true',
         },
       },
-      ...this.getAssetUploadCommands(this.needsVersionedArtifacts).map(cmd => ({
-        run: cmd,
-      }))],
+      steps:
+        cmds,
+      // FIXME is there is an environment, connect it to the workflow
+      // needs to react on this.options.iamRoleArns?.synth
+      //environment: environment && convertToWorkflowEnvironment(environment),
+
+      // FIXME what about the permissions?
+      // permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
+
+      output: {},
     });
-    */
   }
 
   public createDeployment(stage: DeploymentStage): void {
-    console.log(stage);
+    if (stage.manualApproval === true) {
+      // Create new deployment workflow for stage
+      this.createWorkflowForStage(stage);
+    } else {
+      // Add deployment to existing workflow
+      const cmds: string[] = [];
+      cmds.push(...this.renderInstallCommands());
+      cmds.push(...this.renderDeployCommands(stage.name));
+      this.deploymentWorkflowBuilder.addBuildAction({
+        actionName: `deploy-${stage.name}`,
+        // needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
+        dependsOn: ['Synth CDK application'],
+        input: {
+          Sources: ['WorkflowSource'],
+          Variables: {
+            CI: 'true',
+          },
+        },
+        steps:
+        cmds,
+        // FIXME is there is an environment, connect it to the workflow
+        // needs to react on this.options.iamRoleArns?.synth
+        //environment: environment && convertToWorkflowEnvironment(environment),
+
+        // FIXME what about the permissions?
+        // permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
+
+        output: {},
+      });
+    }
+
     /*
     if (stage.manualApproval === true) {
       // Create new workflow for deployment
@@ -269,4 +229,45 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
       this.deploymentStages.push(stage.name);
     }*/
   }
+  createWorkflowForStage(stage: DeploymentStage) {
+    console.log(stage);
+    const deploymentStageWorkflowBuilder = new WorkflowBuilder(this.bp);
+
+    deploymentStageWorkflowBuilder.setName(`release-${stage.name}`);
+
+    // Add deployment to new workflow
+    const cmds: string[] = [];
+    cmds.push(...this.renderInstallCommands());
+    cmds.push(...this.renderInstallPackageCommands(`${this.options.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`));
+    cmds.push(`mv ./node_modules/${this.options.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`);
+    cmds.push(...this.renderDeployCommands(stage.name));
+    deploymentStageWorkflowBuilder.addBuildAction({
+      actionName: `deploy-${stage.name}`,
+      // needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
+      dependsOn: ['Synth CDK application'],
+      input: {
+        Sources: ['WorkflowSource'],
+        Variables: {
+          CI: 'true',
+        },
+      },
+      steps:
+  cmds,
+      // FIXME is there is an environment, connect it to the workflow
+      // needs to react on this.options.iamRoleArns?.synth
+      //environment: environment && convertToWorkflowEnvironment(environment),
+
+      // FIXME what about the permissions?
+      // permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
+
+      output: {},
+    });
+
+    const yml = new YamlFile(this, `.codecatalyst/workflows/release-${stage.name}.yaml`, {
+      obj: deploymentStageWorkflowBuilder.getDefinition(),
+
+    });
+    yml.synthesize();
+  }
+
 }
