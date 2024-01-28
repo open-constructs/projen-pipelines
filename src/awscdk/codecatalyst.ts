@@ -21,6 +21,8 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
   public readonly needsVersionedArtifacts: boolean;
 
   private deploymentWorkflowBuilder: WorkflowBuilder;
+  private deploymentStages: string[] = [];
+
   private bp: Blueprint = new Blueprint({ outdir: '.codecatalyst/workflows' });
 
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: CodeCatalystCDKPipelineOptions) {
@@ -123,8 +125,7 @@ steps.push({
       cmds.push(...this.renderDeployCommands(stage.name));
       this.deploymentWorkflowBuilder.addBuildAction({
         actionName: `deploy-${stage.name}`,
-        // needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
-        dependsOn: ['Synth CDK application'],
+        dependsOn: this.deploymentStages.length > 0 ? ['Publish assets to AWS', `deploy-${this.deploymentStages.at(-1)!}`] : ['Publish assets to AWS'],
         input: {
           Sources: ['WorkflowSource'],
           Variables: {
@@ -142,93 +143,11 @@ steps.push({
 
         output: {},
       });
-    }
 
-    /*
-    if (stage.manualApproval === true) {
-      // Create new workflow for deployment
-      const stageWorkflow = this.app.github!.addWorkflow(`release-${stage.name}-codecatalyst`);
-      stageWorkflow.on({
-        workflowDispatch: {
-          inputs: {
-            version: {
-              description: 'Package version',
-              required: true,
-            },
-          },
-        },
-      });
-      stageWorkflow.addJob('deploy', {
-        name: `Release stage ${stage.name} to AWS`,
-        runsOn: ['ubuntu-latest'],
-        env: {
-          CI: 'true',
-        },
-        permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
-        steps: [{
-          name: 'Checkout',
-          uses: 'actions/checkout@v3',
-        }, {
-          name: 'AWS Credentials',
-          uses: 'aws-actions/configure-aws-credentials@master',
-          with: {
-            'role-to-assume': this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default,
-            'role-session-name': 'GitHubAction',
-            'aws-region': stage.env.region,
-          },
-        },
-        ...this.renderInstallCommands().map(cmd => ({
-          run: cmd,
-        })),
-        ...this.renderInstallPackageCommands(`${this.options.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`).map(cmd => ({
-          run: cmd,
-        })),
-        {
-          run: `mv ./node_modules/${this.options.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`,
-        },
-        ...this.renderDeployCommands(stage.name).map(cmd => ({
-          run: cmd,
-        }))],
-      });
-
-    } else {
-      // Add deployment to CI/CD workflow
-      this.deploymentWorkflow.addJob(`deploy-${stage.name}`, {
-        name: `Deploy stage ${stage.name} to AWS`,
-        needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
-        runsOn: ['ubuntu-latest'],
-        env: {
-          CI: 'true',
-        },
-        permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
-        steps: [{
-          name: 'Checkout',
-          uses: 'actions/checkout@v3',
-        }, {
-          name: 'AWS Credentials',
-          uses: 'aws-actions/configure-aws-credentials@master',
-          with: {
-            'role-to-assume': this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default,
-            'role-session-name': 'GitHubAction',
-            'aws-region': stage.env.region,
-          },
-        }, {
-          uses: 'actions/download-artifact@v3',
-          with: {
-            name: 'cloud-assembly',
-            path: `${this.app.cdkConfig.cdkout}/`,
-          },
-        },
-        ...this.renderInstallCommands().map(cmd => ({
-          run: cmd,
-        })),
-        ...this.renderDeployCommands(stage.name).map(cmd => ({
-          run: cmd,
-        }))],
-      });
       this.deploymentStages.push(stage.name);
-    }*/
+    }
   }
+
   createWorkflowForStage(stage: DeploymentStage) {
     console.log(stage);
     const deploymentStageWorkflowBuilder = new WorkflowBuilder(this.bp);
