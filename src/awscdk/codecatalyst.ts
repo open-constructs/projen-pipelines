@@ -21,7 +21,7 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
   public readonly needsVersionedArtifacts: boolean;
 
   //private deploymentWorkflow: Workflow;
-  private bp: Blueprint = new Blueprint({ outdir: '../.codecatalyst/workflows' });
+  private bp: Blueprint = new Blueprint({ outdir: '.codecatalyst/workflows' });
 
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: CodeCatalystCDKPipelineOptions) {
     super(app, options);
