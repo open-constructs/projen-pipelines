@@ -60,7 +60,7 @@ Actions:
         - Run: npx projen install:ci
         - Run: npx projen deploy:dev
     DependsOn:
-      - Synth CDK application
+      - Publish assets to AWS
 "
 `;
 

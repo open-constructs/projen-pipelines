@@ -219,6 +219,7 @@ new CodeCatalystCDKPipeline(app: AwsCdkTypeScriptApp, options: CodeCatalystCDKPi
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createAssetUpload">createAssetUpload</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createDeployment">createDeployment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createWorkflowForStage">createWorkflowForStage</a></code> | *No description.* |
 
 ---
 
@@ -269,6 +270,18 @@ public createDeployment(stage: DeploymentStage): void
 ```
 
 ###### `stage`<sup>Required</sup> <a name="stage" id="projen-pipelines.CodeCatalystCDKPipeline.createDeployment.parameter.stage"></a>
+
+- *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>
+
+---
+
+##### `createWorkflowForStage` <a name="createWorkflowForStage" id="projen-pipelines.CodeCatalystCDKPipeline.createWorkflowForStage"></a>
+
+```typescript
+public createWorkflowForStage(stage: DeploymentStage): void
+```
+
+###### `stage`<sup>Required</sup> <a name="stage" id="projen-pipelines.CodeCatalystCDKPipeline.createWorkflowForStage.parameter.stage"></a>
 
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>
 
