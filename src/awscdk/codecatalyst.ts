@@ -23,11 +23,15 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
   private deploymentWorkflowBuilder: WorkflowBuilder;
   private deploymentStages: string[] = [];
 
-  private bp: Blueprint = new Blueprint({ outdir: '.codecatalyst/workflows' });
+  private readonly bp: Blueprint;
+
 
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: CodeCatalystCDKPipelineOptions) {
     super(app, options);
+    // see https://github.com/aws/codecatalyst-blueprints/issues/477
+    process.env.CONTEXT_ENVIRONMENTID='prod';
 
+    this.bp = new Blueprint({ outdir: '.codecatalyst/workflows' });
     this.deploymentWorkflowBuilder = new WorkflowBuilder(this.bp);
 
     this.deploymentWorkflowBuilder.setName('deploy');
@@ -57,7 +61,7 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
     const cmds: string[] = [];
     cmds.push(...this.renderSynthCommands());
     this.deploymentWorkflowBuilder.addBuildAction({
-      actionName: 'Synth CDK application',
+      actionName: 'SynthCDKApplication',
       input: {
         Sources: ['WorkflowSource'],
         Variables: {
@@ -93,8 +97,8 @@ steps.push({
     const cmds: string[] = [];
     cmds.push(...this.getAssetUploadCommands(this.needsVersionedArtifacts));
     this.deploymentWorkflowBuilder.addBuildAction({
-      actionName: 'Publish assets to AWS',
-      dependsOn: ['Synth CDK application'],
+      actionName: 'PublishAssetsToAWS',
+      dependsOn: ['SynthCDKApplication'],
       input: {
         Sources: ['WorkflowSource'],
         Variables: {
@@ -124,8 +128,8 @@ steps.push({
       cmds.push(...this.renderInstallCommands());
       cmds.push(...this.renderDeployCommands(stage.name));
       this.deploymentWorkflowBuilder.addBuildAction({
-        actionName: `deploy-${stage.name}`,
-        dependsOn: this.deploymentStages.length > 0 ? ['Publish assets to AWS', `deploy-${this.deploymentStages.at(-1)!}`] : ['Publish assets to AWS'],
+        actionName: `deploy_${stage.name}`,
+        dependsOn: this.deploymentStages.length > 0 ? ['PublishAssetsToAWS', `deploy_${this.deploymentStages.at(-1)!}`] : ['PublishAssetsToAWS'],
         input: {
           Sources: ['WorkflowSource'],
           Variables: {
@@ -161,9 +165,9 @@ steps.push({
     cmds.push(`mv ./node_modules/${this.options.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`);
     cmds.push(...this.renderDeployCommands(stage.name));
     deploymentStageWorkflowBuilder.addBuildAction({
-      actionName: `deploy-${stage.name}`,
-      // needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
-      dependsOn: ['Synth CDK application'],
+      actionName: `deploy_${stage.name}`,
+      // needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy_${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
+      dependsOn: ['SynthCDKApplication'],
       input: {
         Sources: ['WorkflowSource'],
         Variables: {

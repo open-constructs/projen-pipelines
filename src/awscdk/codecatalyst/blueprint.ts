@@ -27,6 +27,7 @@ export interface Options extends ParentOptions {
 export class Blueprint extends ParentBlueprint {
   constructor(options_: Options) {
     super(options_);
+    //this.context.environmentId = 'prod';
   }
 
 }

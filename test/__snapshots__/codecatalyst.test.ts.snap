@@ -10,8 +10,8 @@ Triggers:
     Branches:
       - main
 Actions:
-  Synth CDK application:
-    Identifier: aws/build-beta@v1
+  SynthCDKApplication:
+    Identifier: aws/build@v1
     Inputs:
       Sources:
         - WorkflowSource
@@ -25,8 +25,8 @@ Actions:
       Steps:
         - Run: npx projen install:ci
         - Run: npx projen build
-  Publish assets to AWS:
-    Identifier: aws/build-beta@v1
+  PublishAssetsToAWS:
+    Identifier: aws/build@v1
     Inputs:
       Sources:
         - WorkflowSource
@@ -43,9 +43,9 @@ Actions:
         - Run: npx projen bump
         - Run: npx projen release:push-assembly
     DependsOn:
-      - Synth CDK application
+      - SynthCDKApplication
   deploy_dev:
-    Identifier: aws/build-beta@v1
+    Identifier: aws/build@v1
     Inputs:
       Sources:
         - WorkflowSource
@@ -60,7 +60,7 @@ Actions:
         - Run: npx projen install:ci
         - Run: npx projen deploy:dev
     DependsOn:
-      - Publish assets to AWS
+      - PublishAssetsToAWS
 "
 `;
 
@@ -72,7 +72,7 @@ SchemaVersion: \\"1.0\\"
 Triggers: []
 Actions:
   deploy_prod:
-    Identifier: aws/build-beta@v1
+    Identifier: aws/build@v1
     Inputs:
       Sources:
         - WorkflowSource
@@ -89,7 +89,7 @@ Actions:
         - Run: mv ./node_modules/@assembly/testapp cdk.out
         - Run: npx projen deploy:prod
     DependsOn:
-      - Synth CDK application
+      - SynthCDKApplication
 "
 `;
 
