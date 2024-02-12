@@ -263,13 +263,13 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/fs-extra,@types/jest,@types/node,@types/standard-version,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,constructs,eslint-import-resolver-typescript,eslint-plugin-import,eslint,fs-extra,jest-junit,jest,jsii-diff,jsii-docgen,jsii-pacmak,projen,standard-version,ts-jest,ts-node,typescript"
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/fs-extra,@types/standard-version,eslint-import-resolver-typescript,eslint-plugin-import,fs-extra,jsii-diff,jsii-docgen,jsii-pacmak,jsii-rosetta,jsii,projen,ts-node,typescript,standard-version,constructs"
         },
         {
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade @types/fs-extra @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-import-resolver-typescript eslint-plugin-import eslint fs-extra jest-junit jest jsii-diff jsii-docgen jsii-pacmak projen standard-version ts-jest ts-node typescript"
+          "exec": "yarn upgrade @types/fs-extra @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-import-resolver-typescript eslint-plugin-import eslint fs-extra jest-junit jest jsii-diff jsii-docgen jsii-pacmak jsii-rosetta jsii projen standard-version ts-jest ts-node typescript"
         },
         {
           "exec": "npx projen"
