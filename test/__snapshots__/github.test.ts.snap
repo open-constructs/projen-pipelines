@@ -20,7 +20,7 @@ jobs:
       CI: \\"true\\"
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@master
         with:
@@ -29,7 +29,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen install:ci
       - run: npx projen build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -44,7 +44,7 @@ jobs:
       CI: \\"true\\"
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup GIT identity
@@ -55,7 +55,7 @@ jobs:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -74,14 +74,14 @@ jobs:
       CI: \\"true\\"
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -111,7 +111,7 @@ jobs:
       CI: \\"true\\"
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@master
         with:

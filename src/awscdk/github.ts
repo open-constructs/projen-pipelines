@@ -46,7 +46,7 @@ export class GithubCDKPipeline extends CDKPipeline {
   private createSynth(): void {
     const steps: JobStep[] = [{
       name: 'Checkout',
-      uses: 'actions/checkout@v3',
+      uses: 'actions/checkout@v4',
     }];
 
     if (this.options.iamRoleArns?.synth) {
@@ -66,7 +66,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     })));
 
     steps.push({
-      uses: 'actions/upload-artifact@v3',
+      uses: 'actions/upload-artifact@v4',
       with: {
         name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
@@ -95,7 +95,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       permissions: { idToken: JobPermission.WRITE, contents: this.needsVersionedArtifacts ? JobPermission.WRITE : JobPermission.READ },
       steps: [{
         name: 'Checkout',
-        uses: 'actions/checkout@v3',
+        uses: 'actions/checkout@v4',
         with: {
           'fetch-depth': 0,
         },
@@ -111,7 +111,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           'aws-region': 'us-east-1',
         },
       }, {
-        uses: 'actions/download-artifact@v3',
+        uses: 'actions/download-artifact@v4',
         with: {
           name: 'cloud-assembly',
           path: `${this.app.cdkConfig.cdkout}/`,
@@ -146,7 +146,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
         steps: [{
           name: 'Checkout',
-          uses: 'actions/checkout@v3',
+          uses: 'actions/checkout@v4',
         }, {
           name: 'AWS Credentials',
           uses: 'aws-actions/configure-aws-credentials@master',
@@ -182,7 +182,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
         steps: [{
           name: 'Checkout',
-          uses: 'actions/checkout@v3',
+          uses: 'actions/checkout@v4',
         }, {
           name: 'AWS Credentials',
           uses: 'aws-actions/configure-aws-credentials@master',
@@ -192,7 +192,7 @@ export class GithubCDKPipeline extends CDKPipeline {
             'aws-region': stage.env.region,
           },
         }, {
-          uses: 'actions/download-artifact@v3',
+          uses: 'actions/download-artifact@v4',
           with: {
             name: 'cloud-assembly',
             path: `${this.app.cdkConfig.cdkout}/`,
