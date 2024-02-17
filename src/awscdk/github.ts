@@ -27,7 +27,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.deploymentWorkflow = this.app.github!.addWorkflow('deploy');
     this.deploymentWorkflow.on({
       push: {
-        branches: ['main'], // TODO use defaultReleaseBranch
+        branches: [this.branchName],
       },
       workflowDispatch: {},
     });

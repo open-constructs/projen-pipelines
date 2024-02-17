@@ -135,7 +135,7 @@ awslogin() {
         extends: ['.aws_base'],
         stage: stage.name,
         only: {
-          refs: ['main'],
+          refs: [this.branchName],
         },
         needs: [
           { job: 'synth', artifacts: true },
@@ -154,7 +154,7 @@ awslogin() {
           when: gitlab.JobWhen.MANUAL,
         },
         only: {
-          refs: ['main'],
+          refs: [this.branchName],
         },
         needs: [
           { job: 'synth', artifacts: true },

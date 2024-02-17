@@ -65,6 +65,12 @@ export interface StageOptions {
 export interface CDKPipelineOptions {
 
   /**
+   * the name of the branch to deploy from
+   * @default main
+   */
+  readonly branchName?: string;
+
+  /**
    * This field is used to define a prefix for the AWS Stack resources created
    * during the pipeline's operation.
    *
@@ -107,6 +113,7 @@ export interface CDKPipelineOptions {
 export abstract class CDKPipeline extends Component {
 
   public readonly stackPrefix: string;
+  public readonly branchName: string;
 
   constructor(protected app: awscdk.AwsCdkTypeScriptApp, private baseOptions: CDKPipelineOptions) {
     super(app);
@@ -121,6 +128,7 @@ export abstract class CDKPipeline extends Component {
     // );
 
     this.stackPrefix = baseOptions.stackPrefix ?? app.name;
+    this.branchName = baseOptions.branchName ?? 'main'; // TODO use defaultReleaseBranch of NodeProject
 
     // Removes the compiled cloud assembly before each synth
     this.project.tasks.tryFind('synth')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
