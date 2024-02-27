@@ -1,14 +1,15 @@
 import { awscdk, gitlab } from 'projen';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
+export interface GitlabIamRoleConfig {
+  readonly default?: string;
+  readonly synth?: string;
+  readonly assetPublishing?: string;
+  readonly deployment?: { [stage: string]: string };
+}
 
 export interface GitlabCDKPipelineOptions extends CDKPipelineOptions {
-  readonly iamRoleArns: {
-    readonly default?: string;
-    readonly synth?: string;
-    readonly assetPublishing?: string;
-    readonly deployment?: { [stage: string]: string };
-  };
+  readonly iamRoleArns: GitlabIamRoleConfig;
   // readonly publishedCloudAssemblies?: boolean;
   readonly image?: string;
 }
@@ -44,7 +45,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
     }
   }
 
-  private setupSnippets() {
+  protected setupSnippets() {
     this.config.addJobs({
       '.artifacts_cdk': {
         artifacts: {
@@ -96,12 +97,12 @@ awslogin() {
     });
   }
 
-  private createSynth(): void {
+  protected createSynth(): void {
     const script = ['echo "Running CDK synth"'];
     if (this.options.iamRoleArns?.synth) {
       script.push(`awslogin '${this.options.iamRoleArns.synth}'`);
     }
-    script.push(...this.getSynthCommands());
+    script.push(...this.renderSynthCommands());
 
     this.config.addStages('synth');
     this.config.addJobs({
@@ -113,7 +114,7 @@ awslogin() {
     });
   }
 
-  public createAssetUpload(): void {
+  protected createAssetUpload(): void {
     const script = ['echo "Publish assets to AWS"'];
     if (this.options.iamRoleArns?.assetPublishing) {
       script.push(`awslogin '${this.options.iamRoleArns.assetPublishing}'`);
@@ -131,10 +132,10 @@ awslogin() {
     });
   }
 
-  public createDeployment(stage: DeploymentStage): void {
+  protected createDeployment(stage: DeploymentStage): void {
     const script = [];
     script.push(`awslogin '${this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default}'`);
-    script.push(...this.getInstallCommands());
+    script.push(...this.renderInstallCommands());
 
     this.config.addStages(stage.name);
     this.config.addJobs({
@@ -142,7 +143,7 @@ awslogin() {
         extends: ['.aws_base'],
         stage: stage.name,
         only: {
-          refs: ['main'],
+          refs: [this.branchName],
         },
         needs: [
           { job: 'synth', artifacts: true },
@@ -150,8 +151,8 @@ awslogin() {
         ],
         script: [
           `awslogin '${this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default}'`,
-          ...this.getInstallCommands(),
-          ...this.getDiffCommands(stage.name),
+          ...this.renderInstallCommands(),
+          ...this.renderDiffCommands(stage.name),
         ],
       },
       [`deploy-${stage.name}`]: {
@@ -161,7 +162,7 @@ awslogin() {
           when: gitlab.JobWhen.MANUAL,
         },
         only: {
-          refs: ['main'],
+          refs: [this.branchName],
         },
         needs: [
           { job: 'synth', artifacts: true },
@@ -170,8 +171,8 @@ awslogin() {
         ],
         script: [
           `awslogin '${this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default}'`,
-          ...this.getInstallCommands(),
-          ...this.getDeployCommands(stage.name),
+          ...this.renderInstallCommands(),
+          ...this.renderDeployCommands(stage.name),
         ],
       },
     });

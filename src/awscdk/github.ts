@@ -3,14 +3,15 @@ import { GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
+export interface GithubIamRoleConfig {
+  readonly default?: string;
+  readonly synth?: string;
+  readonly assetPublishing?: string;
+  readonly deployment?: { [stage: string]: string };
+}
 
 export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
-  readonly iamRoleArns: {
-    readonly default?: string;
-    readonly synth?: string;
-    readonly assetPublishing?: string;
-    readonly deployment?: { [stage: string]: string };
-  };
+  readonly iamRoleArns: GithubIamRoleConfig;
 }
 
 export class GithubCDKPipeline extends CDKPipeline {
@@ -26,7 +27,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.deploymentWorkflow = this.app.github!.addWorkflow('deploy');
     this.deploymentWorkflow.on({
       push: {
-        branches: ['main'], // TODO use defaultReleaseBranch
+        branches: [this.branchName],
       },
       workflowDispatch: {},
     });
@@ -45,7 +46,7 @@ export class GithubCDKPipeline extends CDKPipeline {
   private createSynth(): void {
     const steps: JobStep[] = [{
       name: 'Checkout',
-      uses: 'actions/checkout@v3',
+      uses: 'actions/checkout@v4',
     }];
 
     if (this.options.iamRoleArns?.synth) {
@@ -60,12 +61,12 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
     }
 
-    steps.push(...this.getSynthCommands().map(cmd => ({
+    steps.push(...this.renderSynthCommands().map(cmd => ({
       run: cmd,
     })));
 
     steps.push({
-      uses: 'actions/upload-artifact@v3',
+      uses: 'actions/upload-artifact@v4',
       with: {
         name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
@@ -94,7 +95,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       permissions: { idToken: JobPermission.WRITE, contents: this.needsVersionedArtifacts ? JobPermission.WRITE : JobPermission.READ },
       steps: [{
         name: 'Checkout',
-        uses: 'actions/checkout@v3',
+        uses: 'actions/checkout@v4',
         with: {
           'fetch-depth': 0,
         },
@@ -110,7 +111,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           'aws-region': 'us-east-1',
         },
       }, {
-        uses: 'actions/download-artifact@v3',
+        uses: 'actions/download-artifact@v4',
         with: {
           name: 'cloud-assembly',
           path: `${this.app.cdkConfig.cdkout}/`,
@@ -145,7 +146,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
         steps: [{
           name: 'Checkout',
-          uses: 'actions/checkout@v3',
+          uses: 'actions/checkout@v4',
         }, {
           name: 'AWS Credentials',
           uses: 'aws-actions/configure-aws-credentials@master',
@@ -155,16 +156,16 @@ export class GithubCDKPipeline extends CDKPipeline {
             'aws-region': stage.env.region,
           },
         },
-        ...this.getInstallCommands().map(cmd => ({
+        ...this.renderInstallCommands().map(cmd => ({
           run: cmd,
         })),
-        ...this.getInstallPackageCommands(`${this.options.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`).map(cmd => ({
+        ...this.renderInstallPackageCommands(`${this.options.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`).map(cmd => ({
           run: cmd,
         })),
         {
           run: `mv ./node_modules/${this.options.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`,
         },
-        ...this.getDeployCommands(stage.name).map(cmd => ({
+        ...this.renderDeployCommands(stage.name).map(cmd => ({
           run: cmd,
         })),
         {
@@ -188,7 +189,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
         steps: [{
           name: 'Checkout',
-          uses: 'actions/checkout@v3',
+          uses: 'actions/checkout@v4',
         }, {
           name: 'AWS Credentials',
           uses: 'aws-actions/configure-aws-credentials@master',
@@ -198,16 +199,16 @@ export class GithubCDKPipeline extends CDKPipeline {
             'aws-region': stage.env.region,
           },
         }, {
-          uses: 'actions/download-artifact@v3',
+          uses: 'actions/download-artifact@v4',
           with: {
             name: 'cloud-assembly',
             path: `${this.app.cdkConfig.cdkout}/`,
           },
         },
-        ...this.getInstallCommands().map(cmd => ({
+        ...this.renderInstallCommands().map(cmd => ({
           run: cmd,
         })),
-        ...this.getDeployCommands(stage.name).map(cmd => ({
+        ...this.renderDeployCommands(stage.name).map(cmd => ({
           run: cmd,
         })),
         {

@@ -42,13 +42,18 @@ const app = new awscdk.AwsCdkTypeScriptApp({
 });
 
 // Create the pipeline
-new CDKPipeline(app, {
+new GithubCDKPipeline(app, {
   stackPrefix: 'MyApp',
   pkgNamespace: '@company-assemblies',
-  environments: {
-    dev: { account: '111111111111', region: 'eu-central-1' },
-    prod: { account: '222222222222', region: 'eu-central-1' },
-  },
+  stages: [
+    {
+      name: 'dev',
+      env: { account: '123456789012', region: 'eu-central-1' },
+    }, {
+      name: 'prod',
+      manualApproval: true,
+      env: {account: '123456789012', region: 'eu-central-1' },
+    }],
 });
 ```
 
@@ -89,7 +94,7 @@ app.synth();
 
 ### Deployment
 
-The `CDKPipeline` class creates and adds several tasks to the projen project that then can be used in your pipeline to deploy your application to AWS.
+The `<Engine>CDKPipeline` class creates and adds several tasks to the projen project that then can be used in your pipeline to deploy your application to AWS.
 
 Here's a brief description of each one:
 

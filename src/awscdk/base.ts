@@ -52,6 +52,10 @@ export interface DeploymentStage {
   readonly manualApproval?: boolean;
 }
 
+export interface StageOptions {
+  readonly env: Environment;
+}
+
 /**
  * The CDKPipelineOptions interface is designed to provide configuration
  * options for a CDK (Cloud Development Kit) pipeline. It allows the definition
@@ -59,6 +63,12 @@ export interface DeploymentStage {
  * AWS stack, along with the environments configuration to be used.
  */
 export interface CDKPipelineOptions {
+
+  /**
+   * the name of the branch to deploy from
+   * @default main
+   */
+  readonly branchName?: string;
 
   /**
    * This field is used to define a prefix for the AWS Stack resources created
@@ -77,13 +87,9 @@ export interface CDKPipelineOptions {
 
   readonly stages: DeploymentStage[];
 
-  readonly personalStage?: {
-    readonly env: Environment;
-  };
+  readonly personalStage?: StageOptions;
 
-  readonly featureStages?: {
-    readonly env: Environment;
-  };
+  readonly featureStages?: StageOptions;
 
   // /**
   //  * This field specifies the type of pipeline to create. If set to CONTINUOUS_DEPLOYMENT,
@@ -107,6 +113,7 @@ export interface CDKPipelineOptions {
 export abstract class CDKPipeline extends Component {
 
   public readonly stackPrefix: string;
+  public readonly branchName: string;
 
   constructor(protected app: awscdk.AwsCdkTypeScriptApp, private baseOptions: CDKPipelineOptions) {
     super(app);
@@ -121,6 +128,7 @@ export abstract class CDKPipeline extends Component {
     // );
 
     this.stackPrefix = baseOptions.stackPrefix ?? app.name;
+    this.branchName = baseOptions.branchName ?? 'main'; // TODO use defaultReleaseBranch of NodeProject
 
     // Removes the compiled cloud assembly before each synth
     this.project.tasks.tryFind('synth')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
@@ -151,14 +159,14 @@ export abstract class CDKPipeline extends Component {
 
   }
 
-  protected getInstallCommands(): string[] {
+  protected renderInstallCommands(): string[] {
     return [
       ...(this.baseOptions.preInstallCommands ?? []),
       `npx projen ${this.app.package.installCiTask.name}`,
     ];
   }
 
-  protected getInstallPackageCommands(packageName: string, runPreInstallCommands: boolean = false): string[] {
+  protected renderInstallPackageCommands(packageName: string, runPreInstallCommands: boolean = false): string[] {
     const commands = runPreInstallCommands ? this.baseOptions.preInstallCommands ?? [] : [];
 
     switch (this.app.package.packageManager) {
@@ -177,9 +185,9 @@ export abstract class CDKPipeline extends Component {
     return commands;
   }
 
-  protected getSynthCommands(): string[] {
+  protected renderSynthCommands(): string[] {
     return [
-      ...this.getInstallCommands(),
+      ...this.renderInstallCommands(),
       ...(this.baseOptions.preSynthCommands ?? []),
       'npx projen build',
       ...(this.baseOptions.postSynthCommands ?? []),
@@ -188,7 +196,7 @@ export abstract class CDKPipeline extends Component {
 
   protected getAssetUploadCommands(needsVersionedArtifacts: boolean): string[] {
     return [
-      ...this.getInstallCommands(),
+      ...this.renderInstallCommands(),
       'npx projen publish:assets',
       ...(needsVersionedArtifacts ? [
         'npx projen bump',
@@ -197,13 +205,13 @@ export abstract class CDKPipeline extends Component {
     ];
   }
 
-  protected getDeployCommands(stageName: string): string[] {
+  protected renderDeployCommands(stageName: string): string[] {
     return [
       `npx projen deploy:${stageName}`,
     ];
   }
 
-  protected getDiffCommands(stageName: string): string[] {
+  protected renderDiffCommands(stageName: string): string[] {
     return [
       `npx projen diff:${stageName}`,
     ];
@@ -213,7 +221,7 @@ export abstract class CDKPipeline extends Component {
    * This method generates the entry point for the application, including interfaces and classes
    * necessary to set up the pipeline and define the AWS CDK stacks for different environments.
    */
-  private createApplicationEntrypoint() {
+  protected createApplicationEntrypoint() {
     let propsCode = '';
     let appCode = '';
 
@@ -298,7 +306,7 @@ ${appCode}
    * This method sets up tasks to publish CDK assets to all accounts and handle versioning, including bumping the version
    * based on the latest git tag and pushing the CDK assembly to the package repository.
    */
-  private createReleaseTasks() {
+  protected createReleaseTasks() {
     // Task to publish the CDK assets to all accounts
     this.project.addTask('publish:assets', {
       steps: this.baseOptions.stages.map(stage => ({
@@ -338,7 +346,7 @@ ${appCode}
    * This method sets up tasks for the personal deployment stage, including deployment, watching for changes,
    * comparing changes (diff), and destroying the stack when no longer needed.
    */
-  private createPersonalStage() {
+  protected createPersonalStage() {
     this.project.addTask('deploy:personal', {
       exec: `cdk --outputs-file cdk-outputs-personal.json deploy ${this.stackPrefix}-personal`,
     });
@@ -357,7 +365,7 @@ ${appCode}
    * This method sets up tasks for the feature deployment stage, including deployment, comparing changes (diff),
    * and destroying the stack when no longer needed.
    */
-  private createFeatureStage() {
+  protected createFeatureStage() {
     this.project.addTask('deploy:feature', {
       exec: `cdk --outputs-file cdk-outputs-feature.json --progress events --require-approval never deploy ${this.stackPrefix}-feature`,
     });
@@ -373,7 +381,7 @@ ${appCode}
    * This method sets up tasks for the general pipeline stages (dev, prod), including deployment and comparing changes (diff).
    * @param {DeployStageOptions} stage - The stage to create
    */
-  private createPipelineStage(stage: DeploymentStage) {
+  protected createPipelineStage(stage: DeploymentStage) {
     this.project.addTask(`deploy:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${this.stackPrefix}-${stage.name}`,
     });

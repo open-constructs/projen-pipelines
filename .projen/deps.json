@@ -6,11 +6,12 @@
     },
     {
       "name": "@types/jest",
+      "version": "^27",
       "type": "build"
     },
     {
       "name": "@types/node",
-      "version": "^16",
+      "version": "^16 <= 16.18.78",
       "type": "build"
     },
     {
@@ -33,10 +34,6 @@
       "type": "build"
     },
     {
-      "name": "eslint-import-resolver-node",
-      "type": "build"
-    },
-    {
       "name": "eslint-import-resolver-typescript",
       "type": "build"
     },
@@ -54,17 +51,35 @@
       "type": "build"
     },
     {
-      "name": "jest",
-      "type": "build"
-    },
-    {
       "name": "jest-junit",
       "version": "^15",
       "type": "build"
     },
     {
-      "name": "npm-check-updates",
-      "version": "^16",
+      "name": "jest",
+      "version": "^27",
+      "type": "build"
+    },
+    {
+      "name": "jsii-diff",
+      "type": "build"
+    },
+    {
+      "name": "jsii-docgen",
+      "type": "build"
+    },
+    {
+      "name": "jsii-pacmak",
+      "type": "build"
+    },
+    {
+      "name": "jsii-rosetta",
+      "version": "1.x",
+      "type": "build"
+    },
+    {
+      "name": "jsii",
+      "version": "1.x",
       "type": "build"
     },
     {
@@ -78,6 +93,7 @@
     },
     {
       "name": "ts-jest",
+      "version": "^27",
       "type": "build"
     },
     {
@@ -89,15 +105,29 @@
       "type": "build"
     },
     {
+      "name": "standard-version",
+      "type": "bundled"
+    },
+    {
+      "name": "@types/babel__traverse",
+      "version": "7.18.2",
+      "type": "override"
+    },
+    {
+      "name": "@types/prettier",
+      "version": "2.6.0",
+      "type": "override"
+    },
+    {
+      "name": "constructs",
+      "type": "peer"
+    },
+    {
       "name": "projen",
       "type": "peer"
     },
     {
       "name": "projen",
-      "type": "runtime"
-    },
-    {
-      "name": "standard-version",
       "type": "runtime"
     }
   ],
