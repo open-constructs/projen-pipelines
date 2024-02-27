@@ -167,7 +167,14 @@ export class GithubCDKPipeline extends CDKPipeline {
         },
         ...this.renderDeployCommands(stage.name).map(cmd => ({
           run: cmd,
-        }))],
+        })),
+        {
+          uses: 'actions/upload-artifact@v3',
+          with: {
+            name: `cdk-outputs-${stage.name}`,
+            path: `cdk-outputs-${stage.name}.json`,
+          },
+        }],
       });
 
     } else {
@@ -203,7 +210,14 @@ export class GithubCDKPipeline extends CDKPipeline {
         })),
         ...this.renderDeployCommands(stage.name).map(cmd => ({
           run: cmd,
-        }))],
+        })),
+        {
+          uses: 'actions/upload-artifact@v3',
+          with: {
+            name: `cdk-outputs-${stage.name}`,
+            path: `cdk-outputs-${stage.name}.json`,
+          },
+        }],
       });
       this.deploymentStages.push(stage.name);
     }
