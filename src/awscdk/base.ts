@@ -79,6 +79,14 @@ export interface CDKPipelineOptions {
   readonly stackPrefix?: string;
 
   /**
+   * If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy substacks of the main stack.
+   * You can use this to deploy CDk applications containing multiple stacks.
+   *
+   * @default false
+   */
+  readonly deploySubStacks?: boolean;
+
+  /**
    * This field determines the NPM namespace to be used when packaging CDK cloud
    * assemblies. A namespace helps group related resources together, providing
    * better organization and ease of management.
@@ -347,17 +355,18 @@ ${appCode}
    * comparing changes (diff), and destroying the stack when no longer needed.
    */
   protected createPersonalStage() {
+    const stackId = this.baseOptions.deploySubStacks ? `${this.stackPrefix}-personal ${this.stackPrefix}-personal/*` : `${this.stackPrefix}-personal`;
     this.project.addTask('deploy:personal', {
-      exec: `cdk --outputs-file cdk-outputs-personal.json deploy ${this.stackPrefix}-personal`,
+      exec: `cdk --outputs-file cdk-outputs-personal.json deploy ${stackId}`,
     });
     this.project.addTask('watch:personal', {
-      exec: `cdk deploy --watch --hotswap ${this.stackPrefix}-personal`,
+      exec: `cdk deploy --watch --hotswap ${stackId}`,
     });
     this.project.addTask('diff:personal', {
-      exec: `cdk diff ${this.stackPrefix}-personal`,
+      exec: `cdk diff ${stackId}`,
     });
     this.project.addTask('destroy:personal', {
-      exec: `cdk destroy ${this.stackPrefix}-personal`,
+      exec: `cdk destroy ${stackId}`,
     });
   }
 
@@ -366,14 +375,15 @@ ${appCode}
    * and destroying the stack when no longer needed.
    */
   protected createFeatureStage() {
+    const stackId = this.baseOptions.deploySubStacks ? `${this.stackPrefix}-feature ${this.stackPrefix}-feature/*` : `${this.stackPrefix}-feature`;
     this.project.addTask('deploy:feature', {
-      exec: `cdk --outputs-file cdk-outputs-feature.json --progress events --require-approval never deploy ${this.stackPrefix}-feature`,
+      exec: `cdk --outputs-file cdk-outputs-feature.json --progress events --require-approval never deploy ${stackId}`,
     });
     this.project.addTask('diff:feature', {
-      exec: `cdk diff ${this.stackPrefix}-feature`,
+      exec: `cdk diff ${stackId}`,
     });
     this.project.addTask('destroy:feature', {
-      exec: `cdk destroy ${this.stackPrefix}-feature`,
+      exec: `cdk destroy ${stackId}`,
     });
   }
 
@@ -382,11 +392,12 @@ ${appCode}
    * @param {DeployStageOptions} stage - The stage to create
    */
   protected createPipelineStage(stage: DeploymentStage) {
+    const stackId = this.baseOptions.deploySubStacks ? `${this.stackPrefix}-${stage.name} ${this.stackPrefix}-${stage.name}/*` : `${this.stackPrefix}-${stage.name}`;
     this.project.addTask(`deploy:${stage.name}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${this.stackPrefix}-${stage.name}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,
     });
     this.project.addTask(`diff:${stage.name}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${this.stackPrefix}-${stage.name}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
     });
   }
 }
