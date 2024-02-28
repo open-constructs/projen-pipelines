@@ -79,7 +79,7 @@ export interface CDKPipelineOptions {
   readonly stackPrefix?: string;
 
   /**
-   * If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy substacks of the main stack.
+   * If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack.
    * You can use this to deploy CDk applications containing multiple stacks.
    *
    * @default false
@@ -355,7 +355,7 @@ ${appCode}
    * comparing changes (diff), and destroying the stack when no longer needed.
    */
   protected createPersonalStage() {
-    const stackId = this.baseOptions.deploySubStacks ? `${this.stackPrefix}-personal ${this.stackPrefix}-personal/*` : `${this.stackPrefix}-personal`;
+    const stackId = this.getCliStackPattern('personal');
     this.project.addTask('deploy:personal', {
       exec: `cdk --outputs-file cdk-outputs-personal.json deploy ${stackId}`,
     });
@@ -375,7 +375,7 @@ ${appCode}
    * and destroying the stack when no longer needed.
    */
   protected createFeatureStage() {
-    const stackId = this.baseOptions.deploySubStacks ? `${this.stackPrefix}-feature ${this.stackPrefix}-feature/*` : `${this.stackPrefix}-feature`;
+    const stackId = this.getCliStackPattern('feature');
     this.project.addTask('deploy:feature', {
       exec: `cdk --outputs-file cdk-outputs-feature.json --progress events --require-approval never deploy ${stackId}`,
     });
@@ -392,12 +392,16 @@ ${appCode}
    * @param {DeployStageOptions} stage - The stage to create
    */
   protected createPipelineStage(stage: DeploymentStage) {
-    const stackId = this.baseOptions.deploySubStacks ? `${this.stackPrefix}-${stage.name} ${this.stackPrefix}-${stage.name}/*` : `${this.stackPrefix}-${stage.name}`;
+    const stackId = this.getCliStackPattern(stage.name);
     this.project.addTask(`deploy:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,
     });
     this.project.addTask(`diff:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
     });
+  }
+
+  protected getCliStackPattern(stage: string) {
+    return this.baseOptions.deploySubStacks ? `${this.stackPrefix}-${stage} ${this.stackPrefix}-${stage}/*` : `${this.stackPrefix}-${stage}`;
   }
 }
