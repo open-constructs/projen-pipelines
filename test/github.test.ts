@@ -39,4 +39,37 @@ test('Github snapshot', () => {
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
   expect(snapshot['.github/workflows/release-prod.yml']).toMatchSnapshot();
   expect(snapshot['package.json']).toMatchSnapshot();
+  expect(snapshot['.projen/tasks.json']).toMatchSnapshot();
+});
+
+test('Github snapshot with multi stack', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.102.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+        prod: 'prodRole',
+      },
+    },
+    pkgNamespace: '@assembly',
+    deploySubStacks: true,
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
+  expect(snapshot['.projen/tasks.json']).toMatchSnapshot();
 });
