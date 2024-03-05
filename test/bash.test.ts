@@ -11,6 +11,12 @@ test('Bash snapshot', () => {
 
   new BashCDKPipeline(p, {
     pkgNamespace: '@assembly',
+    personalStage: {
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    },
     stages: [{
       name: 'dev',
       env: {
@@ -29,5 +35,7 @@ test('Bash snapshot', () => {
 
   const snapshot = synthSnapshot(p);
   expect(snapshot['.gitlab-ci.yml']).toBeUndefined();
+  expect(snapshot['.github/workflows/deploy.yml']).toBeUndefined();
   expect(snapshot['package.json']).toMatchSnapshot();
+  expect(snapshot['pipeline.md']).toMatchSnapshot();
 });

@@ -79,8 +79,11 @@ Object {
     "compile": "npx projen compile",
     "default": "npx projen default",
     "deploy:dev": "npx projen deploy:dev",
+    "deploy:personal": "npx projen deploy:personal",
     "deploy:prod": "npx projen deploy:prod",
+    "destroy:personal": "npx projen destroy:personal",
     "diff:dev": "npx projen diff:dev",
+    "diff:personal": "npx projen diff:personal",
     "diff:prod": "npx projen diff:prod",
     "eject": "npx projen eject",
     "eslint": "npx projen eslint",
@@ -96,7 +99,68 @@ Object {
     "test": "npx projen test",
     "test:watch": "npx projen test:watch",
     "upgrade": "npx projen upgrade",
+    "watch:personal": "npx projen watch:personal",
   },
   "version": "0.0.0",
 }
+`;
+
+exports[`Bash snapshot 2`] = `
+"# How to run your pipeline
+
+## Build phase
+
+Synthesize your CDK project:
+\`\`\`bash
+npx projen install:ci
+npx projen build
+\`\`\`
+
+Publish all your CDK assets like Lambda function code and container images:
+\`\`\`bash
+npx projen install:ci
+npx projen publish:assets
+\`\`\`
+
+If you want to store your cloud assembly and assets for future use or compliance reasons, use:
+\`\`\`bash
+npx projen install:ci
+npx projen publish:assets
+npx projen bump
+npx projen release:push-assembly
+\`\`\`
+
+## Deployment phase
+
+For every stage some scripts are generated for diff and deploy
+
+Stage: dev
+\`\`\`bash
+npx projen diff:dev
+
+npx projen deploy:dev
+\`\`\`
+
+Stage: prod
+\`\`\`bash
+npx projen diff:prod
+
+npx projen deploy:prod
+\`\`\`
+
+The stage \`personal\` is meant to be deployed manually by the developer and also has a watch script for live updates.
+\`\`\`bash
+npx projen diff:personal
+npx projen deploy:personal
+npx projen destroy:personal
+npx projen watch:personal
+\`\`\`
+
+The stage \`feature\` is meant to be deployed for feature branches.
+\`\`\`bash
+npx projen diff:feature
+npx projen deploy:feature
+npx projen destroy:feature
+\`\`\`
+"
 `;
