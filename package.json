@@ -51,22 +51,22 @@
     "jest": "^27",
     "jest-junit": "^15",
     "jsii": "1.x",
-    "jsii-diff": "^1.94.0",
-    "jsii-docgen": "^10.3.19",
-    "jsii-pacmak": "^1.94.0",
+    "jsii-diff": "^1.95.0",
+    "jsii-docgen": "^10.3.21",
+    "jsii-pacmak": "^1.95.0",
     "jsii-rosetta": "1.x",
-    "projen": "^0.80.5",
+    "projen": "^0.80.10",
     "standard-version": "^9",
     "ts-jest": "^27",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "peerDependencies": {
     "constructs": "^10.3.0",
-    "projen": "^0.80.5"
+    "projen": "^0.80.10"
   },
   "dependencies": {
-    "projen": "^0.80.5",
+    "projen": "^0.80.10",
     "standard-version": "^9.5.0"
   },
   "bundledDependencies": [
