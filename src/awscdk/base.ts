@@ -134,6 +134,7 @@ export abstract class CDKPipeline extends Component {
     );
     // this.app.addDeps(
     // );
+    this.project.gitignore.exclude('/cdk-outputs-*.json');
 
     this.stackPrefix = baseOptions.stackPrefix ?? app.name;
     this.branchName = baseOptions.branchName ?? 'main'; // TODO use defaultReleaseBranch of NodeProject
