@@ -594,6 +594,11 @@ public readonly needsVersionedArtifacts: boolean;
 
 ### GitlabCDKPipeline <a name="GitlabCDKPipeline" id="projen-pipelines.GitlabCDKPipeline"></a>
 
+The GitlabCDKPipeline class extends CDKPipeline to provide a way to configure and execute AWS CDK deployment pipelines within GitLab CI/CD environments.
+
+It integrates IAM role management,
+runner configuration, and defines stages and jobs for the deployment workflow.
+
 #### Initializers <a name="Initializers" id="projen-pipelines.GitlabCDKPipeline.Initializer"></a>
 
 ```typescript
@@ -604,8 +609,8 @@ new GitlabCDKPipeline(app: AwsCdkTypeScriptApp, options: GitlabCDKPipelineOption
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.GitlabCDKPipeline.Initializer.parameter.app">app</a></code> | <code>projen.awscdk.AwsCdkTypeScriptApp</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabCDKPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions">GitlabCDKPipelineOptions</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.Initializer.parameter.app">app</a></code> | <code>projen.awscdk.AwsCdkTypeScriptApp</code> | - The AWS CDK app associated with the pipeline. |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions">GitlabCDKPipelineOptions</a></code> | - Configuration options for the pipeline. |
 
 ---
 
@@ -613,11 +618,15 @@ new GitlabCDKPipeline(app: AwsCdkTypeScriptApp, options: GitlabCDKPipelineOption
 
 - *Type:* projen.awscdk.AwsCdkTypeScriptApp
 
+The AWS CDK app associated with the pipeline.
+
 ---
 
 ##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GitlabCDKPipeline.Initializer.parameter.options"></a>
 
 - *Type:* <a href="#projen-pipelines.GitlabCDKPipelineOptions">GitlabCDKPipelineOptions</a>
+
+Configuration options for the pipeline.
 
 ---
 
@@ -731,9 +740,9 @@ Test whether the given construct is a component.
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabCDKPipeline.property.config">config</a></code> | <code>projen.gitlab.GitlabConfiguration</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabCDKPipeline.property.jobImage">jobImage</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.property.config">config</a></code> | <code>projen.gitlab.GitlabConfiguration</code> | GitLab CI/CD configuration object. |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.property.jobImage">jobImage</a></code> | <code>string</code> | The Docker image used for pipeline jobs. |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | Indicates if versioned artifacts are required. |
 
 ---
 
@@ -787,6 +796,8 @@ public readonly config: GitlabConfiguration;
 
 - *Type:* projen.gitlab.GitlabConfiguration
 
+GitLab CI/CD configuration object.
+
 ---
 
 ##### `jobImage`<sup>Required</sup> <a name="jobImage" id="projen-pipelines.GitlabCDKPipeline.property.jobImage"></a>
@@ -797,6 +808,10 @@ public readonly jobImage: string;
 
 - *Type:* string
 
+The Docker image used for pipeline jobs.
+
+Defaults to a specified image or a default value.
+
 ---
 
 ##### `needsVersionedArtifacts`<sup>Required</sup> <a name="needsVersionedArtifacts" id="projen-pipelines.GitlabCDKPipeline.property.needsVersionedArtifacts"></a>
@@ -806,6 +821,10 @@ public readonly needsVersionedArtifacts: boolean;
 ```
 
 - *Type:* boolean
+
+Indicates if versioned artifacts are required.
+
+Currently set to false
 
 ---
 
@@ -1426,6 +1445,8 @@ public readonly synth: string;
 
 ### GitlabCDKPipelineOptions <a name="GitlabCDKPipelineOptions" id="projen-pipelines.GitlabCDKPipelineOptions"></a>
 
+Options for configuring the GitLab CDK pipeline, extending the base CDK pipeline options.
+
 #### Initializer <a name="Initializer" id="projen-pipelines.GitlabCDKPipelineOptions.Initializer"></a>
 
 ```typescript
@@ -1448,8 +1469,9 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preInstallCommands">preInstallCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
-| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.GitlabIamRoleConfig">GitlabIamRoleConfig</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.image">image</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.GitlabIamRoleConfig">GitlabIamRoleConfig</a></code> | IAM role ARNs configuration for the pipeline. |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.image">image</a></code> | <code>string</code> | The Docker image to use for running the pipeline jobs. |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code><a href="#projen-pipelines.GitlabRunnerTags">GitlabRunnerTags</a></code> | Runner tags configuration for the pipeline. |
 
 ---
 
@@ -1577,6 +1599,8 @@ public readonly iamRoleArns: GitlabIamRoleConfig;
 
 - *Type:* <a href="#projen-pipelines.GitlabIamRoleConfig">GitlabIamRoleConfig</a>
 
+IAM role ARNs configuration for the pipeline.
+
 ---
 
 ##### `image`<sup>Optional</sup> <a name="image" id="projen-pipelines.GitlabCDKPipelineOptions.property.image"></a>
@@ -1587,9 +1611,28 @@ public readonly image: string;
 
 - *Type:* string
 
+The Docker image to use for running the pipeline jobs.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GitlabCDKPipelineOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: GitlabRunnerTags;
+```
+
+- *Type:* <a href="#projen-pipelines.GitlabRunnerTags">GitlabRunnerTags</a>
+
+Runner tags configuration for the pipeline.
+
 ---
 
 ### GitlabIamRoleConfig <a name="GitlabIamRoleConfig" id="projen-pipelines.GitlabIamRoleConfig"></a>
+
+Configuration for IAM roles used within the GitLab CI/CD pipeline for various stages.
+
+Allows specifying different IAM roles for synthesis, asset publishing, and deployment stages,
+providing granular control over permissions.
 
 #### Initializer <a name="Initializer" id="projen-pipelines.GitlabIamRoleConfig.Initializer"></a>
 
@@ -1603,10 +1646,11 @@ const gitlabIamRoleConfig: GitlabIamRoleConfig = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.default">default</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing stage. |
+| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if specific stage role is not provided. |
+| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | A map of stage names to IAM role ARNs for the deployment operation. |
+| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.diff">diff</a></code> | <code>{[ key: string ]: string}</code> | A map of stage names to IAM role ARNs for the diff operation. |
+| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis stage. |
 
 ---
 
@@ -1618,6 +1662,8 @@ public readonly assetPublishing: string;
 
 - *Type:* string
 
+IAM role ARN for the asset publishing stage.
+
 ---
 
 ##### `default`<sup>Optional</sup> <a name="default" id="projen-pipelines.GitlabIamRoleConfig.property.default"></a>
@@ -1627,6 +1673,8 @@ public readonly default: string;
 ```
 
 - *Type:* string
+
+Default IAM role ARN used if specific stage role is not provided.
 
 ---
 
@@ -1638,6 +1686,20 @@ public readonly deployment: {[ key: string ]: string};
 
 - *Type:* {[ key: string ]: string}
 
+A map of stage names to IAM role ARNs for the deployment operation.
+
+---
+
+##### `diff`<sup>Optional</sup> <a name="diff" id="projen-pipelines.GitlabIamRoleConfig.property.diff"></a>
+
+```typescript
+public readonly diff: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+A map of stage names to IAM role ARNs for the diff operation.
+
 ---
 
 ##### `synth`<sup>Optional</sup> <a name="synth" id="projen-pipelines.GitlabIamRoleConfig.property.synth"></a>
@@ -1647,6 +1709,94 @@ public readonly synth: string;
 ```
 
 - *Type:* string
+
+IAM role ARN for the synthesis stage.
+
+---
+
+### GitlabRunnerTags <a name="GitlabRunnerTags" id="projen-pipelines.GitlabRunnerTags"></a>
+
+Configuration for GitLab runner tags used within the CI/CD pipeline for various stages.
+
+This allows for specifying different runners based on the tags for different stages of the pipeline.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitlabRunnerTags.Initializer"></a>
+
+```typescript
+import { GitlabRunnerTags } from 'projen-pipelines'
+
+const gitlabRunnerTags: GitlabRunnerTags = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitlabRunnerTags.property.assetPublishing">assetPublishing</a></code> | <code>string[]</code> | Runner tags for the asset publishing stage. |
+| <code><a href="#projen-pipelines.GitlabRunnerTags.property.default">default</a></code> | <code>string[]</code> | Default runner tags used if specific stage tags are not provided. |
+| <code><a href="#projen-pipelines.GitlabRunnerTags.property.deployment">deployment</a></code> | <code>{[ key: string ]: string[]}</code> | A map of stage names to runner tags for the deployment operation. |
+| <code><a href="#projen-pipelines.GitlabRunnerTags.property.diff">diff</a></code> | <code>{[ key: string ]: string[]}</code> | A map of stage names to runner tags for the diff operation. |
+| <code><a href="#projen-pipelines.GitlabRunnerTags.property.synth">synth</a></code> | <code>string[]</code> | Runner tags for the synthesis stage. |
+
+---
+
+##### `assetPublishing`<sup>Optional</sup> <a name="assetPublishing" id="projen-pipelines.GitlabRunnerTags.property.assetPublishing"></a>
+
+```typescript
+public readonly assetPublishing: string[];
+```
+
+- *Type:* string[]
+
+Runner tags for the asset publishing stage.
+
+---
+
+##### `default`<sup>Optional</sup> <a name="default" id="projen-pipelines.GitlabRunnerTags.property.default"></a>
+
+```typescript
+public readonly default: string[];
+```
+
+- *Type:* string[]
+
+Default runner tags used if specific stage tags are not provided.
+
+---
+
+##### `deployment`<sup>Optional</sup> <a name="deployment" id="projen-pipelines.GitlabRunnerTags.property.deployment"></a>
+
+```typescript
+public readonly deployment: {[ key: string ]: string[]};
+```
+
+- *Type:* {[ key: string ]: string[]}
+
+A map of stage names to runner tags for the deployment operation.
+
+---
+
+##### `diff`<sup>Optional</sup> <a name="diff" id="projen-pipelines.GitlabRunnerTags.property.diff"></a>
+
+```typescript
+public readonly diff: {[ key: string ]: string[]};
+```
+
+- *Type:* {[ key: string ]: string[]}
+
+A map of stage names to runner tags for the diff operation.
+
+---
+
+##### `synth`<sup>Optional</sup> <a name="synth" id="projen-pipelines.GitlabRunnerTags.property.synth"></a>
+
+```typescript
+public readonly synth: string[];
+```
+
+- *Type:* string[]
+
+Runner tags for the synthesis stage.
 
 ---
 

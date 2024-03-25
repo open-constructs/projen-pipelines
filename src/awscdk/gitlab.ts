@@ -1,27 +1,81 @@
 import { awscdk, gitlab } from 'projen';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
+/**
+ * Configuration for IAM roles used within the GitLab CI/CD pipeline for various stages.
+ * Allows specifying different IAM roles for synthesis, asset publishing, and deployment stages,
+ * providing granular control over permissions.
+ */
 export interface GitlabIamRoleConfig {
+  /** Default IAM role ARN used if specific stage role is not provided. */
   readonly default?: string;
+  /** IAM role ARN for the synthesis stage. */
   readonly synth?: string;
+  /** IAM role ARN for the asset publishing stage. */
   readonly assetPublishing?: string;
+  /** A map of stage names to IAM role ARNs for the diff operation. */
+  readonly diff?: { [stage: string]: string };
+  /** A map of stage names to IAM role ARNs for the deployment operation. */
   readonly deployment?: { [stage: string]: string };
 }
 
-export interface GitlabCDKPipelineOptions extends CDKPipelineOptions {
-  readonly iamRoleArns: GitlabIamRoleConfig;
-  // readonly publishedCloudAssemblies?: boolean;
-  readonly image?: string;
+/**
+ * Configuration for GitLab runner tags used within the CI/CD pipeline for various stages.
+ * This allows for specifying different runners based on the tags for different stages of the pipeline.
+ */
+export interface GitlabRunnerTags {
+  /** Default runner tags used if specific stage tags are not provided. */
+  readonly default?: string[];
+  /** Runner tags for the synthesis stage. */
+  readonly synth?: string[];
+  /** Runner tags for the asset publishing stage. */
+  readonly assetPublishing?: string[];
+  /** A map of stage names to runner tags for the diff operation. */
+  readonly diff?: { [stage: string]: string[] };
+  /** A map of stage names to runner tags for the deployment operation. */
+  readonly deployment?: { [stage: string]: string[] };
 }
 
+/**
+ * Options for configuring the GitLab CDK pipeline, extending the base CDK pipeline options.
+ */
+export interface GitlabCDKPipelineOptions extends CDKPipelineOptions {
+  /** IAM role ARNs configuration for the pipeline. */
+  readonly iamRoleArns: GitlabIamRoleConfig;
+  /** Runner tags configuration for the pipeline. */
+  readonly runnerTags?: GitlabRunnerTags;
+  /** The Docker image to use for running the pipeline jobs. */
+  readonly image?: string;
+
+  // readonly publishedCloudAssemblies?: boolean;
+}
+
+/**
+ * The GitlabCDKPipeline class extends CDKPipeline to provide a way to configure and execute
+ * AWS CDK deployment pipelines within GitLab CI/CD environments. It integrates IAM role management,
+ * runner configuration, and defines stages and jobs for the deployment workflow.
+ */
 export class GitlabCDKPipeline extends CDKPipeline {
 
+  /** Indicates if versioned artifacts are required. Currently set to false  */
   public readonly needsVersionedArtifacts: boolean;
+
+  /** The Docker image used for pipeline jobs. Defaults to a specified image or a default value. */
   public readonly jobImage: string;
+
+  /** GitLab CI/CD configuration object. */
   public readonly config: gitlab.GitlabConfiguration;
 
+  /** List of deployment stages as strings. */
   private deploymentStages: string[] = [];
 
+  /**
+   * Constructs an instance of GitlabCDKPipeline, initializing the GitLab CI/CD configuration
+   * and setting up the necessary stages and jobs for AWS CDK deployment.
+   *
+   * @param {awscdk.AwsCdkTypeScriptApp} app - The AWS CDK app associated with the pipeline.
+   * @param {GitlabCDKPipelineOptions} options - Configuration options for the pipeline.
+   */
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: GitlabCDKPipelineOptions) {
     super(app, options);
 
@@ -45,6 +99,11 @@ export class GitlabCDKPipeline extends CDKPipeline {
     }
   }
 
+  /**
+   * Sets up base job snippets for artifact handling and AWS configuration.
+   * This method defines reusable job configurations to be extended by specific pipeline jobs,
+   * facilitating artifact caching and AWS authentication setup.
+   */
   protected setupSnippets() {
     this.config.addJobs({
       '.artifacts_cdk': {
@@ -97,6 +156,12 @@ awslogin() {
     });
   }
 
+  /**
+   * Creates the 'synth' stage of the pipeline to synthesize AWS CDK applications.
+   * This method configures the job to execute CDK synthesis, applying the appropriate IAM role
+   * for AWS commands and specifying runner tags for job execution. The synthesized outputs are
+   * configured to be cached as artifacts.
+   */
   protected createSynth(): void {
     const script = ['echo "Running CDK synth"'];
     if (this.options.iamRoleArns?.synth) {
@@ -109,11 +174,18 @@ awslogin() {
       synth: {
         extends: ['.aws_base', '.artifacts_cdk'],
         stage: 'synth',
+        tags: this.options.runnerTags?.synth ?? this.options.runnerTags?.default,
         script,
       },
     });
   }
 
+  /**
+   * Sets up the asset publishing stage of the pipeline.
+   * This method configures a job to upload synthesized assets to AWS, handling IAM role
+   * authentication and specifying runner tags. It depends on the successful completion
+   * of the 'synth' stage, ensuring assets are only published after successful synthesis.
+   */
   protected createAssetUpload(): void {
     const script = ['echo "Publish assets to AWS"'];
     if (this.options.iamRoleArns?.assetPublishing) {
@@ -126,12 +198,21 @@ awslogin() {
       publish_assets: {
         extends: ['.aws_base'],
         stage: 'publish_assets',
+        tags: this.options.runnerTags?.assetPublishing ?? this.options.runnerTags?.default,
         needs: [{ job: 'synth', artifacts: true }],
         script,
       },
     });
   }
 
+  /**
+   * Dynamically creates deployment stages based on the deployment configuration.
+   * For each provided deployment stage, this method sets up jobs for 'diff' and 'deploy' actions,
+   * applying the correct IAM roles and runner tags. It supports conditional manual approval for
+   * deployment stages, providing flexibility in the deployment workflow.
+   *
+   * @param {DeploymentStage} stage - The deployment stage configuration to set up.
+   */
   protected createDeployment(stage: DeploymentStage): void {
     const script = [];
     script.push(`awslogin '${this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default}'`);
@@ -142,6 +223,7 @@ awslogin() {
       [`diff-${stage.name}`]: {
         extends: ['.aws_base'],
         stage: stage.name,
+        tags: this.options.runnerTags?.diff?.[stage.name] ?? this.options.runnerTags?.deployment?.[stage.name] ?? this.options.runnerTags?.default,
         only: {
           refs: [this.branchName],
         },
@@ -150,7 +232,7 @@ awslogin() {
           { job: 'publish_assets' },
         ],
         script: [
-          `awslogin '${this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default}'`,
+          `awslogin '${this.options.iamRoleArns?.diff?.[stage.name] ?? this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default}'`,
           ...this.renderInstallCommands(),
           ...this.renderDiffCommands(stage.name),
         ],
@@ -158,6 +240,7 @@ awslogin() {
       [`deploy-${stage.name}`]: {
         extends: ['.aws_base', '.artifacts_cdkdeploy'],
         stage: stage.name,
+        tags: this.options.runnerTags?.deployment?.[stage.name] ?? this.options.runnerTags?.default,
         ...stage.manualApproval && {
           when: gitlab.JobWhen.MANUAL,
         },
