@@ -44,7 +44,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     }
   }
 
-  public getEngine(): PipelineEngine {
+  public engineType(): PipelineEngine {
     return PipelineEngine.GITHUB;
   }
 

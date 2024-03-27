@@ -75,7 +75,7 @@ export class BashCDKPipeline extends CDKPipeline {
 
   }
 
-  public getEngine(): PipelineEngine {
+  public engineType(): PipelineEngine {
     return PipelineEngine.BASH;
   }
 

@@ -160,7 +160,7 @@ export abstract class CDKPipeline extends Component {
 
   }
 
-  public abstract getEngine(): PipelineEngine;
+  public abstract engineType(): PipelineEngine;
 
   protected renderInstallCommands(): string[] {
     return [

@@ -291,7 +291,7 @@ awslogin() {
     this.deploymentStages.push(stage.name);
   }
 
-  public getEngine(): PipelineEngine {
+  public engineType(): PipelineEngine {
     return PipelineEngine.GITLAB;
   }
 
