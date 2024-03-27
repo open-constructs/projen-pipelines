@@ -2160,6 +2160,66 @@ public toGitlab(): GitlabStep
 
 
 
+### SimpleCommandStep <a name="SimpleCommandStep" id="projen-pipelines.SimpleCommandStep"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.SimpleCommandStep.Initializer"></a>
+
+```typescript
+import { SimpleCommandStep } from 'projen-pipelines'
+
+new SimpleCommandStep(project: Project, commands: string[])
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.commands">commands</a></code> | <code>string[]</code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.SimpleCommandStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `commands`<sup>Required</sup> <a name="commands" id="projen-pipelines.SimpleCommandStep.Initializer.parameter.commands"></a>
+
+- *Type:* string[]
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.SimpleCommandStep.toBash">toBash</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.SimpleCommandStep.toGithub">toGithub</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.SimpleCommandStep.toGitlab">toGitlab</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.SimpleCommandStep.toBash"></a>
+
+```typescript
+public toBash(): BashStep
+```
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.SimpleCommandStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStep
+```
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.SimpleCommandStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStep
+```
+
+
+
+
 
 ## Enums <a name="Enums" id="Enums"></a>
 
