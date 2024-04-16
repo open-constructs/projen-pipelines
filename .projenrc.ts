@@ -8,6 +8,7 @@ const project = new cdk.JsiiProject({
   copyrightPeriod: '2021',
   defaultReleaseBranch: 'main',
   name: 'projen-pipelines',
+  minNodeVersion: '18.0.0',
   projenrcTs: true,
   repositoryUrl: 'https://github.com/taimos/projen-pipelines.git',
   licensed: true,
@@ -25,7 +26,7 @@ const project = new cdk.JsiiProject({
     'standard-version',
   ],
   peerDeps: [
-    'projen',
+    'projen@>=0.81.0 <1.0.0',
     'constructs',
   ],
   autoApproveUpgrades: true,
