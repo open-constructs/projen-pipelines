@@ -63,7 +63,7 @@
   },
   "peerDependencies": {
     "constructs": "^10.3.0",
-    "projen": "^0.81.1"
+    "projen": ">=0.81.0 <1.0.0"
   },
   "dependencies": {
     "projen": "^0.81.1",

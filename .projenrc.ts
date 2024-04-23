@@ -25,7 +25,7 @@ const project = new cdk.JsiiProject({
     'standard-version',
   ],
   peerDeps: [
-    'projen',
+    'projen@>=0.81.0 <1.0.0',
     'constructs',
   ],
   autoApproveUpgrades: true,
