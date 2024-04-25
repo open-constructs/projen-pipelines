@@ -2,6 +2,7 @@ import { awscdk } from 'projen';
 import { GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
+import { PipelineEngine } from '../engine';
 
 /**
  * Configuration interface for GitHub-specific IAM roles used in the CDK pipeline.
@@ -69,6 +70,11 @@ export class GithubCDKPipeline extends CDKPipeline {
     }
   }
 
+  /** the type of engine this implementation of CDKPipeline is for */
+  public engineType(): PipelineEngine {
+    return PipelineEngine.GITHUB;
+  }
+
   /**
    * Creates a synthesis job for the pipeline using GitHub Actions.
    */
@@ -89,10 +95,20 @@ export class GithubCDKPipeline extends CDKPipeline {
         },
       });
     }
+    const preInstallSteps = (this.options.preInstallSteps ?? []).map(s => s.toGithub());
+    const preSynthSteps = (this.options.preSynthSteps ?? []).map(s => s.toGithub());
+    const postSynthSteps = (this.options.postSynthSteps ?? []).map(s => s.toGithub());
 
+    steps.push(...preInstallSteps.flatMap(s => s.steps));
+    steps.push(...this.renderInstallCommands().map(cmd => ({
+      run: cmd,
+    })));
+
+    steps.push(...preSynthSteps.flatMap(s => s.steps));
     steps.push(...this.renderSynthCommands().map(cmd => ({
       run: cmd,
     })));
+    steps.push(...postSynthSteps.flatMap(s => s.steps));
 
     steps.push({
       uses: 'actions/upload-artifact@v4',
@@ -108,6 +124,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       env: {
         CI: 'true',
       },
+      needs: [...preInstallSteps.flatMap(s => s.needs), ...preSynthSteps.flatMap(s => s.needs), ...postSynthSteps.flatMap(s => s.needs)],
       permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
       steps,
     });
@@ -117,9 +134,11 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a job to upload assets to AWS as part of the pipeline.
    */
   public createAssetUpload(): void {
+    const preInstallSteps = (this.options.preInstallSteps ?? []).map(s => s.toGithub());
+
     this.deploymentWorkflow.addJob('assetUpload', {
       name: 'Publish assets to AWS',
-      needs: ['synth'],
+      needs: ['synth', ...preInstallSteps.flatMap(s => s.needs)],
       runsOn: ['ubuntu-latest'],
       env: {
         CI: 'true',
@@ -149,6 +168,10 @@ export class GithubCDKPipeline extends CDKPipeline {
           path: `${this.app.cdkConfig.cdkout}/`,
         },
       },
+      ...preInstallSteps.flatMap(s => s.steps),
+      ...this.renderInstallCommands().map(cmd => ({
+        run: cmd,
+      })),
       ...this.getAssetUploadCommands(this.needsVersionedArtifacts).map(cmd => ({
         run: cmd,
       }))],
@@ -160,6 +183,8 @@ export class GithubCDKPipeline extends CDKPipeline {
    * @param stage - The deployment stage to create.
    */
   public createDeployment(stage: DeploymentStage): void {
+    const preInstallSteps = (this.options.preInstallSteps ?? []).map(s => s.toGithub());
+
     if (stage.manualApproval === true) {
       // Create new workflow for deployment
       const stageWorkflow = this.app.github!.addWorkflow(`release-${stage.name}`);
@@ -175,6 +200,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
       stageWorkflow.addJob('deploy', {
         name: `Release stage ${stage.name} to AWS`,
+        needs: preInstallSteps.flatMap(s => s.needs),
         runsOn: ['ubuntu-latest'],
         env: {
           CI: 'true',
@@ -192,6 +218,7 @@ export class GithubCDKPipeline extends CDKPipeline {
             'aws-region': stage.env.region,
           },
         },
+        ...preInstallSteps.flatMap(s => s.steps),
         ...this.renderInstallCommands().map(cmd => ({
           run: cmd,
         })),
@@ -217,7 +244,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       // Add deployment to CI/CD workflow
       this.deploymentWorkflow.addJob(`deploy-${stage.name}`, {
         name: `Deploy stage ${stage.name} to AWS`,
-        needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
+        needs: ['assetUpload', ...preInstallSteps.flatMap(s => s.needs), ...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])],
         runsOn: ['ubuntu-latest'],
         env: {
           CI: 'true',
@@ -241,6 +268,7 @@ export class GithubCDKPipeline extends CDKPipeline {
             path: `${this.app.cdkConfig.cdkout}/`,
           },
         },
+        ...preInstallSteps.flatMap(s => s.steps),
         ...this.renderInstallCommands().map(cmd => ({
           run: cmd,
         })),
