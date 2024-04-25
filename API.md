@@ -1035,31 +1035,35 @@ This field is used to define a prefix for the AWS Stack resources created during
 
 ---
 
-### BashStep <a name="BashStep" id="projen-pipelines.BashStep"></a>
+### BashStepConfig <a name="BashStepConfig" id="projen-pipelines.BashStepConfig"></a>
 
-#### Initializer <a name="Initializer" id="projen-pipelines.BashStep.Initializer"></a>
+Configuration interface for a bash script step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.BashStepConfig.Initializer"></a>
 
 ```typescript
-import { BashStep } from 'projen-pipelines'
+import { BashStepConfig } from 'projen-pipelines'
 
-const bashStep: BashStep = { ... }
+const bashStepConfig: BashStepConfig = { ... }
 ```
 
 #### Properties <a name="Properties" id="Properties"></a>
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.BashStep.property.commands">commands</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashStepConfig.property.commands">commands</a></code> | <code>string[]</code> | Shell commands to execute. |
 
 ---
 
-##### `commands`<sup>Required</sup> <a name="commands" id="projen-pipelines.BashStep.property.commands"></a>
+##### `commands`<sup>Required</sup> <a name="commands" id="projen-pipelines.BashStepConfig.property.commands"></a>
 
 ```typescript
 public readonly commands: string[];
 ```
 
 - *Type:* string[]
+
+Shell commands to execute.
 
 ---
 
@@ -1598,26 +1602,28 @@ public readonly synth: string;
 
 ---
 
-### GithubStep <a name="GithubStep" id="projen-pipelines.GithubStep"></a>
+### GithubStepConfig <a name="GithubStepConfig" id="projen-pipelines.GithubStepConfig"></a>
 
-#### Initializer <a name="Initializer" id="projen-pipelines.GithubStep.Initializer"></a>
+Configuration interface for a GitHub Actions step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GithubStepConfig.Initializer"></a>
 
 ```typescript
-import { GithubStep } from 'projen-pipelines'
+import { GithubStepConfig } from 'projen-pipelines'
 
-const githubStep: GithubStep = { ... }
+const githubStepConfig: GithubStepConfig = { ... }
 ```
 
 #### Properties <a name="Properties" id="Properties"></a>
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.GithubStep.property.needs">needs</a></code> | <code>string[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.GithubStep.property.steps">steps</a></code> | <code>projen.github.workflows.JobStep[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubStepConfig.property.needs">needs</a></code> | <code>string[]</code> | Dependencies which need to be completed before this step. |
+| <code><a href="#projen-pipelines.GithubStepConfig.property.steps">steps</a></code> | <code>projen.github.workflows.JobStep[]</code> | Commands wrapped as GitHub Action job steps. |
 
 ---
 
-##### `needs`<sup>Required</sup> <a name="needs" id="projen-pipelines.GithubStep.property.needs"></a>
+##### `needs`<sup>Required</sup> <a name="needs" id="projen-pipelines.GithubStepConfig.property.needs"></a>
 
 ```typescript
 public readonly needs: string[];
@@ -1625,15 +1631,19 @@ public readonly needs: string[];
 
 - *Type:* string[]
 
+Dependencies which need to be completed before this step.
+
 ---
 
-##### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.GithubStep.property.steps"></a>
+##### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.GithubStepConfig.property.steps"></a>
 
 ```typescript
 public readonly steps: JobStep[];
 ```
 
 - *Type:* projen.github.workflows.JobStep[]
+
+Commands wrapped as GitHub Action job steps.
 
 ---
 
@@ -2027,27 +2037,29 @@ Runner tags for the synthesis stage.
 
 ---
 
-### GitlabStep <a name="GitlabStep" id="projen-pipelines.GitlabStep"></a>
+### GitlabStepConfig <a name="GitlabStepConfig" id="projen-pipelines.GitlabStepConfig"></a>
 
-#### Initializer <a name="Initializer" id="projen-pipelines.GitlabStep.Initializer"></a>
+Configuration interface for a GitLab CI step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitlabStepConfig.Initializer"></a>
 
 ```typescript
-import { GitlabStep } from 'projen-pipelines'
+import { GitlabStepConfig } from 'projen-pipelines'
 
-const gitlabStep: GitlabStep = { ... }
+const gitlabStepConfig: GitlabStepConfig = { ... }
 ```
 
 #### Properties <a name="Properties" id="Properties"></a>
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.GitlabStep.property.commands">commands</a></code> | <code>string[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabStep.property.extensions">extensions</a></code> | <code>string[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabStep.property.needs">needs</a></code> | <code>projen.gitlab.Need[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabStepConfig.property.commands">commands</a></code> | <code>string[]</code> | Shell commands to execute in this step. |
+| <code><a href="#projen-pipelines.GitlabStepConfig.property.extensions">extensions</a></code> | <code>string[]</code> | List of job extensions related to the step. |
+| <code><a href="#projen-pipelines.GitlabStepConfig.property.needs">needs</a></code> | <code>projen.gitlab.Need[]</code> | Dependencies which need to be completed before this step. |
 
 ---
 
-##### `commands`<sup>Required</sup> <a name="commands" id="projen-pipelines.GitlabStep.property.commands"></a>
+##### `commands`<sup>Required</sup> <a name="commands" id="projen-pipelines.GitlabStepConfig.property.commands"></a>
 
 ```typescript
 public readonly commands: string[];
@@ -2055,9 +2067,11 @@ public readonly commands: string[];
 
 - *Type:* string[]
 
+Shell commands to execute in this step.
+
 ---
 
-##### `extensions`<sup>Required</sup> <a name="extensions" id="projen-pipelines.GitlabStep.property.extensions"></a>
+##### `extensions`<sup>Required</sup> <a name="extensions" id="projen-pipelines.GitlabStepConfig.property.extensions"></a>
 
 ```typescript
 public readonly extensions: string[];
@@ -2065,15 +2079,19 @@ public readonly extensions: string[];
 
 - *Type:* string[]
 
+List of job extensions related to the step.
+
 ---
 
-##### `needs`<sup>Required</sup> <a name="needs" id="projen-pipelines.GitlabStep.property.needs"></a>
+##### `needs`<sup>Required</sup> <a name="needs" id="projen-pipelines.GitlabStepConfig.property.needs"></a>
 
 ```typescript
 public readonly needs: Need[];
 ```
 
 - *Type:* projen.gitlab.Need[]
+
+Dependencies which need to be completed before this step.
 
 ---
 
@@ -2109,6 +2127,8 @@ public readonly env: Environment;
 
 ### PipelineStep <a name="PipelineStep" id="projen-pipelines.PipelineStep"></a>
 
+Abstract class defining the structure of a pipeline step.
+
 #### Initializers <a name="Initializers" id="projen-pipelines.PipelineStep.Initializer"></a>
 
 ```typescript
@@ -2119,7 +2139,7 @@ new PipelineStep(project: Project)
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.PipelineStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.PipelineStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
 
 ---
 
@@ -2127,40 +2147,56 @@ new PipelineStep(project: Project)
 
 - *Type:* projen.Project
 
+The projen project reference.
+
 ---
 
 #### Methods <a name="Methods" id="Methods"></a>
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#projen-pipelines.PipelineStep.toBash">toBash</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.PipelineStep.toGithub">toGithub</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.PipelineStep.toGitlab">toGitlab</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.PipelineStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.PipelineStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.PipelineStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
 ---
 
 ##### `toBash` <a name="toBash" id="projen-pipelines.PipelineStep.toBash"></a>
 
 ```typescript
-public toBash(): BashStep
+public toBash(): BashStepConfig
 ```
+
+Generates a configuration for a bash script step.
+
+Must be implemented by subclasses.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.PipelineStep.toGithub"></a>
 
 ```typescript
-public toGithub(): GithubStep
+public toGithub(): GithubStepConfig
 ```
+
+Generates a configuration for a GitHub Actions step.
+
+Must be implemented by subclasses.
 
 ##### `toGitlab` <a name="toGitlab" id="projen-pipelines.PipelineStep.toGitlab"></a>
 
 ```typescript
-public toGitlab(): GitlabStep
+public toGitlab(): GitlabStepConfig
 ```
+
+Generates a configuration for a GitLab CI step.
+
+Must be implemented by subclasses.
 
 
 
 
 ### SimpleCommandStep <a name="SimpleCommandStep" id="projen-pipelines.SimpleCommandStep"></a>
+
+Concrete implementation of PipelineStep that executes simple commands.
 
 #### Initializers <a name="Initializers" id="projen-pipelines.SimpleCommandStep.Initializer"></a>
 
@@ -2172,8 +2208,8 @@ new SimpleCommandStep(project: Project, commands: string[])
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
-| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.commands">commands</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.commands">commands</a></code> | <code>string[]</code> | - Shell commands to execute. |
 
 ---
 
@@ -2181,11 +2217,15 @@ new SimpleCommandStep(project: Project, commands: string[])
 
 - *Type:* projen.Project
 
+The projen project reference.
+
 ---
 
 ##### `commands`<sup>Required</sup> <a name="commands" id="projen-pipelines.SimpleCommandStep.Initializer.parameter.commands"></a>
 
 - *Type:* string[]
+
+Shell commands to execute.
 
 ---
 
@@ -2193,29 +2233,35 @@ new SimpleCommandStep(project: Project, commands: string[])
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#projen-pipelines.SimpleCommandStep.toBash">toBash</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.SimpleCommandStep.toGithub">toGithub</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.SimpleCommandStep.toGitlab">toGitlab</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.SimpleCommandStep.toBash">toBash</a></code> | Converts the step into a Bash script configuration. |
+| <code><a href="#projen-pipelines.SimpleCommandStep.toGithub">toGithub</a></code> | Converts the step into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.SimpleCommandStep.toGitlab">toGitlab</a></code> | Converts the step into a GitLab CI configuration. |
 
 ---
 
 ##### `toBash` <a name="toBash" id="projen-pipelines.SimpleCommandStep.toBash"></a>
 
 ```typescript
-public toBash(): BashStep
+public toBash(): BashStepConfig
 ```
+
+Converts the step into a Bash script configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.SimpleCommandStep.toGithub"></a>
 
 ```typescript
-public toGithub(): GithubStep
+public toGithub(): GithubStepConfig
 ```
+
+Converts the step into a GitHub Actions step configuration.
 
 ##### `toGitlab` <a name="toGitlab" id="projen-pipelines.SimpleCommandStep.toGitlab"></a>
 
 ```typescript
-public toGitlab(): GitlabStep
+public toGitlab(): GitlabStepConfig
 ```
+
+Converts the step into a GitLab CI configuration.
 
 
 
