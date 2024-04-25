@@ -12,6 +12,7 @@ export interface GithubIamRoleConfig {
 
 export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
   readonly iamRoleArns: GithubIamRoleConfig;
+  readonly runnerTags?: string[];
 }
 
 export class GithubCDKPipeline extends CDKPipeline {
@@ -75,7 +76,7 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     this.deploymentWorkflow.addJob('synth', {
       name: 'Synth CDK application',
-      runsOn: ['ubuntu-latest'],
+      runsOn: this.options.runnerTags ?? ['ubuntu-latest'],
       env: {
         CI: 'true',
       },
@@ -88,7 +89,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.deploymentWorkflow.addJob('assetUpload', {
       name: 'Publish assets to AWS',
       needs: ['synth'],
-      runsOn: ['ubuntu-latest'],
+      runsOn: this.options.runnerTags ?? ['ubuntu-latest'],
       env: {
         CI: 'true',
       },
@@ -139,7 +140,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
       stageWorkflow.addJob('deploy', {
         name: `Release stage ${stage.name} to AWS`,
-        runsOn: ['ubuntu-latest'],
+        runsOn: this.options.runnerTags ?? ['ubuntu-latest'],
         env: {
           CI: 'true',
         },
@@ -182,7 +183,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       this.deploymentWorkflow.addJob(`deploy-${stage.name}`, {
         name: `Deploy stage ${stage.name} to AWS`,
         needs: this.deploymentStages.length > 0 ? ['assetUpload', `deploy-${this.deploymentStages.at(-1)!}`] : ['assetUpload'],
-        runsOn: ['ubuntu-latest'],
+        runsOn: this.options.runnerTags ?? ['ubuntu-latest'],
         env: {
           CI: 'true',
         },
