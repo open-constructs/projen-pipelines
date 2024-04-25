@@ -1,4 +1,4 @@
-import { cdk, github, javascript } from 'projen';
+import { ReleasableCommits, cdk, github, javascript } from 'projen';
 
 const project = new cdk.JsiiProject({
   author: 'Taimos GmbH',
@@ -33,7 +33,13 @@ const project = new cdk.JsiiProject({
   depsUpgradeOptions: { workflowOptions: { schedule: javascript.UpgradeDependenciesSchedule.WEEKLY } },
   githubOptions: {
     projenCredentials: github.GithubCredentials.fromApp(),
+    pullRequestLintOptions: {
+      semanticTitleOptions: {
+        types: ['feat', 'fix', 'chore', 'ci', 'docs', 'style', 'refactor', 'test', 'revert', 'Revert'],
+      },
+    },
   },
+  releasableCommits: ReleasableCommits.featuresAndFixes(),
   keywords: [
     'aws',
     'cdk',
