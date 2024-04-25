@@ -22,7 +22,15 @@ export interface GithubIamRoleConfig {
  * Extension of the base CDKPipeline options including specific configurations for GitHub.
  */
 export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
+
+  /** IAM config for GitHub Actions */
   readonly iamRoleArns: GithubIamRoleConfig;
+
+  /**
+   * runner tags to use to select runners
+   *
+   * @default ['ubuntu-latest']
+   */
   readonly runnerTags?: string[];
 }
 
