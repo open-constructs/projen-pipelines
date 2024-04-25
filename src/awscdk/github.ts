@@ -3,28 +3,52 @@ import { GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
+/**
+ * Configuration interface for GitHub-specific IAM roles used in the CDK pipeline.
+ */
 export interface GithubIamRoleConfig {
+
+  /** Default IAM role ARN used if no specific role is provided. */
   readonly default?: string;
+  /** IAM role ARN for the synthesis step. */
   readonly synth?: string;
+  /** IAM role ARN for the asset publishing step. */
   readonly assetPublishing?: string;
+  /** IAM role ARNs for different deployment stages. */
   readonly deployment?: { [stage: string]: string };
 }
 
+/**
+ * Extension of the base CDKPipeline options including specific configurations for GitHub.
+ */
 export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
   readonly iamRoleArns: GithubIamRoleConfig;
   readonly runnerTags?: string[];
 }
 
+
+/**
+ * Implements a CDK Pipeline configured specifically for GitHub workflows.
+ */
 export class GithubCDKPipeline extends CDKPipeline {
 
+  /** Indicates if versioned artifacts are needed based on manual approval requirements. */
   public readonly needsVersionedArtifacts: boolean;
 
+  /** The GitHub workflow associated with the pipeline. */
   private deploymentWorkflow: GithubWorkflow;
+  /** List of deployment stages for the pipeline. */
   private deploymentStages: string[] = [];
 
+  /**
+   * Constructs a new GithubCDKPipeline instance.
+   * @param app - The CDK app associated with this pipeline.
+   * @param options - Configuration options for the pipeline.
+   */
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: GithubCDKPipelineOptions) {
     super(app, options);
 
+    // Initialize the deployment workflow on GitHub.
     this.deploymentWorkflow = this.app.github!.addWorkflow('deploy');
     this.deploymentWorkflow.on({
       push: {
@@ -33,8 +57,10 @@ export class GithubCDKPipeline extends CDKPipeline {
       workflowDispatch: {},
     });
 
+    // Determine if versioned artifacts are necessary.
     this.needsVersionedArtifacts = this.options.stages.find(s => s.manualApproval === true) !== undefined;
 
+    // Create jobs for synthesizing, asset uploading, and deployment.
     this.createSynth();
 
     this.createAssetUpload();
@@ -44,6 +70,9 @@ export class GithubCDKPipeline extends CDKPipeline {
     }
   }
 
+  /**
+   * Creates a synthesis job for the pipeline using GitHub Actions.
+   */
   private createSynth(): void {
     const steps: JobStep[] = [{
       name: 'Checkout',
@@ -85,6 +114,9 @@ export class GithubCDKPipeline extends CDKPipeline {
     });
   }
 
+  /**
+   * Creates a job to upload assets to AWS as part of the pipeline.
+   */
   public createAssetUpload(): void {
     this.deploymentWorkflow.addJob('assetUpload', {
       name: 'Publish assets to AWS',
@@ -124,6 +156,10 @@ export class GithubCDKPipeline extends CDKPipeline {
     });
   }
 
+  /**
+   * Creates a job to deploy the CDK application to AWS.
+   * @param stage - The deployment stage to create.
+   */
   public createDeployment(stage: DeploymentStage): void {
     if (stage.manualApproval === true) {
       // Create new workflow for deployment
