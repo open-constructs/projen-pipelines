@@ -392,6 +392,8 @@ public readonly stackPrefix: string;
 
 ### GithubCDKPipeline <a name="GithubCDKPipeline" id="projen-pipelines.GithubCDKPipeline"></a>
 
+Implements a CDK Pipeline configured specifically for GitHub workflows.
+
 #### Initializers <a name="Initializers" id="projen-pipelines.GithubCDKPipeline.Initializer"></a>
 
 ```typescript
@@ -402,8 +404,8 @@ new GithubCDKPipeline(app: AwsCdkTypeScriptApp, options: GithubCDKPipelineOption
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.GithubCDKPipeline.Initializer.parameter.app">app</a></code> | <code>projen.awscdk.AwsCdkTypeScriptApp</code> | *No description.* |
-| <code><a href="#projen-pipelines.GithubCDKPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GithubCDKPipelineOptions">GithubCDKPipelineOptions</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.Initializer.parameter.app">app</a></code> | <code>projen.awscdk.AwsCdkTypeScriptApp</code> | - The CDK app associated with this pipeline. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GithubCDKPipelineOptions">GithubCDKPipelineOptions</a></code> | - Configuration options for the pipeline. |
 
 ---
 
@@ -411,11 +413,15 @@ new GithubCDKPipeline(app: AwsCdkTypeScriptApp, options: GithubCDKPipelineOption
 
 - *Type:* projen.awscdk.AwsCdkTypeScriptApp
 
+The CDK app associated with this pipeline.
+
 ---
 
 ##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GithubCDKPipeline.Initializer.parameter.options"></a>
 
 - *Type:* <a href="#projen-pipelines.GithubCDKPipelineOptions">GithubCDKPipelineOptions</a>
+
+Configuration options for the pipeline.
 
 ---
 
@@ -427,9 +433,9 @@ new GithubCDKPipeline(app: AwsCdkTypeScriptApp, options: GithubCDKPipelineOption
 | <code><a href="#projen-pipelines.GithubCDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
-| <code><a href="#projen-pipelines.GithubCDKPipeline.engineType">engineType</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.GithubCDKPipeline.createAssetUpload">createAssetUpload</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.GithubCDKPipeline.createDeployment">createDeployment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.engineType">engineType</a></code> | the type of engine this implementation of CDKPipeline is for. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.createAssetUpload">createAssetUpload</a></code> | Creates a job to upload assets to AWS as part of the pipeline. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.createDeployment">createDeployment</a></code> | Creates a job to deploy the CDK application to AWS. |
 
 ---
 
@@ -473,11 +479,15 @@ Synthesizes files to the project output directory.
 public engineType(): PipelineEngine
 ```
 
+the type of engine this implementation of CDKPipeline is for.
+
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.GithubCDKPipeline.createAssetUpload"></a>
 
 ```typescript
 public createAssetUpload(): void
 ```
+
+Creates a job to upload assets to AWS as part of the pipeline.
 
 ##### `createDeployment` <a name="createDeployment" id="projen-pipelines.GithubCDKPipeline.createDeployment"></a>
 
@@ -485,9 +495,13 @@ public createAssetUpload(): void
 public createDeployment(stage: DeploymentStage): void
 ```
 
+Creates a job to deploy the CDK application to AWS.
+
 ###### `stage`<sup>Required</sup> <a name="stage" id="projen-pipelines.GithubCDKPipeline.createDeployment.parameter.stage"></a>
 
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>
+
+The deployment stage to create.
 
 ---
 
@@ -556,7 +570,7 @@ Test whether the given construct is a component.
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.GithubCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | Indicates if versioned artifacts are needed based on manual approval requirements. |
 
 ---
 
@@ -609,6 +623,8 @@ public readonly needsVersionedArtifacts: boolean;
 ```
 
 - *Type:* boolean
+
+Indicates if versioned artifacts are needed based on manual approval requirements.
 
 ---
 
@@ -1356,6 +1372,8 @@ availability, and pricing.
 
 ### GithubCDKPipelineOptions <a name="GithubCDKPipelineOptions" id="projen-pipelines.GithubCDKPipelineOptions"></a>
 
+Extension of the base CDKPipeline options including specific configurations for GitHub.
+
 #### Initializer <a name="Initializer" id="projen-pipelines.GithubCDKPipelineOptions.Initializer"></a>
 
 ```typescript
@@ -1543,6 +1561,8 @@ public readonly iamRoleArns: GithubIamRoleConfig;
 
 ### GithubIamRoleConfig <a name="GithubIamRoleConfig" id="projen-pipelines.GithubIamRoleConfig"></a>
 
+Configuration interface for GitHub-specific IAM roles used in the CDK pipeline.
+
 #### Initializer <a name="Initializer" id="projen-pipelines.GithubIamRoleConfig.Initializer"></a>
 
 ```typescript
@@ -1555,10 +1575,10 @@ const githubIamRoleConfig: GithubIamRoleConfig = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.default">default</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | *No description.* |
-| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing step. |
+| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if no specific role is provided. |
+| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different deployment stages. |
+| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis step. |
 
 ---
 
@@ -1570,6 +1590,8 @@ public readonly assetPublishing: string;
 
 - *Type:* string
 
+IAM role ARN for the asset publishing step.
+
 ---
 
 ##### `default`<sup>Optional</sup> <a name="default" id="projen-pipelines.GithubIamRoleConfig.property.default"></a>
@@ -1579,6 +1601,8 @@ public readonly default: string;
 ```
 
 - *Type:* string
+
+Default IAM role ARN used if no specific role is provided.
 
 ---
 
@@ -1590,6 +1614,8 @@ public readonly deployment: {[ key: string ]: string};
 
 - *Type:* {[ key: string ]: string}
 
+IAM role ARNs for different deployment stages.
+
 ---
 
 ##### `synth`<sup>Optional</sup> <a name="synth" id="projen-pipelines.GithubIamRoleConfig.property.synth"></a>
@@ -1599,6 +1625,8 @@ public readonly synth: string;
 ```
 
 - *Type:* string
+
+IAM role ARN for the synthesis step.
 
 ---
 
