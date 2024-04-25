@@ -1253,6 +1253,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.GithubIamRoleConfig">GithubIamRoleConfig</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | *No description.* |
 
 ---
 
@@ -1379,6 +1380,16 @@ public readonly iamRoleArns: GithubIamRoleConfig;
 ```
 
 - *Type:* <a href="#projen-pipelines.GithubIamRoleConfig">GithubIamRoleConfig</a>
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GithubCDKPipelineOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
 
 ---
 
