@@ -43,3 +43,8 @@ export async function addAttachmentToIssue(issueKey: string, filePath: string) {
   const res = await postToJira(`/issue/${issueKey}/attachments`, data, { 'Content-Type': 'multipart/form-data' });
   console.log(res.status);
 }
+
+export function findJiraIssueKey(searchString: string): string | undefined {
+  const match = searchString.match(/([A-Z][A-Za-z0-9_]*-\d+)(:|\s|$|\]|\))/);
+  return match?.[1];
+}
