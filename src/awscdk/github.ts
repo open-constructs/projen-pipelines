@@ -4,6 +4,8 @@ import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 import { PipelineEngine } from '../engine';
 
+const DEFAULT_RUNNER_TAGS = ['ubuntu-latest'];
+
 /**
  * Configuration interface for GitHub-specific IAM roles used in the CDK pipeline.
  */
@@ -23,7 +25,16 @@ export interface GithubIamRoleConfig {
  * Extension of the base CDKPipeline options including specific configurations for GitHub.
  */
 export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
-  readonly iamRoleArns: GithubIamRoleConfig; // IAM role configurations.
+
+  /** IAM config for GitHub Actions */
+  readonly iamRoleArns: GithubIamRoleConfig;
+
+  /**
+   * runner tags to use to select runners
+   *
+   * @default ['ubuntu-latest']
+   */
+  readonly runnerTags?: string[];
 }
 
 
@@ -120,7 +131,7 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     this.deploymentWorkflow.addJob('synth', {
       name: 'Synth CDK application',
-      runsOn: ['ubuntu-latest'],
+      runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       env: {
         CI: 'true',
       },
@@ -139,7 +150,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.deploymentWorkflow.addJob('assetUpload', {
       name: 'Publish assets to AWS',
       needs: ['synth', ...preInstallSteps.flatMap(s => s.needs)],
-      runsOn: ['ubuntu-latest'],
+      runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       env: {
         CI: 'true',
       },
@@ -201,7 +212,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       stageWorkflow.addJob('deploy', {
         name: `Release stage ${stage.name} to AWS`,
         needs: preInstallSteps.flatMap(s => s.needs),
-        runsOn: ['ubuntu-latest'],
+        runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         env: {
           CI: 'true',
         },
@@ -245,7 +256,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       this.deploymentWorkflow.addJob(`deploy-${stage.name}`, {
         name: `Deploy stage ${stage.name} to AWS`,
         needs: ['assetUpload', ...preInstallSteps.flatMap(s => s.needs), ...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])],
-        runsOn: ['ubuntu-latest'],
+        runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         env: {
           CI: 'true',
         },
