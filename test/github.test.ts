@@ -122,6 +122,7 @@ test('Github snapshot with manual approval and GH packages', () => {
   });
 
   const snapshot = synthSnapshot(p);
+  expect(snapshot['.npmrc']).toMatchSnapshot();
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
   expect(snapshot['.github/workflows/release-prod.yml']).toMatchSnapshot();
 });
