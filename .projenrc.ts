@@ -12,14 +12,12 @@ const project = new cdk.JsiiProject({
   repositoryUrl: 'https://github.com/taimos/projen-pipelines.git',
   licensed: true,
   license: 'Apache-2.0',
+  jsiiVersion: '~5.4',
   devDeps: [
     'constructs',
     'fs-extra',
     '@types/fs-extra',
     '@types/standard-version',
-  ],
-  deps: [
-    'projen',
   ],
   bundledDeps: [
     'standard-version',
