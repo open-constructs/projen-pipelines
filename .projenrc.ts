@@ -12,6 +12,7 @@ const project = new cdk.JsiiProject({
   repositoryUrl: 'https://github.com/taimos/projen-pipelines.git',
   licensed: true,
   license: 'Apache-2.0',
+  jsiiVersion: '~5.4',
   devDeps: [
     'constructs',
     'fs-extra',
@@ -20,9 +21,11 @@ const project = new cdk.JsiiProject({
   ],
   deps: [
     'projen',
+    'axios',
   ],
   bundledDeps: [
     'standard-version',
+    'axios',
   ],
   peerDeps: [
     'projen@>=0.81.0 <1.0.0',
@@ -46,6 +49,8 @@ const project = new cdk.JsiiProject({
   ],
   bin: {
     'pipelines-release': 'lib/release.js',
+    'pipelines-jira-comment': 'lib/jira/comment.js',
+    'pipelines-jira-attachment': 'lib/jira/attachment.js',
   },
   releaseToNpm: true,
   gitpod: true,
