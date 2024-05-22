@@ -35,6 +35,9 @@ export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
    * @default ['ubuntu-latest']
    */
   readonly runnerTags?: string[];
+
+  /** use GitHub Packages to store vesioned artifacts of cloud assembly; also needed for manual approvals */
+  readonly useGithubPackagesForAssembly?: boolean;
 }
 
 
@@ -51,13 +54,23 @@ export class GithubCDKPipeline extends CDKPipeline {
   /** List of deployment stages for the pipeline. */
   private deploymentStages: string[] = [];
 
+  protected useGithubPackages: boolean;
+
   /**
    * Constructs a new GithubCDKPipeline instance.
    * @param app - The CDK app associated with this pipeline.
    * @param options - Configuration options for the pipeline.
    */
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: GithubCDKPipelineOptions) {
-    super(app, options);
+    super(app, {
+      ...options,
+      ...options.useGithubPackagesForAssembly && {
+        preInstallCommands: [
+          'echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV',
+          ...(options.preInstallCommands ?? []),
+        ],
+      },
+    });
 
     // Initialize the deployment workflow on GitHub.
     this.deploymentWorkflow = this.app.github!.addWorkflow('deploy');
@@ -69,7 +82,14 @@ export class GithubCDKPipeline extends CDKPipeline {
     });
 
     // Determine if versioned artifacts are necessary.
-    this.needsVersionedArtifacts = this.options.stages.find(s => s.manualApproval === true) !== undefined;
+    this.needsVersionedArtifacts = options.stages.find(s => s.manualApproval === true) !== undefined;;
+    this.useGithubPackages = this.needsVersionedArtifacts && (options.useGithubPackagesForAssembly ?? false);
+
+    if (this.useGithubPackages) {
+      app.npmrc.addRegistry('https://npm.pkg.github.com', `@${this.options.pkgNamespace}`);
+      app.npmrc.addConfig('//npm.pkg.github.com/:_authToken', '${GITHUB_TOKEN}');
+      app.npmrc.addConfig('//npm.pkg.github.com/:always-auth', 'true');
+    }
 
     // Create jobs for synthesizing, asset uploading, and deployment.
     this.createSynth();
@@ -136,7 +156,13 @@ export class GithubCDKPipeline extends CDKPipeline {
         CI: 'true',
       },
       needs: [...preInstallSteps.flatMap(s => s.needs), ...preSynthSteps.flatMap(s => s.needs), ...postSynthSteps.flatMap(s => s.needs)],
-      permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
+      permissions: {
+        idToken: JobPermission.WRITE,
+        contents: JobPermission.READ,
+        ...this.useGithubPackages && {
+          packages: JobPermission.READ,
+        },
+      },
       steps,
     });
   }
@@ -154,7 +180,13 @@ export class GithubCDKPipeline extends CDKPipeline {
       env: {
         CI: 'true',
       },
-      permissions: { idToken: JobPermission.WRITE, contents: this.needsVersionedArtifacts ? JobPermission.WRITE : JobPermission.READ },
+      permissions: {
+        idToken: JobPermission.WRITE,
+        contents: this.needsVersionedArtifacts ? JobPermission.WRITE : JobPermission.READ,
+        ...this.useGithubPackages && {
+          packages: JobPermission.WRITE,
+        },
+      },
       steps: [{
         name: 'Checkout',
         uses: 'actions/checkout@v4',
@@ -216,7 +248,13 @@ export class GithubCDKPipeline extends CDKPipeline {
         env: {
           CI: 'true',
         },
-        permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
+        permissions: {
+          idToken: JobPermission.WRITE,
+          contents: JobPermission.READ,
+          ...this.useGithubPackages && {
+            packages: JobPermission.READ,
+          },
+        },
         steps: [{
           name: 'Checkout',
           uses: 'actions/checkout@v4',
@@ -260,7 +298,13 @@ export class GithubCDKPipeline extends CDKPipeline {
         env: {
           CI: 'true',
         },
-        permissions: { idToken: JobPermission.WRITE, contents: JobPermission.READ },
+        permissions: {
+          idToken: JobPermission.WRITE,
+          contents: JobPermission.READ,
+          ...this.useGithubPackages && {
+            packages: JobPermission.READ,
+          },
+        },
         steps: [{
           name: 'Checkout',
           uses: 'actions/checkout@v4',
