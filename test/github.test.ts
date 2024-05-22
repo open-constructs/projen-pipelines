@@ -96,3 +96,32 @@ test('Github snapshot with custom runner', () => {
   const snapshot = synthSnapshot(p);
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
 });
+
+test('Github snapshot with manual approval and GH packages', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+    },
+    useGithubPackagesForAssembly: true,
+    pkgNamespace: '@assembly',
+    stages: [{
+      name: 'prod',
+      manualApproval: true,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
+  expect(snapshot['.github/workflows/release-prod.yml']).toMatchSnapshot();
+});
