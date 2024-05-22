@@ -86,7 +86,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.useGithubPackages = this.needsVersionedArtifacts && (options.useGithubPackagesForAssembly ?? false);
 
     if (this.useGithubPackages) {
-      app.npmrc.addRegistry('https://npm.pkg.github.com', `@${this.options.pkgNamespace}`);
+      app.npmrc.addRegistry('https://npm.pkg.github.com', this.options.pkgNamespace);
       app.npmrc.addConfig('//npm.pkg.github.com/:_authToken', '${GITHUB_TOKEN}');
       app.npmrc.addConfig('//npm.pkg.github.com/:always-auth', 'true');
     }
