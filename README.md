@@ -20,8 +20,9 @@ We are considering to allow selecting multiple engines going forward - please le
 
 To install the package, add the package `projen-pipelines` to your projects devDeps in your projen configuration file.
 
-
 After installing the package, you can import and use the constructs to define your CDK Pipelines.
+
+You will also have to setup an IAM role that can be used by GitHub Actions. You can find a tutorial on how set this up here: [Configuring OpenID Connect in Amazon Web Services](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services)
 
 ### Usage
 
