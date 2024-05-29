@@ -29,7 +29,7 @@ You can start using the constructs provided by Projen Pipelines in your AWS CDK 
 
 ```typescript
 import { awscdk } from 'projen';
-import { CDKPipeline, CDKPipelineOptions } from 'projen-pipelines';
+import { GithubCDKPipeline } from 'projen-pipelines';
 
 // Define your AWS CDK TypeScript App
 const app = new awscdk.AwsCdkTypeScriptApp({
@@ -44,7 +44,11 @@ const app = new awscdk.AwsCdkTypeScriptApp({
 // Create the pipeline
 new GithubCDKPipeline(app, {
   stackPrefix: 'MyApp',
+  iamRoleArns: {
+    default: 'arn:aws:iam::123456789012:role/GithubDeploymentRole',
+  },
   pkgNamespace: '@company-assemblies',
+  useGithubPackagesForAssembly: true,
   stages: [
     {
       name: 'dev',
