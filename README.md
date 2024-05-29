@@ -42,6 +42,8 @@ const app = new awscdk.AwsCdkTypeScriptApp({
   ],
 });
 
+project.package.addPackageResolutions('projen');
+
 // Create the pipeline
 new GithubCDKPipeline(app, {
   stackPrefix: 'MyApp',
