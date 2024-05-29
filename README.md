@@ -97,6 +97,26 @@ const app = new PipelineApp({
 app.synth();
 ```
 
+### Setting Up Trust Relationships Between Accounts
+
+When planning to manage multiple staging environments, you will need to establish trust relationships. This process centralizes deployment control, improving operational efficiency and security by consolidating deployment management through a singular, monitored channel. Here is a simplified diagram for the setup:
+
+![Trust relationship](documentation/trust.svg)
+
+#### Step 1: Bootstrapping Each Account
+
+Bootstrapping initializes the AWS CDK environment in each account. It prepares the account to work with AWS CDK apps deployed from other accounts. Use the `cdk bootstrap` command for this purpose. Replace `<deployment_account_id>` with the actual AWS account ID of your deployment account.
+
+You can use the [CloudShell](https://aws.amazon.com/cloudshell/) to bootstrap each staging account:
+
+```bash
+cdk bootstrap --trust <deployment_account_id> --cloudformation-execution-policies "arn:aws:iam::aws:policy/AdministratorAccess"
+```
+
+**Note:**
+
+While `AdministratorAccess` grants full access to all AWS services and resources, it's not recommended for production environments due to security risks. Instead, create custom IAM policies that grant only the necessary permissions required for deployment operations.
+
 ### Deployment
 
 The `<Engine>CDKPipeline` class creates and adds several tasks to the projen project that then can be used in your pipeline to deploy your application to AWS.
@@ -128,7 +148,6 @@ Here's a brief description of each one:
 12. **release:push-assembly** - This task creates a manifest, bumps the version without creating a git tag, and publishes the cloud assembly to your registry.
 
 Remember that these tasks are created and managed automatically by the `CDKPipeline` class. You can run these tasks using the `npx projen TASK_NAME` command.
-
 
 ## Contributing
 ### By raising feature requests or issues
