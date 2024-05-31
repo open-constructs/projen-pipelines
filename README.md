@@ -195,3 +195,17 @@ git push origin my-branch
 8. **Submit a Pull Request**: Once your changes are ready to be reviewed, create a pull request from your forked repository's branch into the `main` branch of this repository.
 
 Your pull request will be reviewed and hopefully merged quickly. Thanks for contributing!
+
+## Known issues
+
+### Environment variable not recognized during `npx projen`
+
+When attempting to run `npx projen`, users may encounter an error related to environment variable substitution within configuration files. Specifically, the `${GITHUB_TOKEN}` placeholder fails to be replaced.
+
+#### Solution
+
+To resolve this issue, prefix the `npx projen` command with the `GITHUB_TOKEN=` environment variable:
+
+```bash
+GITHUB_TOKEN= npx projen
+```
