@@ -11,6 +11,7 @@ Object {
 
 exports[`SimpleCommandStep works correctly 2`] = `
 Object {
+  "env": Object {},
   "needs": Array [],
   "steps": Array [
     Object {
@@ -29,6 +30,7 @@ Object {
     "echo \\"Hello World\\"",
     "echo 42",
   ],
+  "env": Object {},
   "extensions": Array [],
   "needs": Array [],
 }

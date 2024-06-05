@@ -1677,8 +1677,21 @@ const githubStepConfig: GithubStepConfig = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubStepConfig.property.env">env</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables to set for this step. |
 | <code><a href="#projen-pipelines.GithubStepConfig.property.needs">needs</a></code> | <code>string[]</code> | Dependencies which need to be completed before this step. |
 | <code><a href="#projen-pipelines.GithubStepConfig.property.steps">steps</a></code> | <code>projen.github.workflows.JobStep[]</code> | Commands wrapped as GitHub Action job steps. |
+
+---
+
+##### `env`<sup>Required</sup> <a name="env" id="projen-pipelines.GithubStepConfig.property.env"></a>
+
+```typescript
+public readonly env: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Additional environment variables to set for this step.
 
 ---
 
@@ -2113,6 +2126,7 @@ const gitlabStepConfig: GitlabStepConfig = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitlabStepConfig.property.commands">commands</a></code> | <code>string[]</code> | Shell commands to execute in this step. |
+| <code><a href="#projen-pipelines.GitlabStepConfig.property.env">env</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables to set for this step. |
 | <code><a href="#projen-pipelines.GitlabStepConfig.property.extensions">extensions</a></code> | <code>string[]</code> | List of job extensions related to the step. |
 | <code><a href="#projen-pipelines.GitlabStepConfig.property.needs">needs</a></code> | <code>projen.gitlab.Need[]</code> | Dependencies which need to be completed before this step. |
 
@@ -2127,6 +2141,18 @@ public readonly commands: string[];
 - *Type:* string[]
 
 Shell commands to execute in this step.
+
+---
+
+##### `env`<sup>Required</sup> <a name="env" id="projen-pipelines.GitlabStepConfig.property.env"></a>
+
+```typescript
+public readonly env: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Additional environment variables to set for this step.
 
 ---
 

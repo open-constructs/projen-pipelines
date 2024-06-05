@@ -154,6 +154,9 @@ export class GithubCDKPipeline extends CDKPipeline {
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       env: {
         CI: 'true',
+        ...preInstallSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+        ...preSynthSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+        ...postSynthSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       needs: [...preInstallSteps.flatMap(s => s.needs), ...preSynthSteps.flatMap(s => s.needs), ...postSynthSteps.flatMap(s => s.needs)],
       permissions: {
@@ -179,6 +182,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       env: {
         CI: 'true',
+        ...preInstallSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       permissions: {
         idToken: JobPermission.WRITE,
@@ -247,6 +251,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         env: {
           CI: 'true',
+          ...preInstallSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
         permissions: {
           idToken: JobPermission.WRITE,
@@ -297,6 +302,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         env: {
           CI: 'true',
+          ...preInstallSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
         permissions: {
           idToken: JobPermission.WRITE,

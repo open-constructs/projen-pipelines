@@ -198,6 +198,11 @@ awslogin() {
         stage: 'synth',
         tags: this.options.runnerTags?.synth ?? this.options.runnerTags?.default,
         script,
+        variables: {
+          ...preInstallSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+          ...preSynthSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+          ...postSynthSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+        },
       },
     });
   }
@@ -227,6 +232,9 @@ awslogin() {
         tags: this.options.runnerTags?.assetPublishing ?? this.options.runnerTags?.default,
         needs: [{ job: 'synth', artifacts: true }, ...preInstallSteps.flatMap(s => s.needs)],
         script,
+        variables: {
+          ...preInstallSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+        },
       },
     });
   }
@@ -262,7 +270,9 @@ awslogin() {
           ...this.renderInstallCommands(),
           ...this.renderDiffCommands(stage.name),
         ],
-
+        variables: {
+          ...preInstallSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+        },
       },
       [`deploy-${stage.name}`]: {
         extends: ['.aws_base', '.artifacts_cdkdeploy', ...preInstallSteps.flatMap(s => s.extensions)],
@@ -286,6 +296,9 @@ awslogin() {
           ...this.renderInstallCommands(),
           ...this.renderDeployCommands(stage.name),
         ],
+        variables: {
+          ...preInstallSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+        },
       },
     });
     this.deploymentStages.push(stage.name);

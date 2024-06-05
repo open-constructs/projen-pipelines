@@ -59,6 +59,7 @@ synth:
     - awslogin 'synthRole'
     - npx projen install:ci
     - npx projen build
+  variables: {}
 publish_assets:
   extends:
     - .aws_base
@@ -71,6 +72,7 @@ publish_assets:
     - awslogin 'publishRole'
     - npx projen install:ci
     - npx projen publish:assets
+  variables: {}
 diff-dev:
   extends:
     - .aws_base
@@ -86,6 +88,7 @@ diff-dev:
     - awslogin 'devRole'
     - npx projen install:ci
     - npx projen diff:dev
+  variables: {}
 deploy-dev:
   extends:
     - .aws_base
@@ -103,6 +106,7 @@ deploy-dev:
     - awslogin 'devRole'
     - npx projen install:ci
     - npx projen deploy:dev
+  variables: {}
 diff-prod:
   extends:
     - .aws_base
@@ -118,6 +122,7 @@ diff-prod:
     - awslogin 'prodRole'
     - npx projen install:ci
     - npx projen diff:prod
+  variables: {}
 deploy-prod:
   extends:
     - .aws_base
@@ -136,6 +141,7 @@ deploy-prod:
     - awslogin 'prodRole'
     - npx projen install:ci
     - npx projen deploy:prod
+  variables: {}
 "
 `;
 
@@ -301,6 +307,7 @@ synth:
     - awslogin 'synthRole'
     - npx projen install:ci
     - npx projen build
+  variables: {}
 publish_assets:
   extends:
     - .aws_base
@@ -315,6 +322,7 @@ publish_assets:
     - awslogin 'publishRole'
     - npx projen install:ci
     - npx projen publish:assets
+  variables: {}
 diff-dev:
   extends:
     - .aws_base
@@ -332,6 +340,7 @@ diff-dev:
     - awslogin 'devRole'
     - npx projen install:ci
     - npx projen diff:dev
+  variables: {}
 deploy-dev:
   extends:
     - .aws_base
@@ -351,6 +360,7 @@ deploy-dev:
     - awslogin 'devRole'
     - npx projen install:ci
     - npx projen deploy:dev
+  variables: {}
 diff-prod:
   extends:
     - .aws_base
@@ -368,6 +378,7 @@ diff-prod:
     - awslogin 'prodRole'
     - npx projen install:ci
     - npx projen diff:prod
+  variables: {}
 deploy-prod:
   extends:
     - .aws_base
@@ -388,6 +399,7 @@ deploy-prod:
     - awslogin 'prodRole'
     - npx projen install:ci
     - npx projen deploy:prod
+  variables: {}
 "
 `;
 
@@ -452,6 +464,7 @@ synth:
     - awslogin 'synthRole'
     - npx projen install:ci
     - npx projen build
+  variables: {}
 publish_assets:
   extends:
     - .aws_base
@@ -466,6 +479,7 @@ publish_assets:
     - awslogin 'publishRole'
     - npx projen install:ci
     - npx projen publish:assets
+  variables: {}
 diff-dev:
   extends:
     - .aws_base
@@ -483,6 +497,7 @@ diff-dev:
     - awslogin 'devRole'
     - npx projen install:ci
     - npx projen diff:dev
+  variables: {}
 deploy-dev:
   extends:
     - .aws_base
@@ -502,6 +517,7 @@ deploy-dev:
     - awslogin 'devRole'
     - npx projen install:ci
     - npx projen deploy:dev
+  variables: {}
 diff-prod:
   extends:
     - .aws_base
@@ -519,6 +535,7 @@ diff-prod:
     - awslogin 'prodRole'
     - npx projen install:ci
     - npx projen diff:prod
+  variables: {}
 deploy-prod:
   extends:
     - .aws_base
@@ -539,5 +556,6 @@ deploy-prod:
     - awslogin 'prodRole'
     - npx projen install:ci
     - npx projen deploy:prod
+  variables: {}
 "
 `;

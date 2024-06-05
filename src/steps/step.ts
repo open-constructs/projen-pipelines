@@ -15,6 +15,9 @@ export interface GitlabStepConfig {
 
   /** Shell commands to execute in this step. */
   readonly commands: string[];
+
+  /** Additional environment variables to set for this step. */
+  readonly env: { [key: string]: string };
 }
 
 /**
@@ -27,6 +30,9 @@ export interface GithubStepConfig {
 
   /** Commands wrapped as GitHub Action job steps. */
   readonly steps: JobStep[];
+
+  /** Additional environment variables to set for this step. */
+  readonly env: { [key: string]: string };
 }
 
 /**
@@ -89,6 +95,7 @@ export class SimpleCommandStep extends PipelineStep {
       extensions: [], // No job extensions specified for this step.
       commands: this.commands, // Commands to be run.
       needs: [], // No dependencies.
+      env: {}, // No environment variables.
     };
   }
 
@@ -108,6 +115,7 @@ export class SimpleCommandStep extends PipelineStep {
     return {
       needs: [], // No dependencies.
       steps: this.commands.map(c => ({ run: c })), // Maps each command into a GitHub Action job step.
+      env: {}, // No environment variables.
     };
   }
 }
