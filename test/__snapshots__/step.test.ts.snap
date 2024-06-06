@@ -11,6 +11,7 @@ exports[`SimpleCommandStep works correctly 1`] = `
 
 exports[`SimpleCommandStep works correctly 2`] = `
 {
+  "env": {},
   "needs": [],
   "steps": [
     {
@@ -29,6 +30,7 @@ exports[`SimpleCommandStep works correctly 3`] = `
     "echo "Hello World"",
     "echo 42",
   ],
+  "env": {},
   "extensions": [],
   "needs": [],
 }

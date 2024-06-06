@@ -1,6 +1,6 @@
 import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk';
 import { synthSnapshot } from 'projen/lib/util/synth';
-import { GitlabCDKPipeline } from '../src';
+import { BashStepConfig, GithubStepConfig, GitlabCDKPipeline, GitlabStepConfig, PipelineStep } from '../src';
 
 test('Gitlab snapshot', () => {
   const p = new AwsCdkTypeScriptApp({
@@ -127,5 +127,52 @@ test('Gitlab snapshot with runner default tags', () => {
   });
 
   const snapshot = synthSnapshot(p);
+  expect(snapshot['.gitlab-ci.yml']).toMatchSnapshot();
+});
+
+test('Gitlab snapshot with preInstallStep', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  class TestStep extends PipelineStep {
+    public toBash(): BashStepConfig {
+      throw new Error('Method not implemented.');
+    }
+    public toGithub(): GithubStepConfig {
+      throw new Error('Method not implemented.');
+    }
+    public toGitlab(): GitlabStepConfig {
+      return {
+        env: {
+          FOO: 'bar',
+        },
+        needs: [],
+        commands: ['echo Login'],
+        extensions: [],
+      };
+    }
+  }
+
+  new GitlabCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+    },
+    preInstallSteps: [new TestStep(p)],
+    pkgNamespace: '@assembly',
+    stages: [{
+      name: 'prod',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  expect(snapshot['.npmrc']).toMatchSnapshot();
   expect(snapshot['.gitlab-ci.yml']).toMatchSnapshot();
 });
