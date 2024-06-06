@@ -53,9 +53,7 @@ jobs:
           overwrite: true
   release_github:
     name: Publish to GitHub Releases
-    needs:
-      - release
-      - release_npm
+    needs: release
     runs-on: ubuntu-latest
     permissions:
       contents: write
