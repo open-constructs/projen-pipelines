@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
@@ -50,7 +50,7 @@ jobs:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -77,7 +77,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
@@ -121,7 +121,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
@@ -548,7 +548,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
@@ -575,7 +575,7 @@ jobs:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -613,7 +613,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
@@ -640,7 +640,7 @@ jobs:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -676,7 +676,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: deployRole
           role-session-name: GitHubAction
@@ -727,7 +727,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
@@ -756,7 +756,7 @@ jobs:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -799,7 +799,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
@@ -839,7 +839,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
@@ -866,7 +866,7 @@ jobs:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -891,7 +891,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
@@ -1204,7 +1204,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
@@ -1233,7 +1233,7 @@ jobs:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -1260,7 +1260,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
