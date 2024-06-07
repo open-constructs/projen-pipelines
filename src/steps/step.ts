@@ -58,19 +58,25 @@ export abstract class PipelineStep {
   }
 
   /**
-   * Generates a configuration for a GitLab CI step. Must be implemented by subclasses.
+   * Generates a configuration for a GitLab CI step. Should be implemented by subclasses.
    */
-  public abstract toGitlab(): GitlabStepConfig;
+  public toGitlab(): GitlabStepConfig {
+    throw new Error('Method not implemented.');
+  }
 
   /**
-   * Generates a configuration for a GitHub Actions step. Must be implemented by subclasses.
+   * Generates a configuration for a GitHub Actions step. Should be implemented by subclasses.
    */
-  public abstract toGithub(): GithubStepConfig;
+  public toGithub(): GithubStepConfig {
+    throw new Error('Method not implemented.');
+  }
 
   /**
-   * Generates a configuration for a bash script step. Must be implemented by subclasses.
+   * Generates a configuration for a bash script step. Should be implemented by subclasses.
    */
-  public abstract toBash(): BashStepConfig;
+  public toBash(): BashStepConfig {
+    throw new Error('Method not implemented.');
+  }
 }
 
 /**

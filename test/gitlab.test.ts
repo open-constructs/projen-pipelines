@@ -1,6 +1,6 @@
 import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk';
 import { synthSnapshot } from 'projen/lib/util/synth';
-import { BashStepConfig, GithubStepConfig, GitlabCDKPipeline, GitlabStepConfig, PipelineStep } from '../src';
+import { GitlabCDKPipeline, GitlabStepConfig, PipelineStep } from '../src';
 
 test('Gitlab snapshot', () => {
   const p = new AwsCdkTypeScriptApp({
@@ -138,12 +138,6 @@ test('Gitlab snapshot with preInstallStep', () => {
   });
 
   class TestStep extends PipelineStep {
-    public toBash(): BashStepConfig {
-      throw new Error('Method not implemented.');
-    }
-    public toGithub(): GithubStepConfig {
-      throw new Error('Method not implemented.');
-    }
     public toGitlab(): GitlabStepConfig {
       return {
         env: {
@@ -158,6 +152,7 @@ test('Gitlab snapshot with preInstallStep', () => {
 
   new GitlabCDKPipeline(p, {
     iamRoleArns: {
+      default: 'defaultRole',
       synth: 'synthRole',
       assetPublishing: 'publishRole',
     },
@@ -174,5 +169,51 @@ test('Gitlab snapshot with preInstallStep', () => {
 
   const snapshot = synthSnapshot(p);
   expect(snapshot['.npmrc']).toMatchSnapshot();
+  expect(snapshot['.gitlab-ci.yml']).toMatchSnapshot();
+});
+
+test('Gitlab snapshot with independent stage', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  class TestStep extends PipelineStep {
+    public toGitlab(): GitlabStepConfig {
+      return {
+        env: {
+          FOO: 'bar',
+        },
+        needs: [],
+        commands: [
+          'echo Post Deploy',
+        ],
+        extensions: [],
+      };
+    }
+  }
+
+  new GitlabCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        independent: 'deployRole',
+      },
+    },
+    pkgNamespace: '@assembly',
+    stages: [],
+    independentStages: [{
+      name: 'independent',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+      postDeploySteps: [new TestStep(p)],
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
   expect(snapshot['.gitlab-ci.yml']).toMatchSnapshot();
 });
