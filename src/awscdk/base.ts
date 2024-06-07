@@ -35,12 +35,31 @@ export interface Environment {
 //   CONTINUOUS_DELIVERY,
 // }
 
-export interface DeploymentStage {
-  readonly name: string;
-  readonly env: Environment;
+/**
+ * Options for stages that are part of the pipeline
+ */
+export interface DeploymentStage extends NamedStageOptions {
   readonly manualApproval?: boolean;
 }
 
+/**
+ * Options for stages that are not part of the pipeline
+ */
+export interface IndependentStage extends NamedStageOptions {
+  readonly postDiffSteps?: PipelineStep[];
+  readonly postDeploySteps?: PipelineStep[];
+}
+
+/**
+ * Options for a CDK stage with a name
+ */
+export interface NamedStageOptions extends StageOptions {
+  readonly name: string;
+}
+
+/**
+ * Options for a CDK stage like the target environment
+ */
 export interface StageOptions {
   readonly env: Environment;
 }
@@ -82,10 +101,18 @@ export interface CDKPipelineOptions {
    */
   readonly pkgNamespace: string;
 
+  /**
+   * This field specifies a list of stages that should be deployed using a CI/CD pipeline
+   */
   readonly stages: DeploymentStage[];
 
+  /** This specifies details for independent stages */
+  readonly independentStages?: IndependentStage[];
+
+  /** This specifies details for a personal stage */
   readonly personalStage?: StageOptions;
 
+  /** This specifies details for feature stages */
   readonly featureStages?: StageOptions;
 
   // /**
@@ -150,6 +177,9 @@ export abstract class CDKPipeline extends Component {
     }
     for (const stage of baseOptions.stages) {
       this.createPipelineStage(stage);
+    }
+    for (const stage of (baseOptions.independentStages ?? [])) {
+      this.createIndependentStage(stage);
     }
 
     // Creates tasks to handle the release process
@@ -251,6 +281,19 @@ export abstract class CDKPipeline extends Component {
     }
 
     for (const stage of this.baseOptions.stages) {
+      const nameUpperFirst = `${stage.name.charAt(0).toUpperCase()}${stage.name.substring(1)}`;
+
+      propsCode += `  /** This function will be used to generate a ${stage.name} stack. */
+  provide${nameUpperFirst}Stack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
+`;
+      appCode += `    // If a function is provided for creating a ${stage.name} stack, it is called with necessary arguments.
+    if (props.provide${nameUpperFirst}Stack) {
+      props.provide${nameUpperFirst}Stack(this, '${this.stackPrefix}-${stage.name}', { env: ${JSON.stringify(stage.env)}, stackName: '${this.stackPrefix}-${stage.name}', stageName: '${stage.name}' });
+    }
+`;
+    }
+
+    for (const stage of (this.baseOptions.independentStages ?? [])) {
       const nameUpperFirst = `${stage.name.charAt(0).toUpperCase()}${stage.name.substring(1)}`;
 
       propsCode += `  /** This function will be used to generate a ${stage.name} stack. */
@@ -385,6 +428,20 @@ ${appCode}
    * @param {DeployStageOptions} stage - The stage to create
    */
   protected createPipelineStage(stage: DeploymentStage) {
+    const stackId = this.getCliStackPattern(stage.name);
+    this.project.addTask(`deploy:${stage.name}`, {
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,
+    });
+    this.project.addTask(`diff:${stage.name}`, {
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
+    });
+  }
+
+  /**
+   * This method sets up tasks for the independent stages including deployment and comparing changes (diff).
+   * @param {NamedStageOptions} stage - The stage to create
+   */
+  protected createIndependentStage(stage: IndependentStage) {
     const stackId = this.getCliStackPattern(stage.name);
     this.project.addTask(`deploy:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,

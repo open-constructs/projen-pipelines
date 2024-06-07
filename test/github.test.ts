@@ -1,6 +1,6 @@
 import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk';
 import { synthSnapshot } from 'projen/lib/util/synth';
-import { BashStepConfig, GithubCDKPipeline, GithubStepConfig, GitlabStepConfig, PipelineStep } from '../src';
+import { GithubCDKPipeline, GithubStepConfig, PipelineStep } from '../src';
 
 test('Github snapshot', () => {
   const p = new AwsCdkTypeScriptApp({
@@ -135,9 +135,6 @@ test('Github snapshot with preInstallStep', () => {
   });
 
   class TestStep extends PipelineStep {
-    public toBash(): BashStepConfig {
-      throw new Error('Method not implemented.');
-    }
     public toGithub(): GithubStepConfig {
       return {
         env: {
@@ -148,9 +145,6 @@ test('Github snapshot with preInstallStep', () => {
           run: 'echo Login',
         }],
       };
-    }
-    public toGitlab(): GitlabStepConfig {
-      throw new Error('Method not implemented.');
     }
   }
 
@@ -173,4 +167,50 @@ test('Github snapshot with preInstallStep', () => {
   const snapshot = synthSnapshot(p);
   expect(snapshot['.npmrc']).toMatchSnapshot();
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
+});
+
+test('Github snapshot with independent stage', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  class TestStep extends PipelineStep {
+    public toGithub(): GithubStepConfig {
+      return {
+        env: {
+          FOO: 'bar',
+        },
+        needs: [],
+        steps: [{
+          run: 'echo Post Deploy',
+        }],
+      };
+    }
+  }
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        independent: 'deployRole',
+      },
+    },
+    pkgNamespace: '@assembly',
+    stages: [],
+    independentStages: [{
+      name: 'independent',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+      postDeploySteps: [new TestStep(p)],
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
+  expect(snapshot['.github/workflows/deploy-independent.yml']).toMatchSnapshot();
 });
