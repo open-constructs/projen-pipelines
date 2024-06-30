@@ -44,7 +44,7 @@ export class AwsAssumeRoleStep extends PipelineStep {
         with: {
           'role-to-assume': this.config.roleArn,
           'role-session-name': this.config.sessionName ?? 'GitHubAction',
-          ...this.config.region ? { 'aws-region': this.config.region } : {},
+          ...this.config.region ? { 'aws-region': this.config.region } : { 'aws-region': 'us-east-1' },
         },
       }],
       needs: [],

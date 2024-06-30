@@ -27,6 +27,7 @@ jobs:
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
+          aws-region: us-east-1
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
@@ -552,6 +553,7 @@ jobs:
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
+          aws-region: us-east-1
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
@@ -617,6 +619,7 @@ jobs:
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
+          aws-region: us-east-1
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
@@ -731,6 +734,7 @@ jobs:
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
+          aws-region: us-east-1
       - run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: npx projen install:ci
       - run: npx projen build
@@ -843,6 +847,7 @@ jobs:
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
+          aws-region: us-east-1
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
@@ -1208,6 +1213,7 @@ jobs:
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
+          aws-region: us-east-1
       - run: echo Login
       - run: npx projen install:ci
       - run: npx projen build
