@@ -55,6 +55,7 @@ export interface IndependentStage extends NamedStageOptions {
  */
 export interface NamedStageOptions extends StageOptions {
   readonly name: string;
+  readonly watchable?: boolean;
 }
 
 /**
@@ -393,10 +394,10 @@ ${appCode}
   protected createPersonalStage() {
     const stackId = this.getCliStackPattern('personal');
     this.project.addTask('deploy:personal', {
-      exec: `cdk --outputs-file cdk-outputs-personal.json deploy ${stackId}`,
+      exec: `cdk deploy --outputs-file cdk-outputs-personal.json ${stackId}`,
     });
     this.project.addTask('watch:personal', {
-      exec: `cdk deploy --watch --hotswap ${stackId}`,
+      exec: `cdk deploy --outputs-file cdk-outputs-personal.json --watch --hotswap ${stackId}`,
     });
     this.project.addTask('diff:personal', {
       exec: `cdk diff ${stackId}`,
@@ -421,6 +422,9 @@ ${appCode}
     this.project.addTask('destroy:feature', {
       exec: `cdk destroy ${stackId}`,
     });
+    this.project.addTask('watch:feature', {
+      exec: `cdk deploy --outputs-file cdk-outputs-feature.json --watch --hotswap ${stackId}`,
+    });
   }
 
   /**
@@ -435,6 +439,11 @@ ${appCode}
     this.project.addTask(`diff:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
     });
+    if (stage.watchable) {
+      this.project.addTask(`watch:${stage.name}`, {
+        exec: `cdk deploy --outputs-file cdk-outputs-${stage.name}.json --watch --hotswap ${stackId}`,
+      });
+    }
   }
 
   /**
@@ -449,6 +458,11 @@ ${appCode}
     this.project.addTask(`diff:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
     });
+    if (stage.watchable) {
+      this.project.addTask(`watch:${stage.name}`, {
+        exec: `cdk deploy --outputs-file cdk-outputs-${stage.name}.json --watch --hotswap ${stackId}`,
+      });
+    }
   }
 
   protected getCliStackPattern(stage: string) {
