@@ -93,6 +93,8 @@ exports[`Bash snapshot 1`] = `
     "pre-compile": "npx projen pre-compile",
     "projen": "npx projen",
     "publish:assets": "npx projen publish:assets",
+    "publish:assets:dev": "npx projen publish:assets:dev",
+    "publish:assets:prod": "npx projen publish:assets:prod",
     "release:push-assembly": "npx projen release:push-assembly",
     "synth": "npx projen synth",
     "synth:silent": "npx projen synth:silent",

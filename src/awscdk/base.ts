@@ -351,10 +351,18 @@ ${appCode}
    * based on the latest git tag and pushing the CDK assembly to the package repository.
    */
   protected createReleaseTasks() {
+    const stages = [...this.baseOptions.stages, ...this.baseOptions.independentStages ?? []];
     // Task to publish the CDK assets to all accounts
+    for (const stage of stages) {
+      this.project.addTask(`publish:assets:${stage.name}`, {
+        steps: [{
+          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-${stage.name}.assets.json publish`,
+        }],
+      });
+    }
     this.project.addTask('publish:assets', {
-      steps: this.baseOptions.stages.map(stage => ({
-        exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-${stage.name}.assets.json publish`,
+      steps: stages.map(stage => ({
+        spawn: `publish:assets:${stage.name}`,
       })),
     });
 
