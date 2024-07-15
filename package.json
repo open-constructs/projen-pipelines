@@ -52,7 +52,7 @@
     "jest-junit": "^15",
     "jsii": "~5.4",
     "jsii-diff": "^1.101.0",
-    "jsii-docgen": "^10.4.17",
+    "jsii-docgen": "^10.4.18",
     "jsii-pacmak": "^1.101.0",
     "jsii-rosetta": "~5.4",
     "projen": "0.81.0",
