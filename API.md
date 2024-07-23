@@ -1355,6 +1355,7 @@ const deploymentStage: DeploymentStage = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.DeploymentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.manualApproval">manualApproval</a></code> | <code>boolean</code> | *No description.* |
 
 ---
@@ -1376,6 +1377,16 @@ public readonly name: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `watchable`<sup>Optional</sup> <a name="watchable" id="projen-pipelines.DeploymentStage.property.watchable"></a>
+
+```typescript
+public readonly watchable: boolean;
+```
+
+- *Type:* boolean
 
 ---
 
@@ -2310,6 +2321,7 @@ const independentStage: IndependentStage = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.IndependentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 
@@ -2332,6 +2344,16 @@ public readonly name: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `watchable`<sup>Optional</sup> <a name="watchable" id="projen-pipelines.IndependentStage.property.watchable"></a>
+
+```typescript
+public readonly watchable: boolean;
+```
+
+- *Type:* boolean
 
 ---
 
@@ -2373,6 +2395,7 @@ const namedStageOptions: NamedStageOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.NamedStageOptions.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
 
 ---
 
@@ -2393,6 +2416,16 @@ public readonly name: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `watchable`<sup>Optional</sup> <a name="watchable" id="projen-pipelines.NamedStageOptions.property.watchable"></a>
+
+```typescript
+public readonly watchable: boolean;
+```
+
+- *Type:* boolean
 
 ---
 
