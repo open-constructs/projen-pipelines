@@ -229,6 +229,8 @@ exports[`Github snapshot 3`] = `
     "pre-compile": "npx projen pre-compile",
     "projen": "npx projen",
     "publish:assets": "npx projen publish:assets",
+    "publish:assets:dev": "npx projen publish:assets:dev",
+    "publish:assets:prod": "npx projen publish:assets:prod",
     "release:push-assembly": "npx projen release:push-assembly",
     "synth": "npx projen synth",
     "synth:silent": "npx projen synth:silent",
@@ -429,8 +431,24 @@ exports[`Github snapshot 4`] = `
       "name": "publish:assets",
       "steps": [
         {
+          "spawn": "publish:assets:dev",
+        },
+        {
+          "spawn": "publish:assets:prod",
+        },
+      ],
+    },
+    "publish:assets:dev": {
+      "name": "publish:assets:dev",
+      "steps": [
+        {
           "exec": "npx cdk-assets -p cdk.out/testapp-dev.assets.json publish",
         },
+      ],
+    },
+    "publish:assets:prod": {
+      "name": "publish:assets:prod",
+      "steps": [
         {
           "exec": "npx cdk-assets -p cdk.out/testapp-prod.assets.json publish",
         },
@@ -1087,6 +1105,14 @@ exports[`Github snapshot with multi stack 2`] = `
     },
     "publish:assets": {
       "name": "publish:assets",
+      "steps": [
+        {
+          "spawn": "publish:assets:dev",
+        },
+      ],
+    },
+    "publish:assets:dev": {
+      "name": "publish:assets:dev",
       "steps": [
         {
           "exec": "npx cdk-assets -p cdk.out/testapp-dev.assets.json publish",
