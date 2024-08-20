@@ -274,7 +274,7 @@ export abstract class CDKPipeline extends Component {
       appCode += `    // If the environment variable USER is set and a function is provided for creating a personal stack, it is called with necessary arguments.
     if (props.providePersonalStack && process.env.USER) {
       const stageName = 'personal-' + process.env.USER.toLowerCase().replace(/\\\//g, '-');
-      props.providePersonalStack(this, '${this.stackPrefix}-personal', { env: ${JSON.stringify(this.baseOptions.personalStage.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
+      props.providePersonalStack(this, '${this.stackPrefix}-personal', { env: { account: '${this.baseOptions.personalStage.env.account}', region: '${this.baseOptions.personalStage.env.region}' }, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
     }
 `;
     }
@@ -286,7 +286,7 @@ export abstract class CDKPipeline extends Component {
       appCode += `    // If the environment variable BRANCH is set and a function is provided for creating a feature stack, it is called with necessary arguments.
     if (props.provideFeatureStack && process.env.BRANCH) {
       const stageName = 'feature-' + process.env.BRANCH.toLowerCase().replace(/\\\//g, '-');
-      props.provideFeatureStack(this, '${this.stackPrefix}-feature', { env: ${JSON.stringify(this.baseOptions.featureStages.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
+      props.provideFeatureStack(this, '${this.stackPrefix}-feature', { env: { account: '${this.baseOptions.featureStages.env.account}', region: '${this.baseOptions.featureStages.env.region}' }, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
     }
 `;
     }
@@ -299,7 +299,7 @@ export abstract class CDKPipeline extends Component {
 `;
       appCode += `    // If a function is provided for creating a ${stage.name} stack, it is called with necessary arguments.
     if (props.provide${nameUpperFirst}Stack) {
-      props.provide${nameUpperFirst}Stack(this, '${this.stackPrefix}-${stage.name}', { env: ${JSON.stringify(stage.env)}, stackName: '${this.stackPrefix}-${stage.name}', stageName: '${stage.name}' });
+      props.provide${nameUpperFirst}Stack(this, '${this.stackPrefix}-${stage.name}', { env: { account: '${stage.env.account}', region: '${stage.env.region}' }, stackName: '${this.stackPrefix}-${stage.name}', stageName: '${stage.name}' });
     }
 `;
     }
@@ -312,7 +312,7 @@ export abstract class CDKPipeline extends Component {
 `;
       appCode += `    // If a function is provided for creating a ${stage.name} stack, it is called with necessary arguments.
     if (props.provide${nameUpperFirst}Stack) {
-      props.provide${nameUpperFirst}Stack(this, '${this.stackPrefix}-${stage.name}', { env: ${JSON.stringify(stage.env)}, stackName: '${this.stackPrefix}-${stage.name}', stageName: '${stage.name}' });
+      props.provide${nameUpperFirst}Stack(this, '${this.stackPrefix}-${stage.name}', { env: { account: '${stage.env.account}', region: '${stage.env.region}' }, stackName: '${this.stackPrefix}-${stage.name}', stageName: '${stage.name}' });
     }
 `;
     }
