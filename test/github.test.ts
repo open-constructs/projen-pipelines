@@ -14,13 +14,13 @@ test('Github snapshot', () => {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
       deployment: {
-        dev: 'devRole',
-        prod: 'prodRole',
+        'my-dev': 'devRole',
+        'prod': 'prodRole',
       },
     },
     pkgNamespace: '@assembly',
     stages: [{
-      name: 'dev',
+      name: 'my-dev',
       env: {
         account: '123456789012',
         region: 'eu-central-1',
@@ -37,6 +37,7 @@ test('Github snapshot', () => {
 
   const snapshot = synthSnapshot(p);
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
+  expect(snapshot['src/app.ts']).toMatchSnapshot();
   expect(snapshot['.github/workflows/release-prod.yml']).toMatchSnapshot();
   expect(snapshot['package.json']).toMatchSnapshot();
   expect(snapshot['.projen/tasks.json']).toMatchSnapshot();
