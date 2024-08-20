@@ -105,7 +105,6 @@ export interface CDKPipelineOptions {
  * It also manages tasks such as publishing CDK assets, bumping version based on git tags, and cleaning up conflicting tasks.
  */
 export abstract class CDKPipeline extends Component {
-
   public readonly stackPrefix: string;
 
   constructor(protected app: awscdk.AwsCdkTypeScriptApp, private baseOptions: CDKPipelineOptions) {

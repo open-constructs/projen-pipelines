@@ -25,7 +25,6 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
 
   private readonly bp: Blueprint;
 
-
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: CodeCatalystCDKPipelineOptions) {
     super(app, options);
     // see https://github.com/aws/codecatalyst-blueprints/issues/477
