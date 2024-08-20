@@ -249,6 +249,16 @@ export abstract class CDKPipeline extends Component {
     ];
   }
 
+  protected createSafeStageName(name: string): string {
+    // Remove non-alphanumeric characters and split into words
+    const words = name.replace(/[^a-zA-Z0-9]+/g, ' ').trim().split(/\s+/);
+
+    // Capitalize the first letter of each word and join them
+    return words.map((word) => {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join('');
+  }
+
   /**
    * This method generates the entry point for the application, including interfaces and classes
    * necessary to set up the pipeline and define the AWS CDK stacks for different environments.
@@ -282,7 +292,7 @@ export abstract class CDKPipeline extends Component {
     }
 
     for (const stage of this.baseOptions.stages) {
-      const nameUpperFirst = `${stage.name.charAt(0).toUpperCase()}${stage.name.substring(1)}`;
+      const nameUpperFirst = this.createSafeStageName(stage.name);
 
       propsCode += `  /** This function will be used to generate a ${stage.name} stack. */
   provide${nameUpperFirst}Stack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
@@ -295,7 +305,7 @@ export abstract class CDKPipeline extends Component {
     }
 
     for (const stage of (this.baseOptions.independentStages ?? [])) {
-      const nameUpperFirst = `${stage.name.charAt(0).toUpperCase()}${stage.name.substring(1)}`;
+      const nameUpperFirst = this.createSafeStageName(stage.name);
 
       propsCode += `  /** This function will be used to generate a ${stage.name} stack. */
   provide${nameUpperFirst}Stack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
