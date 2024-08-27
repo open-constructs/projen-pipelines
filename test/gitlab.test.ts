@@ -199,18 +199,26 @@ test('Gitlab snapshot with independent stage', () => {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
       deployment: {
-        independent: 'deployRole',
+        independent1: 'deployRole',
       },
     },
     pkgNamespace: '@assembly',
     stages: [],
     independentStages: [{
-      name: 'independent',
+      name: 'independent1',
       env: {
         account: '123456789012',
         region: 'eu-central-1',
       },
       postDeploySteps: [new TestStep(p)],
+    }, {
+      name: 'independent2',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+      postDeploySteps: [new TestStep(p)],
+      deployOnPush: true,
     }],
   });
 
