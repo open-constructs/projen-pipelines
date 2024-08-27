@@ -227,13 +227,16 @@ export abstract class CDKPipeline extends Component {
     ];
   }
 
-  protected getAssetUploadCommands(needsVersionedArtifacts: boolean): string[] {
+  protected renderAssetUploadCommands(stageName?: string): string[] {
     return [
-      'npx projen publish:assets',
-      ...(needsVersionedArtifacts ? [
-        'npx projen bump',
-        'npx projen release:push-assembly',
-      ] : []),
+      `npx projen publish:assets${stageName ? `:${stageName}` : ''}`,
+    ];
+  }
+
+  protected renderAssemblyUploadCommands(): string[] {
+    return [
+      'npx projen bump',
+      'npx projen release:push-assembly',
     ];
   }
 

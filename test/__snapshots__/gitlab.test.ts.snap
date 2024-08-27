@@ -70,7 +70,10 @@ publish_assets:
   script:
     - "awslogin publishRole "
     - npx projen install:ci
-    - npx projen publish:assets
+    - "awslogin publishRole "
+    - npx projen publish:assets:dev
+    - "awslogin prodPublishRole "
+    - npx projen publish:assets:prod
   variables: {}
 diff-dev:
   extends:

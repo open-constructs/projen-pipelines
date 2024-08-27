@@ -14,8 +14,10 @@ export interface GitlabIamRoleConfig {
   readonly default?: string;
   /** IAM role ARN for the synthesis stage. */
   readonly synth?: string;
-  /** IAM role ARN for the asset publishing stage. */
+  /** IAM role ARN for the asset publishing step. */
   readonly assetPublishing?: string;
+  /** IAM role ARN for the asset publishing step for a specific stage. */
+  readonly assetPublishingPerStage?: { [stage: string]: string };
   /** A map of stage names to IAM role ARNs for the diff operation. */
   readonly diff?: { [stage: string]: string };
   /** A map of stage names to IAM role ARNs for the deployment operation. */
@@ -209,14 +211,30 @@ awslogin() {
   protected createAssetUpload(): void {
     const steps = [];
 
-    if (this.options.iamRoleArns?.assetPublishing) {
+    const globalPublishRole = this.options.iamRoleArns.assetPublishing ?? this.options.iamRoleArns.default;
+    if (globalPublishRole) {
       steps.push(new AwsAssumeRoleStep(this.project, {
-        roleArn: this.options.iamRoleArns.assetPublishing,
+        roleArn: globalPublishRole,
       }));
     }
     steps.push(...this.options.preInstallSteps ?? []);
     steps.push(new SimpleCommandStep(this.project, this.renderInstallCommands()));
-    steps.push(new SimpleCommandStep(this.project, this.getAssetUploadCommands(this.needsVersionedArtifacts)));
+
+    if (this.options.iamRoleArns.assetPublishingPerStage) {
+      const stages = [...this.options.stages, ...this.options.independentStages ?? []];
+      for (const stage of stages) {
+        steps.push(new AwsAssumeRoleStep(this.project, {
+          roleArn: this.options.iamRoleArns.assetPublishingPerStage[stage.name] ?? globalPublishRole,
+        }));
+        steps.push(new SimpleCommandStep(this.project, this.renderAssetUploadCommands(stage.name)));
+      }
+    } else {
+      steps.push(new SimpleCommandStep(this.project, this.renderAssetUploadCommands()));
+    }
+
+    if (this.needsVersionedArtifacts) {
+      steps.push(new SimpleCommandStep(this.project, this.renderAssemblyUploadCommands()));
+    }
 
     const gitlabSteps = steps.map(s => s.toGitlab());
 

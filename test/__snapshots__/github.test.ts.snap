@@ -62,7 +62,20 @@ jobs:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
-      - run: npx projen publish:assets
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: publishRole
+          role-session-name: GitHubAction
+          aws-region: us-east-1
+      - run: npx projen publish:assets:my-dev
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: prodPublishRole
+          role-session-name: GitHubAction
+          aws-region: us-east-1
+      - run: npx projen publish:assets:prod
       - run: npx projen bump
       - run: npx projen release:push-assembly
   deploy-my-dev:
