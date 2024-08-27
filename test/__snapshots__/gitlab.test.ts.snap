@@ -256,7 +256,8 @@ exports[`Gitlab snapshot with independent stage 1`] = `
 stages:
   - synth
   - publish_assets
-  - independent
+  - independent1
+  - independent2
 .artifacts_cdk:
   artifacts:
     when: on_success
@@ -321,19 +322,38 @@ publish_assets:
     - npx projen install:ci
     - npx projen publish:assets
   variables: {}
-deploy-independent:
+deploy-independent1:
   extends:
     - .aws_base
     - .artifacts_cdkdeploy
-  stage: independent
+  stage: independent1
   when: manual
   needs: []
   script:
     - "awslogin deployRole "
     - npx projen install:ci
     - npx projen build
-    - npx projen diff:independent
-    - npx projen deploy:independent
+    - npx projen diff:independent1
+    - npx projen deploy:independent1
+    - echo Post Deploy
+  variables:
+    AWS_REGION: eu-central-1
+    FOO: bar
+deploy-independent2:
+  extends:
+    - .aws_base
+    - .artifacts_cdkdeploy
+  stage: independent2
+  only:
+    refs:
+      - main
+  needs: []
+  script:
+    - "awslogin undefined "
+    - npx projen install:ci
+    - npx projen build
+    - npx projen diff:independent2
+    - npx projen deploy:independent2
     - echo Post Deploy
   variables:
     AWS_REGION: eu-central-1

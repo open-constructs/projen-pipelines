@@ -371,6 +371,11 @@ export class GithubCDKPipeline extends CDKPipeline {
     const stageWorkflow = this.app.github!.addWorkflow(`deploy-${stage.name}`);
     stageWorkflow.on({
       workflowDispatch: {},
+      ...stage.deployOnPush && {
+        push: {
+          branches: [this.branchName],
+        },
+      },
     });
     stageWorkflow.addJob('deploy', {
       name: `Release stage ${stage.name} to AWS`,

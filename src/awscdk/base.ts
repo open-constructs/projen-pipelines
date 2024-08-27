@@ -46,6 +46,13 @@ export interface DeploymentStage extends NamedStageOptions {
  * Options for stages that are not part of the pipeline
  */
 export interface IndependentStage extends NamedStageOptions {
+  /**
+   * This specifies whether the stage should be deployed on push
+   *
+   * @default false
+   */
+  readonly deployOnPush?: boolean;
+
   readonly postDiffSteps?: PipelineStep[];
   readonly postDeploySteps?: PipelineStep[];
 }

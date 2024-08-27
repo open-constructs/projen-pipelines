@@ -352,7 +352,14 @@ awslogin() {
         extends: ['.aws_base', '.artifacts_cdkdeploy', ...steps.flatMap(s => s.extensions)],
         stage: stage.name,
         tags: this.options.runnerTags?.deployment?.[stage.name] ?? this.options.runnerTags?.default,
-        when: gitlab.JobWhen.MANUAL,
+        ...stage.deployOnPush && {
+          only: {
+            refs: [this.branchName],
+          },
+        },
+        ...!stage.deployOnPush && {
+          when: gitlab.JobWhen.MANUAL,
+        },
         needs: steps.flatMap(s => s.needs),
         script: steps.flatMap(s => s.commands),
         variables: steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
