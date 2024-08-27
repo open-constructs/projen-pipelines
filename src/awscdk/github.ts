@@ -43,6 +43,15 @@ export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
 
   /** use GitHub Packages to store vesioned artifacts of cloud assembly; also needed for manual approvals */
   readonly useGithubPackagesForAssembly?: boolean;
+
+  /**
+   * whether to use GitHub environments for deployment stages
+   *
+   * INFO: When using environments consider protection rules instead of using the manual option of projen-pipelines for stages
+   *
+   * @default false
+   */
+  readonly useGithubEnvironments?: boolean;
 }
 
 
@@ -270,6 +279,9 @@ export class GithubCDKPipeline extends CDKPipeline {
         name: `Release stage ${stage.name} to AWS`,
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+        ...this.options.useGithubEnvironments && {
+          environment: stage.name,
+        },
         env: {
           CI: 'true',
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
@@ -313,6 +325,9 @@ export class GithubCDKPipeline extends CDKPipeline {
       // Add deployment to CI/CD workflow
       this.deploymentWorkflow.addJob(`deploy-${stage.name}`, {
         name: `Deploy stage ${stage.name} to AWS`,
+        ...this.options.useGithubEnvironments && {
+          environment: stage.name,
+        },
         needs: ['assetUpload', ...steps.flatMap(s => s.needs), ...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])],
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         env: {
@@ -381,6 +396,9 @@ export class GithubCDKPipeline extends CDKPipeline {
       name: `Release stage ${stage.name} to AWS`,
       needs: steps.flatMap(s => s.needs),
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      ...this.options.useGithubEnvironments && {
+        environment: stage.name,
+      },
       env: {
         CI: 'true',
         ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
