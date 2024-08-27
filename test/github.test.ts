@@ -13,6 +13,9 @@ test('Github snapshot', () => {
     iamRoleArns: {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
+      assetPublishingPerStage: {
+        prod: 'prodPublishRole',
+      },
       deployment: {
         'my-dev': 'devRole',
         'prod': 'prodRole',

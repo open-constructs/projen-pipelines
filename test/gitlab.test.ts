@@ -13,6 +13,9 @@ test('Gitlab snapshot', () => {
     iamRoleArns: {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
+      assetPublishingPerStage: {
+        prod: 'prodPublishRole',
+      },
       deployment: {
         dev: 'devRole',
         prod: 'prodRole',
