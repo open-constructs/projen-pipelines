@@ -2,4 +2,4 @@
 
 tasks:
   - command: npx projen build
-    init: yarn install --check-files --frozen-lockfile
+    init: npm ci
