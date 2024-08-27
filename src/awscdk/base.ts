@@ -46,6 +46,13 @@ export interface DeploymentStage extends NamedStageOptions {
  * Options for stages that are not part of the pipeline
  */
 export interface IndependentStage extends NamedStageOptions {
+  /**
+   * This specifies whether the stage should be deployed on push
+   *
+   * @default false
+   */
+  readonly deployOnPush?: boolean;
+
   readonly postDiffSteps?: PipelineStep[];
   readonly postDeploySteps?: PipelineStep[];
 }
@@ -227,13 +234,16 @@ export abstract class CDKPipeline extends Component {
     ];
   }
 
-  protected getAssetUploadCommands(needsVersionedArtifacts: boolean): string[] {
+  protected renderAssetUploadCommands(stageName?: string): string[] {
     return [
-      'npx projen publish:assets',
-      ...(needsVersionedArtifacts ? [
-        'npx projen bump',
-        'npx projen release:push-assembly',
-      ] : []),
+      `npx projen publish:assets${stageName ? `:${stageName}` : ''}`,
+    ];
+  }
+
+  protected renderAssemblyUploadCommands(): string[] {
+    return [
+      'npx projen bump',
+      'npx projen release:push-assembly',
     ];
   }
 

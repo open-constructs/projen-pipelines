@@ -32,14 +32,15 @@ export class BashCDKPipeline extends CDKPipeline {
     readme.addLine('```bash');
     readme.addLine(`${(options.preInstallSteps ?? []).flatMap(s => s.toBash().commands).join('\n')}`);
     readme.addLine(`${this.renderInstallCommands().join('\n')}`);
-    readme.addLine(`${this.getAssetUploadCommands(false).join('\n')}`);
+    readme.addLine(`${this.renderAssetUploadCommands().join('\n')}`);
     readme.addLine('```');
     readme.addLine('');
     readme.addLine('If you want to store your cloud assembly and assets for future use or compliance reasons, use:');
     readme.addLine('```bash');
     readme.addLine(`${(options.preInstallSteps ?? []).flatMap(s => s.toBash().commands).join('\n')}`);
     readme.addLine(`${this.renderInstallCommands().join('\n')}`);
-    readme.addLine(`${this.getAssetUploadCommands(true).join('\n')}`);
+    readme.addLine(`${this.renderAssetUploadCommands().join('\n')}`);
+    readme.addLine(`${this.renderAssemblyUploadCommands().join('\n')}`);
     readme.addLine('```');
     readme.addLine('');
     readme.addLine('## Deployment phase');

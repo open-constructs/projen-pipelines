@@ -13,6 +13,9 @@ test('Github snapshot', () => {
     iamRoleArns: {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
+      assetPublishingPerStage: {
+        prod: 'prodPublishRole',
+      },
       deployment: {
         'my-dev': 'devRole',
         'prod': 'prodRole',
@@ -243,22 +246,31 @@ test('Github snapshot with independent stage', () => {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
       deployment: {
-        independent: 'deployRole',
+        independent1: 'deployRole',
       },
     },
     pkgNamespace: '@assembly',
     stages: [],
     independentStages: [{
-      name: 'independent',
+      name: 'independent1',
       env: {
         account: '123456789012',
         region: 'eu-central-1',
       },
       postDeploySteps: [new TestStep(p)],
+    }, {
+      name: 'independent2',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+      postDeploySteps: [new TestStep(p)],
+      deployOnPush: true,
     }],
   });
 
   const snapshot = synthSnapshot(p);
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
-  expect(snapshot['.github/workflows/deploy-independent.yml']).toMatchSnapshot();
+  expect(snapshot['.github/workflows/deploy-independent1.yml']).toMatchSnapshot();
+  expect(snapshot['.github/workflows/deploy-independent2.yml']).toMatchSnapshot();
 });
