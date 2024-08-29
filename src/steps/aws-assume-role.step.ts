@@ -1,4 +1,5 @@
 import { Project } from 'projen';
+import { JobPermission } from 'projen/lib/github/workflows-model';
 import { GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
 
 
@@ -49,6 +50,9 @@ export class AwsAssumeRoleStep extends PipelineStep {
       }],
       needs: [],
       env: {},
+      permissions: {
+        idToken: JobPermission.WRITE,
+      },
     };
   }
 

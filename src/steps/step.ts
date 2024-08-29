@@ -1,5 +1,5 @@
 import { Project } from 'projen';
-import { JobStep } from 'projen/lib/github/workflows-model';
+import { JobPermissions, JobStep } from 'projen/lib/github/workflows-model';
 import { Need } from 'projen/lib/gitlab';
 
 /**
@@ -33,6 +33,9 @@ export interface GithubStepConfig {
 
   /** Additional environment variables to set for this step. */
   readonly env: { [key: string]: string };
+
+  /** Additional job permissions needed */
+  readonly permissions?: JobPermissions;
 }
 
 /**

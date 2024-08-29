@@ -143,7 +143,7 @@ export abstract class CDKPipeline extends Component {
   public readonly stackPrefix: string;
   public readonly branchName: string;
 
-  constructor(protected app: awscdk.AwsCdkTypeScriptApp, private baseOptions: CDKPipelineOptions) {
+  constructor(protected app: awscdk.AwsCdkTypeScriptApp, protected baseOptions: CDKPipelineOptions) {
     super(app);
 
     // Add development dependencies
