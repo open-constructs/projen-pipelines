@@ -1,6 +1,6 @@
 import { awscdk } from 'projen';
 import { GithubWorkflow } from 'projen/lib/github';
-import { JobPermission } from 'projen/lib/github/workflows-model';
+import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage } from './base';
 import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
@@ -151,7 +151,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       permissions: mergeJobPermissions({
         idToken: JobPermission.WRITE,
         contents: JobPermission.READ,
-      }, ...githubSteps.flatMap(s => s.permissions).filter(p => p != undefined)),
+      }, ...(githubSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       steps: [
         {
           name: 'Checkout',
@@ -195,7 +195,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         ...this.useGithubPackages && {
           packages: JobPermission.WRITE,
         },
-      }, ...steps.flatMap(s => s.permissions).filter(p => p != undefined)),
+      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       steps: [
         {
           name: 'Checkout',
@@ -255,7 +255,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         permissions: mergeJobPermissions({
           idToken: JobPermission.WRITE,
           contents: JobPermission.READ,
-        }, ...steps.flatMap(s => s.permissions).filter(p => p != undefined)),
+        }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
         steps: [
           {
             name: 'Checkout',
@@ -297,7 +297,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         permissions: mergeJobPermissions({
           idToken: JobPermission.WRITE,
           contents: JobPermission.READ,
-        }, ...steps.flatMap(s => s.permissions).filter(p => p != undefined)),
+        }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
         steps: [
           {
             name: 'Checkout',
@@ -355,7 +355,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       permissions: mergeJobPermissions({
         idToken: JobPermission.WRITE,
         contents: JobPermission.READ,
-      }, ...steps.flatMap(s => s.permissions).filter(p => p != undefined)),
+      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       steps: [
         {
           name: 'Checkout',
