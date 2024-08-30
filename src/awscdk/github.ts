@@ -22,6 +22,8 @@ export interface GithubIamRoleConfig {
   readonly synth?: string;
   /** IAM role ARN for the asset publishing step. */
   readonly assetPublishing?: string;
+  /** IAM role ARN for the asset publishing step for a specific stage. */
+  readonly assetPublishingPerStage?: { [stage: string]: string };
   /** IAM role ARNs for different deployment stages. */
   readonly deployment?: { [stage: string]: string };
 }
@@ -43,6 +45,15 @@ export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
 
   /** use GitHub Packages to store vesioned artifacts of cloud assembly; also needed for manual approvals */
   readonly useGithubPackagesForAssembly?: boolean;
+
+  /**
+   * whether to use GitHub environments for deployment stages
+   *
+   * INFO: When using environments consider protection rules instead of using the manual option of projen-pipelines for stages
+   *
+   * @default false
+   */
+  readonly useGithubEnvironments?: boolean;
 }
 
 
@@ -166,10 +177,12 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a job to upload assets to AWS as part of the pipeline.
    */
   public createAssetUpload(): void {
+    const globalPublishRole = this.options.iamRoleArns.assetPublishing ?? this.options.iamRoleArns.default!;
+
     const steps = [
       new SimpleCommandStep(this.project, ['git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"']),
       new AwsAssumeRoleStep(this.project, {
-        roleArn: this.options.iamRoleArns?.assetPublishing ?? this.options.iamRoleArns?.default!,
+        roleArn: globalPublishRole,
         region: 'us-east-1',
       }),
       new DownloadArtifactStep(this.project, {
@@ -178,16 +191,33 @@ export class GithubCDKPipeline extends CDKPipeline {
       }),
       ...this.baseOptions.preInstallSteps ?? [],
       new SimpleCommandStep(this.project, this.renderInstallCommands()),
-      new SimpleCommandStep(this.project, this.getAssetUploadCommands(this.needsVersionedArtifacts)),
-    ].map(s => s.toGithub());
+    ];
+
+    if (this.options.iamRoleArns.assetPublishingPerStage) {
+      const stages = [...this.options.stages, ...this.options.independentStages ?? []];
+      for (const stage of stages) {
+        steps.push(new AwsAssumeRoleStep(this.project, {
+          roleArn: this.options.iamRoleArns.assetPublishingPerStage[stage.name] ?? globalPublishRole,
+        }));
+        steps.push(new SimpleCommandStep(this.project, this.renderAssetUploadCommands(stage.name)));
+      }
+    } else {
+      steps.push(new SimpleCommandStep(this.project, this.renderAssetUploadCommands()));
+    }
+
+    if (this.needsVersionedArtifacts) {
+      steps.push(new SimpleCommandStep(this.project, this.renderAssemblyUploadCommands()));
+    }
+
+    const ghSteps = steps.map(s => s.toGithub());
 
     this.deploymentWorkflow.addJob('assetUpload', {
       name: 'Publish assets to AWS',
-      needs: ['synth', ...steps.flatMap(s => s.needs)],
+      needs: ['synth', ...ghSteps.flatMap(s => s.needs)],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       env: {
         CI: 'true',
-        ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+        ...ghSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       permissions: mergeJobPermissions({
         idToken: JobPermission.WRITE,
@@ -204,7 +234,7 @@ export class GithubCDKPipeline extends CDKPipeline {
             'fetch-depth': 0,
           },
         },
-        ...steps.flatMap(s => s.steps),
+        ...ghSteps.flatMap(s => s.steps),
       ],
     });
   }
@@ -248,6 +278,9 @@ export class GithubCDKPipeline extends CDKPipeline {
         name: `Release stage ${stage.name} to AWS`,
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+        ...this.options.useGithubEnvironments && {
+          environment: stage.name,
+        },
         env: {
           CI: 'true',
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
@@ -288,6 +321,9 @@ export class GithubCDKPipeline extends CDKPipeline {
       // Add deployment to CI/CD workflow
       this.deploymentWorkflow.addJob(`deploy-${stage.name}`, {
         name: `Deploy stage ${stage.name} to AWS`,
+        ...this.options.useGithubEnvironments && {
+          environment: stage.name,
+        },
         needs: ['assetUpload', ...steps.flatMap(s => s.needs), ...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])],
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         env: {
@@ -343,11 +379,19 @@ export class GithubCDKPipeline extends CDKPipeline {
     const stageWorkflow = this.app.github!.addWorkflow(`deploy-${stage.name}`);
     stageWorkflow.on({
       workflowDispatch: {},
+      ...stage.deployOnPush && {
+        push: {
+          branches: [this.branchName],
+        },
+      },
     });
     stageWorkflow.addJob('deploy', {
       name: `Release stage ${stage.name} to AWS`,
       needs: steps.flatMap(s => s.needs),
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      ...this.options.useGithubEnvironments && {
+        environment: stage.name,
+      },
       env: {
         CI: 'true',
         ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
