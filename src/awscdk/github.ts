@@ -1,11 +1,13 @@
 import { awscdk } from 'projen';
 import { GithubWorkflow } from 'projen/lib/github';
-import { JobPermission } from 'projen/lib/github/workflows-model';
+import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage } from './base';
 import { PipelineEngine } from '../engine';
+import { mergeJobPermissions } from '../engines';
 import { PipelineStep, SimpleCommandStep } from '../steps';
 import { DownloadArtifactStep, UploadArtifactStep } from '../steps/artifact-steps';
 import { AwsAssumeRoleStep } from '../steps/aws-assume-role.step';
+import { GithubPackagesLoginStep } from '../steps/registries';
 
 const DEFAULT_RUNNER_TAGS = ['ubuntu-latest'];
 
@@ -79,9 +81,9 @@ export class GithubCDKPipeline extends CDKPipeline {
     super(app, {
       ...options,
       ...options.useGithubPackagesForAssembly && {
-        preInstallCommands: [
-          'echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV',
-          ...(options.preInstallCommands ?? []),
+        preInstallSteps: [
+          new GithubPackagesLoginStep(app, { write: false }),
+          ...options.preInstallSteps ?? [],
         ],
       },
     });
@@ -100,7 +102,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.useGithubPackages = this.needsVersionedArtifacts && (options.useGithubPackagesForAssembly ?? false);
 
     if (this.useGithubPackages) {
-      app.npmrc.addRegistry('https://npm.pkg.github.com', this.options.pkgNamespace);
+      app.npmrc.addRegistry('https://npm.pkg.github.com', this.baseOptions.pkgNamespace);
       app.npmrc.addConfig('//npm.pkg.github.com/:_authToken', '${GITHUB_TOKEN}');
       app.npmrc.addConfig('//npm.pkg.github.com/:always-auth', 'true');
     }
@@ -135,12 +137,12 @@ export class GithubCDKPipeline extends CDKPipeline {
         sessionName: 'GitHubAction',
       }));
     }
-    steps.push(...this.options.preInstallSteps ?? []);
+    steps.push(...this.baseOptions.preInstallSteps ?? []);
     steps.push(new SimpleCommandStep(this.project, this.renderInstallCommands()));
 
-    steps.push(...this.options.preSynthSteps ?? []);
+    steps.push(...this.baseOptions.preSynthSteps ?? []);
     steps.push(new SimpleCommandStep(this.project, this.renderSynthCommands()));
-    steps.push(...this.options.postSynthSteps ?? []);
+    steps.push(...this.baseOptions.postSynthSteps ?? []);
 
     steps.push(new UploadArtifactStep(this.project, {
       name: 'cloud-assembly',
@@ -157,13 +159,10 @@ export class GithubCDKPipeline extends CDKPipeline {
         ...githubSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       needs: [...githubSteps.flatMap(s => s.needs)],
-      permissions: {
+      permissions: mergeJobPermissions({
         idToken: JobPermission.WRITE,
         contents: JobPermission.READ,
-        ...this.useGithubPackages && {
-          packages: JobPermission.READ,
-        },
-      },
+      }, ...(githubSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       steps: [
         {
           name: 'Checkout',
@@ -190,7 +189,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
-      ...this.options.preInstallSteps ?? [],
+      ...this.baseOptions.preInstallSteps ?? [],
       new SimpleCommandStep(this.project, this.renderInstallCommands()),
     ];
 
@@ -220,13 +219,13 @@ export class GithubCDKPipeline extends CDKPipeline {
         CI: 'true',
         ...ghSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
-      permissions: {
+      permissions: mergeJobPermissions({
         idToken: JobPermission.WRITE,
         contents: this.needsVersionedArtifacts ? JobPermission.WRITE : JobPermission.READ,
         ...this.useGithubPackages && {
           packages: JobPermission.WRITE,
         },
-      },
+      }, ...(ghSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       steps: [
         {
           name: 'Checkout',
@@ -252,10 +251,10 @@ export class GithubCDKPipeline extends CDKPipeline {
           roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
           region: stage.env.region,
         }),
-        ...this.options.preInstallSteps ?? [],
+        ...this.baseOptions.preInstallSteps ?? [],
         new SimpleCommandStep(this.project, this.renderInstallCommands()),
-        new SimpleCommandStep(this.project, this.renderInstallPackageCommands(`${this.options.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`)),
-        new SimpleCommandStep(this.project, [`mv ./node_modules/${this.options.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`]),
+        new SimpleCommandStep(this.project, this.renderInstallPackageCommands(`${this.baseOptions.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`)),
+        new SimpleCommandStep(this.project, [`mv ./node_modules/${this.baseOptions.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`]),
         new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
         new UploadArtifactStep(this.project, {
           name: `cdk-outputs-${stage.name}`,
@@ -286,13 +285,10 @@ export class GithubCDKPipeline extends CDKPipeline {
           CI: 'true',
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
-        permissions: {
+        permissions: mergeJobPermissions({
           idToken: JobPermission.WRITE,
           contents: JobPermission.READ,
-          ...this.useGithubPackages && {
-            packages: JobPermission.READ,
-          },
-        },
+        }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
         steps: [
           {
             name: 'Checkout',
@@ -313,7 +309,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           name: 'cloud-assembly',
           path: `${this.app.cdkConfig.cdkout}/`,
         }),
-        ...this.options.preInstallSteps ?? [],
+        ...this.baseOptions.preInstallSteps ?? [],
         new SimpleCommandStep(this.project, this.renderInstallCommands()),
         new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
         new UploadArtifactStep(this.project, {
@@ -334,13 +330,10 @@ export class GithubCDKPipeline extends CDKPipeline {
           CI: 'true',
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
-        permissions: {
+        permissions: mergeJobPermissions({
           idToken: JobPermission.WRITE,
           contents: JobPermission.READ,
-          ...this.useGithubPackages && {
-            packages: JobPermission.READ,
-          },
-        },
+        }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
         steps: [
           {
             name: 'Checkout',
@@ -363,12 +356,12 @@ export class GithubCDKPipeline extends CDKPipeline {
         roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
         region: stage.env.region,
       }),
-      ...this.options.preInstallSteps ?? [],
+      ...this.baseOptions.preInstallSteps ?? [],
       new SimpleCommandStep(this.project, this.renderInstallCommands()),
 
-      ...this.options.preSynthSteps ?? [],
+      ...this.baseOptions.preSynthSteps ?? [],
       new SimpleCommandStep(this.project, this.renderSynthCommands()),
-      ...this.options.postSynthSteps ?? [],
+      ...this.baseOptions.postSynthSteps ?? [],
 
       new SimpleCommandStep(this.project, this.renderDiffCommands(stage.name)),
       ...stage.postDiffSteps ?? [],
@@ -403,10 +396,10 @@ export class GithubCDKPipeline extends CDKPipeline {
         CI: 'true',
         ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
-      permissions: {
+      permissions: mergeJobPermissions({
         idToken: JobPermission.WRITE,
         contents: JobPermission.READ,
-      },
+      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       steps: [
         {
           name: 'Checkout',
