@@ -225,7 +225,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         ...this.useGithubPackages && {
           packages: JobPermission.WRITE,
         },
-      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+      }, ...(ghSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       steps: [
         {
           name: 'Checkout',
