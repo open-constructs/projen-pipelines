@@ -63,7 +63,7 @@ const project = new cdk.JsiiProject({
   },
 });
 
-project.package.addPackageResolutions('projen@0.79.3');
+project.package.addPackageResolutions('projen@0.81.0');
 
 project.gitpod?.addCustomTask({
   init: 'npm ci',

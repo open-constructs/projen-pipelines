@@ -83,7 +83,7 @@
     "@amazon-codecatalyst/blueprints.blueprint",
     "standard-version"
   ],
-  "resolutions": {
+  "overrides": {
     "projen": "0.79.3"
   },
   "keywords": [
