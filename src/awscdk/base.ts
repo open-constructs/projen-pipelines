@@ -1,6 +1,8 @@
 import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
+import { PipelineEngine } from '../engine';
+import { PipelineStep } from '../steps';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -23,19 +25,6 @@ export interface Environment {
   readonly region: string;
 }
 
-/**
- * The CI/CD tooling used to run your pipeline.
- * The component will render workflows for the given system
- */
-export enum PipelineEngine {
-  /** Create GitHub actions */
-  GITHUB,
-  /** Create a .gitlab-ci.yaml file */
-  GITLAB,
-  // /** Create AWS CodeCatalyst workflows */
-  // CODE_CATALYST,
-}
-
 // /**
 //  * Describes the type of pipeline that will be created
 //  */
@@ -46,12 +35,32 @@ export enum PipelineEngine {
 //   CONTINUOUS_DELIVERY,
 // }
 
-export interface DeploymentStage {
-  readonly name: string;
-  readonly env: Environment;
+/**
+ * Options for stages that are part of the pipeline
+ */
+export interface DeploymentStage extends NamedStageOptions {
   readonly manualApproval?: boolean;
 }
 
+/**
+ * Options for stages that are not part of the pipeline
+ */
+export interface IndependentStage extends NamedStageOptions {
+  readonly postDiffSteps?: PipelineStep[];
+  readonly postDeploySteps?: PipelineStep[];
+}
+
+/**
+ * Options for a CDK stage with a name
+ */
+export interface NamedStageOptions extends StageOptions {
+  readonly name: string;
+  readonly watchable?: boolean;
+}
+
+/**
+ * Options for a CDK stage like the target environment
+ */
 export interface StageOptions {
   readonly env: Environment;
 }
@@ -65,6 +74,12 @@ export interface StageOptions {
 export interface CDKPipelineOptions {
 
   /**
+   * the name of the branch to deploy from
+   * @default main
+   */
+  readonly branchName?: string;
+
+  /**
    * This field is used to define a prefix for the AWS Stack resources created
    * during the pipeline's operation.
    *
@@ -73,16 +88,32 @@ export interface CDKPipelineOptions {
   readonly stackPrefix?: string;
 
   /**
+   * If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack.
+   * You can use this to deploy CDk applications containing multiple stacks.
+   *
+   * @default false
+   */
+  readonly deploySubStacks?: boolean;
+
+  /**
    * This field determines the NPM namespace to be used when packaging CDK cloud
    * assemblies. A namespace helps group related resources together, providing
    * better organization and ease of management.
    */
   readonly pkgNamespace: string;
 
+  /**
+   * This field specifies a list of stages that should be deployed using a CI/CD pipeline
+   */
   readonly stages: DeploymentStage[];
 
+  /** This specifies details for independent stages */
+  readonly independentStages?: IndependentStage[];
+
+  /** This specifies details for a personal stage */
   readonly personalStage?: StageOptions;
 
+  /** This specifies details for feature stages */
   readonly featureStages?: StageOptions;
 
   // /**
@@ -98,6 +129,9 @@ export interface CDKPipelineOptions {
   readonly preSynthCommands?: string[];
   readonly postSynthCommands?: string[];
 
+  readonly preInstallSteps?: PipelineStep[];
+  readonly preSynthSteps?: PipelineStep[];
+  readonly postSynthSteps?: PipelineStep[];
 }
 
 /**
@@ -106,6 +140,7 @@ export interface CDKPipelineOptions {
  */
 export abstract class CDKPipeline extends Component {
   public readonly stackPrefix: string;
+  public readonly branchName: string;
 
   constructor(protected app: awscdk.AwsCdkTypeScriptApp, private baseOptions: CDKPipelineOptions) {
     super(app);
@@ -118,8 +153,10 @@ export abstract class CDKPipeline extends Component {
     );
     // this.app.addDeps(
     // );
+    this.project.gitignore.exclude('/cdk-outputs-*.json');
 
     this.stackPrefix = baseOptions.stackPrefix ?? app.name;
+    this.branchName = baseOptions.branchName ?? 'main'; // TODO use defaultReleaseBranch of NodeProject
 
     // Removes the compiled cloud assembly before each synth
     this.project.tasks.tryFind('synth')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
@@ -141,6 +178,9 @@ export abstract class CDKPipeline extends Component {
     for (const stage of baseOptions.stages) {
       this.createPipelineStage(stage);
     }
+    for (const stage of (baseOptions.independentStages ?? [])) {
+      this.createIndependentStage(stage);
+    }
 
     // Creates tasks to handle the release process
     this.createReleaseTasks();
@@ -149,6 +189,8 @@ export abstract class CDKPipeline extends Component {
     this.createApplicationEntrypoint();
 
   }
+
+  public abstract engineType(): PipelineEngine;
 
   protected renderInstallCommands(): string[] {
     return [
@@ -178,7 +220,6 @@ export abstract class CDKPipeline extends Component {
 
   protected renderSynthCommands(): string[] {
     return [
-      ...this.renderInstallCommands(),
       ...(this.baseOptions.preSynthCommands ?? []),
       'npx projen build',
       ...(this.baseOptions.postSynthCommands ?? []),
@@ -187,7 +228,6 @@ export abstract class CDKPipeline extends Component {
 
   protected getAssetUploadCommands(needsVersionedArtifacts: boolean): string[] {
     return [
-      ...this.renderInstallCommands(),
       'npx projen publish:assets',
       ...(needsVersionedArtifacts ? [
         'npx projen bump',
@@ -208,6 +248,16 @@ export abstract class CDKPipeline extends Component {
     ];
   }
 
+  protected createSafeStageName(name: string): string {
+    // Remove non-alphanumeric characters and split into words
+    const words = name.replace(/[^a-zA-Z0-9]+/g, ' ').trim().split(/\s+/);
+
+    // Capitalize the first letter of each word and join them
+    return words.map((word) => {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join('');
+  }
+
   /**
    * This method generates the entry point for the application, including interfaces and classes
    * necessary to set up the pipeline and define the AWS CDK stacks for different environments.
@@ -223,7 +273,7 @@ export abstract class CDKPipeline extends Component {
       appCode += `    // If the environment variable USER is set and a function is provided for creating a personal stack, it is called with necessary arguments.
     if (props.providePersonalStack && process.env.USER) {
       const stageName = 'personal-' + process.env.USER.toLowerCase().replace(/\\\//g, '-');
-      props.providePersonalStack(this, '${this.stackPrefix}-personal', { env: ${JSON.stringify(this.baseOptions.personalStage.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
+      props.providePersonalStack(this, '${this.stackPrefix}-personal', { env: { account: '${this.baseOptions.personalStage.env.account}', region: '${this.baseOptions.personalStage.env.region}' }, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
     }
 `;
     }
@@ -235,20 +285,33 @@ export abstract class CDKPipeline extends Component {
       appCode += `    // If the environment variable BRANCH is set and a function is provided for creating a feature stack, it is called with necessary arguments.
     if (props.provideFeatureStack && process.env.BRANCH) {
       const stageName = 'feature-' + process.env.BRANCH.toLowerCase().replace(/\\\//g, '-');
-      props.provideFeatureStack(this, '${this.stackPrefix}-feature', { env: ${JSON.stringify(this.baseOptions.featureStages.env)}, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
+      props.provideFeatureStack(this, '${this.stackPrefix}-feature', { env: { account: '${this.baseOptions.featureStages.env.account}', region: '${this.baseOptions.featureStages.env.region}' }, stackName: \`${this.stackPrefix}-\${stageName}\`, stageName });
     }
 `;
     }
 
     for (const stage of this.baseOptions.stages) {
-      const nameUpperFirst = `${stage.name.charAt(0).toUpperCase()}${stage.name.substring(1)}`;
+      const nameUpperFirst = this.createSafeStageName(stage.name);
 
       propsCode += `  /** This function will be used to generate a ${stage.name} stack. */
   provide${nameUpperFirst}Stack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
 `;
       appCode += `    // If a function is provided for creating a ${stage.name} stack, it is called with necessary arguments.
     if (props.provide${nameUpperFirst}Stack) {
-      props.provide${nameUpperFirst}Stack(this, '${this.stackPrefix}-${stage.name}', { env: ${JSON.stringify(stage.env)}, stackName: '${this.stackPrefix}-${stage.name}', stageName: '${stage.name}' });
+      props.provide${nameUpperFirst}Stack(this, '${this.stackPrefix}-${stage.name}', { env: { account: '${stage.env.account}', region: '${stage.env.region}' }, stackName: '${this.stackPrefix}-${stage.name}', stageName: '${stage.name}' });
+    }
+`;
+    }
+
+    for (const stage of (this.baseOptions.independentStages ?? [])) {
+      const nameUpperFirst = this.createSafeStageName(stage.name);
+
+      propsCode += `  /** This function will be used to generate a ${stage.name} stack. */
+  provide${nameUpperFirst}Stack: (app: App, stackId: string, props: PipelineAppStackProps) => Stack;
+`;
+      appCode += `    // If a function is provided for creating a ${stage.name} stack, it is called with necessary arguments.
+    if (props.provide${nameUpperFirst}Stack) {
+      props.provide${nameUpperFirst}Stack(this, '${this.stackPrefix}-${stage.name}', { env: { account: '${stage.env.account}', region: '${stage.env.region}' }, stackName: '${this.stackPrefix}-${stage.name}', stageName: '${stage.name}' });
     }
 `;
     }
@@ -298,10 +361,18 @@ ${appCode}
    * based on the latest git tag and pushing the CDK assembly to the package repository.
    */
   protected createReleaseTasks() {
+    const stages = [...this.baseOptions.stages, ...this.baseOptions.independentStages ?? []];
     // Task to publish the CDK assets to all accounts
+    for (const stage of stages) {
+      this.project.addTask(`publish:assets:${stage.name}`, {
+        steps: [{
+          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-${stage.name}.assets.json publish`,
+        }],
+      });
+    }
     this.project.addTask('publish:assets', {
-      steps: this.baseOptions.stages.map(stage => ({
-        exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}-${stage.name}.assets.json publish`,
+      steps: stages.map(stage => ({
+        spawn: `publish:assets:${stage.name}`,
       })),
     });
 
@@ -338,17 +409,18 @@ ${appCode}
    * comparing changes (diff), and destroying the stack when no longer needed.
    */
   protected createPersonalStage() {
+    const stackId = this.getCliStackPattern('personal');
     this.project.addTask('deploy:personal', {
-      exec: `cdk deploy ${this.stackPrefix}-personal`,
+      exec: `cdk deploy --outputs-file cdk-outputs-personal.json ${stackId}`,
     });
     this.project.addTask('watch:personal', {
-      exec: `cdk deploy --watch --hotswap ${this.stackPrefix}-personal`,
+      exec: `cdk deploy --outputs-file cdk-outputs-personal.json --watch --hotswap ${stackId}`,
     });
     this.project.addTask('diff:personal', {
-      exec: `cdk diff ${this.stackPrefix}-personal`,
+      exec: `cdk diff ${stackId}`,
     });
     this.project.addTask('destroy:personal', {
-      exec: `cdk destroy ${this.stackPrefix}-personal`,
+      exec: `cdk destroy ${stackId}`,
     });
   }
 
@@ -357,14 +429,18 @@ ${appCode}
    * and destroying the stack when no longer needed.
    */
   protected createFeatureStage() {
+    const stackId = this.getCliStackPattern('feature');
     this.project.addTask('deploy:feature', {
-      exec: `cdk --progress events --require-approval never deploy ${this.stackPrefix}-feature`,
+      exec: `cdk --outputs-file cdk-outputs-feature.json --progress events --require-approval never deploy ${stackId}`,
     });
     this.project.addTask('diff:feature', {
-      exec: `cdk diff ${this.stackPrefix}-feature`,
+      exec: `cdk diff ${stackId}`,
     });
     this.project.addTask('destroy:feature', {
-      exec: `cdk destroy ${this.stackPrefix}-feature`,
+      exec: `cdk destroy ${stackId}`,
+    });
+    this.project.addTask('watch:feature', {
+      exec: `cdk deploy --outputs-file cdk-outputs-feature.json --watch --hotswap ${stackId}`,
     });
   }
 
@@ -373,11 +449,40 @@ ${appCode}
    * @param {DeployStageOptions} stage - The stage to create
    */
   protected createPipelineStage(stage: DeploymentStage) {
+    const stackId = this.getCliStackPattern(stage.name);
     this.project.addTask(`deploy:${stage.name}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} --progress events --require-approval never deploy ${this.stackPrefix}-${stage.name}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,
     });
     this.project.addTask(`diff:${stage.name}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${this.stackPrefix}-${stage.name}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
     });
+    if (stage.watchable) {
+      this.project.addTask(`watch:${stage.name}`, {
+        exec: `cdk deploy --outputs-file cdk-outputs-${stage.name}.json --watch --hotswap ${stackId}`,
+      });
+    }
+  }
+
+  /**
+   * This method sets up tasks for the independent stages including deployment and comparing changes (diff).
+   * @param {NamedStageOptions} stage - The stage to create
+   */
+  protected createIndependentStage(stage: IndependentStage) {
+    const stackId = this.getCliStackPattern(stage.name);
+    this.project.addTask(`deploy:${stage.name}`, {
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,
+    });
+    this.project.addTask(`diff:${stage.name}`, {
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
+    });
+    if (stage.watchable) {
+      this.project.addTask(`watch:${stage.name}`, {
+        exec: `cdk deploy --outputs-file cdk-outputs-${stage.name}.json --watch --hotswap ${stackId}`,
+      });
+    }
+  }
+
+  protected getCliStackPattern(stage: string) {
+    return this.baseOptions.deploySubStacks ? `${this.stackPrefix}-${stage} ${this.stackPrefix}-${stage}/*` : `${this.stackPrefix}-${stage}`;
   }
 }

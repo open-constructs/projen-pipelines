@@ -1,4 +1,4 @@
-import { cdk, github, javascript } from 'projen';
+import { ReleasableCommits, cdk, github, javascript } from 'projen';
 
 const project = new cdk.JsiiProject({
   author: 'Taimos GmbH',
@@ -12,6 +12,7 @@ const project = new cdk.JsiiProject({
   repositoryUrl: 'https://github.com/taimos/projen-pipelines.git',
   licensed: true,
   license: 'Apache-2.0',
+  jsiiVersion: '~5.4',
   devDeps: [
     'constructs',
     'fs-extra',
@@ -19,9 +20,6 @@ const project = new cdk.JsiiProject({
     '@types/standard-version',
     '@amazon-codecatalyst/blueprint-util.projen-blueprint',
     '@amazon-codecatalyst/blueprint-util.cli',
-  ],
-  deps: [
-    'projen',
   ],
   bundledDeps: [
     'standard-version',
@@ -32,7 +30,7 @@ const project = new cdk.JsiiProject({
     '@amazon-codecatalyst/blueprint-component.environments',
   ],
   peerDeps: [
-    'projen',
+    'projen@>=0.81.0 <1.0.0',
     'constructs',
   ],
   autoApproveUpgrades: true,
@@ -40,7 +38,13 @@ const project = new cdk.JsiiProject({
   depsUpgradeOptions: { workflowOptions: { schedule: javascript.UpgradeDependenciesSchedule.WEEKLY } },
   githubOptions: {
     projenCredentials: github.GithubCredentials.fromApp(),
+    pullRequestLintOptions: {
+      semanticTitleOptions: {
+        types: ['feat', 'fix', 'chore', 'ci', 'docs', 'style', 'refactor', 'test', 'revert', 'Revert'],
+      },
+    },
   },
+  releasableCommits: ReleasableCommits.featuresAndFixes(),
   keywords: [
     'aws',
     'cdk',
