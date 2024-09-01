@@ -33,7 +33,7 @@
         "BUMPFILE": "dist/version.txt",
         "RELEASETAG": "dist/releasetag.txt",
         "RELEASE_TAG_PREFIX": "",
-        "RELEASABLE_COMMITS": "git log --no-merges --oneline $LATEST_TAG..HEAD -E --grep '^(feat|fix){1}(\\([^()[:space:]]+\\))?(!)?:[[:blank:]]+.+'"
+        "RELEASABLE_COMMITS": "git log --no-merges --oneline $LATEST_TAG..HEAD -E --grep '^(feat|fix|revert|Revert|docs){1}(\\([^()[:space:]]+\\))?(!)?:[[:blank:]]+.+'"
       },
       "steps": [
         {
@@ -137,7 +137,7 @@
       "description": "Install project dependencies and update lockfile (non-frozen)",
       "steps": [
         {
-          "exec": "yarn install --check-files"
+          "exec": "npm install"
         }
       ]
     },
@@ -146,7 +146,7 @@
       "description": "Install project dependencies using frozen lockfile",
       "steps": [
         {
-          "exec": "yarn install --check-files --frozen-lockfile"
+          "exec": "npm ci"
         }
       ]
     },
@@ -249,7 +249,7 @@
         "BUMPFILE": "dist/version.txt",
         "RELEASETAG": "dist/releasetag.txt",
         "RELEASE_TAG_PREFIX": "",
-        "RELEASABLE_COMMITS": "git log --no-merges --oneline $LATEST_TAG..HEAD -E --grep '^(feat|fix){1}(\\([^()[:space:]]+\\))?(!)?:[[:blank:]]+.+'"
+        "RELEASABLE_COMMITS": "git log --no-merges --oneline $LATEST_TAG..HEAD -E --grep '^(feat|fix|revert|Revert|docs){1}(\\([^()[:space:]]+\\))?(!)?:[[:blank:]]+.+'"
       },
       "steps": [
         {
@@ -268,10 +268,10 @@
           "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@amazon-codecatalyst/blueprint-util.cli,@amazon-codecatalyst/blueprint-util.projen-blueprint,@types/fs-extra,@types/jest,@types/standard-version,eslint-import-resolver-typescript,eslint-plugin-import,fs-extra,jest,jsii-diff,jsii-docgen,jsii-pacmak,projen,ts-jest,ts-node,typescript,@amazon-codecatalyst/blueprint-component.dev-environments,@amazon-codecatalyst/blueprint-component.environments,@amazon-codecatalyst/blueprint-component.source-repositories,@amazon-codecatalyst/blueprint-component.workflows,@amazon-codecatalyst/blueprints.blueprint,standard-version,constructs"
         },
         {
-          "exec": "yarn install --check-files"
+          "exec": "npm install"
         },
         {
-          "exec": "yarn upgrade @amazon-codecatalyst/blueprint-util.cli @amazon-codecatalyst/blueprint-util.projen-blueprint @types/fs-extra @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-import-resolver-typescript eslint-plugin-import eslint fs-extra jest jest-junit jsii-diff jsii-docgen jsii-pacmak jsii-rosetta jsii projen standard-version ts-jest ts-node typescript @amazon-codecatalyst/blueprint-component.dev-environments @amazon-codecatalyst/blueprint-component.environments @amazon-codecatalyst/blueprint-component.source-repositories @amazon-codecatalyst/blueprint-component.workflows @amazon-codecatalyst/blueprints.blueprint"
+          "exec": "npm update @types/fs-extra @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-import-resolver-typescript eslint-plugin-import eslint fs-extra jest jest-junit jsii-diff jsii-docgen jsii-pacmak jsii-rosetta jsii projen standard-version ts-jest ts-node typescript"
         },
         {
           "exec": "npx projen"

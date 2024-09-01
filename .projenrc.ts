@@ -9,6 +9,7 @@ const project = new cdk.JsiiProject({
   defaultReleaseBranch: 'main',
   name: 'projen-pipelines',
   projenrcTs: true,
+  packageManager: javascript.NodePackageManager.NPM,
   repositoryUrl: 'https://github.com/taimos/projen-pipelines.git',
   licensed: true,
   license: 'Apache-2.0',
@@ -44,7 +45,7 @@ const project = new cdk.JsiiProject({
       },
     },
   },
-  releasableCommits: ReleasableCommits.featuresAndFixes(),
+  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'revert', 'Revert', 'docs']),
   keywords: [
     'aws',
     'cdk',
@@ -65,7 +66,7 @@ const project = new cdk.JsiiProject({
 project.package.addPackageResolutions('projen@0.79.3');
 
 project.gitpod?.addCustomTask({
-  init: 'yarn install --check-files --frozen-lockfile',
+  init: 'npm ci',
   command: 'npx projen build',
 });
 

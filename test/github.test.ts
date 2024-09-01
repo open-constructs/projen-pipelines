@@ -13,6 +13,9 @@ test('Github snapshot', () => {
     iamRoleArns: {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
+      assetPublishingPerStage: {
+        prod: 'prodPublishRole',
+      },
       deployment: {
         'my-dev': 'devRole',
         'prod': 'prodRole',
@@ -41,6 +44,53 @@ test('Github snapshot', () => {
   expect(snapshot['.github/workflows/release-prod.yml']).toMatchSnapshot();
   expect(snapshot['package.json']).toMatchSnapshot();
   expect(snapshot['.projen/tasks.json']).toMatchSnapshot();
+});
+
+test('Github snapshot with environment', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.102.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        'my-dev': 'devRole',
+        'prod': 'prodRole',
+      },
+    },
+    useGithubEnvironments: true,
+    pkgNamespace: '@assembly',
+    stages: [{
+      name: 'my-dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }, {
+      name: 'prod',
+      manualApproval: true,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+    independentStages: [{
+      name: 'independent',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
+  expect(snapshot['.github/workflows/release-prod.yml']).toMatchSnapshot();
+  expect(snapshot['.github/workflows/deploy-independent.yml']).toMatchSnapshot();
 });
 
 test('Github snapshot with multi stack', () => {
@@ -196,22 +246,31 @@ test('Github snapshot with independent stage', () => {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
       deployment: {
-        independent: 'deployRole',
+        independent1: 'deployRole',
       },
     },
     pkgNamespace: '@assembly',
     stages: [],
     independentStages: [{
-      name: 'independent',
+      name: 'independent1',
       env: {
         account: '123456789012',
         region: 'eu-central-1',
       },
       postDeploySteps: [new TestStep(p)],
+    }, {
+      name: 'independent2',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+      postDeploySteps: [new TestStep(p)],
+      deployOnPush: true,
     }],
   });
 
   const snapshot = synthSnapshot(p);
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
-  expect(snapshot['.github/workflows/deploy-independent.yml']).toMatchSnapshot();
+  expect(snapshot['.github/workflows/deploy-independent1.yml']).toMatchSnapshot();
+  expect(snapshot['.github/workflows/deploy-independent2.yml']).toMatchSnapshot();
 });

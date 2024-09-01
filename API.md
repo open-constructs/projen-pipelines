@@ -1127,6 +1127,64 @@ Currently set to false
 
 ## Structs <a name="Structs" id="Structs"></a>
 
+### AwsAssumeRoleStepConfig <a name="AwsAssumeRoleStepConfig" id="projen-pipelines.AwsAssumeRoleStepConfig"></a>
+
+Configuration for an AWS AssumeRoleStep.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.AwsAssumeRoleStepConfig.Initializer"></a>
+
+```typescript
+import { AwsAssumeRoleStepConfig } from 'projen-pipelines'
+
+const awsAssumeRoleStepConfig: AwsAssumeRoleStepConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.roleArn">roleArn</a></code> | <code>string</code> | The ARN of the role to assume. |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.region">region</a></code> | <code>string</code> | The AWS region that should be set. |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.sessionName">sessionName</a></code> | <code>string</code> | An identifier for the assumed role session. |
+
+---
+
+##### `roleArn`<sup>Required</sup> <a name="roleArn" id="projen-pipelines.AwsAssumeRoleStepConfig.property.roleArn"></a>
+
+```typescript
+public readonly roleArn: string;
+```
+
+- *Type:* string
+
+The ARN of the role to assume.
+
+---
+
+##### `region`<sup>Optional</sup> <a name="region" id="projen-pipelines.AwsAssumeRoleStepConfig.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+The AWS region that should be set.
+
+---
+
+##### `sessionName`<sup>Optional</sup> <a name="sessionName" id="projen-pipelines.AwsAssumeRoleStepConfig.property.sessionName"></a>
+
+```typescript
+public readonly sessionName: string;
+```
+
+- *Type:* string
+
+An identifier for the assumed role session.
+
+---
+
 ### BashCDKPipelineOptions <a name="BashCDKPipelineOptions" id="projen-pipelines.BashCDKPipelineOptions"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.BashCDKPipelineOptions.Initializer"></a>
@@ -1803,6 +1861,45 @@ public readonly manualApproval: boolean;
 
 ---
 
+### DownloadArtifactStepConfig <a name="DownloadArtifactStepConfig" id="projen-pipelines.DownloadArtifactStepConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DownloadArtifactStepConfig.Initializer"></a>
+
+```typescript
+import { DownloadArtifactStepConfig } from 'projen-pipelines'
+
+const downloadArtifactStepConfig: DownloadArtifactStepConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DownloadArtifactStepConfig.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DownloadArtifactStepConfig.property.path">path</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.DownloadArtifactStepConfig.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `path`<sup>Required</sup> <a name="path" id="projen-pipelines.DownloadArtifactStepConfig.property.path"></a>
+
+```typescript
+public readonly path: string;
+```
+
+- *Type:* string
+
+---
+
 ### Environment <a name="Environment" id="projen-pipelines.Environment"></a>
 
 The Environment interface is designed to hold AWS related information for a specific deployment environment within your infrastructure.
@@ -1890,6 +1987,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.GithubIamRoleConfig">GithubIamRoleConfig</a></code> | IAM config for GitHub Actions. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironments">useGithubEnvironments</a></code> | <code>boolean</code> | whether to use GitHub environments for deployment stages. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubPackagesForAssembly">useGithubPackagesForAssembly</a></code> | <code>boolean</code> | use GitHub Packages to store vesioned artifacts of cloud assembly; |
 
 ---
@@ -2083,6 +2181,21 @@ runner tags to use to select runners.
 
 ---
 
+##### `useGithubEnvironments`<sup>Optional</sup> <a name="useGithubEnvironments" id="projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironments"></a>
+
+```typescript
+public readonly useGithubEnvironments: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+whether to use GitHub environments for deployment stages.
+
+INFO: When using environments consider protection rules instead of using the manual option of projen-pipelines for stages
+
+---
+
 ##### `useGithubPackagesForAssembly`<sup>Optional</sup> <a name="useGithubPackagesForAssembly" id="projen-pipelines.GithubCDKPipelineOptions.property.useGithubPackagesForAssembly"></a>
 
 ```typescript
@@ -2114,6 +2227,7 @@ const githubIamRoleConfig: GithubIamRoleConfig = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GithubIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing step. |
+| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.assetPublishingPerStage">assetPublishingPerStage</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARN for the asset publishing step for a specific stage. |
 | <code><a href="#projen-pipelines.GithubIamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if no specific role is provided. |
 | <code><a href="#projen-pipelines.GithubIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different deployment stages. |
 | <code><a href="#projen-pipelines.GithubIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis step. |
@@ -2129,6 +2243,18 @@ public readonly assetPublishing: string;
 - *Type:* string
 
 IAM role ARN for the asset publishing step.
+
+---
+
+##### `assetPublishingPerStage`<sup>Optional</sup> <a name="assetPublishingPerStage" id="projen-pipelines.GithubIamRoleConfig.property.assetPublishingPerStage"></a>
+
+```typescript
+public readonly assetPublishingPerStage: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+IAM role ARN for the asset publishing step for a specific stage.
 
 ---
 
@@ -2168,6 +2294,37 @@ IAM role ARN for the synthesis step.
 
 ---
 
+### GithubPackagesLoginStepOptions <a name="GithubPackagesLoginStepOptions" id="projen-pipelines.GithubPackagesLoginStepOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GithubPackagesLoginStepOptions.Initializer"></a>
+
+```typescript
+import { GithubPackagesLoginStepOptions } from 'projen-pipelines'
+
+const githubPackagesLoginStepOptions: GithubPackagesLoginStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubPackagesLoginStepOptions.property.write">write</a></code> | <code>boolean</code> | Whether or not to grant the step write permissions to the registry. |
+
+---
+
+##### `write`<sup>Optional</sup> <a name="write" id="projen-pipelines.GithubPackagesLoginStepOptions.property.write"></a>
+
+```typescript
+public readonly write: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Whether or not to grant the step write permissions to the registry.
+
+---
+
 ### GithubStepConfig <a name="GithubStepConfig" id="projen-pipelines.GithubStepConfig"></a>
 
 Configuration interface for a GitHub Actions step.
@@ -2187,6 +2344,7 @@ const githubStepConfig: GithubStepConfig = { ... }
 | <code><a href="#projen-pipelines.GithubStepConfig.property.env">env</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables to set for this step. |
 | <code><a href="#projen-pipelines.GithubStepConfig.property.needs">needs</a></code> | <code>string[]</code> | Dependencies which need to be completed before this step. |
 | <code><a href="#projen-pipelines.GithubStepConfig.property.steps">steps</a></code> | <code>projen.github.workflows.JobStep[]</code> | Commands wrapped as GitHub Action job steps. |
+| <code><a href="#projen-pipelines.GithubStepConfig.property.permissions">permissions</a></code> | <code>projen.github.workflows.JobPermissions</code> | Additional job permissions needed. |
 
 ---
 
@@ -2223,6 +2381,18 @@ public readonly steps: JobStep[];
 - *Type:* projen.github.workflows.JobStep[]
 
 Commands wrapped as GitHub Action job steps.
+
+---
+
+##### `permissions`<sup>Optional</sup> <a name="permissions" id="projen-pipelines.GithubStepConfig.property.permissions"></a>
+
+```typescript
+public readonly permissions: JobPermissions;
+```
+
+- *Type:* projen.github.workflows.JobPermissions
+
+Additional job permissions needed.
 
 ---
 
@@ -2481,7 +2651,8 @@ const gitlabIamRoleConfig: GitlabIamRoleConfig = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing stage. |
+| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing step. |
+| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.assetPublishingPerStage">assetPublishingPerStage</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARN for the asset publishing step for a specific stage. |
 | <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if specific stage role is not provided. |
 | <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | A map of stage names to IAM role ARNs for the deployment operation. |
 | <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.diff">diff</a></code> | <code>{[ key: string ]: string}</code> | A map of stage names to IAM role ARNs for the diff operation. |
@@ -2497,7 +2668,19 @@ public readonly assetPublishing: string;
 
 - *Type:* string
 
-IAM role ARN for the asset publishing stage.
+IAM role ARN for the asset publishing step.
+
+---
+
+##### `assetPublishingPerStage`<sup>Optional</sup> <a name="assetPublishingPerStage" id="projen-pipelines.GitlabIamRoleConfig.property.assetPublishingPerStage"></a>
+
+```typescript
+public readonly assetPublishingPerStage: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+IAM role ARN for the asset publishing step for a specific stage.
 
 ---
 
@@ -2725,6 +2908,7 @@ const independentStage: IndependentStage = { ... }
 | <code><a href="#projen-pipelines.IndependentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.deployOnPush">deployOnPush</a></code> | <code>boolean</code> | This specifies whether the stage should be deployed on push. |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 
@@ -2757,6 +2941,19 @@ public readonly watchable: boolean;
 ```
 
 - *Type:* boolean
+
+---
+
+##### `deployOnPush`<sup>Optional</sup> <a name="deployOnPush" id="projen-pipelines.IndependentStage.property.deployOnPush"></a>
+
+```typescript
+public readonly deployOnPush: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+This specifies whether the stage should be deployed on push.
 
 ---
 
@@ -2862,7 +3059,270 @@ public readonly env: Environment;
 
 ---
 
+### UploadArtifactStepConfig <a name="UploadArtifactStepConfig" id="projen-pipelines.UploadArtifactStepConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.UploadArtifactStepConfig.Initializer"></a>
+
+```typescript
+import { UploadArtifactStepConfig } from 'projen-pipelines'
+
+const uploadArtifactStepConfig: UploadArtifactStepConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.UploadArtifactStepConfig.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.UploadArtifactStepConfig.property.path">path</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.UploadArtifactStepConfig.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `path`<sup>Required</sup> <a name="path" id="projen-pipelines.UploadArtifactStepConfig.property.path"></a>
+
+```typescript
+public readonly path: string;
+```
+
+- *Type:* string
+
+---
+
 ## Classes <a name="Classes" id="Classes"></a>
+
+### AwsAssumeRoleStep <a name="AwsAssumeRoleStep" id="projen-pipelines.AwsAssumeRoleStep"></a>
+
+A step that assumes a role in AWS.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.AwsAssumeRoleStep.Initializer"></a>
+
+```typescript
+import { AwsAssumeRoleStep } from 'projen-pipelines'
+
+new AwsAssumeRoleStep(project: Project, config: AwsAssumeRoleStepConfig)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStep.Initializer.parameter.config">config</a></code> | <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig">AwsAssumeRoleStepConfig</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.AwsAssumeRoleStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.AwsAssumeRoleStep.Initializer.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.AwsAssumeRoleStepConfig">AwsAssumeRoleStepConfig</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.AwsAssumeRoleStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.AwsAssumeRoleStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.AwsAssumeRoleStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### DownloadArtifactStep <a name="DownloadArtifactStep" id="projen-pipelines.DownloadArtifactStep"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DownloadArtifactStep.Initializer"></a>
+
+```typescript
+import { DownloadArtifactStep } from 'projen-pipelines'
+
+new DownloadArtifactStep(project: Project, config: DownloadArtifactStepConfig)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DownloadArtifactStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.DownloadArtifactStep.Initializer.parameter.config">config</a></code> | <code><a href="#projen-pipelines.DownloadArtifactStepConfig">DownloadArtifactStepConfig</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DownloadArtifactStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.DownloadArtifactStep.Initializer.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.DownloadArtifactStepConfig">DownloadArtifactStepConfig</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DownloadArtifactStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.DownloadArtifactStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.DownloadArtifactStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.DownloadArtifactStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DownloadArtifactStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DownloadArtifactStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### GithubPackagesLoginStep <a name="GithubPackagesLoginStep" id="projen-pipelines.GithubPackagesLoginStep"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GithubPackagesLoginStep.Initializer"></a>
+
+```typescript
+import { GithubPackagesLoginStep } from 'projen-pipelines'
+
+new GithubPackagesLoginStep(project: Project, options: GithubPackagesLoginStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubPackagesLoginStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.GithubPackagesLoginStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GithubPackagesLoginStepOptions">GithubPackagesLoginStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubPackagesLoginStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GithubPackagesLoginStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GithubPackagesLoginStepOptions">GithubPackagesLoginStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubPackagesLoginStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.GithubPackagesLoginStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.GithubPackagesLoginStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.GithubPackagesLoginStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.GithubPackagesLoginStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.GithubPackagesLoginStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
 
 ### PipelineStep <a name="PipelineStep" id="projen-pipelines.PipelineStep"></a>
 
@@ -3001,6 +3461,80 @@ public toGitlab(): GitlabStepConfig
 ```
 
 Converts the step into a GitLab CI configuration.
+
+
+
+
+### UploadArtifactStep <a name="UploadArtifactStep" id="projen-pipelines.UploadArtifactStep"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.UploadArtifactStep.Initializer"></a>
+
+```typescript
+import { UploadArtifactStep } from 'projen-pipelines'
+
+new UploadArtifactStep(project: Project, config: UploadArtifactStepConfig)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.UploadArtifactStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.UploadArtifactStep.Initializer.parameter.config">config</a></code> | <code><a href="#projen-pipelines.UploadArtifactStepConfig">UploadArtifactStepConfig</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.UploadArtifactStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.UploadArtifactStep.Initializer.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.UploadArtifactStepConfig">UploadArtifactStepConfig</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.UploadArtifactStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.UploadArtifactStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.UploadArtifactStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.UploadArtifactStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.UploadArtifactStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.UploadArtifactStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
 
 
 
