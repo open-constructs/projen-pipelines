@@ -29,8 +29,7 @@
     "unbump": "npx projen unbump",
     "upgrade": "npx projen upgrade",
     "watch": "npx projen watch",
-    "projen": "npx projen",
-    "local-push": "npx projen build && npx yalc push"
+    "projen": "npx projen"
   },
   "author": {
     "name": "Taimos GmbH",
@@ -69,6 +68,11 @@
     "projen": ">=0.81.0 <1.0.0"
   },
   "dependencies": {
+    "@amazon-codecatalyst/blueprint-component.dev-environments": "*",
+    "@amazon-codecatalyst/blueprint-component.environments": "*",
+    "@amazon-codecatalyst/blueprint-component.source-repositories": "*",
+    "@amazon-codecatalyst/blueprint-component.workflows": "*",
+    "@amazon-codecatalyst/blueprints.blueprint": "*",
     "standard-version": "^9"
   },
   "bundledDependencies": [
@@ -79,6 +83,9 @@
     "@amazon-codecatalyst/blueprints.blueprint",
     "standard-version"
   ],
+  "resolutions": {
+    "projen": "0.79.3"
+  },
   "keywords": [
     "aws",
     "cdk",
