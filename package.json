@@ -29,7 +29,8 @@
     "unbump": "npx projen unbump",
     "upgrade": "npx projen upgrade",
     "watch": "npx projen watch",
-    "projen": "npx projen"
+    "projen": "npx projen",
+    "local-push": "npx projen build && npx yalc push"
   },
   "author": {
     "name": "Taimos GmbH",

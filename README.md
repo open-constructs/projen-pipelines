@@ -196,6 +196,14 @@ git push origin my-branch
 
 Your pull request will be reviewed and hopefully merged quickly. Thanks for contributing!
 
+### How to test changes?
+The best way currently is to test things locally or - if you have a working stall of all supported CI/CD tools - manually test the functionalities there in diferent projects.
+
+_For local testing:_
+Using `yalc push` you can install the project locally to your local yalc package manager.
+Wirch `yalc add projen-pipelines` you can then use it in a local project.
+
+
 ## Known issues
 
 ### Environment variable not recognized during `npx projen`

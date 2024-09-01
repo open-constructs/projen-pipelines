@@ -3,6 +3,7 @@ import { YamlFile, awscdk } from 'projen';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
 import { Blueprint } from './codecatalyst/blueprint';
+import { PipelineEngine } from '../engine';
 
 
 export interface CodeCatalystIamRoleConfig {
@@ -51,9 +52,12 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
 
     });
     yml.synthesize();
-
-
   }
+
+    /** the type of engine this implementation of CDKPipeline is for */
+    public engineType(): PipelineEngine {
+      return PipelineEngine.CODE_CATALYST;
+    }
 
   private createSynth(): void {
 
