@@ -53,7 +53,7 @@ export class UploadArtifactStep extends PipelineStep {
     return {
       steps: [{
         name: 'Upload Artifact',
-        uses: 'actions/upload-artifact@v4',
+        uses: 'actions/upload-artifact@v4.3.6',
         with: {
           name: this.config.name,
           path: this.config.path,

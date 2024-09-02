@@ -31,7 +31,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -104,7 +104,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen deploy:my-dev
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-my-dev
           path: cdk-outputs-my-dev.json
@@ -197,7 +197,7 @@ jobs:
       - run: mv ./node_modules/@assembly/testapp cdk.out
       - run: npx projen deploy:prod
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -215,8 +215,8 @@ exports[`Github snapshot 4`] = `
     "@types/jest": "*",
     "@types/node": "^18",
     "@types/standard-version": "*",
-    "@typescript-eslint/eslint-plugin": "^6",
-    "@typescript-eslint/parser": "^6",
+    "@typescript-eslint/eslint-plugin": "^7",
+    "@typescript-eslint/parser": "^7",
     "aws-cdk": "^2.102.0",
     "cdk-assets": "*",
     "esbuild": "*",
@@ -238,6 +238,7 @@ exports[`Github snapshot 4`] = `
     "coveragePathIgnorePatterns": [
       "/node_modules/",
     ],
+    "coverageProvider": "v8",
     "coverageReporters": [
       "json",
       "lcov",
@@ -255,8 +256,8 @@ exports[`Github snapshot 4`] = `
       ],
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-      "<rootDir>/(test|src)/**/*(*.)@(spec|test).ts?(x)",
+      "<rootDir>/@(src|test)/**/*(*.)@(spec|test).ts?(x)",
+      "<rootDir>/@(src|test)/**/__tests__/**/*.ts?(x)",
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
@@ -275,6 +276,9 @@ exports[`Github snapshot 4`] = `
   },
   "license": "Apache-2.0",
   "name": "testapp",
+  "publishConfig": {
+    "access": "public",
+  },
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
@@ -640,7 +644,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -706,7 +710,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -767,7 +771,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen deploy:my-dev
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-my-dev
           path: cdk-outputs-my-dev.json
@@ -809,7 +813,7 @@ jobs:
       - run: mv ./node_modules/@assembly/testapp cdk.out
       - run: npx projen deploy:prod
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -846,7 +850,7 @@ jobs:
       - run: npx projen diff:independent
       - run: npx projen deploy:independent
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-independent
           path: cdk-outputs-independent.json
@@ -884,7 +888,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -951,7 +955,7 @@ jobs:
       - run: npx projen deploy:independent1
       - run: echo Post Deploy
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-independent1
           path: cdk-outputs-independent1.json
@@ -992,7 +996,7 @@ jobs:
       - run: npx projen deploy:independent2
       - run: echo Post Deploy
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-independent2
           path: cdk-outputs-independent2.json
@@ -1041,7 +1045,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1115,7 +1119,7 @@ jobs:
       - run: mv ./node_modules/@assembly/testapp cdk.out
       - run: npx projen deploy:prod
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -1153,7 +1157,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1211,7 +1215,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen deploy:dev
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -1528,7 +1532,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1589,7 +1593,7 @@ jobs:
       - run: npx projen install:ci
       - run: npx projen deploy:prod
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
