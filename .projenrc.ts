@@ -28,7 +28,7 @@ const project = new cdk.JsiiProject({
     'constructs',
   ],
   autoApproveUpgrades: true,
-  autoApproveOptions: { allowedUsernames: ['hoegertn', 'Lock128', 'open-constructs-projen'], secret: 'GITHUB_TOKEN' },
+  autoApproveOptions: { allowedUsernames: ['hoegertn', 'Lock128', 'open-constructs-projen[bot]'], secret: 'GITHUB_TOKEN' },
   depsUpgradeOptions: { workflowOptions: { schedule: javascript.UpgradeDependenciesSchedule.WEEKLY } },
   githubOptions: {
     projenCredentials: github.GithubCredentials.fromApp(),
