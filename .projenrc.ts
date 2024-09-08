@@ -21,14 +21,20 @@ const project = new cdk.JsiiProject({
     '@types/standard-version',
     '@amazon-codecatalyst/blueprint-util.projen-blueprint',
     '@amazon-codecatalyst/blueprint-util.cli',
+    '@amazon-codecatalyst/blueprint-component.workflows',
+    '@amazon-codecatalyst/blueprints.blueprint'
+    /*'@amazon-codecatalyst/blueprint-component.workflows',
+    '@amazon-codecatalyst/blueprint-component.source-repositories',
+    '@amazon-codecatalyst/blueprint-component.dev-environments',
+    '@amazon-codecatalyst/blueprint-component.environments',*/
   ],
   bundledDeps: [
     'standard-version',
-    '@amazon-codecatalyst/blueprints.blueprint',
+    /*'@amazon-codecatalyst/blueprints.blueprint',
     '@amazon-codecatalyst/blueprint-component.workflows',
     '@amazon-codecatalyst/blueprint-component.source-repositories',
     '@amazon-codecatalyst/blueprint-component.dev-environments',
-    '@amazon-codecatalyst/blueprint-component.environments',
+    '@amazon-codecatalyst/blueprint-component.environments',*/
   ],
   peerDeps: [
     'projen@>=0.81.0 <1.0.0',
@@ -64,6 +70,8 @@ const project = new cdk.JsiiProject({
 });
 
 project.package.addPackageResolutions('projen@0.81.0');
+
+project.addTask('local-push', {'exec': 'npx projen build && npx yalc push'});
 
 project.gitpod?.addCustomTask({
   init: 'npm ci',

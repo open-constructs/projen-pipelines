@@ -1,11 +1,19 @@
 {
   "dependencies": [
     {
+      "name": "@amazon-codecatalyst/blueprint-component.workflows",
+      "type": "build"
+    },
+    {
       "name": "@amazon-codecatalyst/blueprint-util.cli",
       "type": "build"
     },
     {
       "name": "@amazon-codecatalyst/blueprint-util.projen-blueprint",
+      "type": "build"
+    },
+    {
+      "name": "@amazon-codecatalyst/blueprints.blueprint",
       "type": "build"
     },
     {
@@ -110,32 +118,12 @@
       "type": "build"
     },
     {
-      "name": "@amazon-codecatalyst/blueprint-component.dev-environments",
-      "type": "bundled"
-    },
-    {
-      "name": "@amazon-codecatalyst/blueprint-component.environments",
-      "type": "bundled"
-    },
-    {
-      "name": "@amazon-codecatalyst/blueprint-component.source-repositories",
-      "type": "bundled"
-    },
-    {
-      "name": "@amazon-codecatalyst/blueprint-component.workflows",
-      "type": "bundled"
-    },
-    {
-      "name": "@amazon-codecatalyst/blueprints.blueprint",
-      "type": "bundled"
-    },
-    {
       "name": "standard-version",
       "type": "bundled"
     },
     {
       "name": "projen",
-      "version": "0.79.3",
+      "version": "0.81.0",
       "type": "override"
     },
     {
