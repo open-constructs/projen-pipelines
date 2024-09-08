@@ -46,8 +46,9 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^18",
     "@types/standard-version": "^7.1.3",
-    "@typescript-eslint/eslint-plugin": "^6",
-    "@typescript-eslint/parser": "^6",
+    "@typescript-eslint/eslint-plugin": "^7",
+    "@typescript-eslint/parser": "^7",
+    "commit-and-tag-version": "^12",
     "constructs": "10.3.0",
     "eslint": "^8",
     "eslint-import-resolver-typescript": "^3.6.3",
@@ -57,18 +58,17 @@
     "jest-junit": "^15",
     "jsii": "~5.4",
     "jsii-diff": "^1.103.1",
-    "jsii-docgen": "^10.5.2",
+    "jsii-docgen": "^10.5.0",
     "jsii-pacmak": "^1.103.1",
     "jsii-rosetta": "~5.4",
-    "projen": "0.81.0",
-    "standard-version": "^9",
-    "ts-jest": "^29.2.5",
+    "projen": "0.86.7",
+    "ts-jest": "^29",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   },
   "peerDependencies": {
     "constructs": "^10.3.0",
-    "projen": ">=0.81.0 <1.0.0"
+    "projen": ">=0.86.7 <1.0.0"
   },
   "dependencies": {
     "standard-version": "^9.5.0"
@@ -86,11 +86,17 @@
   ],
   "main": "lib/index.js",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.0",
   "jest": {
+    "coverageProvider": "v8",
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-      "<rootDir>/(test|src)/**/*(*.)@(spec|test).ts?(x)"
+      "<rootDir>/@(src|test)/**/*(*.)@(spec|test).ts?(x)",
+      "<rootDir>/@(src|test)/**/__tests__/**/*.ts?(x)",
+      "<rootDir>/@(projenrc)/**/*(*.)@(spec|test).ts?(x)",
+      "<rootDir>/@(projenrc)/**/__tests__/**/*.ts?(x)"
     ],
     "clearMocks": true,
     "collectCoverage": true,

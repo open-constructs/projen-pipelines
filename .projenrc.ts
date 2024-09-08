@@ -37,11 +37,11 @@ const project = new cdk.JsiiProject({
     '@amazon-codecatalyst/blueprint-component.environments',*/
   ],
   peerDeps: [
-    'projen@>=0.81.0 <1.0.0',
+    'projen@>=0.86.7 <1.0.0',
     'constructs',
   ],
   autoApproveUpgrades: true,
-  autoApproveOptions: { allowedUsernames: ['hoegertn', 'Lock128', 'taimos-projen[bot]'], secret: 'GITHUB_TOKEN' },
+  autoApproveOptions: { allowedUsernames: ['hoegertn', 'Lock128', 'open-constructs-projen[bot]'], secret: 'GITHUB_TOKEN' },
   depsUpgradeOptions: { workflowOptions: { schedule: javascript.UpgradeDependenciesSchedule.WEEKLY } },
   githubOptions: {
     projenCredentials: github.GithubCredentials.fromApp(),

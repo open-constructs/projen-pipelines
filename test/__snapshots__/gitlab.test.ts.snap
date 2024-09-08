@@ -158,8 +158,8 @@ exports[`Gitlab snapshot 2`] = `
     "@types/jest": "*",
     "@types/node": "^18",
     "@types/standard-version": "*",
-    "@typescript-eslint/eslint-plugin": "^6",
-    "@typescript-eslint/parser": "^6",
+    "@typescript-eslint/eslint-plugin": "^7",
+    "@typescript-eslint/parser": "^7",
     "aws-cdk": "^2.102.0",
     "cdk-assets": "*",
     "esbuild": "*",
@@ -181,6 +181,7 @@ exports[`Gitlab snapshot 2`] = `
     "coveragePathIgnorePatterns": [
       "/node_modules/",
     ],
+    "coverageProvider": "v8",
     "coverageReporters": [
       "json",
       "lcov",
@@ -198,8 +199,8 @@ exports[`Gitlab snapshot 2`] = `
       ],
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-      "<rootDir>/(test|src)/**/*(*.)@(spec|test).ts?(x)",
+      "<rootDir>/@(src|test)/**/*(*.)@(spec|test).ts?(x)",
+      "<rootDir>/@(src|test)/**/__tests__/**/*.ts?(x)",
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
@@ -218,6 +219,9 @@ exports[`Gitlab snapshot 2`] = `
   },
   "license": "Apache-2.0",
   "name": "testapp",
+  "publishConfig": {
+    "access": "public",
+  },
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
