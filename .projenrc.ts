@@ -32,8 +32,8 @@ const project = new cdk.JsiiProject({
     /*'@amazon-codecatalyst/blueprints.blueprint',
     '@amazon-codecatalyst/blueprint-component.workflows',
     '@amazon-codecatalyst/blueprint-component.source-repositories',
-    '@amazon-codecatalyst/blueprint-component.dev-environments',
-    '@amazon-codecatalyst/blueprint-component.environments',*/
+    '@amazon-codecatalyst/blueprint-component.dev-environments',*/
+    '@amazon-codecatalyst/blueprint-component.environments',
     '@amazon-codecatalyst/blueprint-component.workflows',
     '@amazon-codecatalyst/blueprints.blueprint',
   ],

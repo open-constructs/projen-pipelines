@@ -111,6 +111,10 @@
       "type": "build"
     },
     {
+      "name": "@amazon-codecatalyst/blueprint-component.environments",
+      "type": "bundled"
+    },
+    {
       "name": "@amazon-codecatalyst/blueprint-component.workflows",
       "type": "bundled"
     },

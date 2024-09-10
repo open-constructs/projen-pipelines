@@ -56,11 +56,16 @@ Actions:
       Steps:
         - Run: npx projen install:ci
         - Run: npx projen deploy:dev
+    Environment:
+      Name: dev
+      Connections:
+        - Name: awsAccount
+          Role: dev-role
     DependsOn:
       - PublishAssetsToAWS
   approve_prod:
     Identifier: aws/approval@v1
-    dependsOn:
+    DependsOn:
       - deploy_dev
     Configuration:
       ApprovalsRequired: 1
@@ -79,6 +84,11 @@ Actions:
       Steps:
         - Run: npx projen install:ci
         - Run: npx projen deploy:prod
+    Environment:
+      Name: prod
+      Connections:
+        - Name: awsAccount
+          Role: prod-role
     DependsOn:
       - PublishAssetsToAWS
       - approve_prod

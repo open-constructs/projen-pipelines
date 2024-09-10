@@ -69,11 +69,13 @@
     "projen": ">=0.86.7 <1.0.0"
   },
   "dependencies": {
+    "@amazon-codecatalyst/blueprint-component.environments": "^0.3.151",
     "@amazon-codecatalyst/blueprint-component.workflows": "^0.3.151",
     "@amazon-codecatalyst/blueprints.blueprint": "^0.3.151",
     "standard-version": "^9.5.0"
   },
   "bundledDependencies": [
+    "@amazon-codecatalyst/blueprint-component.environments",
     "@amazon-codecatalyst/blueprint-component.workflows",
     "@amazon-codecatalyst/blueprints.blueprint",
     "standard-version"
