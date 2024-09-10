@@ -38,10 +38,8 @@
     "organization": true
   },
   "devDependencies": {
-    "@amazon-codecatalyst/blueprint-component.workflows": "^0.3.150",
-    "@amazon-codecatalyst/blueprint-util.cli": "^0.3.150",
-    "@amazon-codecatalyst/blueprint-util.projen-blueprint": "^0.3.150",
-    "@amazon-codecatalyst/blueprints.blueprint": "^0.3.150",
+    "@amazon-codecatalyst/blueprint-util.cli": "^0.3.151",
+    "@amazon-codecatalyst/blueprint-util.projen-blueprint": "^0.3.151",
     "@types/fs-extra": "^11.0.4",
     "@types/jest": "^27.5.2",
     "@types/node": "^18",
@@ -62,7 +60,7 @@
     "jsii-pacmak": "^1.103.1",
     "jsii-rosetta": "~5.4",
     "projen": "0.86.7",
-    "ts-jest": "^29",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   },
@@ -71,13 +69,17 @@
     "projen": ">=0.86.7 <1.0.0"
   },
   "dependencies": {
+    "@amazon-codecatalyst/blueprint-component.workflows": "^0.3.151",
+    "@amazon-codecatalyst/blueprints.blueprint": "^0.3.151",
     "standard-version": "^9.5.0"
   },
   "bundledDependencies": [
+    "@amazon-codecatalyst/blueprint-component.workflows",
+    "@amazon-codecatalyst/blueprints.blueprint",
     "standard-version"
   ],
   "overrides": {
-    "projen": "0.81.0"
+    "projen": "0.86.7"
   },
   "keywords": [
     "aws",

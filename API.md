@@ -427,6 +427,7 @@ new CodeCatalystCDKPipeline(app: AwsCdkTypeScriptApp, options: CodeCatalystCDKPi
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.engineType">engineType</a></code> | the type of engine this implementation of CDKPipeline is for. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createAssetUpload">createAssetUpload</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createDeployment">createDeployment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createWorkflowForStage">createWorkflowForStage</a></code> | *No description.* |
@@ -466,6 +467,14 @@ public synthesize(): void
 ```
 
 Synthesizes files to the project output directory.
+
+##### `engineType` <a name="engineType" id="projen-pipelines.CodeCatalystCDKPipeline.engineType"></a>
+
+```typescript
+public engineType(): PipelineEngine
+```
+
+the type of engine this implementation of CDKPipeline is for.
 
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.CodeCatalystCDKPipeline.createAssetUpload"></a>
 
@@ -560,6 +569,7 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | *No description.* |
 
@@ -584,6 +594,16 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `branchName`<sup>Required</sup> <a name="branchName" id="projen-pipelines.CodeCatalystCDKPipeline.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -1628,12 +1648,18 @@ const codeCatalystCDKPipelineOptions: CodeCatalystCDKPipelineOptions = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preInstallCommands">preInstallCommands</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig">CodeCatalystIamRoleConfig</a></code> | *No description.* |
 
@@ -1662,6 +1688,36 @@ public readonly stages: DeploymentStage[];
 
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]
 
+This field specifies a list of stages that should be deployed using a CI/CD pipeline.
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* main
+
+the name of the branch to deploy from.
+
+---
+
+##### `deploySubStacks`<sup>Optional</sup> <a name="deploySubStacks" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.deploySubStacks"></a>
+
+```typescript
+public readonly deploySubStacks: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack.
+
+You can use this to deploy CDk applications containing multiple stacks.
+
 ---
 
 ##### `featureStages`<sup>Optional</sup> <a name="featureStages" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.featureStages"></a>
@@ -1672,6 +1728,20 @@ public readonly featureStages: StageOptions;
 
 - *Type:* <a href="#projen-pipelines.StageOptions">StageOptions</a>
 
+This specifies details for feature stages.
+
+---
+
+##### `independentStages`<sup>Optional</sup> <a name="independentStages" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.independentStages"></a>
+
+```typescript
+public readonly independentStages: IndependentStage[];
+```
+
+- *Type:* <a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]
+
+This specifies details for independent stages.
+
 ---
 
 ##### `personalStage`<sup>Optional</sup> <a name="personalStage" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.personalStage"></a>
@@ -1681,6 +1751,8 @@ public readonly personalStage: StageOptions;
 ```
 
 - *Type:* <a href="#projen-pipelines.StageOptions">StageOptions</a>
+
+This specifies details for a personal stage.
 
 ---
 
@@ -1694,6 +1766,16 @@ public readonly postSynthCommands: string[];
 
 ---
 
+##### `postSynthSteps`<sup>Optional</sup> <a name="postSynthSteps" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.postSynthSteps"></a>
+
+```typescript
+public readonly postSynthSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
 ##### `preInstallCommands`<sup>Optional</sup> <a name="preInstallCommands" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.preInstallCommands"></a>
 
 ```typescript
@@ -1704,6 +1786,16 @@ public readonly preInstallCommands: string[];
 
 ---
 
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
 ##### `preSynthCommands`<sup>Optional</sup> <a name="preSynthCommands" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthCommands"></a>
 
 ```typescript
@@ -1711,6 +1803,16 @@ public readonly preSynthCommands: string[];
 ```
 
 - *Type:* string[]
+
+---
+
+##### `preSynthSteps`<sup>Optional</sup> <a name="preSynthSteps" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthSteps"></a>
+
+```typescript
+public readonly preSynthSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
@@ -3554,6 +3656,7 @@ The component will render workflows for the given system
 | --- | --- |
 | <code><a href="#projen-pipelines.PipelineEngine.GITHUB">GITHUB</a></code> | Create GitHub actions. |
 | <code><a href="#projen-pipelines.PipelineEngine.GITLAB">GITLAB</a></code> | Create a .gitlab-ci.yaml file. |
+| <code><a href="#projen-pipelines.PipelineEngine.CODE_CATALYST">CODE_CATALYST</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.PipelineEngine.BASH">BASH</a></code> | Create bash scripts. |
 
 ---
@@ -3568,6 +3671,11 @@ Create GitHub actions.
 ##### `GITLAB` <a name="GITLAB" id="projen-pipelines.PipelineEngine.GITLAB"></a>
 
 Create a .gitlab-ci.yaml file.
+
+---
+
+
+##### `CODE_CATALYST` <a name="CODE_CATALYST" id="projen-pipelines.PipelineEngine.CODE_CATALYST"></a>
 
 ---
 

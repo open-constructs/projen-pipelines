@@ -21,8 +21,7 @@ const project = new cdk.JsiiProject({
     '@types/standard-version',
     '@amazon-codecatalyst/blueprint-util.projen-blueprint',
     '@amazon-codecatalyst/blueprint-util.cli',
-    '@amazon-codecatalyst/blueprint-component.workflows',
-    '@amazon-codecatalyst/blueprints.blueprint'
+
     /*'@amazon-codecatalyst/blueprint-component.workflows',
     '@amazon-codecatalyst/blueprint-component.source-repositories',
     '@amazon-codecatalyst/blueprint-component.dev-environments',
@@ -35,6 +34,8 @@ const project = new cdk.JsiiProject({
     '@amazon-codecatalyst/blueprint-component.source-repositories',
     '@amazon-codecatalyst/blueprint-component.dev-environments',
     '@amazon-codecatalyst/blueprint-component.environments',*/
+    '@amazon-codecatalyst/blueprint-component.workflows',
+    '@amazon-codecatalyst/blueprints.blueprint',
   ],
   peerDeps: [
     'projen@>=0.86.7 <1.0.0',
@@ -67,11 +68,16 @@ const project = new cdk.JsiiProject({
       esModuleInterop: true,
     },
   },
+  gitignore: [
+    '!lib/',
+    '**/.DS_Store',
+  ],
 });
 
-project.package.addPackageResolutions('projen@0.81.0');
+project.package.addPackageResolutions('projen@0.86.7');
 
-project.addTask('local-push', {'exec': 'npx projen build && npx yalc push'});
+project.tasks.tryFind('docgen')?.reset('echo no-execute on local');
+project.addTask('local-push', { exec: 'npx yalc push' }).prependSpawn(project.buildTask);
 
 project.gitpod?.addCustomTask({
   init: 'npm ci',
