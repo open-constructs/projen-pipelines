@@ -239,8 +239,10 @@ Your pull request will be reviewed and hopefully merged quickly. Thanks for cont
 The best way currently is to test things locally or - if you have a working stall of all supported CI/CD tools - manually test the functionalities there in diferent projects.
 
 _For local testing:_
-Using `yalc push` you can install the project locally to your local yalc package manager.
-Wirch `yalc add projen-pipelines` you can then use it in a local project.
+Using `yalc push` you can install the project locally to your local yalc package manager. You can also use `npm run local-push` instead of this.
+
+With `yalc add projen-pipelines` you can then use it in a local project.
+
 
 ## Future Plans
 
