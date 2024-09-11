@@ -5,6 +5,7 @@ import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
 import { Blueprint } from './codecatalyst/blueprint';
 import { PipelineEngine } from '../engine';
+import { PipelineStep, SimpleCommandStep, UploadArtifactStep } from '../steps';
 
 /*
 Needs to create:
@@ -20,12 +21,12 @@ Needs to create:
 * deploy to prod (manual approval)
 
 TODO:
-- account target
+- account target -- NOT POSSIBLE as we cannot create environments/accounts/targets
 - manual approval for stages -- DONE
 - IAM role per stage, synth, asset - NOT POSSIBLE as we cannot create environments
 - independend stages (all parallel to each other) after synth&assets -- DONE
 - environments support - DONE
-- steps per stage - preInstall, preSynth, ...
+- steps per stage - preInstall, preSynth, ... - DONE
 
 example: https://github.com/aws-community-dach/event-system-backend
 
@@ -179,6 +180,21 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
   }
 
   private createSynth(): void {
+    const steps: PipelineStep[] = [];
+
+    steps.push(...this.baseOptions.preInstallSteps ?? []);
+    steps.push(new SimpleCommandStep(this.project, this.renderInstallCommands()));
+
+    steps.push(...this.baseOptions.preSynthSteps ?? []);
+    steps.push(new SimpleCommandStep(this.project, this.renderSynthCommands()));
+    steps.push(...this.baseOptions.postSynthSteps ?? []);
+
+    steps.push(new UploadArtifactStep(this.project, {
+      name: 'cloud-assembly',
+      path: `${this.app.cdkConfig.cdkout}/`,
+    }));
+
+    const codeCatalystSteps = steps.map(s => s.toCodeCatalyst());
 
     const cmds: string[] = [];
     cmds.push(...this.renderInstallCommands());
@@ -192,7 +208,7 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
         },
       },
       steps:
-        cmds,
+      [...codeCatalystSteps.flatMap(s => s.commands)],
       // FIXME is there is an environment, connect it to the workflow
       // needs to react on this.options.iamRoleArns?.synth
       //environment: environment && convertToWorkflowEnvironment(environment),

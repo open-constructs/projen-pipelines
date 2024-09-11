@@ -1,5 +1,5 @@
 import { Project } from 'projen';
-import { GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
+import { CodeCatalystStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
 
 export interface DownloadArtifactStepConfig {
   readonly name: string;
@@ -35,6 +35,17 @@ export class DownloadArtifactStep extends PipelineStep {
       env: {},
     };
   }
+
+  /**
+   * Converts the step into a CodeCatalyst Actions step configuration.
+   */
+  public toCodeCatalyst(): CodeCatalystStepConfig {
+    return {
+      needs: [], // No dependencies.
+      commands: [], // Maps each command into a CodeCatalyst Action job step.
+      env: {}, // No environment variables.
+    };
+  }
 }
 
 
@@ -61,6 +72,17 @@ export class UploadArtifactStep extends PipelineStep {
       }],
       needs: [],
       env: {},
+    };
+  }
+
+  /**
+   * Converts the step into a CodeCatalyst Actions step configuration.
+   */
+  public toCodeCatalyst(): CodeCatalystStepConfig {
+    return {
+      needs: [], // No dependencies.
+      commands: [], // Maps each command into a CodeCatalyst Action job step.
+      env: {}, // No environment variables.
     };
   }
 
