@@ -1,16 +1,16 @@
 import { ReleasableCommits, cdk, github, javascript } from 'projen';
 
 const project = new cdk.JsiiProject({
-  author: 'Taimos GmbH',
+  author: 'The Open Construct Foundation',
   authorAddress: 'info@taimos.de',
   authorOrganization: true,
-  copyrightOwner: 'Taimos GmbH',
+  copyrightOwner: 'The Open Construct Foundation',
   copyrightPeriod: '2024',
   defaultReleaseBranch: 'main',
   name: 'projen-pipelines',
   projenrcTs: true,
   packageManager: javascript.NodePackageManager.NPM,
-  repositoryUrl: 'https://github.com/taimos/projen-pipelines.git',
+  repositoryUrl: 'https://github.com/open-constructs/projen-pipelines.git',
   licensed: true,
   license: 'Apache-2.0',
   jsiiVersion: '~5.4',
