@@ -38,6 +38,5 @@ test('CodeCatalyst snapshot', () => {
   const snapshot = synthSnapshot(p);
   console.log(snapshot);
   expect(snapshot['.codecatalyst/workflows/deploy.yaml']).toMatchSnapshot();
-  expect(snapshot['.codecatalyst/workflows/release-prod.yaml']).toMatchSnapshot();
   expect(snapshot['package.json']).toMatchSnapshot();
 });

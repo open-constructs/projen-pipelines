@@ -52,8 +52,6 @@ export interface CodeCatalystStepConfig {
   /** Additional environment variables to set for this step. */
   readonly env: { [key: string]: string };
 
-  /** Additional job permissions needed */
-  readonly permissions?: JobPermissions;
 }
 
 /**

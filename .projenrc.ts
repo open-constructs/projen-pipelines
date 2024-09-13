@@ -60,14 +60,10 @@ const project = new cdk.JsiiProject({
     },
   },
   gitignore: [
-    '!lib/',
     '**/.DS_Store',
   ],
 });
 
-project.package.addPackageResolutions('projen@0.86.7');
-
-project.tasks.tryFind('docgen')?.reset('echo no-execute on local');
 project.addTask('local-push', { exec: 'npx yalc push' }).prependSpawn(project.buildTask);
 
 project.gitpod?.addCustomTask({

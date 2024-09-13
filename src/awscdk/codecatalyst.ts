@@ -264,7 +264,7 @@ steps.push({
       this.deploymentWorkflowBuilder.addGenericAction({
         Identifier: 'aws/approval@v1',
         actionName: `approve_${stage.name}`,
-        DependsOn: [`deploy_${this.deploymentStages.at(-1)!}`],
+        DependsOn: [dependsOn],
         Configuration: {
           ApprovalsRequired: 1,
         },
@@ -306,7 +306,7 @@ steps.push({
       this.deploymentWorkflowBuilder.addGenericAction({
         Identifier: 'aws/approval@v1',
         actionName: `approve_${stage.name}`,
-        DependsOn: [`deploy_${this.deploymentStages.at(-1)!}`],
+        DependsOn: [dependsOn],
         Configuration: {
           ApprovalsRequired: 1,
         },
