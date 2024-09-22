@@ -61,6 +61,7 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
   private deploymentStages: string[] = [];
 
   private readonly bp: Blueprint;
+  private _yml: YamlFile;
 
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: CodeCatalystCDKPipelineOptions) {
     super(app, options);
@@ -91,11 +92,18 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
       this.createIndependentDeployment(stage);
     }
 
-    const yml = new YamlFile(this, '.codecatalyst/workflows/deploy.yaml', {
+    this._yml=this.yml;
+  }
+
+  get yml() {
+    return this._yml || (this._yml = this.initYaml());
+  }
+
+  private initYaml() {
+    return new YamlFile(this, '.codecatalyst/workflows/deploy.yaml', {
       obj: this.deploymentWorkflowBuilder.getDefinition(),
 
     });
-    yml.synthesize();
   }
 
   public createEnvironments() {

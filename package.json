@@ -2,7 +2,7 @@
   "name": "projen-pipelines",
   "repository": {
     "type": "git",
-    "url": "https://github.com/taimos/projen-pipelines.git"
+    "url": "https://github.com/open-constructs/projen-pipelines.git"
   },
   "bin": {
     "pipelines-release": "lib/release.js"
@@ -33,7 +33,7 @@
     "projen": "npx projen"
   },
   "author": {
-    "name": "Taimos GmbH",
+    "name": "The Open Construct Foundation",
     "email": "info@taimos.de",
     "organization": true
   },
@@ -80,9 +80,6 @@
     "@amazon-codecatalyst/blueprints.blueprint",
     "standard-version"
   ],
-  "overrides": {
-    "projen": "0.86.7"
-  },
   "keywords": [
     "aws",
     "cdk",

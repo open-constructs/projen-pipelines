@@ -127,11 +127,6 @@
       "type": "bundled"
     },
     {
-      "name": "projen",
-      "version": "0.86.7",
-      "type": "override"
-    },
-    {
       "name": "constructs",
       "type": "peer"
     },
