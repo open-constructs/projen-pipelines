@@ -66,9 +66,6 @@ const project = new cdk.JsiiProject({
 
 project.addTask('local-push', { exec: 'npx yalc push' }).prependSpawn(project.buildTask);
 
-project.tasks.tryFind('docgen')?.reset('echo no-execute on local');
-
-
 project.gitpod?.addCustomTask({
   init: 'npm ci',
   command: 'npx projen build',
