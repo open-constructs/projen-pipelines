@@ -39,6 +39,22 @@ export interface GithubStepConfig {
 }
 
 /**
+ * Configuration interface for a CodeCatalyst Actions step.
+ */
+export interface CodeCatalystStepConfig {
+
+  /** Dependencies which need to be completed before this step. */
+  readonly needs: string[];
+
+  /** Commands wrapped as GitHub Action job steps. */
+  readonly commands: string[];
+
+  /** Additional environment variables to set for this step. */
+  readonly env: { [key: string]: string };
+
+}
+
+/**
  * Configuration interface for a bash script step.
  */
 export interface BashStepConfig {
@@ -71,6 +87,13 @@ export abstract class PipelineStep {
    * Generates a configuration for a GitHub Actions step. Should be implemented by subclasses.
    */
   public toGithub(): GithubStepConfig {
+    throw new Error('Method not implemented.');
+  }
+
+  /**
+   * Generates a configuration for a CodeCatalyst Actions step. Should be implemented by subclasses.
+   */
+  public toCodeCatalyst(): CodeCatalystStepConfig {
     throw new Error('Method not implemented.');
   }
 
@@ -124,6 +147,17 @@ export class SimpleCommandStep extends PipelineStep {
     return {
       needs: [], // No dependencies.
       steps: this.commands.map(c => ({ run: c })), // Maps each command into a GitHub Action job step.
+      env: {}, // No environment variables.
+    };
+  }
+
+  /**
+   * Converts the step into a CodeCatalyst Actions step configuration.
+   */
+  public toCodeCatalyst(): CodeCatalystStepConfig {
+    return {
+      needs: [], // No dependencies.
+      commands: this.commands.map(c => (c)), // Maps each command into a CodeCatalyst Action job step.
       env: {}, // No environment variables.
     };
   }
