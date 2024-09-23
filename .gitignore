@@ -32,7 +32,6 @@ jspm_packages/
 *.tgz
 .yarn-integrity
 .cache
-**/.DS_Store
 /test-reports/
 junit.xml
 /coverage/

@@ -90,7 +90,7 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
     for (const stage of (options.independentStages ?? [])) {
       this.createIndependentDeployment(stage);
     }
-    
+
     new YamlFile(this, '.codecatalyst/workflows/deploy.yaml', {
       obj: () => this.deploymentWorkflowBuilder.getDefinition(),
     });

@@ -107,7 +107,7 @@
       "description": "Generate API.md from .jsii manifest",
       "steps": [
         {
-          "exec": "echo no-execute on local"
+          "exec": "jsii-docgen -o API.md"
         }
       ]
     },
