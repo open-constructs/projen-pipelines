@@ -59,9 +59,6 @@ const project = new cdk.JsiiProject({
       esModuleInterop: true,
     },
   },
-  gitignore: [
-    '**/.DS_Store',
-  ],
 });
 
 project.addTask('local-push', { exec: 'npx yalc push' }).prependSpawn(project.buildTask);
