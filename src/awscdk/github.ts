@@ -354,7 +354,7 @@ export class GithubCDKPipeline extends CDKPipeline {
    * @param stage - The independent stage to create.
    */
   public createIndependentDeployment(stage: IndependentStage): void {
-    if (stage.deployOnPush) {
+    if (stage.deployOnPush || this.options.useGithubEnvironments) {
       this.createDeployJob(this.deploymentWorkflow, [], stage);
     } else {
       const steps = [
@@ -390,9 +390,6 @@ export class GithubCDKPipeline extends CDKPipeline {
         name: `Release stage ${stage.name} to AWS`,
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
-        ...this.options.useGithubEnvironments && {
-          environment: stage.name,
-        },
         env: {
           CI: 'true',
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),

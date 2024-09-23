@@ -90,7 +90,6 @@ test('Github snapshot with environment', () => {
   const snapshot = synthSnapshot(p);
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
   expect(snapshot['.github/workflows/release-prod.yml']).toMatchSnapshot();
-  expect(snapshot['.github/workflows/deploy-independent.yml']).toMatchSnapshot();
 });
 
 test('Github snapshot with multi stack', () => {
@@ -272,5 +271,4 @@ test('Github snapshot with independent stage', () => {
   const snapshot = synthSnapshot(p);
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
   expect(snapshot['.github/workflows/deploy-independent1.yml']).toMatchSnapshot();
-  expect(snapshot['.github/workflows/deploy-independent2.yml']).toMatchSnapshot();
 });
