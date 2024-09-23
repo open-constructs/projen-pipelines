@@ -430,7 +430,8 @@ new CodeCatalystCDKPipeline(app: AwsCdkTypeScriptApp, options: CodeCatalystCDKPi
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.engineType">engineType</a></code> | the type of engine this implementation of CDKPipeline is for. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createAssetUpload">createAssetUpload</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createDeployment">createDeployment</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createWorkflowForStage">createWorkflowForStage</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createEnvironments">createEnvironments</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createIndependentDeployment">createIndependentDeployment</a></code> | *No description.* |
 
 ---
 
@@ -494,13 +495,19 @@ public createDeployment(stage: DeploymentStage): void
 
 ---
 
-##### `createWorkflowForStage` <a name="createWorkflowForStage" id="projen-pipelines.CodeCatalystCDKPipeline.createWorkflowForStage"></a>
+##### `createEnvironments` <a name="createEnvironments" id="projen-pipelines.CodeCatalystCDKPipeline.createEnvironments"></a>
 
 ```typescript
-public createWorkflowForStage(stage: DeploymentStage): void
+public createEnvironments(): void
 ```
 
-###### `stage`<sup>Required</sup> <a name="stage" id="projen-pipelines.CodeCatalystCDKPipeline.createWorkflowForStage.parameter.stage"></a>
+##### `createIndependentDeployment` <a name="createIndependentDeployment" id="projen-pipelines.CodeCatalystCDKPipeline.createIndependentDeployment"></a>
+
+```typescript
+public createIndependentDeployment(stage: DeploymentStage): void
+```
+
+###### `stage`<sup>Required</sup> <a name="stage" id="projen-pipelines.CodeCatalystCDKPipeline.createIndependentDeployment.parameter.stage"></a>
 
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>
 
@@ -1853,10 +1860,11 @@ const codeCatalystIamRoleConfig: CodeCatalystIamRoleConfig = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.default">default</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing step. |
+| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.assetPublishingPerStage">assetPublishingPerStage</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARN for the asset publishing step for a specific stage. |
+| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if no specific role is provided. |
+| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different deployment stages. |
+| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis step. |
 
 ---
 
@@ -1868,6 +1876,20 @@ public readonly assetPublishing: string;
 
 - *Type:* string
 
+IAM role ARN for the asset publishing step.
+
+---
+
+##### `assetPublishingPerStage`<sup>Optional</sup> <a name="assetPublishingPerStage" id="projen-pipelines.CodeCatalystIamRoleConfig.property.assetPublishingPerStage"></a>
+
+```typescript
+public readonly assetPublishingPerStage: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+IAM role ARN for the asset publishing step for a specific stage.
+
 ---
 
 ##### `default`<sup>Optional</sup> <a name="default" id="projen-pipelines.CodeCatalystIamRoleConfig.property.default"></a>
@@ -1877,6 +1899,8 @@ public readonly default: string;
 ```
 
 - *Type:* string
+
+Default IAM role ARN used if no specific role is provided.
 
 ---
 
@@ -1888,6 +1912,8 @@ public readonly deployment: {[ key: string ]: string};
 
 - *Type:* {[ key: string ]: string}
 
+IAM role ARNs for different deployment stages.
+
 ---
 
 ##### `synth`<sup>Optional</sup> <a name="synth" id="projen-pipelines.CodeCatalystIamRoleConfig.property.synth"></a>
@@ -1897,6 +1923,66 @@ public readonly synth: string;
 ```
 
 - *Type:* string
+
+IAM role ARN for the synthesis step.
+
+---
+
+### CodeCatalystStepConfig <a name="CodeCatalystStepConfig" id="projen-pipelines.CodeCatalystStepConfig"></a>
+
+Configuration interface for a CodeCatalyst Actions step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.CodeCatalystStepConfig.Initializer"></a>
+
+```typescript
+import { CodeCatalystStepConfig } from 'projen-pipelines'
+
+const codeCatalystStepConfig: CodeCatalystStepConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CodeCatalystStepConfig.property.commands">commands</a></code> | <code>string[]</code> | Commands wrapped as GitHub Action job steps. |
+| <code><a href="#projen-pipelines.CodeCatalystStepConfig.property.env">env</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables to set for this step. |
+| <code><a href="#projen-pipelines.CodeCatalystStepConfig.property.needs">needs</a></code> | <code>string[]</code> | Dependencies which need to be completed before this step. |
+
+---
+
+##### `commands`<sup>Required</sup> <a name="commands" id="projen-pipelines.CodeCatalystStepConfig.property.commands"></a>
+
+```typescript
+public readonly commands: string[];
+```
+
+- *Type:* string[]
+
+Commands wrapped as GitHub Action job steps.
+
+---
+
+##### `env`<sup>Required</sup> <a name="env" id="projen-pipelines.CodeCatalystStepConfig.property.env"></a>
+
+```typescript
+public readonly env: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Additional environment variables to set for this step.
+
+---
+
+##### `needs`<sup>Required</sup> <a name="needs" id="projen-pipelines.CodeCatalystStepConfig.property.needs"></a>
+
+```typescript
+public readonly needs: string[];
+```
+
+- *Type:* string[]
+
+Dependencies which need to be completed before this step.
 
 ---
 
@@ -3240,6 +3326,7 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -3252,6 +3339,16 @@ public toBash(): BashStepConfig
 ```
 
 Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.AwsAssumeRoleStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
 
 Should be implemented by subclasses.
 
@@ -3314,6 +3411,7 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.DownloadArtifactStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.DownloadArtifactStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.DownloadArtifactStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.DownloadArtifactStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -3328,6 +3426,14 @@ public toBash(): BashStepConfig
 Generates a configuration for a bash script step.
 
 Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DownloadArtifactStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.DownloadArtifactStep.toGithub"></a>
 
@@ -3388,6 +3494,7 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GithubPackagesLoginStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.GithubPackagesLoginStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.GithubPackagesLoginStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.GithubPackagesLoginStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -3400,6 +3507,16 @@ public toBash(): BashStepConfig
 ```
 
 Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.GithubPackagesLoginStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
 
 Should be implemented by subclasses.
 
@@ -3457,6 +3574,7 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.PipelineStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.PipelineStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.PipelineStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.PipelineStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -3469,6 +3587,16 @@ public toBash(): BashStepConfig
 ```
 
 Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.PipelineStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
 
 Should be implemented by subclasses.
 
@@ -3535,6 +3663,7 @@ Shell commands to execute.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.SimpleCommandStep.toBash">toBash</a></code> | Converts the step into a Bash script configuration. |
+| <code><a href="#projen-pipelines.SimpleCommandStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.SimpleCommandStep.toGithub">toGithub</a></code> | Converts the step into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.SimpleCommandStep.toGitlab">toGitlab</a></code> | Converts the step into a GitLab CI configuration. |
 
@@ -3547,6 +3676,14 @@ public toBash(): BashStepConfig
 ```
 
 Converts the step into a Bash script configuration.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.SimpleCommandStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.SimpleCommandStep.toGithub"></a>
 
@@ -3603,6 +3740,7 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.UploadArtifactStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.UploadArtifactStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.UploadArtifactStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.UploadArtifactStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -3617,6 +3755,14 @@ public toBash(): BashStepConfig
 Generates a configuration for a bash script step.
 
 Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.UploadArtifactStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.UploadArtifactStep.toGithub"></a>
 

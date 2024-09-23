@@ -3,9 +3,9 @@ import { convertToWorkflowEnvironment, WorkflowBuilder } from '@amazon-codecatal
 import { YamlFile, awscdk } from 'projen';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
-import { Blueprint } from './codecatalyst/blueprint';
 import { PipelineEngine } from '../engine';
 import { PipelineStep, SimpleCommandStep, UploadArtifactStep } from '../steps';
+import { Blueprint } from './codecatalyst/blueprint';
 
 /*
 Needs to create:
