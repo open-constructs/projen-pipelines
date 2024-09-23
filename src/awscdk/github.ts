@@ -1,7 +1,7 @@
 import { awscdk } from 'projen';
 import { GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model';
-import { CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage } from './base';
+import { CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage, NamedStageOptions } from './base';
 import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
 import { PipelineStep, SimpleCommandStep } from '../steps';
@@ -299,32 +299,96 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
 
     } else {
+      this.createDeployJob(this.deploymentWorkflow, [...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])], stage);
+      this.deploymentStages.push(stage.name);
+    }
+  }
 
+  private createDeployJob(workflow: GithubWorkflow, jobDependencies: string[], stage: NamedStageOptions) {
+    const steps = [
+      new AwsAssumeRoleStep(this.project, {
+        roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
+        region: stage.env.region,
+      }),
+      new DownloadArtifactStep(this.project, {
+        name: 'cloud-assembly',
+        path: `${this.app.cdkConfig.cdkout}/`,
+      }),
+      ...this.baseOptions.preInstallSteps ?? [],
+      new SimpleCommandStep(this.project, this.renderInstallCommands()),
+      new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
+      new UploadArtifactStep(this.project, {
+        name: `cdk-outputs-${stage.name}`,
+        path: `cdk-outputs-${stage.name}.json`,
+      }),
+    ].map(s => s.toGithub());
+
+    // Add deployment to CI/CD workflow
+    workflow.addJob(`deploy-${stage.name}`, {
+      name: `Deploy stage ${stage.name} to AWS`,
+      ...this.options.useGithubEnvironments && {
+        environment: stage.name,
+      },
+      needs: ['assetUpload', ...steps.flatMap(s => s.needs), ...jobDependencies],
+      runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      env: {
+        CI: 'true',
+        ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+      },
+      permissions: mergeJobPermissions({
+        idToken: JobPermission.WRITE,
+        contents: JobPermission.READ,
+      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+      steps: [
+        {
+          name: 'Checkout',
+          uses: 'actions/checkout@v4',
+        },
+        ...steps.flatMap(s => s.steps),
+      ],
+    });
+  }
+
+  /**
+   * Creates a job to deploy the CDK application to AWS.
+   * @param stage - The independent stage to create.
+   */
+  public createIndependentDeployment(stage: IndependentStage): void {
+    if (stage.deployOnPush || this.options.useGithubEnvironments) {
+      this.createDeployJob(this.deploymentWorkflow, [], stage);
+    } else {
       const steps = [
         new AwsAssumeRoleStep(this.project, {
           roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
           region: stage.env.region,
         }),
-        new DownloadArtifactStep(this.project, {
-          name: 'cloud-assembly',
-          path: `${this.app.cdkConfig.cdkout}/`,
-        }),
         ...this.baseOptions.preInstallSteps ?? [],
         new SimpleCommandStep(this.project, this.renderInstallCommands()),
+
+        ...this.baseOptions.preSynthSteps ?? [],
+        new SimpleCommandStep(this.project, this.renderSynthCommands()),
+        ...this.baseOptions.postSynthSteps ?? [],
+
+        new SimpleCommandStep(this.project, this.renderDiffCommands(stage.name)),
+        ...stage.postDiffSteps ?? [],
+
         new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
+        ...stage.postDeploySteps ?? [],
+
         new UploadArtifactStep(this.project, {
           name: `cdk-outputs-${stage.name}`,
           path: `cdk-outputs-${stage.name}.json`,
         }),
       ].map(s => s.toGithub());
 
-      // Add deployment to CI/CD workflow
-      this.deploymentWorkflow.addJob(`deploy-${stage.name}`, {
-        name: `Deploy stage ${stage.name} to AWS`,
-        ...this.options.useGithubEnvironments && {
-          environment: stage.name,
-        },
-        needs: ['assetUpload', ...steps.flatMap(s => s.needs), ...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])],
+      // Create new workflow for deployment
+      const stageWorkflow = this.app.github!.addWorkflow(`deploy-${stage.name}`);
+      stageWorkflow.on({
+        workflowDispatch: {},
+      });
+      stageWorkflow.addJob('deploy', {
+        name: `Release stage ${stage.name} to AWS`,
+        needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         env: {
           CI: 'true',
@@ -342,72 +406,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           ...steps.flatMap(s => s.steps),
         ],
       });
-      this.deploymentStages.push(stage.name);
+
     }
-  }
-
-  /**
-   * Creates a job to deploy the CDK application to AWS.
-   * @param stage - The independent stage to create.
-   */
-  public createIndependentDeployment(stage: IndependentStage): void {
-    const steps = [
-      new AwsAssumeRoleStep(this.project, {
-        roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
-        region: stage.env.region,
-      }),
-      ...this.baseOptions.preInstallSteps ?? [],
-      new SimpleCommandStep(this.project, this.renderInstallCommands()),
-
-      ...this.baseOptions.preSynthSteps ?? [],
-      new SimpleCommandStep(this.project, this.renderSynthCommands()),
-      ...this.baseOptions.postSynthSteps ?? [],
-
-      new SimpleCommandStep(this.project, this.renderDiffCommands(stage.name)),
-      ...stage.postDiffSteps ?? [],
-
-      new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
-      ...stage.postDeploySteps ?? [],
-
-      new UploadArtifactStep(this.project, {
-        name: `cdk-outputs-${stage.name}`,
-        path: `cdk-outputs-${stage.name}.json`,
-      }),
-    ].map(s => s.toGithub());
-
-    // Create new workflow for deployment
-    const stageWorkflow = this.app.github!.addWorkflow(`deploy-${stage.name}`);
-    stageWorkflow.on({
-      workflowDispatch: {},
-      ...stage.deployOnPush && {
-        push: {
-          branches: [this.branchName],
-        },
-      },
-    });
-    stageWorkflow.addJob('deploy', {
-      name: `Release stage ${stage.name} to AWS`,
-      needs: steps.flatMap(s => s.needs),
-      runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
-      ...this.options.useGithubEnvironments && {
-        environment: stage.name,
-      },
-      env: {
-        CI: 'true',
-        ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
-      },
-      permissions: mergeJobPermissions({
-        idToken: JobPermission.WRITE,
-        contents: JobPermission.READ,
-      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
-      steps: [
-        {
-          name: 'Checkout',
-          uses: 'actions/checkout@v4',
-        },
-        ...steps.flatMap(s => s.steps),
-      ],
-    });
-
   }
 }
