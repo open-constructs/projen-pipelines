@@ -61,7 +61,6 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
   private deploymentStages: string[] = [];
 
   private readonly bp: Blueprint;
-  private _yml: YamlFile;
 
   constructor(app: awscdk.AwsCdkTypeScriptApp, private options: CodeCatalystCDKPipelineOptions) {
     super(app, options);
@@ -91,18 +90,9 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
     for (const stage of (options.independentStages ?? [])) {
       this.createIndependentDeployment(stage);
     }
-
-    this._yml=this.yml;
-  }
-
-  get yml() {
-    return this._yml || (this._yml = this.initYaml());
-  }
-
-  private initYaml() {
-    return new YamlFile(this, '.codecatalyst/workflows/deploy.yaml', {
-      obj: this.deploymentWorkflowBuilder.getDefinition(),
-
+    
+    new YamlFile(this, '.codecatalyst/workflows/deploy.yaml', {
+      obj: () => this.deploymentWorkflowBuilder.getDefinition(),
     });
   }
 
@@ -216,7 +206,7 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
         },
       },
       steps:
-      [...codeCatalystSteps.flatMap(s => s.commands)],
+        [...codeCatalystSteps.flatMap(s => s.commands)],
       // FIXME is there is an environment, connect it to the workflow
       // needs to react on this.options.iamRoleArns?.synth
       //environment: environment && convertToWorkflowEnvironment(environment),
