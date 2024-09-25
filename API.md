@@ -146,7 +146,6 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.BashCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
-| <code><a href="#projen-pipelines.BashCDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 
@@ -171,16 +170,6 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
-
----
-
-##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.BashCDKPipeline.property.baseOptions"></a>
-
-```typescript
-public readonly baseOptions: CDKPipelineOptions;
-```
-
-- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -353,7 +342,6 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.CDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.CDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
-| <code><a href="#projen-pipelines.CDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 
@@ -378,16 +366,6 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
-
----
-
-##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.CDKPipeline.property.baseOptions"></a>
-
-```typescript
-public readonly baseOptions: CDKPipelineOptions;
-```
-
-- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -598,7 +576,6 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | *No description.* |
@@ -624,16 +601,6 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
-
----
-
-##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.CodeCatalystCDKPipeline.property.baseOptions"></a>
-
-```typescript
-public readonly baseOptions: CDKPipelineOptions;
-```
-
-- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -863,7 +830,6 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
-| <code><a href="#projen-pipelines.GithubCDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | Indicates if versioned artifacts are needed based on manual approval requirements. |
@@ -889,16 +855,6 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
-
----
-
-##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.GithubCDKPipeline.property.baseOptions"></a>
-
-```typescript
-public readonly baseOptions: CDKPipelineOptions;
-```
-
-- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -1105,7 +1061,6 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
-| <code><a href="#projen-pipelines.GitlabCDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.config">config</a></code> | <code>projen.gitlab.GitlabConfiguration</code> | GitLab CI/CD configuration object. |
@@ -1133,16 +1088,6 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
-
----
-
-##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.GitlabCDKPipeline.property.baseOptions"></a>
-
-```typescript
-public readonly baseOptions: CDKPipelineOptions;
-```
-
-- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -1718,6 +1663,67 @@ public readonly stackPrefix: string;
 - *Default:* project name
 
 This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation.
+
+---
+
+### CodeArtifactLoginStepOptions <a name="CodeArtifactLoginStepOptions" id="projen-pipelines.CodeArtifactLoginStepOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.CodeArtifactLoginStepOptions.Initializer"></a>
+
+```typescript
+import { CodeArtifactLoginStepOptions } from 'projen-pipelines'
+
+const codeArtifactLoginStepOptions: CodeArtifactLoginStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStepOptions.property.domainName">domainName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStepOptions.property.ownerAccount">ownerAccount</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStepOptions.property.region">region</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStepOptions.property.role">role</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `domainName`<sup>Required</sup> <a name="domainName" id="projen-pipelines.CodeArtifactLoginStepOptions.property.domainName"></a>
+
+```typescript
+public readonly domainName: string;
+```
+
+- *Type:* string
+
+---
+
+##### `ownerAccount`<sup>Required</sup> <a name="ownerAccount" id="projen-pipelines.CodeArtifactLoginStepOptions.property.ownerAccount"></a>
+
+```typescript
+public readonly ownerAccount: string;
+```
+
+- *Type:* string
+
+---
+
+##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.CodeArtifactLoginStepOptions.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+---
+
+##### `role`<sup>Required</sup> <a name="role" id="projen-pipelines.CodeArtifactLoginStepOptions.property.role"></a>
+
+```typescript
+public readonly role: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -3329,6 +3335,109 @@ public toGitlab(): GitlabStepConfig
 Generates a configuration for a GitLab CI step.
 
 Should be implemented by subclasses.
+
+
+
+
+### CodeArtifactLoginStep <a name="CodeArtifactLoginStep" id="projen-pipelines.CodeArtifactLoginStep"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.CodeArtifactLoginStep.Initializer"></a>
+
+```typescript
+import { CodeArtifactLoginStep } from 'projen-pipelines'
+
+new CodeArtifactLoginStep(project: Project, options: CodeArtifactLoginStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.CodeArtifactLoginStepOptions">CodeArtifactLoginStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.CodeArtifactLoginStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.CodeArtifactLoginStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.CodeArtifactLoginStepOptions">CodeArtifactLoginStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStep.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.CodeArtifactLoginStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.CodeArtifactLoginStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the sequence of steps into a CodeCatalyst Actions step configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.CodeArtifactLoginStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.CodeArtifactLoginStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.CodeArtifactLoginStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: PipelineStep): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.CodeArtifactLoginStep.addSteps.parameter.steps"></a>
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.CodeArtifactLoginStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: PipelineStep): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.CodeArtifactLoginStep.prependSteps.parameter.steps"></a>
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+
+---
 
 
 
