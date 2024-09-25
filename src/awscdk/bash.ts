@@ -20,27 +20,22 @@ export class BashCDKPipeline extends CDKPipeline {
 
     readme.addLine('Synthesize your CDK project:');
     readme.addLine('```bash');
-    readme.addLine(`${(options.preInstallSteps ?? []).flatMap(s => s.toBash().commands).join('\n')}`);
-    readme.addLine(`${this.renderInstallCommands().join('\n')}`);
-    readme.addLine(`${(options.preSynthSteps ?? []).flatMap(s => s.toBash().commands).join('\n')}`);
-    readme.addLine(`${this.renderSynthCommands().join('\n')}`);
-    readme.addLine(`${(options.postSynthSteps ?? []).flatMap(s => s.toBash().commands).join('\n')}`);
+    readme.addLine(`${this.provideInstallStep().toBash().commands.join('\n')}`);
+    readme.addLine(`${this.provideSynthStep().toBash().commands.join('\n')}`);
     readme.addLine('```');
     readme.addLine('');
 
     readme.addLine('Publish all your CDK assets like Lambda function code and container images:');
     readme.addLine('```bash');
-    readme.addLine(`${(options.preInstallSteps ?? []).flatMap(s => s.toBash().commands).join('\n')}`);
-    readme.addLine(`${this.renderInstallCommands().join('\n')}`);
-    readme.addLine(`${this.renderAssetUploadCommands().join('\n')}`);
+    readme.addLine(`${this.provideInstallStep().toBash().commands.join('\n')}`);
+    readme.addLine(`${this.provideAssetUploadStep().toBash().commands.join('\n')}`);
     readme.addLine('```');
     readme.addLine('');
     readme.addLine('If you want to store your cloud assembly and assets for future use or compliance reasons, use:');
     readme.addLine('```bash');
-    readme.addLine(`${(options.preInstallSteps ?? []).flatMap(s => s.toBash().commands).join('\n')}`);
-    readme.addLine(`${this.renderInstallCommands().join('\n')}`);
-    readme.addLine(`${this.renderAssetUploadCommands().join('\n')}`);
-    readme.addLine(`${this.renderAssemblyUploadCommands().join('\n')}`);
+    readme.addLine(`${this.provideInstallStep().toBash().commands.join('\n')}`);
+    readme.addLine(`${this.provideAssetUploadStep().toBash().commands.join('\n')}`);
+    readme.addLine(`${this.provideAssemblyUploadStep().toBash().commands.join('\n')}`);
     readme.addLine('```');
     readme.addLine('');
     readme.addLine('## Deployment phase');
@@ -51,9 +46,9 @@ export class BashCDKPipeline extends CDKPipeline {
     for (const stage of options.stages) {
       readme.addLine(`Stage: ${stage.name}`);
       readme.addLine('```bash');
-      readme.addLine(`${this.renderDiffCommands(stage.name).join('\n')}`);
+      readme.addLine(`${this.provideDiffStep(stage).toBash().commands.join('\n')}`);
       readme.addLine('');
-      readme.addLine(`${this.renderDeployCommands(stage.name).join('\n')}`);
+      readme.addLine(`${this.provideDeployStep(stage).toBash().commands.join('\n')}`);
       readme.addLine('```');
       readme.addLine('');
     }

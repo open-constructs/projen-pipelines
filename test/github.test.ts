@@ -60,6 +60,7 @@ test('Github snapshot with environment', () => {
       deployment: {
         'my-dev': 'devRole',
         'prod': 'prodRole',
+        'independent': 'independentRole',
       },
     },
     useGithubEnvironments: true,

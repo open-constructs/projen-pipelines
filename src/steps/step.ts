@@ -1,6 +1,7 @@
 import { Project } from 'projen';
 import { JobPermissions, JobStep } from 'projen/lib/github/workflows-model';
 import { Need } from 'projen/lib/gitlab';
+import { mergeJobPermissions } from '../engines';
 
 /**
  * Configuration interface for a GitLab CI step.
@@ -110,13 +111,16 @@ export abstract class PipelineStep {
  */
 export class SimpleCommandStep extends PipelineStep {
 
+  protected commands: string[];
+
   /**
    * Constructs a simple command step with a specified set of commands.
    * @param project - The projen project reference.
    * @param commands - Shell commands to execute.
    */
-  constructor(project: Project, protected commands: string[]) {
+  constructor(project: Project, commands: string[]) {
     super(project);
+    this.commands = [...commands];
   }
 
   /**
@@ -160,5 +164,115 @@ export class SimpleCommandStep extends PipelineStep {
       commands: this.commands.map(c => (c)), // Maps each command into a CodeCatalyst Action job step.
       env: {}, // No environment variables.
     };
+  }
+}
+
+export class ProjenScriptStep extends SimpleCommandStep {
+  constructor(project: Project, scriptName: string, args?: string) {
+    super(project, [`npx projen ${scriptName}${args ? ` ${args}` : ''}`]);
+  }
+}
+
+// Add class that is a sequence of pipleine steps but is a pipeline step in itself
+export class StepSequence extends PipelineStep {
+
+  protected steps: PipelineStep[];
+
+  /**
+   * Constructs a sequence of pipeline steps.
+   * @param project - The projen project reference.
+   * @param steps - The sequence of pipeline steps.
+   */
+  constructor(project: Project, steps: PipelineStep[]) {
+    super(project);
+    this.steps = [...steps];
+  }
+
+  /**
+   * Converts the sequence of steps into a GitLab CI configuration.
+   */
+  public toGitlab(): GitlabStepConfig {
+    const extensions: string[] = [];
+    const commands: string[] = [];
+    const needs: Need[] = [];
+    const env: { [key: string]: string } = {};
+    for (const step of this.steps) {
+      const stepConfig = step.toGitlab();
+      extensions.push(...stepConfig.extensions);
+      commands.push(...stepConfig.commands);
+      needs.push(...stepConfig.needs);
+      Object.assign(env, stepConfig.env);
+    }
+    return {
+      extensions,
+      commands,
+      needs: Array.from(new Set(needs)),
+      env,
+    };
+  }
+
+  /**
+   * Converts the sequence of steps into a Bash script configuration.
+   */
+  public toBash(): BashStepConfig {
+    const commands: string[] = [];
+    for (const step of this.steps) {
+      const stepConfig = step.toBash();
+      commands.push(...stepConfig.commands);
+    }
+    return { commands };
+  }
+
+  /**
+   * Converts the sequence of steps into a GitHub Actions step configuration.
+   */
+  public toGithub(): GithubStepConfig {
+    const needs: string[] = [];
+    const steps: JobStep[] = [];
+    const env: { [key: string]: string } = {};
+    const permissions: JobPermissions[] = [];
+    for (const step of this.steps) {
+      const stepConfig = step.toGithub();
+      needs.push(...stepConfig.needs);
+      steps.push(...stepConfig.steps);
+      if (stepConfig.permissions) {
+        permissions.push(stepConfig.permissions);
+      }
+      Object.assign(env, stepConfig.env);
+    }
+    return {
+      needs: Array.from(new Set(needs)),
+      steps,
+      env,
+      permissions: mergeJobPermissions(...permissions),
+    };
+  }
+
+  /**
+   * Converts the sequence of steps into a CodeCatalyst Actions step configuration.
+   */
+  public toCodeCatalyst(): CodeCatalystStepConfig {
+    const needs: string[] = [];
+    const commands: string[] = [];
+    const env: { [key: string]: string } = {};
+    for (const step of this.steps) {
+      const stepConfig = step.toCodeCatalyst();
+      needs.push(...stepConfig.needs);
+      commands.push(...stepConfig.commands);
+      Object.assign(env, stepConfig.env);
+    }
+    return {
+      needs: Array.from(new Set(needs)),
+      commands,
+      env,
+    };
+  }
+
+  public addSteps(...steps: PipelineStep[]) {
+    this.steps.push(...steps);
+  }
+
+  public prependSteps(...steps: PipelineStep[]) {
+    this.steps.unshift(...steps);
   }
 }

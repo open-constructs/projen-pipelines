@@ -2,7 +2,7 @@ import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
-import { PipelineStep } from '../steps';
+import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence } from '../steps';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -52,9 +52,6 @@ export interface IndependentStage extends NamedStageOptions {
    * @default false
    */
   readonly deployOnPush?: boolean;
-
-  readonly postDiffSteps?: PipelineStep[];
-  readonly postDeploySteps?: PipelineStep[];
 }
 
 /**
@@ -63,6 +60,8 @@ export interface IndependentStage extends NamedStageOptions {
 export interface NamedStageOptions extends StageOptions {
   readonly name: string;
   readonly watchable?: boolean;
+  readonly postDiffSteps?: PipelineStep[];
+  readonly postDeploySteps?: PipelineStep[];
 }
 
 /**
@@ -70,6 +69,25 @@ export interface NamedStageOptions extends StageOptions {
  */
 export interface StageOptions {
   readonly env: Environment;
+}
+
+/**
+ * Configuration interface for IAM roles used in the CDK pipeline.
+ */
+export interface IamRoleConfig {
+
+  /** Default IAM role ARN used if no specific role is provided. */
+  readonly default?: string;
+  /** IAM role ARN for the synthesis step. */
+  readonly synth?: string;
+  /** IAM role ARN for the asset publishing step. */
+  readonly assetPublishing?: string;
+  /** IAM role ARN for the asset publishing step for a specific stage. */
+  readonly assetPublishingPerStage?: { [stage: string]: string };
+  /** IAM role ARNs for different diff stages. */
+  readonly diff?: { [stage: string]: string };
+  /** IAM role ARNs for different deployment stages. */
+  readonly deployment?: { [stage: string]: string };
 }
 
 /**
@@ -108,6 +126,9 @@ export interface CDKPipelineOptions {
    * better organization and ease of management.
    */
   readonly pkgNamespace: string;
+
+  /** IAM config */
+  readonly iamRoleArns: IamRoleConfig;
 
   /**
    * This field specifies a list of stages that should be deployed using a CI/CD pipeline
@@ -199,11 +220,98 @@ export abstract class CDKPipeline extends Component {
 
   public abstract engineType(): PipelineEngine;
 
-  protected renderInstallCommands(): string[] {
-    return [
-      ...(this.baseOptions.preInstallCommands ?? []),
-      `npx projen ${this.app.package.installCiTask.name}`,
-    ];
+  protected provideInstallStep(): PipelineStep {
+    const seq = new StepSequence(this.project, this.baseOptions.preInstallSteps ?? []);
+    if (this.baseOptions.preInstallCommands) {
+      seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.preInstallCommands));
+    }
+    seq.addSteps(new ProjenScriptStep(this.project, this.app.package.installCiTask.name));
+    return seq;
+  }
+
+  protected provideSynthStep(): PipelineStep {
+    const seq = new StepSequence(this.project, []);
+
+    if (this.baseOptions.iamRoleArns?.synth) {
+      seq.addSteps(new AwsAssumeRoleStep(this.project, {
+        roleArn: this.baseOptions.iamRoleArns.synth,
+      }));
+    }
+
+    seq.addSteps(...this.baseOptions.preSynthSteps ?? []);
+    if (this.baseOptions.preSynthCommands) {
+      seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.preSynthCommands));
+    }
+
+    seq.addSteps(new ProjenScriptStep(this.project, 'build'));
+
+    seq.addSteps(...this.baseOptions.postSynthSteps ?? []);
+    if (this.baseOptions.postSynthCommands) {
+      seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.postSynthCommands));
+    }
+    return seq;
+  }
+
+  protected provideAssetUploadStep(stageName?: string): PipelineStep {
+    const seq = new StepSequence(this.project, []);
+
+    const globalPublishRole = this.baseOptions.iamRoleArns.assetPublishing ?? this.baseOptions.iamRoleArns.default!;
+    if (stageName) {
+      seq.addSteps(new AwsAssumeRoleStep(this.project, {
+        roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage ?
+          (this.baseOptions.iamRoleArns.assetPublishingPerStage[stageName] ?? globalPublishRole) :
+          globalPublishRole,
+      }));
+      seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stageName}`));
+    } else {
+      if (this.baseOptions.iamRoleArns.assetPublishingPerStage) {
+        const stages = [...this.baseOptions.stages, ...this.baseOptions.independentStages ?? []];
+        for (const stage of stages) {
+          seq.addSteps(new AwsAssumeRoleStep(this.project, {
+            roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage[stage.name] ?? globalPublishRole,
+          }));
+          seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stage.name}`));
+        }
+      } else {
+        seq.addSteps(new AwsAssumeRoleStep(this.project, {
+          roleArn: globalPublishRole,
+        }));
+        seq.addSteps(new ProjenScriptStep(this.project, 'publish:assets'));
+      }
+    }
+
+    return seq;
+  }
+
+  protected provideAssemblyUploadStep(): PipelineStep {
+    return new StepSequence(this.project, [
+      new ProjenScriptStep(this.project, 'bump'),
+      new ProjenScriptStep(this.project, 'release:push-assembly'),
+    ]);
+  }
+
+  protected provideDeployStep(stage: NamedStageOptions): PipelineStep {
+    return new StepSequence(this.project, [
+      new AwsAssumeRoleStep(this.project, {
+        roleArn: this.baseOptions.iamRoleArns?.deployment?.[stage.name] ?? this.baseOptions.iamRoleArns?.default!,
+        region: stage.env.region,
+      }),
+      new ProjenScriptStep(this.project, `deploy:${stage.name}`),
+      ...stage.postDeploySteps ?? [],
+    ]);
+  }
+
+  protected provideDiffStep(stage: NamedStageOptions): PipelineStep {
+    return new StepSequence(this.project, [
+      new AwsAssumeRoleStep(this.project, {
+        roleArn: this.baseOptions.iamRoleArns?.diff?.[stage.name] ??
+          this.baseOptions.iamRoleArns?.deployment?.[stage.name] ??
+          this.baseOptions.iamRoleArns?.default!,
+        region: stage.env.region,
+      }),
+      new ProjenScriptStep(this.project, `diff:${stage.name}`),
+      ...stage.postDiffSteps ?? [],
+    ]);
   }
 
   protected renderInstallPackageCommands(packageName: string, runPreInstallCommands: boolean = false): string[] {
@@ -223,39 +331,6 @@ export abstract class CDKPipeline extends Component {
         throw new Error('No install scripts for packageManager: ' + this.app.package.packageManager);
     }
     return commands;
-  }
-
-  protected renderSynthCommands(): string[] {
-    return [
-      ...(this.baseOptions.preSynthCommands ?? []),
-      'npx projen build',
-      ...(this.baseOptions.postSynthCommands ?? []),
-    ];
-  }
-
-  protected renderAssetUploadCommands(stageName?: string): string[] {
-    return [
-      `npx projen publish:assets${stageName ? `:${stageName}` : ''}`,
-    ];
-  }
-
-  protected renderAssemblyUploadCommands(): string[] {
-    return [
-      'npx projen bump',
-      'npx projen release:push-assembly',
-    ];
-  }
-
-  protected renderDeployCommands(stageName: string): string[] {
-    return [
-      `npx projen deploy:${stageName}`,
-    ];
-  }
-
-  protected renderDiffCommands(stageName: string): string[] {
-    return [
-      `npx projen diff:${stageName}`,
-    ];
   }
 
   protected createSafeStageName(name: string): string {

@@ -38,6 +38,7 @@ Actions:
         Enabled: false
     Configuration:
       Steps:
+        - Run: npx projen install:ci
         - Run: npx projen publish:assets
     DependsOn:
       - SynthCDKApplication

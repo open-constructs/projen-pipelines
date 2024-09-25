@@ -146,6 +146,7 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.BashCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashCDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 
@@ -170,6 +171,16 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.BashCDKPipeline.property.baseOptions"></a>
+
+```typescript
+public readonly baseOptions: CDKPipelineOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -342,6 +353,7 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.CDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.CDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.CDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 
@@ -366,6 +378,16 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.CDKPipeline.property.baseOptions"></a>
+
+```typescript
+public readonly baseOptions: CDKPipelineOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -576,6 +598,7 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | *No description.* |
@@ -601,6 +624,16 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.CodeCatalystCDKPipeline.property.baseOptions"></a>
+
+```typescript
+public readonly baseOptions: CDKPipelineOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -830,6 +863,7 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | Indicates if versioned artifacts are needed based on manual approval requirements. |
@@ -855,6 +889,16 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.GithubCDKPipeline.property.baseOptions"></a>
+
+```typescript
+public readonly baseOptions: CDKPipelineOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -1061,6 +1105,7 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.property.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.property.config">config</a></code> | <code>projen.gitlab.GitlabConfiguration</code> | GitLab CI/CD configuration object. |
@@ -1088,6 +1133,16 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.GitlabCDKPipeline.property.baseOptions"></a>
+
+```typescript
+public readonly baseOptions: CDKPipelineOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.CDKPipelineOptions">CDKPipelineOptions</a>
 
 ---
 
@@ -1226,6 +1281,7 @@ const bashCDKPipelineOptions: BashCDKPipelineOptions = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
@@ -1240,6 +1296,18 @@ const bashCDKPipelineOptions: BashCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
+
+---
+
+##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.BashCDKPipelineOptions.property.iamRoleArns"></a>
+
+```typescript
+public readonly iamRoleArns: IamRoleConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a>
+
+IAM config.
 
 ---
 
@@ -1459,6 +1527,7 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
@@ -1473,6 +1542,18 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
+
+---
+
+##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.CDKPipelineOptions.property.iamRoleArns"></a>
+
+```typescript
+public readonly iamRoleArns: IamRoleConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a>
+
+IAM config.
 
 ---
 
@@ -1654,6 +1735,7 @@ const codeCatalystCDKPipelineOptions: CodeCatalystCDKPipelineOptions = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
+| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
@@ -1668,7 +1750,18 @@ const codeCatalystCDKPipelineOptions: CodeCatalystCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig">CodeCatalystIamRoleConfig</a></code> | *No description.* |
+
+---
+
+##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.iamRoleArns"></a>
+
+```typescript
+public readonly iamRoleArns: IamRoleConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a>
+
+IAM config.
 
 ---
 
@@ -1836,98 +1929,6 @@ This field is used to define a prefix for the AWS Stack resources created during
 
 ---
 
-##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.iamRoleArns"></a>
-
-```typescript
-public readonly iamRoleArns: CodeCatalystIamRoleConfig;
-```
-
-- *Type:* <a href="#projen-pipelines.CodeCatalystIamRoleConfig">CodeCatalystIamRoleConfig</a>
-
----
-
-### CodeCatalystIamRoleConfig <a name="CodeCatalystIamRoleConfig" id="projen-pipelines.CodeCatalystIamRoleConfig"></a>
-
-#### Initializer <a name="Initializer" id="projen-pipelines.CodeCatalystIamRoleConfig.Initializer"></a>
-
-```typescript
-import { CodeCatalystIamRoleConfig } from 'projen-pipelines'
-
-const codeCatalystIamRoleConfig: CodeCatalystIamRoleConfig = { ... }
-```
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing step. |
-| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.assetPublishingPerStage">assetPublishingPerStage</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARN for the asset publishing step for a specific stage. |
-| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if no specific role is provided. |
-| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different deployment stages. |
-| <code><a href="#projen-pipelines.CodeCatalystIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis step. |
-
----
-
-##### `assetPublishing`<sup>Optional</sup> <a name="assetPublishing" id="projen-pipelines.CodeCatalystIamRoleConfig.property.assetPublishing"></a>
-
-```typescript
-public readonly assetPublishing: string;
-```
-
-- *Type:* string
-
-IAM role ARN for the asset publishing step.
-
----
-
-##### `assetPublishingPerStage`<sup>Optional</sup> <a name="assetPublishingPerStage" id="projen-pipelines.CodeCatalystIamRoleConfig.property.assetPublishingPerStage"></a>
-
-```typescript
-public readonly assetPublishingPerStage: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-IAM role ARN for the asset publishing step for a specific stage.
-
----
-
-##### `default`<sup>Optional</sup> <a name="default" id="projen-pipelines.CodeCatalystIamRoleConfig.property.default"></a>
-
-```typescript
-public readonly default: string;
-```
-
-- *Type:* string
-
-Default IAM role ARN used if no specific role is provided.
-
----
-
-##### `deployment`<sup>Optional</sup> <a name="deployment" id="projen-pipelines.CodeCatalystIamRoleConfig.property.deployment"></a>
-
-```typescript
-public readonly deployment: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-IAM role ARNs for different deployment stages.
-
----
-
-##### `synth`<sup>Optional</sup> <a name="synth" id="projen-pipelines.CodeCatalystIamRoleConfig.property.synth"></a>
-
-```typescript
-public readonly synth: string;
-```
-
-- *Type:* string
-
-IAM role ARN for the synthesis step.
-
----
-
 ### CodeCatalystStepConfig <a name="CodeCatalystStepConfig" id="projen-pipelines.CodeCatalystStepConfig"></a>
 
 Configuration interface for a CodeCatalyst Actions step.
@@ -2004,6 +2005,8 @@ const deploymentStage: DeploymentStage = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.DeploymentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.manualApproval">manualApproval</a></code> | <code>boolean</code> | *No description.* |
 
@@ -2026,6 +2029,26 @@ public readonly name: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `postDeploySteps`<sup>Optional</sup> <a name="postDeploySteps" id="projen-pipelines.DeploymentStage.property.postDeploySteps"></a>
+
+```typescript
+public readonly postDeploySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `postDiffSteps`<sup>Optional</sup> <a name="postDiffSteps" id="projen-pipelines.DeploymentStage.property.postDiffSteps"></a>
+
+```typescript
+public readonly postDiffSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
@@ -2159,6 +2182,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
@@ -2173,10 +2197,21 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
-| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.GithubIamRoleConfig">GithubIamRoleConfig</a></code> | IAM config for GitHub Actions. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironments">useGithubEnvironments</a></code> | <code>boolean</code> | whether to use GitHub environments for deployment stages. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubPackagesForAssembly">useGithubPackagesForAssembly</a></code> | <code>boolean</code> | use GitHub Packages to store vesioned artifacts of cloud assembly; |
+
+---
+
+##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.GithubCDKPipelineOptions.property.iamRoleArns"></a>
+
+```typescript
+public readonly iamRoleArns: IamRoleConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a>
+
+IAM config.
 
 ---
 
@@ -2344,18 +2379,6 @@ This field is used to define a prefix for the AWS Stack resources created during
 
 ---
 
-##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.GithubCDKPipelineOptions.property.iamRoleArns"></a>
-
-```typescript
-public readonly iamRoleArns: GithubIamRoleConfig;
-```
-
-- *Type:* <a href="#projen-pipelines.GithubIamRoleConfig">GithubIamRoleConfig</a>
-
-IAM config for GitHub Actions.
-
----
-
 ##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GithubCDKPipelineOptions.property.runnerTags"></a>
 
 ```typescript
@@ -2395,90 +2418,6 @@ public readonly useGithubPackagesForAssembly: boolean;
 use GitHub Packages to store vesioned artifacts of cloud assembly;
 
 also needed for manual approvals
-
----
-
-### GithubIamRoleConfig <a name="GithubIamRoleConfig" id="projen-pipelines.GithubIamRoleConfig"></a>
-
-Configuration interface for GitHub-specific IAM roles used in the CDK pipeline.
-
-#### Initializer <a name="Initializer" id="projen-pipelines.GithubIamRoleConfig.Initializer"></a>
-
-```typescript
-import { GithubIamRoleConfig } from 'projen-pipelines'
-
-const githubIamRoleConfig: GithubIamRoleConfig = { ... }
-```
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing step. |
-| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.assetPublishingPerStage">assetPublishingPerStage</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARN for the asset publishing step for a specific stage. |
-| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if no specific role is provided. |
-| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different deployment stages. |
-| <code><a href="#projen-pipelines.GithubIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis step. |
-
----
-
-##### `assetPublishing`<sup>Optional</sup> <a name="assetPublishing" id="projen-pipelines.GithubIamRoleConfig.property.assetPublishing"></a>
-
-```typescript
-public readonly assetPublishing: string;
-```
-
-- *Type:* string
-
-IAM role ARN for the asset publishing step.
-
----
-
-##### `assetPublishingPerStage`<sup>Optional</sup> <a name="assetPublishingPerStage" id="projen-pipelines.GithubIamRoleConfig.property.assetPublishingPerStage"></a>
-
-```typescript
-public readonly assetPublishingPerStage: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-IAM role ARN for the asset publishing step for a specific stage.
-
----
-
-##### `default`<sup>Optional</sup> <a name="default" id="projen-pipelines.GithubIamRoleConfig.property.default"></a>
-
-```typescript
-public readonly default: string;
-```
-
-- *Type:* string
-
-Default IAM role ARN used if no specific role is provided.
-
----
-
-##### `deployment`<sup>Optional</sup> <a name="deployment" id="projen-pipelines.GithubIamRoleConfig.property.deployment"></a>
-
-```typescript
-public readonly deployment: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-IAM role ARNs for different deployment stages.
-
----
-
-##### `synth`<sup>Optional</sup> <a name="synth" id="projen-pipelines.GithubIamRoleConfig.property.synth"></a>
-
-```typescript
-public readonly synth: string;
-```
-
-- *Type:* string
-
-IAM role ARN for the synthesis step.
 
 ---
 
@@ -2600,6 +2539,7 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
@@ -2614,9 +2554,20 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
-| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.GitlabIamRoleConfig">GitlabIamRoleConfig</a></code> | IAM role ARNs configuration for the pipeline. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.image">image</a></code> | <code>string</code> | The Docker image to use for running the pipeline jobs. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code><a href="#projen-pipelines.GitlabRunnerTags">GitlabRunnerTags</a></code> | Runner tags configuration for the pipeline. |
+
+---
+
+##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.GitlabCDKPipelineOptions.property.iamRoleArns"></a>
+
+```typescript
+public readonly iamRoleArns: IamRoleConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a>
+
+IAM config.
 
 ---
 
@@ -2784,18 +2735,6 @@ This field is used to define a prefix for the AWS Stack resources created during
 
 ---
 
-##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.GitlabCDKPipelineOptions.property.iamRoleArns"></a>
-
-```typescript
-public readonly iamRoleArns: GitlabIamRoleConfig;
-```
-
-- *Type:* <a href="#projen-pipelines.GitlabIamRoleConfig">GitlabIamRoleConfig</a>
-
-IAM role ARNs configuration for the pipeline.
-
----
-
 ##### `image`<sup>Optional</sup> <a name="image" id="projen-pipelines.GitlabCDKPipelineOptions.property.image"></a>
 
 ```typescript
@@ -2817,106 +2756,6 @@ public readonly runnerTags: GitlabRunnerTags;
 - *Type:* <a href="#projen-pipelines.GitlabRunnerTags">GitlabRunnerTags</a>
 
 Runner tags configuration for the pipeline.
-
----
-
-### GitlabIamRoleConfig <a name="GitlabIamRoleConfig" id="projen-pipelines.GitlabIamRoleConfig"></a>
-
-Configuration for IAM roles used within the GitLab CI/CD pipeline for various stages.
-
-Allows specifying different IAM roles for synthesis, asset publishing, and deployment stages,
-providing granular control over permissions.
-
-#### Initializer <a name="Initializer" id="projen-pipelines.GitlabIamRoleConfig.Initializer"></a>
-
-```typescript
-import { GitlabIamRoleConfig } from 'projen-pipelines'
-
-const gitlabIamRoleConfig: GitlabIamRoleConfig = { ... }
-```
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing step. |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.assetPublishingPerStage">assetPublishingPerStage</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARN for the asset publishing step for a specific stage. |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if specific stage role is not provided. |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | A map of stage names to IAM role ARNs for the deployment operation. |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.diff">diff</a></code> | <code>{[ key: string ]: string}</code> | A map of stage names to IAM role ARNs for the diff operation. |
-| <code><a href="#projen-pipelines.GitlabIamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis stage. |
-
----
-
-##### `assetPublishing`<sup>Optional</sup> <a name="assetPublishing" id="projen-pipelines.GitlabIamRoleConfig.property.assetPublishing"></a>
-
-```typescript
-public readonly assetPublishing: string;
-```
-
-- *Type:* string
-
-IAM role ARN for the asset publishing step.
-
----
-
-##### `assetPublishingPerStage`<sup>Optional</sup> <a name="assetPublishingPerStage" id="projen-pipelines.GitlabIamRoleConfig.property.assetPublishingPerStage"></a>
-
-```typescript
-public readonly assetPublishingPerStage: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-IAM role ARN for the asset publishing step for a specific stage.
-
----
-
-##### `default`<sup>Optional</sup> <a name="default" id="projen-pipelines.GitlabIamRoleConfig.property.default"></a>
-
-```typescript
-public readonly default: string;
-```
-
-- *Type:* string
-
-Default IAM role ARN used if specific stage role is not provided.
-
----
-
-##### `deployment`<sup>Optional</sup> <a name="deployment" id="projen-pipelines.GitlabIamRoleConfig.property.deployment"></a>
-
-```typescript
-public readonly deployment: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-A map of stage names to IAM role ARNs for the deployment operation.
-
----
-
-##### `diff`<sup>Optional</sup> <a name="diff" id="projen-pipelines.GitlabIamRoleConfig.property.diff"></a>
-
-```typescript
-public readonly diff: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-A map of stage names to IAM role ARNs for the diff operation.
-
----
-
-##### `synth`<sup>Optional</sup> <a name="synth" id="projen-pipelines.GitlabIamRoleConfig.property.synth"></a>
-
-```typescript
-public readonly synth: string;
-```
-
-- *Type:* string
-
-IAM role ARN for the synthesis stage.
 
 ---
 
@@ -3077,6 +2916,103 @@ Dependencies which need to be completed before this step.
 
 ---
 
+### IamRoleConfig <a name="IamRoleConfig" id="projen-pipelines.IamRoleConfig"></a>
+
+Configuration interface for IAM roles used in the CDK pipeline.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.IamRoleConfig.Initializer"></a>
+
+```typescript
+import { IamRoleConfig } from 'projen-pipelines'
+
+const iamRoleConfig: IamRoleConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.IamRoleConfig.property.assetPublishing">assetPublishing</a></code> | <code>string</code> | IAM role ARN for the asset publishing step. |
+| <code><a href="#projen-pipelines.IamRoleConfig.property.assetPublishingPerStage">assetPublishingPerStage</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARN for the asset publishing step for a specific stage. |
+| <code><a href="#projen-pipelines.IamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if no specific role is provided. |
+| <code><a href="#projen-pipelines.IamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different deployment stages. |
+| <code><a href="#projen-pipelines.IamRoleConfig.property.diff">diff</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different diff stages. |
+| <code><a href="#projen-pipelines.IamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis step. |
+
+---
+
+##### `assetPublishing`<sup>Optional</sup> <a name="assetPublishing" id="projen-pipelines.IamRoleConfig.property.assetPublishing"></a>
+
+```typescript
+public readonly assetPublishing: string;
+```
+
+- *Type:* string
+
+IAM role ARN for the asset publishing step.
+
+---
+
+##### `assetPublishingPerStage`<sup>Optional</sup> <a name="assetPublishingPerStage" id="projen-pipelines.IamRoleConfig.property.assetPublishingPerStage"></a>
+
+```typescript
+public readonly assetPublishingPerStage: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+IAM role ARN for the asset publishing step for a specific stage.
+
+---
+
+##### `default`<sup>Optional</sup> <a name="default" id="projen-pipelines.IamRoleConfig.property.default"></a>
+
+```typescript
+public readonly default: string;
+```
+
+- *Type:* string
+
+Default IAM role ARN used if no specific role is provided.
+
+---
+
+##### `deployment`<sup>Optional</sup> <a name="deployment" id="projen-pipelines.IamRoleConfig.property.deployment"></a>
+
+```typescript
+public readonly deployment: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+IAM role ARNs for different deployment stages.
+
+---
+
+##### `diff`<sup>Optional</sup> <a name="diff" id="projen-pipelines.IamRoleConfig.property.diff"></a>
+
+```typescript
+public readonly diff: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+IAM role ARNs for different diff stages.
+
+---
+
+##### `synth`<sup>Optional</sup> <a name="synth" id="projen-pipelines.IamRoleConfig.property.synth"></a>
+
+```typescript
+public readonly synth: string;
+```
+
+- *Type:* string
+
+IAM role ARN for the synthesis step.
+
+---
+
 ### IndependentStage <a name="IndependentStage" id="projen-pipelines.IndependentStage"></a>
 
 Options for stages that are not part of the pipeline.
@@ -3095,10 +3031,10 @@ const independentStage: IndependentStage = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.IndependentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.IndependentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#projen-pipelines.IndependentStage.property.deployOnPush">deployOnPush</a></code> | <code>boolean</code> | This specifies whether the stage should be deployed on push. |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.deployOnPush">deployOnPush</a></code> | <code>boolean</code> | This specifies whether the stage should be deployed on push. |
 
 ---
 
@@ -3119,6 +3055,26 @@ public readonly name: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `postDeploySteps`<sup>Optional</sup> <a name="postDeploySteps" id="projen-pipelines.IndependentStage.property.postDeploySteps"></a>
+
+```typescript
+public readonly postDeploySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `postDiffSteps`<sup>Optional</sup> <a name="postDiffSteps" id="projen-pipelines.IndependentStage.property.postDiffSteps"></a>
+
+```typescript
+public readonly postDiffSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
@@ -3145,26 +3101,6 @@ This specifies whether the stage should be deployed on push.
 
 ---
 
-##### `postDeploySteps`<sup>Optional</sup> <a name="postDeploySteps" id="projen-pipelines.IndependentStage.property.postDeploySteps"></a>
-
-```typescript
-public readonly postDeploySteps: PipelineStep[];
-```
-
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
-
----
-
-##### `postDiffSteps`<sup>Optional</sup> <a name="postDiffSteps" id="projen-pipelines.IndependentStage.property.postDiffSteps"></a>
-
-```typescript
-public readonly postDiffSteps: PipelineStep[];
-```
-
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
-
----
-
 ### NamedStageOptions <a name="NamedStageOptions" id="projen-pipelines.NamedStageOptions"></a>
 
 Options for a CDK stage with a name.
@@ -3183,6 +3119,8 @@ const namedStageOptions: NamedStageOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.NamedStageOptions.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.NamedStageOptions.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
 
 ---
@@ -3204,6 +3142,26 @@ public readonly name: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `postDeploySteps`<sup>Optional</sup> <a name="postDeploySteps" id="projen-pipelines.NamedStageOptions.property.postDeploySteps"></a>
+
+```typescript
+public readonly postDeploySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `postDiffSteps`<sup>Optional</sup> <a name="postDiffSteps" id="projen-pipelines.NamedStageOptions.property.postDiffSteps"></a>
+
+```typescript
+public readonly postDiffSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
@@ -3623,6 +3581,90 @@ Should be implemented by subclasses.
 
 
 
+### ProjenScriptStep <a name="ProjenScriptStep" id="projen-pipelines.ProjenScriptStep"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.ProjenScriptStep.Initializer"></a>
+
+```typescript
+import { ProjenScriptStep } from 'projen-pipelines'
+
+new ProjenScriptStep(project: Project, scriptName: string, args?: string)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ProjenScriptStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.ProjenScriptStep.Initializer.parameter.scriptName">scriptName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.ProjenScriptStep.Initializer.parameter.args">args</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.ProjenScriptStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `scriptName`<sup>Required</sup> <a name="scriptName" id="projen-pipelines.ProjenScriptStep.Initializer.parameter.scriptName"></a>
+
+- *Type:* string
+
+---
+
+##### `args`<sup>Optional</sup> <a name="args" id="projen-pipelines.ProjenScriptStep.Initializer.parameter.args"></a>
+
+- *Type:* string
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.ProjenScriptStep.toBash">toBash</a></code> | Converts the step into a Bash script configuration. |
+| <code><a href="#projen-pipelines.ProjenScriptStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
+| <code><a href="#projen-pipelines.ProjenScriptStep.toGithub">toGithub</a></code> | Converts the step into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.ProjenScriptStep.toGitlab">toGitlab</a></code> | Converts the step into a GitLab CI configuration. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.ProjenScriptStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the step into a Bash script configuration.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.ProjenScriptStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the step into a CodeCatalyst Actions step configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.ProjenScriptStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the step into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.ProjenScriptStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the step into a GitLab CI configuration.
+
+
+
+
 ### SimpleCommandStep <a name="SimpleCommandStep" id="projen-pipelines.SimpleCommandStep"></a>
 
 Concrete implementation of PipelineStep that executes simple commands.
@@ -3700,6 +3742,111 @@ public toGitlab(): GitlabStepConfig
 ```
 
 Converts the step into a GitLab CI configuration.
+
+
+
+
+### StepSequence <a name="StepSequence" id="projen-pipelines.StepSequence"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.StepSequence.Initializer"></a>
+
+```typescript
+import { StepSequence } from 'projen-pipelines'
+
+new StepSequence(project: Project, steps: PipelineStep[])
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.StepSequence.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.StepSequence.Initializer.parameter.steps">steps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | - The sequence of pipeline steps. |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.StepSequence.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.StepSequence.Initializer.parameter.steps"></a>
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+The sequence of pipeline steps.
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.StepSequence.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.StepSequence.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
+| <code><a href="#projen-pipelines.StepSequence.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.StepSequence.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.StepSequence.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.StepSequence.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.StepSequence.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.StepSequence.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the sequence of steps into a CodeCatalyst Actions step configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.StepSequence.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.StepSequence.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.StepSequence.addSteps"></a>
+
+```typescript
+public addSteps(steps: PipelineStep): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.StepSequence.addSteps.parameter.steps"></a>
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.StepSequence.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: PipelineStep): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.StepSequence.prependSteps.parameter.steps"></a>
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+
+---
 
 
 

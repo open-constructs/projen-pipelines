@@ -56,8 +56,8 @@ synth:
   needs: []
   stage: synth
   script:
-    - "awslogin synthRole "
     - npx projen install:ci
+    - "awslogin synthRole "
     - npx projen build
   variables: {}
 publish_assets:
@@ -68,7 +68,6 @@ publish_assets:
     - job: synth
       artifacts: true
   script:
-    - "awslogin publishRole "
     - npx projen install:ci
     - "awslogin publishRole "
     - npx projen publish:assets:dev
@@ -87,10 +86,11 @@ diff-dev:
       artifacts: true
     - job: publish_assets
   script:
-    - "awslogin devRole "
     - npx projen install:ci
+    - "awslogin devRole "
     - npx projen diff:dev
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 deploy-dev:
   extends:
     - .aws_base
@@ -105,10 +105,11 @@ deploy-dev:
     - job: publish_assets
     - job: diff-dev
   script:
-    - "awslogin devRole "
     - npx projen install:ci
+    - "awslogin devRole "
     - npx projen deploy:dev
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 diff-prod:
   extends:
     - .aws_base
@@ -121,10 +122,11 @@ diff-prod:
       artifacts: true
     - job: publish_assets
   script:
-    - "awslogin prodRole "
     - npx projen install:ci
+    - "awslogin prodRole "
     - npx projen diff:prod
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 deploy-prod:
   extends:
     - .aws_base
@@ -140,10 +142,11 @@ deploy-prod:
     - job: publish_assets
     - job: diff-prod
   script:
-    - "awslogin prodRole "
     - npx projen install:ci
+    - "awslogin prodRole "
     - npx projen deploy:prod
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 "
 `;
 
@@ -310,8 +313,8 @@ synth:
   needs: []
   stage: synth
   script:
-    - "awslogin synthRole "
     - npx projen install:ci
+    - "awslogin synthRole "
     - npx projen build
   variables: {}
 publish_assets:
@@ -322,8 +325,8 @@ publish_assets:
     - job: synth
       artifacts: true
   script:
-    - "awslogin publishRole "
     - npx projen install:ci
+    - "awslogin publishRole "
     - npx projen publish:assets
   variables: {}
 deploy-independent1:
@@ -334,10 +337,12 @@ deploy-independent1:
   when: manual
   needs: []
   script:
-    - "awslogin deployRole "
     - npx projen install:ci
+    - "awslogin synthRole "
     - npx projen build
+    - "awslogin deployRole "
     - npx projen diff:independent1
+    - "awslogin deployRole "
     - npx projen deploy:independent1
     - echo Post Deploy
   variables:
@@ -353,10 +358,12 @@ deploy-independent2:
       - main
   needs: []
   script:
-    - "awslogin undefined "
     - npx projen install:ci
+    - "awslogin synthRole "
     - npx projen build
+    - "awslogin deployRole "
     - npx projen diff:independent2
+    - "awslogin deployRole "
     - npx projen deploy:independent2
     - echo Post Deploy
   variables:
@@ -422,9 +429,9 @@ synth:
   needs: []
   stage: synth
   script:
-    - "awslogin synthRole "
     - echo Login
     - npx projen install:ci
+    - "awslogin synthRole "
     - npx projen build
   variables:
     FOO: bar
@@ -436,9 +443,9 @@ publish_assets:
     - job: synth
       artifacts: true
   script:
-    - "awslogin publishRole "
     - echo Login
     - npx projen install:ci
+    - "awslogin publishRole "
     - npx projen publish:assets
   variables:
     FOO: bar
@@ -454,12 +461,13 @@ diff-prod:
       artifacts: true
     - job: publish_assets
   script:
-    - "awslogin defaultRole "
     - echo Login
     - npx projen install:ci
+    - "awslogin defaultRole "
     - npx projen diff:prod
   variables:
     FOO: bar
+    AWS_REGION: eu-central-1
 deploy-prod:
   extends:
     - .aws_base
@@ -474,12 +482,13 @@ deploy-prod:
     - job: publish_assets
     - job: diff-prod
   script:
-    - "awslogin defaultRole "
     - echo Login
     - npx projen install:ci
+    - "awslogin defaultRole "
     - npx projen deploy:prod
   variables:
     FOO: bar
+    AWS_REGION: eu-central-1
 "
 `;
 
@@ -541,8 +550,8 @@ synth:
   tags:
     - defaultTag
   script:
-    - "awslogin synthRole "
     - npx projen install:ci
+    - "awslogin synthRole "
     - npx projen build
   variables: {}
 publish_assets:
@@ -555,8 +564,8 @@ publish_assets:
     - job: synth
       artifacts: true
   script:
-    - "awslogin publishRole "
     - npx projen install:ci
+    - "awslogin publishRole "
     - npx projen publish:assets
   variables: {}
 diff-dev:
@@ -573,10 +582,11 @@ diff-dev:
       artifacts: true
     - job: publish_assets
   script:
-    - "awslogin devRole "
     - npx projen install:ci
+    - "awslogin devRole "
     - npx projen diff:dev
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 deploy-dev:
   extends:
     - .aws_base
@@ -593,10 +603,11 @@ deploy-dev:
     - job: publish_assets
     - job: diff-dev
   script:
-    - "awslogin devRole "
     - npx projen install:ci
+    - "awslogin devRole "
     - npx projen deploy:dev
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 diff-prod:
   extends:
     - .aws_base
@@ -611,10 +622,11 @@ diff-prod:
       artifacts: true
     - job: publish_assets
   script:
-    - "awslogin prodRole "
     - npx projen install:ci
+    - "awslogin prodRole "
     - npx projen diff:prod
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 deploy-prod:
   extends:
     - .aws_base
@@ -632,10 +644,11 @@ deploy-prod:
     - job: publish_assets
     - job: diff-prod
   script:
-    - "awslogin prodRole "
     - npx projen install:ci
+    - "awslogin prodRole "
     - npx projen deploy:prod
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 "
 `;
 
@@ -697,8 +710,8 @@ synth:
   tags:
     - synthTag
   script:
-    - "awslogin synthRole "
     - npx projen install:ci
+    - "awslogin synthRole "
     - npx projen build
   variables: {}
 publish_assets:
@@ -711,8 +724,8 @@ publish_assets:
     - job: synth
       artifacts: true
   script:
-    - "awslogin publishRole "
     - npx projen install:ci
+    - "awslogin publishRole "
     - npx projen publish:assets
   variables: {}
 diff-dev:
@@ -729,10 +742,11 @@ diff-dev:
       artifacts: true
     - job: publish_assets
   script:
-    - "awslogin devRole "
     - npx projen install:ci
+    - "awslogin devRole "
     - npx projen diff:dev
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 deploy-dev:
   extends:
     - .aws_base
@@ -749,10 +763,11 @@ deploy-dev:
     - job: publish_assets
     - job: diff-dev
   script:
-    - "awslogin devRole "
     - npx projen install:ci
+    - "awslogin devRole "
     - npx projen deploy:dev
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 diff-prod:
   extends:
     - .aws_base
@@ -767,10 +782,11 @@ diff-prod:
       artifacts: true
     - job: publish_assets
   script:
-    - "awslogin prodRole "
     - npx projen install:ci
+    - "awslogin prodRole "
     - npx projen diff:prod
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 deploy-prod:
   extends:
     - .aws_base
@@ -788,9 +804,10 @@ deploy-prod:
     - job: publish_assets
     - job: diff-prod
   script:
-    - "awslogin prodRole "
     - npx projen install:ci
+    - "awslogin prodRole "
     - npx projen deploy:prod
-  variables: {}
+  variables:
+    AWS_REGION: eu-central-1
 "
 `;
