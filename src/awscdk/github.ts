@@ -6,35 +6,15 @@ import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
 import { PipelineStep, SimpleCommandStep } from '../steps';
 import { DownloadArtifactStep, UploadArtifactStep } from '../steps/artifact-steps';
-import { AwsAssumeRoleStep } from '../steps/aws-assume-role.step';
 import { GithubPackagesLoginStep } from '../steps/registries';
 
 const DEFAULT_RUNNER_TAGS = ['ubuntu-latest'];
 
-/**
- * Configuration interface for GitHub-specific IAM roles used in the CDK pipeline.
- */
-export interface GithubIamRoleConfig {
-
-  /** Default IAM role ARN used if no specific role is provided. */
-  readonly default?: string;
-  /** IAM role ARN for the synthesis step. */
-  readonly synth?: string;
-  /** IAM role ARN for the asset publishing step. */
-  readonly assetPublishing?: string;
-  /** IAM role ARN for the asset publishing step for a specific stage. */
-  readonly assetPublishingPerStage?: { [stage: string]: string };
-  /** IAM role ARNs for different deployment stages. */
-  readonly deployment?: { [stage: string]: string };
-}
 
 /**
  * Extension of the base CDKPipeline options including specific configurations for GitHub.
  */
 export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
-
-  /** IAM config for GitHub Actions */
-  readonly iamRoleArns: GithubIamRoleConfig;
 
   /**
    * runner tags to use to select runners
@@ -130,19 +110,8 @@ export class GithubCDKPipeline extends CDKPipeline {
    */
   private createSynth(): void {
     const steps: PipelineStep[] = [];
-
-    if (this.options.iamRoleArns?.synth) {
-      steps.push(new AwsAssumeRoleStep(this.project, {
-        roleArn: this.options.iamRoleArns.synth,
-        sessionName: 'GitHubAction',
-      }));
-    }
-    steps.push(...this.baseOptions.preInstallSteps ?? []);
-    steps.push(new SimpleCommandStep(this.project, this.renderInstallCommands()));
-
-    steps.push(...this.baseOptions.preSynthSteps ?? []);
-    steps.push(new SimpleCommandStep(this.project, this.renderSynthCommands()));
-    steps.push(...this.baseOptions.postSynthSteps ?? []);
+    steps.push(this.provideInstallStep());
+    steps.push(this.provideSynthStep());
 
     steps.push(new UploadArtifactStep(this.project, {
       name: 'cloud-assembly',
@@ -160,7 +129,6 @@ export class GithubCDKPipeline extends CDKPipeline {
       },
       needs: [...githubSteps.flatMap(s => s.needs)],
       permissions: mergeJobPermissions({
-        idToken: JobPermission.WRITE,
         contents: JobPermission.READ,
       }, ...(githubSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       steps: [
@@ -177,36 +145,19 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a job to upload assets to AWS as part of the pipeline.
    */
   public createAssetUpload(): void {
-    const globalPublishRole = this.options.iamRoleArns.assetPublishing ?? this.options.iamRoleArns.default!;
 
     const steps = [
       new SimpleCommandStep(this.project, ['git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"']),
-      new AwsAssumeRoleStep(this.project, {
-        roleArn: globalPublishRole,
-        region: 'us-east-1',
-      }),
       new DownloadArtifactStep(this.project, {
         name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
-      ...this.baseOptions.preInstallSteps ?? [],
-      new SimpleCommandStep(this.project, this.renderInstallCommands()),
+      this.provideInstallStep(),
+      this.provideAssetUploadStep(),
     ];
 
-    if (this.options.iamRoleArns.assetPublishingPerStage) {
-      const stages = [...this.options.stages, ...this.options.independentStages ?? []];
-      for (const stage of stages) {
-        steps.push(new AwsAssumeRoleStep(this.project, {
-          roleArn: this.options.iamRoleArns.assetPublishingPerStage[stage.name] ?? globalPublishRole,
-        }));
-        steps.push(new SimpleCommandStep(this.project, this.renderAssetUploadCommands(stage.name)));
-      }
-    } else {
-      steps.push(new SimpleCommandStep(this.project, this.renderAssetUploadCommands()));
-    }
-
     if (this.needsVersionedArtifacts) {
-      steps.push(new SimpleCommandStep(this.project, this.renderAssemblyUploadCommands()));
+      steps.push(this.provideAssemblyUploadStep());
     }
 
     const ghSteps = steps.map(s => s.toGithub());
@@ -247,15 +198,10 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     if (stage.manualApproval === true) {
       const steps = [
-        new AwsAssumeRoleStep(this.project, {
-          roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
-          region: stage.env.region,
-        }),
-        ...this.baseOptions.preInstallSteps ?? [],
-        new SimpleCommandStep(this.project, this.renderInstallCommands()),
+        this.provideInstallStep(),
         new SimpleCommandStep(this.project, this.renderInstallPackageCommands(`${this.baseOptions.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`)),
         new SimpleCommandStep(this.project, [`mv ./node_modules/${this.baseOptions.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`]),
-        new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
+        this.provideDeployStep(stage),
         new UploadArtifactStep(this.project, {
           name: `cdk-outputs-${stage.name}`,
           path: `cdk-outputs-${stage.name}.json`,
@@ -286,7 +232,6 @@ export class GithubCDKPipeline extends CDKPipeline {
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
         permissions: mergeJobPermissions({
-          idToken: JobPermission.WRITE,
           contents: JobPermission.READ,
         }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
         steps: [
@@ -306,17 +251,12 @@ export class GithubCDKPipeline extends CDKPipeline {
 
   private createDeployJob(workflow: GithubWorkflow, jobDependencies: string[], stage: NamedStageOptions) {
     const steps = [
-      new AwsAssumeRoleStep(this.project, {
-        roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
-        region: stage.env.region,
-      }),
       new DownloadArtifactStep(this.project, {
         name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
-      ...this.baseOptions.preInstallSteps ?? [],
-      new SimpleCommandStep(this.project, this.renderInstallCommands()),
-      new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
+      this.provideInstallStep(),
+      this.provideDeployStep(stage),
       new UploadArtifactStep(this.project, {
         name: `cdk-outputs-${stage.name}`,
         path: `cdk-outputs-${stage.name}.json`,
@@ -336,7 +276,6 @@ export class GithubCDKPipeline extends CDKPipeline {
         ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       permissions: mergeJobPermissions({
-        idToken: JobPermission.WRITE,
         contents: JobPermission.READ,
       }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       steps: [
@@ -358,22 +297,10 @@ export class GithubCDKPipeline extends CDKPipeline {
       this.createDeployJob(this.deploymentWorkflow, [], stage);
     } else {
       const steps = [
-        new AwsAssumeRoleStep(this.project, {
-          roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
-          region: stage.env.region,
-        }),
-        ...this.baseOptions.preInstallSteps ?? [],
-        new SimpleCommandStep(this.project, this.renderInstallCommands()),
-
-        ...this.baseOptions.preSynthSteps ?? [],
-        new SimpleCommandStep(this.project, this.renderSynthCommands()),
-        ...this.baseOptions.postSynthSteps ?? [],
-
-        new SimpleCommandStep(this.project, this.renderDiffCommands(stage.name)),
-        ...stage.postDiffSteps ?? [],
-
-        new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
-        ...stage.postDeploySteps ?? [],
+        this.provideInstallStep(),
+        this.provideSynthStep(),
+        this.provideDiffStep(stage),
+        this.provideDeployStep(stage),
 
         new UploadArtifactStep(this.project, {
           name: `cdk-outputs-${stage.name}`,
@@ -395,7 +322,6 @@ export class GithubCDKPipeline extends CDKPipeline {
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
         permissions: mergeJobPermissions({
-          idToken: JobPermission.WRITE,
           contents: JobPermission.READ,
         }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
         steps: [

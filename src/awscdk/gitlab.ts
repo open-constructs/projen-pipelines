@@ -1,28 +1,7 @@
 import { awscdk, gitlab } from 'projen';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage } from './base';
 import { PipelineEngine } from '../engine';
-import { PipelineStep, SimpleCommandStep } from '../steps';
-import { AwsAssumeRoleStep } from '../steps/aws-assume-role.step';
-
-/**
- * Configuration for IAM roles used within the GitLab CI/CD pipeline for various stages.
- * Allows specifying different IAM roles for synthesis, asset publishing, and deployment stages,
- * providing granular control over permissions.
- */
-export interface GitlabIamRoleConfig {
-  /** Default IAM role ARN used if specific stage role is not provided. */
-  readonly default?: string;
-  /** IAM role ARN for the synthesis stage. */
-  readonly synth?: string;
-  /** IAM role ARN for the asset publishing step. */
-  readonly assetPublishing?: string;
-  /** IAM role ARN for the asset publishing step for a specific stage. */
-  readonly assetPublishingPerStage?: { [stage: string]: string };
-  /** A map of stage names to IAM role ARNs for the diff operation. */
-  readonly diff?: { [stage: string]: string };
-  /** A map of stage names to IAM role ARNs for the deployment operation. */
-  readonly deployment?: { [stage: string]: string };
-}
+import { PipelineStep } from '../steps';
 
 /**
  * Configuration for GitLab runner tags used within the CI/CD pipeline for various stages.
@@ -45,8 +24,6 @@ export interface GitlabRunnerTags {
  * Options for configuring the GitLab CDK pipeline, extending the base CDK pipeline options.
  */
 export interface GitlabCDKPipelineOptions extends CDKPipelineOptions {
-  /** IAM role ARNs configuration for the pipeline. */
-  readonly iamRoleArns: GitlabIamRoleConfig;
   /** Runner tags configuration for the pipeline. */
   readonly runnerTags?: GitlabRunnerTags;
   /** The Docker image to use for running the pipeline jobs. */
@@ -173,19 +150,10 @@ awslogin() {
    * configured to be cached as artifacts.
    */
   protected createSynth(): void {
-    const steps: PipelineStep[] = [];
-
-    if (this.options.iamRoleArns?.synth) {
-      steps.push(new AwsAssumeRoleStep(this.project, {
-        roleArn: this.options.iamRoleArns.synth,
-      }));
-    }
-    steps.push(...this.options.preInstallSteps ?? []);
-    steps.push(new SimpleCommandStep(this.project, this.renderInstallCommands()));
-
-    steps.push(...this.options.preSynthSteps ?? []);
-    steps.push(new SimpleCommandStep(this.project, this.renderSynthCommands()));
-    steps.push(...this.options.postSynthSteps ?? []);
+    const steps: PipelineStep[] = [
+      this.provideInstallStep(),
+      this.provideSynthStep(),
+    ];
 
     const gitlabSteps = steps.map(s => s.toGitlab());
 
@@ -209,31 +177,13 @@ awslogin() {
    * of the 'synth' stage, ensuring assets are only published after successful synthesis.
    */
   protected createAssetUpload(): void {
-    const steps = [];
-
-    const globalPublishRole = this.options.iamRoleArns.assetPublishing ?? this.options.iamRoleArns.default;
-    if (globalPublishRole) {
-      steps.push(new AwsAssumeRoleStep(this.project, {
-        roleArn: globalPublishRole,
-      }));
-    }
-    steps.push(...this.options.preInstallSteps ?? []);
-    steps.push(new SimpleCommandStep(this.project, this.renderInstallCommands()));
-
-    if (this.options.iamRoleArns.assetPublishingPerStage) {
-      const stages = [...this.options.stages, ...this.options.independentStages ?? []];
-      for (const stage of stages) {
-        steps.push(new AwsAssumeRoleStep(this.project, {
-          roleArn: this.options.iamRoleArns.assetPublishingPerStage[stage.name] ?? globalPublishRole,
-        }));
-        steps.push(new SimpleCommandStep(this.project, this.renderAssetUploadCommands(stage.name)));
-      }
-    } else {
-      steps.push(new SimpleCommandStep(this.project, this.renderAssetUploadCommands()));
-    }
+    const steps = [
+      this.provideInstallStep(),
+      this.provideAssetUploadStep(),
+    ];
 
     if (this.needsVersionedArtifacts) {
-      steps.push(new SimpleCommandStep(this.project, this.renderAssemblyUploadCommands()));
+      steps.push(this.provideAssemblyUploadStep());
     }
 
     const gitlabSteps = steps.map(s => s.toGitlab());
@@ -261,24 +211,14 @@ awslogin() {
    */
   protected createDeployment(stage: DeploymentStage): void {
     const diffSteps = [
-      new AwsAssumeRoleStep(this.project, {
-        roleArn: this.options.iamRoleArns?.diff?.[stage.name]
-          ?? this.options.iamRoleArns?.deployment?.[stage.name]
-          ?? this.options.iamRoleArns?.default!,
-      }),
-      ...this.options.preInstallSteps ?? [],
-      new SimpleCommandStep(this.project, this.renderInstallCommands()),
-      new SimpleCommandStep(this.project, this.renderDiffCommands(stage.name)),
+      this.provideInstallStep(),
+      this.provideDiffStep(stage),
     ].map(s => s.toGitlab());
 
 
     const deploySteps = [
-      new AwsAssumeRoleStep(this.project, {
-        roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
-      }),
-      ...this.options.preInstallSteps ?? [],
-      new SimpleCommandStep(this.project, this.renderInstallCommands()),
-      new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
+      this.provideInstallStep(),
+      this.provideDeployStep(stage),
     ].map(s => s.toGitlab());
 
     this.config.addStages(stage.name);
@@ -328,22 +268,10 @@ awslogin() {
    */
   public createIndependentDeployment(stage: IndependentStage): void {
     const steps = [
-      new AwsAssumeRoleStep(this.project, {
-        roleArn: this.options.iamRoleArns?.deployment?.[stage.name] ?? this.options.iamRoleArns?.default!,
-        region: stage.env.region,
-      }),
-      ...this.options.preInstallSteps ?? [],
-      new SimpleCommandStep(this.project, this.renderInstallCommands()),
-
-      ...this.options.preSynthSteps ?? [],
-      new SimpleCommandStep(this.project, this.renderSynthCommands()),
-      ...this.options.postSynthSteps ?? [],
-
-      new SimpleCommandStep(this.project, this.renderDiffCommands(stage.name)),
-      ...stage.postDiffSteps ?? [],
-
-      new SimpleCommandStep(this.project, this.renderDeployCommands(stage.name)),
-      ...stage.postDeploySteps ?? [],
+      this.provideInstallStep(),
+      this.provideSynthStep(),
+      this.provideDiffStep(stage),
+      this.provideDeployStep(stage),
     ].map(s => s.toGitlab());
 
     this.config.addStages(stage.name);

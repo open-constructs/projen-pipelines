@@ -4,7 +4,7 @@ import { YamlFile, awscdk } from 'projen';
 import { CDKPipeline, CDKPipelineOptions, DeploymentStage } from './base';
 
 import { PipelineEngine } from '../engine';
-import { PipelineStep, SimpleCommandStep, UploadArtifactStep } from '../steps';
+import { PipelineStep } from '../steps';
 import { Blueprint } from './codecatalyst/blueprint';
 
 /*
@@ -35,21 +35,8 @@ test docgen: https://github.com/open-constructs/aws-cdk-library
 
 */
 
-export interface CodeCatalystIamRoleConfig {
-  /** Default IAM role ARN used if no specific role is provided. */
-  readonly default?: string;
-  /** IAM role ARN for the synthesis step. */
-  readonly synth?: string;
-  /** IAM role ARN for the asset publishing step. */
-  readonly assetPublishing?: string;
-  /** IAM role ARN for the asset publishing step for a specific stage. */
-  readonly assetPublishingPerStage?: { [stage: string]: string };
-  /** IAM role ARNs for different deployment stages. */
-  readonly deployment?: { [stage: string]: string };
-}
-
 export interface CodeCatalystCDKPipelineOptions extends CDKPipelineOptions {
-  readonly iamRoleArns: CodeCatalystIamRoleConfig;
+  //
 }
 
 export class CodeCatalystCDKPipeline extends CDKPipeline {
@@ -178,25 +165,13 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
   }
 
   private createSynth(): void {
-    const steps: PipelineStep[] = [];
-
-    steps.push(...this.baseOptions.preInstallSteps ?? []);
-    steps.push(new SimpleCommandStep(this.project, this.renderInstallCommands()));
-
-    steps.push(...this.baseOptions.preSynthSteps ?? []);
-    steps.push(new SimpleCommandStep(this.project, this.renderSynthCommands()));
-    steps.push(...this.baseOptions.postSynthSteps ?? []);
-
-    steps.push(new UploadArtifactStep(this.project, {
-      name: 'cloud-assembly',
-      path: `${this.app.cdkConfig.cdkout}/`,
-    }));
+    const steps: PipelineStep[] = [
+      this.provideInstallStep(),
+      this.provideSynthStep(),
+    ];
 
     const codeCatalystSteps = steps.map(s => s.toCodeCatalyst());
 
-    const cmds: string[] = [];
-    cmds.push(...this.renderInstallCommands());
-    cmds.push(...this.renderSynthCommands());
     this.deploymentWorkflowBuilder.addBuildAction({
       actionName: 'SynthCDKApplication',
       input: {
@@ -205,8 +180,7 @@ export class CodeCatalystCDKPipeline extends CDKPipeline {
           CI: 'true',
         },
       },
-      steps:
-        [...codeCatalystSteps.flatMap(s => s.commands)],
+      steps: [...codeCatalystSteps.flatMap(s => s.commands)],
       // FIXME is there is an environment, connect it to the workflow
       // needs to react on this.options.iamRoleArns?.synth
       //environment: environment && convertToWorkflowEnvironment(environment),
@@ -231,9 +205,12 @@ steps.push({
   }
 
   public createAssetUpload(): void {
+    const steps = [
+      this.provideInstallStep(),
+      this.provideAssetUploadStep(),
+    ];
+    const codeCatalystSteps = steps.map(s => s.toCodeCatalyst());
 
-    const cmds: string[] = [];
-    cmds.push(...this.renderAssetUploadCommands());
     this.deploymentWorkflowBuilder.addBuildAction({
       actionName: 'PublishAssetsToAWS',
       dependsOn: ['SynthCDKApplication'],
@@ -243,8 +220,7 @@ steps.push({
           CI: 'true',
         },
       },
-      steps:
-        cmds,
+      steps: [...codeCatalystSteps.flatMap(s => s.commands)],
       // FIXME is there is an environment, connect it to the workflow
       // needs to react on this.options.iamRoleArns?.synth
       //environment: environment && convertToWorkflowEnvironment(environment),
@@ -270,9 +246,11 @@ steps.push({
       dependsOn = `approve_${stage.name}`;
     }
     // Add deployment to existing workflow
-    const cmds: string[] = [];
-    cmds.push(...this.renderInstallCommands());
-    cmds.push(...this.renderDeployCommands(stage.name));
+    const deploySteps = [
+      this.provideInstallStep(),
+      this.provideDeployStep(stage),
+    ].map(s => s.toCodeCatalyst());
+
     this.deploymentWorkflowBuilder.addBuildAction({
       actionName: `deploy_${stage.name}`,
       dependsOn: this.deploymentStages.length > 0 ? ['PublishAssetsToAWS', dependsOn] : ['PublishAssetsToAWS'],
@@ -282,8 +260,7 @@ steps.push({
           CI: 'true',
         },
       },
-      steps:
-        cmds,
+      steps: [...deploySteps.flatMap(s => s.commands)],
       // FIXME is there is an environment, connect it to the workflow
       // needs to react on this.options.iamRoleArns?.synth
       //environment: environment && convertToWorkflowEnvironment(environment),
@@ -312,9 +289,13 @@ steps.push({
       dependsOn = `approve_${stage.name}`;
     }
     // Add deployment to existing workflow
-    const cmds: string[] = [];
-    cmds.push(...this.renderInstallCommands());
-    cmds.push(...this.renderDeployCommands(stage.name));
+
+    const steps = [
+      this.provideInstallStep(),
+      this.provideSynthStep(),
+      this.provideDeployStep(stage),
+    ].map(s => s.toGitlab());
+
     this.deploymentWorkflowBuilder.addBuildAction({
       actionName: `indeploy_${stage.name}`,
       dependsOn: [dependsOn],
@@ -324,8 +305,7 @@ steps.push({
           CI: 'true',
         },
       },
-      steps:
-        cmds,
+      steps: [...steps.flatMap(s => s.commands)],
       // FIXME is there is an environment, connect it to the workflow
       // needs to react on this.options.iamRoleArns?.synth
       //environment: environment && convertToWorkflowEnvironment(environment),

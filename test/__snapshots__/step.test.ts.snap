@@ -35,3 +35,113 @@ exports[`SimpleCommandStep works correctly 3`] = `
   "needs": [],
 }
 `;
+
+exports[`StepSequence not sharing internal state 1`] = `
+{
+  "commands": [
+    "echo "Hello World"",
+    "echo 42",
+    "npx projen dummy",
+  ],
+}
+`;
+
+exports[`StepSequence not sharing internal state 2`] = `
+{
+  "commands": [
+    "echo "Hello World"",
+    "echo 42",
+    "npx projen dummy",
+  ],
+}
+`;
+
+exports[`StepSequence works correctly 1`] = `
+{
+  "commands": [
+    "echo "Login to AWS using role role for region undefined"",
+    "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain domain --region eu-central-1 --domain-owner domainOwner --query authorizationToken --output text)",
+    "echo "Hello World"",
+    "echo 42",
+    "echo "Login to AWS using role roleArn for region undefined"",
+    "echo "Hello World"",
+    "echo 42",
+  ],
+}
+`;
+
+exports[`StepSequence works correctly 2`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {
+    "idToken": "write",
+  },
+  "steps": [
+    {
+      "name": "AWS Credentials",
+      "uses": "aws-actions/configure-aws-credentials@v4",
+      "with": {
+        "aws-region": "us-east-1",
+        "role-session-name": "CodeArtifact",
+        "role-to-assume": "role",
+      },
+    },
+    {
+      "run": "echo "CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain domain --region eu-central-1 --domain-owner domainOwner --query authorizationToken --output text)" >> $GITHUB_ENV",
+    },
+    {
+      "run": "echo "Hello World"",
+    },
+    {
+      "run": "echo 42",
+    },
+    {
+      "name": "AWS Credentials",
+      "uses": "aws-actions/configure-aws-credentials@v4",
+      "with": {
+        "aws-region": "us-east-1",
+        "role-session-name": "GitHubAction",
+        "role-to-assume": "roleArn",
+      },
+    },
+    {
+      "run": "echo "Hello World"",
+    },
+    {
+      "run": "echo 42",
+    },
+  ],
+}
+`;
+
+exports[`StepSequence works correctly 3`] = `
+{
+  "commands": [
+    "awslogin role CodeArtifact",
+    "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain domain --region eu-central-1 --domain-owner domainOwner --query authorizationToken --output text)",
+    "echo "Hello World"",
+    "echo 42",
+    "awslogin roleArn ",
+    "echo "Hello World"",
+    "echo 42",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`StepSequence works correctly 4`] = `
+{
+  "commands": [
+    "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain domain --region eu-central-1 --domain-owner domainOwner --query authorizationToken --output text)",
+    "echo "Hello World"",
+    "echo 42",
+    "echo "Hello World"",
+    "echo 42",
+  ],
+  "env": {},
+  "needs": [],
+}
+`;

@@ -1,6 +1,6 @@
 import { Project } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
-import { GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
+import { BashStepConfig, CodeCatalystStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
 
 
 /**
@@ -53,6 +53,23 @@ export class AwsAssumeRoleStep extends PipelineStep {
       permissions: {
         idToken: JobPermission.WRITE,
       },
+    };
+  }
+
+  public toBash(): BashStepConfig {
+    return {
+      commands: [
+        `echo "Login to AWS using role ${this.config.roleArn} for region ${this.config.region ?? 'undefined'}"`,
+      ],
+    };
+  }
+
+  public toCodeCatalyst(): CodeCatalystStepConfig {
+    //FIXME use CC environments here
+    return {
+      commands: [],
+      env: {},
+      needs: [],
     };
   }
 

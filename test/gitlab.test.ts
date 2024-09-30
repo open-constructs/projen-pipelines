@@ -203,6 +203,7 @@ test('Gitlab snapshot with independent stage', () => {
       assetPublishing: 'publishRole',
       deployment: {
         independent1: 'deployRole',
+        independent2: 'deployRole',
       },
     },
     pkgNamespace: '@assembly',

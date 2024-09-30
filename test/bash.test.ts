@@ -10,6 +10,7 @@ test('Bash snapshot', () => {
   });
 
   new BashCDKPipeline(p, {
+    iamRoleArns: {},
     pkgNamespace: '@assembly',
     personalStage: {
       env: {
