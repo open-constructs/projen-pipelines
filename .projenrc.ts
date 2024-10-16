@@ -1,4 +1,5 @@
 import { ReleasableCommits, cdk, github, javascript } from 'projen';
+import { JobPermission } from 'projen/lib/github/workflows-model';
 
 const project = new cdk.JsiiProject({
   author: 'The Open Construct Foundation',
@@ -66,6 +67,61 @@ project.addTask('local-push', { exec: 'npx yalc push' }).prependSpawn(project.bu
 project.gitpod?.addCustomTask({
   init: 'npm ci',
   command: 'npx projen build',
+});
+
+const integWf = project.github?.addWorkflow('integ');
+integWf?.on({
+  push: { branches: ['main'] },
+  workflowDispatch: {},
+  pullRequest: {},
+});
+integWf?.addJobs({
+  'build': {
+    runsOn: ['ubuntu-latest'],
+    permissions: { contents: JobPermission.WRITE },
+    steps: [
+      {
+        name: 'Checkout',
+        uses: 'actions/checkout@v4',
+        with:
+        {
+          ref: '${{github.event.pull_request.head.ref}}',
+          repository: '${{github.event.pull_request.head.repo.full_name}}',
+        },
+      },
+      { name: 'Install dependencies', run: 'npm install' },
+      { name: 'build', run: 'npx projen compile' },
+      {
+        name: 'Upload artifact',
+        uses: 'actions/upload-artifact@v4.3.6',
+        with: { name: 'integ-artifact', path: '.', overwrite: true },
+      },
+    ],
+  },
+  'test-yarn': {
+    runsOn: ['ubuntu-latest'],
+    needs: ['build'],
+    permissions: {},
+    steps: [
+      { name: 'Checkout', uses: 'actions/checkout@v4' },
+      { name: 'Download artifact', uses: 'actions/download-artifact@v4', with: { name: 'integ-artifact', path: 'dist' } },
+      { name: 'Run yalc', run: 'cd dist && npx yalc publish' },
+      { name: 'Add yalc', run: 'cd integ/existing && npx yalc add projen-pipelines' },
+      { name: 'Run Test', run: 'cd integ/existing && npx yarn install' },
+    ],
+  },
+  'test-npm': {
+    runsOn: ['ubuntu-latest'],
+    needs: ['build'],
+    permissions: {},
+    steps: [
+      { name: 'Checkout', uses: 'actions/checkout@v4' },
+      { name: 'Download artifact', uses: 'actions/download-artifact@v4', with: { name: 'integ-artifact', path: 'dist' } },
+      { name: 'Run yalc', run: 'cd dist && npx yalc publish' },
+      { name: 'Add yalc', run: 'cd integ/existing && npx yalc add projen-pipelines' },
+      { name: 'Run Test', run: 'cd integ/existing && npx npm install' },
+    ],
+  },
 });
 
 project.synth();
