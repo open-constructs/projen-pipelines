@@ -69,6 +69,7 @@ project.gitpod?.addCustomTask({
   command: 'npx projen build',
 });
 
+// Integration tests for existing and new projects
 const integWf = project.github?.addWorkflow('integ');
 integWf?.on({
   push: { branches: ['main'] },
@@ -98,7 +99,7 @@ integWf?.addJobs({
       },
     ],
   },
-  'test-yarn': {
+  'test-yarn-existing': {
     runsOn: ['ubuntu-latest'],
     needs: ['build'],
     permissions: {},
@@ -110,7 +111,7 @@ integWf?.addJobs({
       { name: 'Run Test', run: 'cd integ/existing && npx yarn install' },
     ],
   },
-  'test-npm': {
+  'test-npm-existing': {
     runsOn: ['ubuntu-latest'],
     needs: ['build'],
     permissions: {},

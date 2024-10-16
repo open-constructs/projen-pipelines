@@ -70,6 +70,11 @@
       "type": "build"
     },
     {
+      "name": "projen",
+      "version": "0.88.3",
+      "type": "override"
+    },
+    {
       "name": "aws-cdk-lib",
       "version": "^2.160.0",
       "type": "runtime"
