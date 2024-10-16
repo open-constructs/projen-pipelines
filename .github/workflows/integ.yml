@@ -30,7 +30,7 @@ jobs:
             lib/
             .jsii
           overwrite: true
-  test-yarn:
+  test-yarn-existing:
     needs: build
     runs-on: ubuntu-latest
     permissions: {}
@@ -47,7 +47,7 @@ jobs:
         run: cd integ/existing && npx yalc add projen-pipelines
       - name: Run Test
         run: cd integ/existing && npx yarn install
-  test-npm:
+  test-npm-existing:
     needs: build
     runs-on: ubuntu-latest
     permissions: {}
