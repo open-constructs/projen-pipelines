@@ -104,8 +104,8 @@ integWf?.addJobs({
     permissions: {},
     steps: [
       { name: 'Checkout', uses: 'actions/checkout@v4' },
-      { name: 'Download artifact', uses: 'actions/download-artifact@v4', with: { name: 'integ-artifact', path: 'dist' } },
-      { name: 'Run yalc', run: 'cd dist && npx yalc publish' },
+      { name: 'Download artifact', uses: 'actions/download-artifact@v4', with: { name: 'integ-artifact' } },
+      { name: 'Run yalc', run: 'npx yalc publish' },
       { name: 'Add yalc', run: 'cd integ/existing && npx yalc add projen-pipelines' },
       { name: 'Run Test', run: 'cd integ/existing && npx yarn install' },
     ],
@@ -116,8 +116,8 @@ integWf?.addJobs({
     permissions: {},
     steps: [
       { name: 'Checkout', uses: 'actions/checkout@v4' },
-      { name: 'Download artifact', uses: 'actions/download-artifact@v4', with: { name: 'integ-artifact', path: 'dist' } },
-      { name: 'Run yalc', run: 'cd dist && npx yalc publish' },
+      { name: 'Download artifact', uses: 'actions/download-artifact@v4', with: { name: 'integ-artifact' } },
+      { name: 'Run yalc', run: 'npx yalc publish' },
       { name: 'Add yalc', run: 'cd integ/existing && npx yalc add projen-pipelines' },
       { name: 'Run Test', run: 'cd integ/existing && npx npm install' },
     ],

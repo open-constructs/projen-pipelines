@@ -41,9 +41,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: integ-artifact
-          path: dist
       - name: Run yalc
-        run: cd dist && npx yalc publish
+        run: npx yalc publish
       - name: Add yalc
         run: cd integ/existing && npx yalc add projen-pipelines
       - name: Run Test
@@ -59,9 +58,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: integ-artifact
-          path: dist
       - name: Run yalc
-        run: cd dist && npx yalc publish
+        run: npx yalc publish
       - name: Add yalc
         run: cd integ/existing && npx yalc add projen-pipelines
       - name: Run Test
