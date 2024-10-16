@@ -26,7 +26,9 @@ jobs:
         uses: actions/upload-artifact@v4.3.6
         with:
           name: integ-artifact
-          path: .
+          path: |-
+            lib/
+            .jsii
           overwrite: true
   test-yarn:
     needs: build

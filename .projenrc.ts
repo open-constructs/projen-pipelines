@@ -94,7 +94,7 @@ integWf?.addJobs({
       {
         name: 'Upload artifact',
         uses: 'actions/upload-artifact@v4.3.6',
-        with: { name: 'integ-artifact', path: '.', overwrite: true },
+        with: { name: 'integ-artifact', path: 'lib/\n.jsii', overwrite: true },
       },
     ],
   },
