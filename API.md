@@ -2011,6 +2011,7 @@ const deploymentStage: DeploymentStage = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.DeploymentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
@@ -2035,6 +2036,16 @@ public readonly name: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `diffType`<sup>Optional</sup> <a name="diffType" id="projen-pipelines.DeploymentStage.property.diffType"></a>
+
+```typescript
+public readonly diffType: CdkDiffType;
+```
+
+- *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
 
 ---
 
@@ -3037,6 +3048,7 @@ const independentStage: IndependentStage = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.IndependentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
@@ -3061,6 +3073,16 @@ public readonly name: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `diffType`<sup>Optional</sup> <a name="diffType" id="projen-pipelines.IndependentStage.property.diffType"></a>
+
+```typescript
+public readonly diffType: CdkDiffType;
+```
+
+- *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
 
 ---
 
@@ -3125,6 +3147,7 @@ const namedStageOptions: NamedStageOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.NamedStageOptions.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
@@ -3148,6 +3171,16 @@ public readonly name: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `diffType`<sup>Optional</sup> <a name="diffType" id="projen-pipelines.NamedStageOptions.property.diffType"></a>
+
+```typescript
+public readonly diffType: CdkDiffType;
+```
+
+- *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
 
 ---
 
@@ -4045,6 +4078,39 @@ Should be implemented by subclasses.
 
 
 ## Enums <a name="Enums" id="Enums"></a>
+
+### CdkDiffType <a name="CdkDiffType" id="projen-pipelines.CdkDiffType"></a>
+
+#### Members <a name="Members" id="Members"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CdkDiffType.NONE">NONE</a></code> | Do not perform a diff. |
+| <code><a href="#projen-pipelines.CdkDiffType.FAST">FAST</a></code> | Perform a fast template diff (--no-changeset). |
+| <code><a href="#projen-pipelines.CdkDiffType.FULL">FULL</a></code> | Perform a full CloudFormation diff (--changeset). |
+
+---
+
+##### `NONE` <a name="NONE" id="projen-pipelines.CdkDiffType.NONE"></a>
+
+Do not perform a diff.
+
+---
+
+
+##### `FAST` <a name="FAST" id="projen-pipelines.CdkDiffType.FAST"></a>
+
+Perform a fast template diff (--no-changeset).
+
+---
+
+
+##### `FULL` <a name="FULL" id="projen-pipelines.CdkDiffType.FULL"></a>
+
+Perform a full CloudFormation diff (--changeset).
+
+---
+
 
 ### PipelineEngine <a name="PipelineEngine" id="projen-pipelines.PipelineEngine"></a>
 

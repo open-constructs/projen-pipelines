@@ -1,6 +1,6 @@
 import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk';
 import { synthSnapshot } from 'projen/lib/util/synth';
-import { GitlabCDKPipeline, GitlabStepConfig, PipelineStep } from '../src';
+import { CdkDiffType, GitlabCDKPipeline, GitlabStepConfig, PipelineStep } from '../src';
 
 test('Gitlab snapshot', () => {
   const p = new AwsCdkTypeScriptApp({
@@ -24,6 +24,7 @@ test('Gitlab snapshot', () => {
     pkgNamespace: '@assembly',
     stages: [{
       name: 'dev',
+      diffType: CdkDiffType.FAST,
       env: {
         account: '123456789012',
         region: 'eu-central-1',
@@ -31,6 +32,7 @@ test('Gitlab snapshot', () => {
     }, {
       name: 'prod',
       manualApproval: true,
+      diffType: CdkDiffType.FULL,
       env: {
         account: '123456789012',
         region: 'eu-central-1',
@@ -214,6 +216,7 @@ test('Gitlab snapshot with independent stage', () => {
         account: '123456789012',
         region: 'eu-central-1',
       },
+      diffType: CdkDiffType.FULL,
       postDeploySteps: [new TestStep(p)],
     }, {
       name: 'independent2',
@@ -221,6 +224,7 @@ test('Gitlab snapshot with independent stage', () => {
         account: '123456789012',
         region: 'eu-central-1',
       },
+      diffType: CdkDiffType.NONE,
       postDeploySteps: [new TestStep(p)],
       deployOnPush: true,
     }],

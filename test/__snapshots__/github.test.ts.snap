@@ -286,6 +286,8 @@ exports[`Github snapshot 4`] = `
     "diff:prod": "npx projen diff:prod",
     "eject": "npx projen eject",
     "eslint": "npx projen eslint",
+    "fastdiff:my-dev": "npx projen fastdiff:my-dev",
+    "fastdiff:prod": "npx projen fastdiff:prod",
     "package": "npx projen package",
     "post-compile": "npx projen post-compile",
     "post-upgrade": "npx projen post-upgrade",
@@ -448,6 +450,22 @@ exports[`Github snapshot 5`] = `
         {
           "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
           "receiveArgs": true,
+        },
+      ],
+    },
+    "fastdiff:my-dev": {
+      "name": "fastdiff:my-dev",
+      "steps": [
+        {
+          "exec": "cdk --app cdk.out diff --no-changeset testapp-my-dev",
+        },
+      ],
+    },
+    "fastdiff:prod": {
+      "name": "fastdiff:prod",
+      "steps": [
+        {
+          "exec": "cdk --app cdk.out diff --no-changeset testapp-prod",
         },
       ],
     },
@@ -1339,6 +1357,14 @@ exports[`Github snapshot with multi stack 2`] = `
         {
           "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
           "receiveArgs": true,
+        },
+      ],
+    },
+    "fastdiff:dev": {
+      "name": "fastdiff:dev",
+      "steps": [
+        {
+          "exec": "cdk --app cdk.out diff --no-changeset testapp-dev testapp-dev/*",
         },
       ],
     },

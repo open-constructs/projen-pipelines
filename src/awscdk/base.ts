@@ -35,6 +35,15 @@ export interface Environment {
 //   CONTINUOUS_DELIVERY,
 // }
 
+export enum CdkDiffType {
+  /** Do not perform a diff */
+  NONE,
+  /** Perform a fast template diff (--no-changeset) */
+  FAST,
+  /** Perform a full CloudFormation diff (--changeset) */
+  FULL,
+}
+
 /**
  * Options for stages that are part of the pipeline
  */
@@ -60,6 +69,7 @@ export interface IndependentStage extends NamedStageOptions {
 export interface NamedStageOptions extends StageOptions {
   readonly name: string;
   readonly watchable?: boolean;
+  readonly diffType?: CdkDiffType;
   readonly postDiffSteps?: PipelineStep[];
   readonly postDeploySteps?: PipelineStep[];
 }
@@ -301,7 +311,7 @@ export abstract class CDKPipeline extends Component {
     ]);
   }
 
-  protected provideDiffStep(stage: NamedStageOptions): PipelineStep {
+  protected provideDiffStep(stage: NamedStageOptions, fast?: boolean): PipelineStep {
     return new StepSequence(this.project, [
       new AwsAssumeRoleStep(this.project, {
         roleArn: this.baseOptions.iamRoleArns?.diff?.[stage.name] ??
@@ -309,7 +319,7 @@ export abstract class CDKPipeline extends Component {
           this.baseOptions.iamRoleArns?.default!,
         region: stage.env.region,
       }),
-      new ProjenScriptStep(this.project, `diff:${stage.name}`),
+      new ProjenScriptStep(this.project, fast ? `fastdiff:${stage.name}` : `diff:${stage.name}`),
       ...stage.postDiffSteps ?? [],
     ]);
   }
@@ -504,6 +514,9 @@ ${appCode}
     this.project.addTask('diff:personal', {
       exec: `cdk diff ${stackId}`,
     });
+    this.project.addTask('fastdiff:personal', {
+      exec: `cdk diff --no-changeset ${stackId}`,
+    });
     this.project.addTask('destroy:personal', {
       exec: `cdk destroy ${stackId}`,
     });
@@ -520,6 +533,9 @@ ${appCode}
     });
     this.project.addTask('diff:feature', {
       exec: `cdk diff ${stackId}`,
+    });
+    this.project.addTask('fastdiff:feature', {
+      exec: `cdk diff --no-changeset ${stackId}`,
     });
     this.project.addTask('destroy:feature', {
       exec: `cdk destroy ${stackId}`,
@@ -541,6 +557,9 @@ ${appCode}
     this.project.addTask(`diff:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
     });
+    this.project.addTask(`fastdiff:${stage.name}`, {
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff --no-changeset ${stackId}`,
+    });
     if (stage.watchable) {
       this.project.addTask(`watch:${stage.name}`, {
         exec: `cdk deploy --outputs-file cdk-outputs-${stage.name}.json --watch --hotswap ${stackId}`,
@@ -559,6 +578,9 @@ ${appCode}
     });
     this.project.addTask(`diff:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
+    });
+    this.project.addTask(`fastdiff:${stage.name}`, {
+      exec: `cdk --app ${this.app.cdkConfig.cdkout} diff --no-changeset ${stackId}`,
     });
     if (stage.watchable) {
       this.project.addTask(`watch:${stage.name}`, {

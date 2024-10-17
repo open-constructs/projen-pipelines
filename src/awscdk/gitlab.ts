@@ -1,5 +1,5 @@
 import { awscdk, gitlab } from 'projen';
-import { CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage } from './base';
+import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage } from './base';
 import { PipelineEngine } from '../engine';
 import { PipelineStep } from '../steps';
 
@@ -212,7 +212,7 @@ awslogin() {
   protected createDeployment(stage: DeploymentStage): void {
     const diffSteps = [
       this.provideInstallStep(),
-      this.provideDiffStep(stage),
+      this.provideDiffStep(stage, stage.diffType === CdkDiffType.FAST),
     ].map(s => s.toGitlab());
 
 
@@ -223,20 +223,22 @@ awslogin() {
 
     this.config.addStages(stage.name);
     this.config.addJobs({
-      [`diff-${stage.name}`]: {
-        extends: ['.aws_base', ...diffSteps.flatMap(s => s.extensions)],
-        stage: stage.name,
-        tags: this.options.runnerTags?.diff?.[stage.name] ?? this.options.runnerTags?.deployment?.[stage.name] ?? this.options.runnerTags?.default,
-        only: {
-          refs: [this.branchName],
+      ...(stage.diffType !== CdkDiffType.NONE) && {
+        [`diff-${stage.name}`]: {
+          extends: ['.aws_base', ...diffSteps.flatMap(s => s.extensions)],
+          stage: stage.name,
+          tags: this.options.runnerTags?.diff?.[stage.name] ?? this.options.runnerTags?.deployment?.[stage.name] ?? this.options.runnerTags?.default,
+          only: {
+            refs: [this.branchName],
+          },
+          needs: [
+            { job: 'synth', artifacts: true },
+            { job: 'publish_assets' },
+            ...diffSteps.flatMap(s => s.needs),
+          ],
+          script: diffSteps.flatMap(s => s.commands),
+          variables: diffSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
-        needs: [
-          { job: 'synth', artifacts: true },
-          { job: 'publish_assets' },
-          ...diffSteps.flatMap(s => s.needs),
-        ],
-        script: diffSteps.flatMap(s => s.commands),
-        variables: diffSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       [`deploy-${stage.name}`]: {
         extends: ['.aws_base', '.artifacts_cdkdeploy', ...deploySteps.flatMap(s => s.extensions)],
@@ -251,7 +253,7 @@ awslogin() {
         needs: [
           { job: 'synth', artifacts: true },
           { job: 'publish_assets' },
-          { job: `diff-${stage.name}` },
+          ...(stage.diffType !== CdkDiffType.NONE) ? [{ job: `diff-${stage.name}` }] : [],
           ...deploySteps.flatMap(s => s.needs),
         ],
         script: deploySteps.flatMap(s => s.commands),
@@ -270,7 +272,7 @@ awslogin() {
     const steps = [
       this.provideInstallStep(),
       this.provideSynthStep(),
-      this.provideDiffStep(stage),
+      ...(stage.diffType !== CdkDiffType.NONE ? [this.provideDiffStep(stage, stage.diffType == CdkDiffType.FAST)] : []),
       this.provideDeployStep(stage),
     ].map(s => s.toGitlab());
 

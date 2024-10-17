@@ -1,7 +1,7 @@
 import { awscdk } from 'projen';
 import { GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model';
-import { CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage, NamedStageOptions } from './base';
+import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage, NamedStageOptions } from './base';
 import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
 import { PipelineStep, SimpleCommandStep } from '../steps';
@@ -299,7 +299,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       const steps = [
         this.provideInstallStep(),
         this.provideSynthStep(),
-        this.provideDiffStep(stage),
+        ...((stage.diffType !== CdkDiffType.NONE) ? [this.provideDiffStep(stage, stage.diffType === CdkDiffType.FAST)] : []),
         this.provideDeployStep(stage),
 
         new UploadArtifactStep(this.project, {
