@@ -1,5 +1,5 @@
 import { TextFile, awscdk } from 'projen';
-import { CDKPipeline, CDKPipelineOptions } from './base';
+import { CdkDiffType, CDKPipeline, CDKPipelineOptions } from './base';
 import { PipelineEngine } from '../engine';
 
 export interface BashCDKPipelineOptions extends CDKPipelineOptions {
@@ -46,8 +46,10 @@ export class BashCDKPipeline extends CDKPipeline {
     for (const stage of options.stages) {
       readme.addLine(`Stage: ${stage.name}`);
       readme.addLine('```bash');
-      readme.addLine(`${this.provideDiffStep(stage).toBash().commands.join('\n')}`);
-      readme.addLine('');
+      if (stage.diffType !== CdkDiffType.NONE) {
+        readme.addLine(`${this.provideDiffStep(stage, stage.diffType == CdkDiffType.FAST).toBash().commands.join('\n')}`);
+        readme.addLine('');
+      }
       readme.addLine(`${this.provideDeployStep(stage).toBash().commands.join('\n')}`);
       readme.addLine('```');
       readme.addLine('');

@@ -184,6 +184,8 @@ exports[`CodeCatalyst snapshot 2`] = `
     "diff:prod": "npx projen diff:prod",
     "eject": "npx projen eject",
     "eslint": "npx projen eslint",
+    "fastdiff:dev": "npx projen fastdiff:dev",
+    "fastdiff:prod": "npx projen fastdiff:prod",
     "package": "npx projen package",
     "post-compile": "npx projen post-compile",
     "post-upgrade": "npx projen post-upgrade",

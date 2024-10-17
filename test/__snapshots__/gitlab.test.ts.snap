@@ -88,7 +88,7 @@ diff-dev:
   script:
     - npx projen install:ci
     - "awslogin devRole "
-    - npx projen diff:dev
+    - npx projen fastdiff:dev
   variables:
     AWS_REGION: eu-central-1
 deploy-dev:
@@ -238,6 +238,8 @@ exports[`Gitlab snapshot 2`] = `
     "diff:prod": "npx projen diff:prod",
     "eject": "npx projen eject",
     "eslint": "npx projen eslint",
+    "fastdiff:dev": "npx projen fastdiff:dev",
+    "fastdiff:prod": "npx projen fastdiff:prod",
     "package": "npx projen package",
     "post-compile": "npx projen post-compile",
     "post-upgrade": "npx projen post-upgrade",
@@ -361,8 +363,6 @@ deploy-independent2:
     - npx projen install:ci
     - "awslogin synthRole "
     - npx projen build
-    - "awslogin deployRole "
-    - npx projen diff:independent2
     - "awslogin deployRole "
     - npx projen deploy:independent2
     - echo Post Deploy
