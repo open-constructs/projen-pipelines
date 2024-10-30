@@ -121,24 +121,6 @@ export class GitlabCDKPipeline extends CDKPipeline {
           CI: 'true',
           // NPM_REGISTRY: 'xxx'
         },
-        beforeScript: [
-          `check_variables_defined() {
-  for var in "$@"; do
-    if [ -z "$(eval "echo \\$$var")" ]; then
-      log_fatal "\${var} not defined";
-    fi
-  done
-}
-
-awslogin() {
-  roleArn=\${1: -\${AWS_ROLE_ARN}}
-  sessionName=\${2:-GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}
-  check_variables_defined roleArn AWS_TOKEN
-  export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn \${roleArn} --role-session-name "\${sessionName}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
-  # TODO CODE ARTIFACT
-}
-`,
-        ],
       },
     });
   }
