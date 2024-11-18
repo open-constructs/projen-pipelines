@@ -38,8 +38,6 @@
     "organization": true
   },
   "devDependencies": {
-    "@amazon-codecatalyst/blueprint-util.cli": "^0.3.154",
-    "@amazon-codecatalyst/blueprint-util.projen-blueprint": "^0.3.154",
     "@types/fs-extra": "^11.0.4",
     "@types/jest": "^27.5.2",
     "@types/node": "^18",
@@ -69,15 +67,9 @@
     "projen": ">=0.86.7 <1.0.0"
   },
   "dependencies": {
-    "@amazon-codecatalyst/blueprint-component.environments": "^0.3.154",
-    "@amazon-codecatalyst/blueprint-component.workflows": "^0.3.154",
-    "@amazon-codecatalyst/blueprints.blueprint": "^0.3.154",
     "standard-version": "^9.5.0"
   },
   "bundledDependencies": [
-    "@amazon-codecatalyst/blueprint-component.environments",
-    "@amazon-codecatalyst/blueprint-component.workflows",
-    "@amazon-codecatalyst/blueprints.blueprint",
     "standard-version"
   ],
   "keywords": [
