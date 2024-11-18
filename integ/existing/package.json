@@ -45,9 +45,6 @@
     "aws-cdk-lib": "^2.160.0",
     "constructs": "^10.0.5"
   },
-  "resolutions": {
-    "projen": "0.88.3"
-  },
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
