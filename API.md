@@ -2998,24 +2998,24 @@ Converts the sequence of steps into a GitLab CI configuration.
 ##### `addSteps` <a name="addSteps" id="projen-pipelines.CodeArtifactLoginStep.addSteps"></a>
 
 ```typescript
-public addSteps(steps: PipelineStep): void
+public addSteps(steps: ...PipelineStep[]): void
 ```
 
 ###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.CodeArtifactLoginStep.addSteps.parameter.steps"></a>
 
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
 ##### `prependSteps` <a name="prependSteps" id="projen-pipelines.CodeArtifactLoginStep.prependSteps"></a>
 
 ```typescript
-public prependSteps(steps: PipelineStep): void
+public prependSteps(steps: ...PipelineStep[]): void
 ```
 
 ###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.CodeArtifactLoginStep.prependSteps.parameter.steps"></a>
 
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
@@ -3516,24 +3516,24 @@ Converts the sequence of steps into a GitLab CI configuration.
 ##### `addSteps` <a name="addSteps" id="projen-pipelines.StepSequence.addSteps"></a>
 
 ```typescript
-public addSteps(steps: PipelineStep): void
+public addSteps(steps: ...PipelineStep[]): void
 ```
 
 ###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.StepSequence.addSteps.parameter.steps"></a>
 
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
 ##### `prependSteps` <a name="prependSteps" id="projen-pipelines.StepSequence.prependSteps"></a>
 
 ```typescript
-public prependSteps(steps: PipelineStep): void
+public prependSteps(steps: ...PipelineStep[]): void
 ```
 
 ###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.StepSequence.prependSteps.parameter.steps"></a>
 
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
