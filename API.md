@@ -390,251 +390,6 @@ public readonly stackPrefix: string;
 ---
 
 
-### CodeCatalystCDKPipeline <a name="CodeCatalystCDKPipeline" id="projen-pipelines.CodeCatalystCDKPipeline"></a>
-
-#### Initializers <a name="Initializers" id="projen-pipelines.CodeCatalystCDKPipeline.Initializer"></a>
-
-```typescript
-import { CodeCatalystCDKPipeline } from 'projen-pipelines'
-
-new CodeCatalystCDKPipeline(app: AwsCdkTypeScriptApp, options: CodeCatalystCDKPipelineOptions)
-```
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.Initializer.parameter.app">app</a></code> | <code>projen.awscdk.AwsCdkTypeScriptApp</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions">CodeCatalystCDKPipelineOptions</a></code> | *No description.* |
-
----
-
-##### `app`<sup>Required</sup> <a name="app" id="projen-pipelines.CodeCatalystCDKPipeline.Initializer.parameter.app"></a>
-
-- *Type:* projen.awscdk.AwsCdkTypeScriptApp
-
----
-
-##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.CodeCatalystCDKPipeline.Initializer.parameter.options"></a>
-
-- *Type:* <a href="#projen-pipelines.CodeCatalystCDKPipelineOptions">CodeCatalystCDKPipelineOptions</a>
-
----
-
-#### Methods <a name="Methods" id="Methods"></a>
-
-| **Name** | **Description** |
-| --- | --- |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.engineType">engineType</a></code> | the type of engine this implementation of CDKPipeline is for. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createAssetUpload">createAssetUpload</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createDeployment">createDeployment</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createEnvironments">createEnvironments</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.createIndependentDeployment">createIndependentDeployment</a></code> | *No description.* |
-
----
-
-##### `toString` <a name="toString" id="projen-pipelines.CodeCatalystCDKPipeline.toString"></a>
-
-```typescript
-public toString(): string
-```
-
-Returns a string representation of this construct.
-
-##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.CodeCatalystCDKPipeline.postSynthesize"></a>
-
-```typescript
-public postSynthesize(): void
-```
-
-Called after synthesis.
-
-Order is *not* guaranteed.
-
-##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.CodeCatalystCDKPipeline.preSynthesize"></a>
-
-```typescript
-public preSynthesize(): void
-```
-
-Called before synthesis.
-
-##### `synthesize` <a name="synthesize" id="projen-pipelines.CodeCatalystCDKPipeline.synthesize"></a>
-
-```typescript
-public synthesize(): void
-```
-
-Synthesizes files to the project output directory.
-
-##### `engineType` <a name="engineType" id="projen-pipelines.CodeCatalystCDKPipeline.engineType"></a>
-
-```typescript
-public engineType(): PipelineEngine
-```
-
-the type of engine this implementation of CDKPipeline is for.
-
-##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.CodeCatalystCDKPipeline.createAssetUpload"></a>
-
-```typescript
-public createAssetUpload(): void
-```
-
-##### `createDeployment` <a name="createDeployment" id="projen-pipelines.CodeCatalystCDKPipeline.createDeployment"></a>
-
-```typescript
-public createDeployment(stage: DeploymentStage): void
-```
-
-###### `stage`<sup>Required</sup> <a name="stage" id="projen-pipelines.CodeCatalystCDKPipeline.createDeployment.parameter.stage"></a>
-
-- *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>
-
----
-
-##### `createEnvironments` <a name="createEnvironments" id="projen-pipelines.CodeCatalystCDKPipeline.createEnvironments"></a>
-
-```typescript
-public createEnvironments(): void
-```
-
-##### `createIndependentDeployment` <a name="createIndependentDeployment" id="projen-pipelines.CodeCatalystCDKPipeline.createIndependentDeployment"></a>
-
-```typescript
-public createIndependentDeployment(stage: DeploymentStage): void
-```
-
-###### `stage`<sup>Required</sup> <a name="stage" id="projen-pipelines.CodeCatalystCDKPipeline.createIndependentDeployment.parameter.stage"></a>
-
-- *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>
-
----
-
-#### Static Functions <a name="Static Functions" id="Static Functions"></a>
-
-| **Name** | **Description** |
-| --- | --- |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
-
----
-
-##### `isConstruct` <a name="isConstruct" id="projen-pipelines.CodeCatalystCDKPipeline.isConstruct"></a>
-
-```typescript
-import { CodeCatalystCDKPipeline } from 'projen-pipelines'
-
-CodeCatalystCDKPipeline.isConstruct(x: any)
-```
-
-Checks if `x` is a construct.
-
-Use this method instead of `instanceof` to properly detect `Construct`
-instances, even when the construct library is symlinked.
-
-Explanation: in JavaScript, multiple copies of the `constructs` library on
-disk are seen as independent, completely different libraries. As a
-consequence, the class `Construct` in each copy of the `constructs` library
-is seen as a different class, and an instance of one class will not test as
-`instanceof` the other class. `npm install` will not create installations
-like this, but users may manually symlink construct libraries together or
-use a monorepo tool: in those cases, multiple copies of the `constructs`
-library can be accidentally installed, and `instanceof` will behave
-unpredictably. It is safest to avoid using `instanceof`, and using
-this type-testing method instead.
-
-###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.CodeCatalystCDKPipeline.isConstruct.parameter.x"></a>
-
-- *Type:* any
-
-Any object.
-
----
-
-##### `isComponent` <a name="isComponent" id="projen-pipelines.CodeCatalystCDKPipeline.isComponent"></a>
-
-```typescript
-import { CodeCatalystCDKPipeline } from 'projen-pipelines'
-
-CodeCatalystCDKPipeline.isComponent(x: any)
-```
-
-Test whether the given construct is a component.
-
-###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.CodeCatalystCDKPipeline.isComponent.parameter.x"></a>
-
-- *Type:* any
-
----
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipeline.property.needsVersionedArtifacts">needsVersionedArtifacts</a></code> | <code>boolean</code> | *No description.* |
-
----
-
-##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.CodeCatalystCDKPipeline.property.node"></a>
-
-```typescript
-public readonly node: Node;
-```
-
-- *Type:* constructs.Node
-
-The tree node.
-
----
-
-##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.CodeCatalystCDKPipeline.property.project"></a>
-
-```typescript
-public readonly project: Project;
-```
-
-- *Type:* projen.Project
-
----
-
-##### `branchName`<sup>Required</sup> <a name="branchName" id="projen-pipelines.CodeCatalystCDKPipeline.property.branchName"></a>
-
-```typescript
-public readonly branchName: string;
-```
-
-- *Type:* string
-
----
-
-##### `stackPrefix`<sup>Required</sup> <a name="stackPrefix" id="projen-pipelines.CodeCatalystCDKPipeline.property.stackPrefix"></a>
-
-```typescript
-public readonly stackPrefix: string;
-```
-
-- *Type:* string
-
----
-
-##### `needsVersionedArtifacts`<sup>Required</sup> <a name="needsVersionedArtifacts" id="projen-pipelines.CodeCatalystCDKPipeline.property.needsVersionedArtifacts"></a>
-
-```typescript
-public readonly needsVersionedArtifacts: boolean;
-```
-
-- *Type:* boolean
-
----
-
-
 ### GithubCDKPipeline <a name="GithubCDKPipeline" id="projen-pipelines.GithubCDKPipeline"></a>
 
 Implements a CDK Pipeline configured specifically for GitHub workflows.
@@ -1724,214 +1479,6 @@ public readonly role: string;
 ```
 
 - *Type:* string
-
----
-
-### CodeCatalystCDKPipelineOptions <a name="CodeCatalystCDKPipelineOptions" id="projen-pipelines.CodeCatalystCDKPipelineOptions"></a>
-
-#### Initializer <a name="Initializer" id="projen-pipelines.CodeCatalystCDKPipelineOptions.Initializer"></a>
-
-```typescript
-import { CodeCatalystCDKPipelineOptions } from 'projen-pipelines'
-
-const codeCatalystCDKPipelineOptions: CodeCatalystCDKPipelineOptions = { ... }
-```
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preInstallCommands">preInstallCommands</a></code> | <code>string[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.CodeCatalystCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
-
----
-
-##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.iamRoleArns"></a>
-
-```typescript
-public readonly iamRoleArns: IamRoleConfig;
-```
-
-- *Type:* <a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a>
-
-IAM config.
-
----
-
-##### `pkgNamespace`<sup>Required</sup> <a name="pkgNamespace" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.pkgNamespace"></a>
-
-```typescript
-public readonly pkgNamespace: string;
-```
-
-- *Type:* string
-
-This field determines the NPM namespace to be used when packaging CDK cloud assemblies.
-
-A namespace helps group related resources together, providing
-better organization and ease of management.
-
----
-
-##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.stages"></a>
-
-```typescript
-public readonly stages: DeploymentStage[];
-```
-
-- *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]
-
-This field specifies a list of stages that should be deployed using a CI/CD pipeline.
-
----
-
-##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.branchName"></a>
-
-```typescript
-public readonly branchName: string;
-```
-
-- *Type:* string
-- *Default:* main
-
-the name of the branch to deploy from.
-
----
-
-##### `deploySubStacks`<sup>Optional</sup> <a name="deploySubStacks" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.deploySubStacks"></a>
-
-```typescript
-public readonly deploySubStacks: boolean;
-```
-
-- *Type:* boolean
-- *Default:* false
-
-If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack.
-
-You can use this to deploy CDk applications containing multiple stacks.
-
----
-
-##### `featureStages`<sup>Optional</sup> <a name="featureStages" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.featureStages"></a>
-
-```typescript
-public readonly featureStages: StageOptions;
-```
-
-- *Type:* <a href="#projen-pipelines.StageOptions">StageOptions</a>
-
-This specifies details for feature stages.
-
----
-
-##### `independentStages`<sup>Optional</sup> <a name="independentStages" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.independentStages"></a>
-
-```typescript
-public readonly independentStages: IndependentStage[];
-```
-
-- *Type:* <a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]
-
-This specifies details for independent stages.
-
----
-
-##### `personalStage`<sup>Optional</sup> <a name="personalStage" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.personalStage"></a>
-
-```typescript
-public readonly personalStage: StageOptions;
-```
-
-- *Type:* <a href="#projen-pipelines.StageOptions">StageOptions</a>
-
-This specifies details for a personal stage.
-
----
-
-##### `postSynthCommands`<sup>Optional</sup> <a name="postSynthCommands" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.postSynthCommands"></a>
-
-```typescript
-public readonly postSynthCommands: string[];
-```
-
-- *Type:* string[]
-
----
-
-##### `postSynthSteps`<sup>Optional</sup> <a name="postSynthSteps" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.postSynthSteps"></a>
-
-```typescript
-public readonly postSynthSteps: PipelineStep[];
-```
-
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
-
----
-
-##### `preInstallCommands`<sup>Optional</sup> <a name="preInstallCommands" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.preInstallCommands"></a>
-
-```typescript
-public readonly preInstallCommands: string[];
-```
-
-- *Type:* string[]
-
----
-
-##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.preInstallSteps"></a>
-
-```typescript
-public readonly preInstallSteps: PipelineStep[];
-```
-
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
-
----
-
-##### `preSynthCommands`<sup>Optional</sup> <a name="preSynthCommands" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthCommands"></a>
-
-```typescript
-public readonly preSynthCommands: string[];
-```
-
-- *Type:* string[]
-
----
-
-##### `preSynthSteps`<sup>Optional</sup> <a name="preSynthSteps" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.preSynthSteps"></a>
-
-```typescript
-public readonly preSynthSteps: PipelineStep[];
-```
-
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
-
----
-
-##### `stackPrefix`<sup>Optional</sup> <a name="stackPrefix" id="projen-pipelines.CodeCatalystCDKPipelineOptions.property.stackPrefix"></a>
-
-```typescript
-public readonly stackPrefix: string;
-```
-
-- *Type:* string
-- *Default:* project name
-
-This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation.
 
 ---
 
@@ -3451,24 +2998,24 @@ Converts the sequence of steps into a GitLab CI configuration.
 ##### `addSteps` <a name="addSteps" id="projen-pipelines.CodeArtifactLoginStep.addSteps"></a>
 
 ```typescript
-public addSteps(steps: PipelineStep): void
+public addSteps(steps: ...PipelineStep[]): void
 ```
 
 ###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.CodeArtifactLoginStep.addSteps.parameter.steps"></a>
 
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
 ##### `prependSteps` <a name="prependSteps" id="projen-pipelines.CodeArtifactLoginStep.prependSteps"></a>
 
 ```typescript
-public prependSteps(steps: PipelineStep): void
+public prependSteps(steps: ...PipelineStep[]): void
 ```
 
 ###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.CodeArtifactLoginStep.prependSteps.parameter.steps"></a>
 
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
@@ -3969,24 +3516,24 @@ Converts the sequence of steps into a GitLab CI configuration.
 ##### `addSteps` <a name="addSteps" id="projen-pipelines.StepSequence.addSteps"></a>
 
 ```typescript
-public addSteps(steps: PipelineStep): void
+public addSteps(steps: ...PipelineStep[]): void
 ```
 
 ###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.StepSequence.addSteps.parameter.steps"></a>
 
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 
 ##### `prependSteps` <a name="prependSteps" id="projen-pipelines.StepSequence.prependSteps"></a>
 
 ```typescript
-public prependSteps(steps: PipelineStep): void
+public prependSteps(steps: ...PipelineStep[]): void
 ```
 
 ###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.StepSequence.prependSteps.parameter.steps"></a>
 
-- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
 

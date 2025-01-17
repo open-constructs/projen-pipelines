@@ -13,6 +13,6 @@ const project = new awscdk.AwsCdkTypeScriptApp({
 project.gitignore.addPatterns('yarn.lock', 'package-lock.json');
 
 // This needs to go away after fixing yarn
-project.package.addPackageResolutions('projen@0.88.3');
+// project.package.addPackageResolutions('projen@0.88.3');
 
 project.synth();

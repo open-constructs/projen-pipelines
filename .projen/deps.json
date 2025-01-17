@@ -1,14 +1,6 @@
 {
   "dependencies": [
     {
-      "name": "@amazon-codecatalyst/blueprint-util.cli",
-      "type": "build"
-    },
-    {
-      "name": "@amazon-codecatalyst/blueprint-util.projen-blueprint",
-      "type": "build"
-    },
-    {
       "name": "@types/fs-extra",
       "type": "build"
     },
@@ -111,23 +103,12 @@
       "type": "build"
     },
     {
-      "name": "@amazon-codecatalyst/blueprint-component.environments",
-      "type": "bundled"
-    },
-    {
-      "name": "@amazon-codecatalyst/blueprint-component.workflows",
-      "type": "bundled"
-    },
-    {
-      "name": "@amazon-codecatalyst/blueprints.blueprint",
-      "type": "bundled"
-    },
-    {
       "name": "standard-version",
       "type": "bundled"
     },
     {
       "name": "constructs",
+      "version": "^10.4.2",
       "type": "peer"
     },
     {
