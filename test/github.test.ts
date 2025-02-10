@@ -125,7 +125,6 @@ test('Github snapshot with multi stack', () => {
   expect(snapshot['.projen/tasks.json']).toMatchSnapshot();
 });
 
-
 test('Github snapshot with custom runner', () => {
   const p = new AwsCdkTypeScriptApp({
     cdkVersion: '2.132.0',
@@ -272,4 +271,143 @@ test('Github snapshot with independent stage', () => {
   const snapshot = synthSnapshot(p);
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
   expect(snapshot['.github/workflows/deploy-independent1.yml']).toMatchSnapshot();
+});
+
+test('Github snapshot with empty prefix for stages', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  class TestStep extends PipelineStep {
+    public toGithub(): GithubStepConfig {
+      return {
+        env: {
+          TEST: 'me',
+        },
+        needs: [],
+        steps: [{
+          run: 'echo Post Deploy',
+        }],
+      };
+    }
+  }
+
+  new GithubCDKPipeline(p, {
+    stackPrefix: '', // Testing an empty prefix
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        stage1: 'deployRole1',
+        stage2: 'deployRole2',
+      },
+    },
+    pkgNamespace: '@assembly',
+    stages: [{
+      name: 'stage1',
+      env: {
+        account: '123456789012',
+        region: 'eu-west-2',
+      },
+      postDeploySteps: [],
+    }, {
+      name: 'stage2',
+      env: {
+        account: '123456789012',
+        region: 'us-central-2',
+      },
+      postDeploySteps: [new TestStep(p)],
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deploySnapshot = snapshot['.github/workflows/deploy.yml'];
+  const deployStage1Snapshot = snapshot['.github/workflows/deploy-independent1.yml'];
+  const deployStage2Snapshot = snapshot['.github/workflows/deploy-independent2.yml'];
+  const appTsSnapshot = snapshot['src/app.ts'];
+
+  expect(deploySnapshot).toMatchSnapshot();
+  expect(deployStage1Snapshot).toMatchSnapshot();
+  expect(deployStage2Snapshot).toMatchSnapshot();
+
+  // Check that the app.ts file contains the correct stack names and stage names
+  // The stack name and stack identifier should match the stage name
+  expect(appTsSnapshot).toMatchSnapshot();
+  expect(appTsSnapshot.includes('this, \'stage1\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('this, \'stage2\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('stackName: \'stage1\', stageName: \'stage1\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('stackName: \'stage2\', stageName: \'stage2\'')).toBeTruthy();
+
+
+});
+
+test('Github snapshot with empty prefix for independent stages', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  class TestStep extends PipelineStep {
+    public toGithub(): GithubStepConfig {
+      return {
+        env: {
+          TEST: 'me',
+        },
+        needs: [],
+        steps: [{
+          run: 'echo Post Deploy',
+        }],
+      };
+    }
+  }
+
+  new GithubCDKPipeline(p, {
+    stackPrefix: '', // Testing an empty prefix
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        independent1: 'deployRole',
+      },
+    },
+    pkgNamespace: '@assembly',
+    stages: [],
+    independentStages: [{
+      name: 'independent1',
+      env: {
+        account: '123456789012',
+        region: 'eu-west-2',
+      },
+      postDeploySteps: [new TestStep(p)],
+    }, {
+      name: 'independent2',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-2',
+      },
+      postDeploySteps: [new TestStep(p)],
+      deployOnPush: true,
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deploySnapshot = snapshot['.github/workflows/deploy.yml'];
+  const deployIndependent1Snapshot = snapshot['.github/workflows/deploy-independent1.yml'];
+  const deployIndependent2Snapshot = snapshot['.github/workflows/deploy-independent2.yml'];
+  const appTsSnapshot = snapshot['src/app.ts'];
+
+  expect(deploySnapshot).toMatchSnapshot();
+  expect(deployIndependent1Snapshot).toMatchSnapshot();
+  expect(deployIndependent2Snapshot).toMatchSnapshot();
+
+  // Check that the app.ts file contains the correct stack names and stage names
+  // The stack name and stack identifier should match the stage name
+  expect(appTsSnapshot).toMatchSnapshot();
+  expect(appTsSnapshot.includes('this, \'independent1\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('this, \'independent2\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('stackName: \'independent1\', stageName: \'independent1\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('stackName: \'independent2\', stageName: \'independent2\'')).toBeTruthy();
 });
