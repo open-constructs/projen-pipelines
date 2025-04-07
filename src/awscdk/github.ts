@@ -51,6 +51,7 @@ export class GithubCDKPipeline extends CDKPipeline {
   private deploymentStages: string[] = [];
 
   protected useGithubPackages: boolean;
+  protected minNodeVersion: string | undefined;
 
   /**
    * Constructs a new GithubCDKPipeline instance.
@@ -80,6 +81,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     // Determine if versioned artifacts are necessary.
     this.needsVersionedArtifacts = options.stages.find(s => s.manualApproval === true) !== undefined;;
     this.useGithubPackages = this.needsVersionedArtifacts && (options.useGithubPackagesForAssembly ?? false);
+    this.minNodeVersion = app.minNodeVersion;
 
     if (this.useGithubPackages) {
       app.npmrc.addRegistry('https://npm.pkg.github.com', this.baseOptions.pkgNamespace);
@@ -131,6 +133,11 @@ export class GithubCDKPipeline extends CDKPipeline {
       permissions: mergeJobPermissions({
         contents: JobPermission.READ,
       }, ...(githubSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+      tools: {
+        node: {
+          version: this.minNodeVersion ?? '20',
+        },
+      },
       steps: [
         {
           name: 'Checkout',
@@ -177,6 +184,11 @@ export class GithubCDKPipeline extends CDKPipeline {
           packages: JobPermission.WRITE,
         },
       }, ...(ghSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+      tools: {
+        node: {
+          version: this.minNodeVersion ?? '20',
+        },
+      },
       steps: [
         {
           name: 'Checkout',
@@ -234,6 +246,11 @@ export class GithubCDKPipeline extends CDKPipeline {
         permissions: mergeJobPermissions({
           contents: JobPermission.READ,
         }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+        tools: {
+          node: {
+            version: this.minNodeVersion ?? '20',
+          },
+        },
         steps: [
           {
             name: 'Checkout',
@@ -278,6 +295,11 @@ export class GithubCDKPipeline extends CDKPipeline {
       permissions: mergeJobPermissions({
         contents: JobPermission.READ,
       }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+      tools: {
+        node: {
+          version: this.minNodeVersion ?? '20',
+        },
+      },
       steps: [
         {
           name: 'Checkout',
@@ -324,6 +346,11 @@ export class GithubCDKPipeline extends CDKPipeline {
         permissions: mergeJobPermissions({
           contents: JobPermission.READ,
         }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+        tools: {
+          node: {
+            version: this.minNodeVersion ?? '20',
+          },
+        },
         steps: [
           {
             name: 'Checkout',

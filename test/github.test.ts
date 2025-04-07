@@ -147,6 +147,27 @@ test('Github snapshot with custom runner', () => {
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
 });
 
+test('Github snapshot with custom node version', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+    minNodeVersion: '22.0.0',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+    },
+    pkgNamespace: '@assembly',
+    stages: [],
+  });
+
+  const snapshot = synthSnapshot(p);
+  expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
+});
+
 test('Github snapshot with manual approval and GH packages', () => {
   const p = new AwsCdkTypeScriptApp({
     cdkVersion: '2.132.0',
