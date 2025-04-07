@@ -239,6 +239,10 @@ export class GithubCDKPipeline extends CDKPipeline {
         ...this.options.useGithubEnvironments && {
           environment: stage.name,
         },
+        concurrency: {
+          group: `deploy-${stage.name}`,
+          cancelInProgress: false,
+        },
         env: {
           CI: 'true',
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
@@ -285,6 +289,10 @@ export class GithubCDKPipeline extends CDKPipeline {
       name: `Deploy stage ${stage.name} to AWS`,
       ...this.options.useGithubEnvironments && {
         environment: stage.name,
+      },
+      concurrency: {
+        group: `deploy-${stage.name}`,
+        cancelInProgress: false,
       },
       needs: ['assetUpload', ...steps.flatMap(s => s.needs), ...jobDependencies],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
@@ -339,6 +347,10 @@ export class GithubCDKPipeline extends CDKPipeline {
         name: `Release stage ${stage.name} to AWS`,
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+        concurrency: {
+          group: `deploy-${stage.name}`,
+          cancelInProgress: false,
+        },
         env: {
           CI: 'true',
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
