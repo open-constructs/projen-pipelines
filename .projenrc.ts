@@ -14,7 +14,7 @@ const project = new cdk.JsiiProject({
   repositoryUrl: 'https://github.com/open-constructs/projen-pipelines.git',
   licensed: true,
   license: 'Apache-2.0',
-  jsiiVersion: '~5.4',
+  jsiiVersion: '~5.8',
   devDeps: [
     'constructs',
     'fs-extra',
@@ -25,7 +25,7 @@ const project = new cdk.JsiiProject({
     'standard-version',
   ],
   peerDeps: [
-    'projen@>=0.86.7 <1.0.0',
+    'projen@>=0.91.20 <1.0.0',
     'constructs@^10.4.2',
   ],
   autoApproveUpgrades: true,
