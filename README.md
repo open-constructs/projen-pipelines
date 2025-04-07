@@ -58,7 +58,25 @@ To install the package, add the package `projen-pipelines` to your projects devD
 
 After installing the package, you can import and use the constructs to define your CDK Pipelines.
 
-You will also have to setup an IAM role that can be used by GitHub Actions. You can find a tutorial on how set this up here: [Configuring OpenID Connect in Amazon Web Services](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services)
+You will also have to setup an IAM role that can be used by GitHub Actions. For example, create a role named `GithubDeploymentRole` in your deployment account (`123456789012`) with a policy like this to assume the CDK roles of the pipeline stages (AWS account IDs `123456789013` and `123456789014`):
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Action": "sts:AssumeRole",
+            "Resource": [
+                "arn:aws:iam::123456789013:role/cdk-*-123456789013-*",
+                "arn:aws:iam::123456789014:role/cdk-*-123456789014-*"
+            ]
+        }
+    ]
+}
+```
+
+Add a trust policy to this role as described in this tutorial: [Configuring OpenID Connect in Amazon Web Services](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services)
 
 ### Usage with AWS CDK
 
@@ -89,11 +107,11 @@ new GithubCDKPipeline(app, {
   stages: [
     {
       name: 'dev',
-      env: { account: '123456789012', region: 'eu-central-1' },
+      env: { account: '123456789013', region: 'eu-central-1' },
     }, {
       name: 'prod',
       manualApproval: true,
-      env: {account: '123456789012', region: 'eu-central-1' },
+      env: { account: '123456789014', region: 'eu-central-1' },
     }],
 });
 ```
