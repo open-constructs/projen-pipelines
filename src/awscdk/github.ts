@@ -79,7 +79,10 @@ export class GithubCDKPipeline extends CDKPipeline {
     });
 
     // Determine if versioned artifacts are necessary.
-    this.needsVersionedArtifacts = options.stages.find(s => s.manualApproval === true) !== undefined;;
+    this.needsVersionedArtifacts = options.stages.find(s => s.manualApproval === true) !== undefined;
+    if (this.needsVersionedArtifacts && !options.pkgNamespace) {
+      throw new Error('pkgNamespace is required when using versioned artifacts (e.g. manual approvals)');
+    }
     this.useGithubPackages = this.needsVersionedArtifacts && (options.useGithubPackagesForAssembly ?? false);
     this.minNodeVersion = app.minNodeVersion;
 

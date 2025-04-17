@@ -21,7 +21,6 @@ test('Gitlab snapshot', () => {
         prod: 'prodRole',
       },
     },
-    pkgNamespace: '@assembly',
     stages: [{
       name: 'dev',
       diffType: CdkDiffType.FAST,
@@ -73,7 +72,6 @@ test('Gitlab snapshot with runner tags', () => {
         prod: ['prodTag'],
       },
     },
-    pkgNamespace: '@assembly',
     stages: [{
       name: 'dev',
       env: {
@@ -114,7 +112,6 @@ test('Gitlab snapshot with runner default tags', () => {
     runnerTags: {
       default: ['defaultTag'],
     },
-    pkgNamespace: '@assembly',
     stages: [{
       name: 'dev',
       env: {
@@ -162,7 +159,6 @@ test('Gitlab snapshot with preInstallStep', () => {
       assetPublishing: 'publishRole',
     },
     preInstallSteps: [new TestStep(p)],
-    pkgNamespace: '@assembly',
     stages: [{
       name: 'prod',
       env: {
@@ -208,7 +204,6 @@ test('Gitlab snapshot with independent stage', () => {
         independent2: 'deployRole',
       },
     },
-    pkgNamespace: '@assembly',
     stages: [],
     independentStages: [{
       name: 'independent1',

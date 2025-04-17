@@ -35,7 +35,9 @@ export class BashCDKPipeline extends CDKPipeline {
     readme.addLine('```bash');
     readme.addLine(`${this.provideInstallStep().toBash().commands.join('\n')}`);
     readme.addLine(`${this.provideAssetUploadStep().toBash().commands.join('\n')}`);
-    readme.addLine(`${this.provideAssemblyUploadStep().toBash().commands.join('\n')}`);
+    if (this.baseOptions.pkgNamespace) {
+      readme.addLine(`${this.provideAssemblyUploadStep().toBash().commands.join('\n')}`);
+    }
     readme.addLine('```');
     readme.addLine('');
     readme.addLine('## Deployment phase');
