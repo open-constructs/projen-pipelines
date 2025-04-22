@@ -85,6 +85,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-my-dev
+      cancelInProgress: false
     env:
       CI: "true"
     steps:
@@ -184,6 +187,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-prod
+      cancelInProgress: false
     env:
       CI: "true"
     steps:
@@ -861,6 +867,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-independent2
+      cancelInProgress: false
     env:
       CI: "true"
       TEST: me
@@ -905,6 +914,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-independent1
+      cancelInProgress: false
     env:
       CI: "true"
       TEST: me
@@ -1075,6 +1087,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-stage1
+      cancelInProgress: false
     env:
       CI: "true"
     steps:
@@ -1110,6 +1125,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-stage2
+      cancelInProgress: false
     env:
       CI: "true"
       TEST: me
@@ -1276,6 +1294,9 @@ jobs:
       contents: read
       id-token: write
     environment: my-dev
+    concurrency:
+      group: deploy-my-dev
+      cancelInProgress: false
     env:
       CI: "true"
     steps:
@@ -1310,6 +1331,9 @@ jobs:
       contents: read
       id-token: write
     environment: independent
+    concurrency:
+      group: deploy-independent
+      cancelInProgress: false
     env:
       CI: "true"
     steps:
@@ -1358,6 +1382,9 @@ jobs:
       contents: read
       id-token: write
     environment: prod
+    concurrency:
+      group: deploy-prod
+      cancelInProgress: false
     env:
       CI: "true"
     steps:
@@ -1460,6 +1487,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-independent2
+      cancelInProgress: false
     env:
       CI: "true"
       FOO: bar
@@ -1504,6 +1534,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-independent1
+      cancelInProgress: false
     env:
       CI: "true"
       FOO: bar
@@ -1650,6 +1683,9 @@ jobs:
       contents: read
       packages: read
       id-token: write
+    concurrency:
+      group: deploy-prod
+      cancelInProgress: false
     env:
       CI: "true"
     steps:
@@ -1752,6 +1788,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-dev
+      cancelInProgress: false
     env:
       CI: "true"
     steps:
@@ -2149,6 +2188,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: deploy-prod
+      cancelInProgress: false
     env:
       CI: "true"
       FOO: bar
