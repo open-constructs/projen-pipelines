@@ -109,7 +109,6 @@ test('Github snapshot with multi stack', () => {
         prod: 'prodRole',
       },
     },
-    pkgNamespace: '@assembly',
     deploySubStacks: true,
     stages: [{
       name: 'dev',
@@ -137,7 +136,6 @@ test('Github snapshot with custom runner', () => {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
     },
-    pkgNamespace: '@assembly',
     deploySubStacks: true,
     stages: [],
     runnerTags: ['custom-runner'],
@@ -160,7 +158,6 @@ test('Github snapshot with custom node version', () => {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
     },
-    pkgNamespace: '@assembly',
     stages: [],
   });
 
@@ -225,7 +222,6 @@ test('Github snapshot with preInstallStep', () => {
       assetPublishing: 'publishRole',
     },
     preInstallSteps: [new TestStep(p)],
-    pkgNamespace: '@assembly',
     stages: [{
       name: 'prod',
       env: {
@@ -269,7 +265,6 @@ test('Github snapshot with independent stage', () => {
         independent1: 'deployRole',
       },
     },
-    pkgNamespace: '@assembly',
     stages: [],
     independentStages: [{
       name: 'independent1',
@@ -325,7 +320,6 @@ test('Github snapshot with empty prefix for stages', () => {
         stage2: 'deployRole2',
       },
     },
-    pkgNamespace: '@assembly',
     stages: [{
       name: 'stage1',
       env: {
@@ -394,7 +388,6 @@ test('Github snapshot with empty prefix for independent stages', () => {
         independent1: 'deployRole',
       },
     },
-    pkgNamespace: '@assembly',
     stages: [],
     independentStages: [{
       name: 'independent1',
@@ -431,4 +424,28 @@ test('Github snapshot with empty prefix for independent stages', () => {
   expect(appTsSnapshot.includes('this, \'independent2\'')).toBeTruthy();
   expect(appTsSnapshot.includes('stackName: \'independent1\', stageName: \'independent1\'')).toBeTruthy();
   expect(appTsSnapshot.includes('stackName: \'independent2\', stageName: \'independent2\'')).toBeTruthy();
+});
+
+test('Github snapshot with manual approval and no pkgNamespace', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  expect(() => new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+    },
+    pkgNamespace: undefined,
+    stages: [{
+      name: 'prod',
+      manualApproval: true,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  })).toThrow('pkgNamespace is required when using versioned artifacts (e.g. manual approvals)');
 });
