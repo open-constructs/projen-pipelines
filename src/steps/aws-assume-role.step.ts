@@ -25,12 +25,13 @@ export class AwsAssumeRoleStep extends PipelineStep {
   }
 
   public toGitlab(): GitlabStepConfig {
+    const sessionName = this.config.sessionName ?? 'GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}';
     return {
       env: {
         ...this.config.region ? { AWS_REGION: this.config.region } : {},
       },
       commands: [
-        `awslogin ${this.config.roleArn} ${this.config.sessionName ?? ''}`,
+        `export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "${this.config.roleArn}" --role-session-name "${sessionName}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))`,
       ],
       extensions: [],
       needs: [],
