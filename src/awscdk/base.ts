@@ -134,8 +134,12 @@ export interface CDKPipelineOptions {
    * This field determines the NPM namespace to be used when packaging CDK cloud
    * assemblies. A namespace helps group related resources together, providing
    * better organization and ease of management.
+   *
+   * This is only needed if you need to version and upload the cloud assembly to a package repository.
+   *
+   * @default -
    */
-  readonly pkgNamespace: string;
+  readonly pkgNamespace?: string;
 
   /** IAM config */
   readonly iamRoleArns: IamRoleConfig;
@@ -294,6 +298,9 @@ export abstract class CDKPipeline extends Component {
   }
 
   protected provideAssemblyUploadStep(): PipelineStep {
+    if (!this.baseOptions.pkgNamespace) {
+      throw new Error('pkgNamespace is required when using versioned artifacts (e.g. manual approvals)');
+    }
     return new StepSequence(this.project, [
       new ProjenScriptStep(this.project, 'bump'),
       new ProjenScriptStep(this.project, 'release:push-assembly'),
@@ -480,32 +487,35 @@ ${appCode}
       })),
     });
 
-    this.project.addTask('bump', {
-      description: 'Bumps version based on latest git tag',
-      steps: [
-        {
-          exec: 'pipelines-release bump',
-        },
-        {
-          exec: 'git push --tags',
-        },
-      ],
-    });
-    this.project.addTask('release:push-assembly', {
-      steps: [
-        {
-          exec: `pipelines-release create-manifest "${this.app.cdkConfig.cdkout}"  "${this.baseOptions.pkgNamespace}"`,
-        },
-        {
-          cwd: this.app.cdkConfig.cdkout,
-          exec: 'npm version --no-git-tag-version from-git',
-        },
-        {
-          cwd: this.app.cdkConfig.cdkout,
-          exec: 'npm publish',
-        },
-      ],
-    });
+    if (this.baseOptions.pkgNamespace) {
+      this.project.addTask('bump', {
+        description: 'Bumps version based on latest git tag',
+        steps: [
+          {
+            exec: 'pipelines-release bump',
+          },
+          {
+            exec: 'git push --tags',
+          },
+        ],
+      });
+      this.project.addTask('release:push-assembly', {
+        steps: [
+          {
+            exec: `pipelines-release create-manifest "${this.app.cdkConfig.cdkout}"  "${this.baseOptions.pkgNamespace}"`,
+          },
+          {
+            cwd: this.app.cdkConfig.cdkout,
+            exec: 'npm version --no-git-tag-version from-git',
+          },
+          {
+            cwd: this.app.cdkConfig.cdkout,
+            exec: 'npm publish',
+          },
+        ],
+      });
+    }
+
   }
 
   /**

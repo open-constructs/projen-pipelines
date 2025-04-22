@@ -1847,18 +1847,6 @@ exports[`Github snapshot with multi stack 2`] = `
         },
       ],
     },
-    "bump": {
-      "description": "Bumps version based on latest git tag",
-      "name": "bump",
-      "steps": [
-        {
-          "exec": "pipelines-release bump",
-        },
-        {
-          "exec": "git push --tags",
-        },
-      ],
-    },
     "bundle": {
       "description": "Prepare assets",
       "name": "bundle",
@@ -2006,22 +1994,6 @@ exports[`Github snapshot with multi stack 2`] = `
       "steps": [
         {
           "exec": "npx cdk-assets -p cdk.out/testapp-dev.assets.json publish",
-        },
-      ],
-    },
-    "release:push-assembly": {
-      "name": "release:push-assembly",
-      "steps": [
-        {
-          "exec": "pipelines-release create-manifest "cdk.out"  "@assembly"",
-        },
-        {
-          "cwd": "cdk.out",
-          "exec": "npm version --no-git-tag-version from-git",
-        },
-        {
-          "cwd": "cdk.out",
-          "exec": "npm publish",
         },
       ],
     },

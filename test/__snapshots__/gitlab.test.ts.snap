@@ -210,7 +210,6 @@ exports[`Gitlab snapshot 2`] = `
   },
   "scripts": {
     "build": "npx projen build",
-    "bump": "npx projen bump",
     "bundle": "npx projen bundle",
     "clobber": "npx projen clobber",
     "compile": "npx projen compile",
@@ -231,7 +230,6 @@ exports[`Gitlab snapshot 2`] = `
     "publish:assets": "npx projen publish:assets",
     "publish:assets:dev": "npx projen publish:assets:dev",
     "publish:assets:prod": "npx projen publish:assets:prod",
-    "release:push-assembly": "npx projen release:push-assembly",
     "synth": "npx projen synth",
     "synth:silent": "npx projen synth:silent",
     "test": "npx projen test",
