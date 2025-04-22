@@ -32,23 +32,6 @@ stages:
       aud: https://sts.amazonaws.com
   variables:
     CI: "true"
-  before_script:
-    - |
-      check_variables_defined() {
-        for var in "$@"; do
-          if [ -z "$(eval "echo \\$$var")" ]; then
-            log_fatal "\${var} not defined";
-          fi
-        done
-      }
-
-      awslogin() {
-        roleArn=\${1: -\${AWS_ROLE_ARN}}
-        sessionName=\${2:-GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}
-        check_variables_defined roleArn AWS_TOKEN
-        export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn \${roleArn} --role-session-name "\${sessionName}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
-        # TODO CODE ARTIFACT
-      }
 synth:
   extends:
     - .aws_base
@@ -57,7 +40,7 @@ synth:
   stage: synth
   script:
     - npx projen install:ci
-    - "awslogin synthRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
   variables: {}
 publish_assets:
@@ -69,9 +52,9 @@ publish_assets:
       artifacts: true
   script:
     - npx projen install:ci
-    - "awslogin publishRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "publishRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen publish:assets:dev
-    - "awslogin prodPublishRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodPublishRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen publish:assets:prod
   variables: {}
 diff-dev:
@@ -87,7 +70,7 @@ diff-dev:
     - job: publish_assets
   script:
     - npx projen install:ci
-    - "awslogin devRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen fastdiff:dev
   variables:
     AWS_REGION: eu-central-1
@@ -106,7 +89,7 @@ deploy-dev:
     - job: diff-dev
   script:
     - npx projen install:ci
-    - "awslogin devRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:dev
   variables:
     AWS_REGION: eu-central-1
@@ -123,7 +106,7 @@ diff-prod:
     - job: publish_assets
   script:
     - npx projen install:ci
-    - "awslogin prodRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen diff:prod
   variables:
     AWS_REGION: eu-central-1
@@ -143,7 +126,7 @@ deploy-prod:
     - job: diff-prod
   script:
     - npx projen install:ci
-    - "awslogin prodRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:prod
   variables:
     AWS_REGION: eu-central-1
@@ -292,23 +275,6 @@ stages:
       aud: https://sts.amazonaws.com
   variables:
     CI: "true"
-  before_script:
-    - |
-      check_variables_defined() {
-        for var in "$@"; do
-          if [ -z "$(eval "echo \\$$var")" ]; then
-            log_fatal "\${var} not defined";
-          fi
-        done
-      }
-
-      awslogin() {
-        roleArn=\${1: -\${AWS_ROLE_ARN}}
-        sessionName=\${2:-GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}
-        check_variables_defined roleArn AWS_TOKEN
-        export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn \${roleArn} --role-session-name "\${sessionName}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
-        # TODO CODE ARTIFACT
-      }
 synth:
   extends:
     - .aws_base
@@ -317,7 +283,7 @@ synth:
   stage: synth
   script:
     - npx projen install:ci
-    - "awslogin synthRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
   variables: {}
 publish_assets:
@@ -329,7 +295,7 @@ publish_assets:
       artifacts: true
   script:
     - npx projen install:ci
-    - "awslogin publishRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "publishRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen publish:assets
   variables: {}
 deploy-independent1:
@@ -341,11 +307,11 @@ deploy-independent1:
   needs: []
   script:
     - npx projen install:ci
-    - "awslogin synthRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - "awslogin deployRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "deployRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen diff:independent1
-    - "awslogin deployRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "deployRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:independent1
     - echo Post Deploy
   variables:
@@ -362,9 +328,9 @@ deploy-independent2:
   needs: []
   script:
     - npx projen install:ci
-    - "awslogin synthRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - "awslogin deployRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "deployRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:independent2
     - echo Post Deploy
   variables:
@@ -406,23 +372,6 @@ stages:
       aud: https://sts.amazonaws.com
   variables:
     CI: "true"
-  before_script:
-    - |
-      check_variables_defined() {
-        for var in "$@"; do
-          if [ -z "$(eval "echo \\$$var")" ]; then
-            log_fatal "\${var} not defined";
-          fi
-        done
-      }
-
-      awslogin() {
-        roleArn=\${1: -\${AWS_ROLE_ARN}}
-        sessionName=\${2:-GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}
-        check_variables_defined roleArn AWS_TOKEN
-        export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn \${roleArn} --role-session-name "\${sessionName}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
-        # TODO CODE ARTIFACT
-      }
 synth:
   extends:
     - .aws_base
@@ -432,7 +381,7 @@ synth:
   script:
     - echo Login
     - npx projen install:ci
-    - "awslogin synthRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
   variables:
     FOO: bar
@@ -446,7 +395,7 @@ publish_assets:
   script:
     - echo Login
     - npx projen install:ci
-    - "awslogin publishRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "publishRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen publish:assets
   variables:
     FOO: bar
@@ -464,7 +413,7 @@ diff-prod:
   script:
     - echo Login
     - npx projen install:ci
-    - "awslogin defaultRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "defaultRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen diff:prod
   variables:
     FOO: bar
@@ -485,7 +434,7 @@ deploy-prod:
   script:
     - echo Login
     - npx projen install:ci
-    - "awslogin defaultRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "defaultRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:prod
   variables:
     FOO: bar
@@ -525,23 +474,6 @@ stages:
       aud: https://sts.amazonaws.com
   variables:
     CI: "true"
-  before_script:
-    - |
-      check_variables_defined() {
-        for var in "$@"; do
-          if [ -z "$(eval "echo \\$$var")" ]; then
-            log_fatal "\${var} not defined";
-          fi
-        done
-      }
-
-      awslogin() {
-        roleArn=\${1: -\${AWS_ROLE_ARN}}
-        sessionName=\${2:-GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}
-        check_variables_defined roleArn AWS_TOKEN
-        export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn \${roleArn} --role-session-name "\${sessionName}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
-        # TODO CODE ARTIFACT
-      }
 synth:
   extends:
     - .aws_base
@@ -552,7 +484,7 @@ synth:
     - defaultTag
   script:
     - npx projen install:ci
-    - "awslogin synthRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
   variables: {}
 publish_assets:
@@ -566,7 +498,7 @@ publish_assets:
       artifacts: true
   script:
     - npx projen install:ci
-    - "awslogin publishRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "publishRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen publish:assets
   variables: {}
 diff-dev:
@@ -584,7 +516,7 @@ diff-dev:
     - job: publish_assets
   script:
     - npx projen install:ci
-    - "awslogin devRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen diff:dev
   variables:
     AWS_REGION: eu-central-1
@@ -605,7 +537,7 @@ deploy-dev:
     - job: diff-dev
   script:
     - npx projen install:ci
-    - "awslogin devRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:dev
   variables:
     AWS_REGION: eu-central-1
@@ -624,7 +556,7 @@ diff-prod:
     - job: publish_assets
   script:
     - npx projen install:ci
-    - "awslogin prodRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen diff:prod
   variables:
     AWS_REGION: eu-central-1
@@ -646,7 +578,7 @@ deploy-prod:
     - job: diff-prod
   script:
     - npx projen install:ci
-    - "awslogin prodRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:prod
   variables:
     AWS_REGION: eu-central-1
@@ -685,23 +617,6 @@ stages:
       aud: https://sts.amazonaws.com
   variables:
     CI: "true"
-  before_script:
-    - |
-      check_variables_defined() {
-        for var in "$@"; do
-          if [ -z "$(eval "echo \\$$var")" ]; then
-            log_fatal "\${var} not defined";
-          fi
-        done
-      }
-
-      awslogin() {
-        roleArn=\${1: -\${AWS_ROLE_ARN}}
-        sessionName=\${2:-GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}
-        check_variables_defined roleArn AWS_TOKEN
-        export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn \${roleArn} --role-session-name "\${sessionName}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
-        # TODO CODE ARTIFACT
-      }
 synth:
   extends:
     - .aws_base
@@ -712,7 +627,7 @@ synth:
     - synthTag
   script:
     - npx projen install:ci
-    - "awslogin synthRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
   variables: {}
 publish_assets:
@@ -726,7 +641,7 @@ publish_assets:
       artifacts: true
   script:
     - npx projen install:ci
-    - "awslogin publishRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "publishRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen publish:assets
   variables: {}
 diff-dev:
@@ -744,7 +659,7 @@ diff-dev:
     - job: publish_assets
   script:
     - npx projen install:ci
-    - "awslogin devRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen diff:dev
   variables:
     AWS_REGION: eu-central-1
@@ -765,7 +680,7 @@ deploy-dev:
     - job: diff-dev
   script:
     - npx projen install:ci
-    - "awslogin devRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:dev
   variables:
     AWS_REGION: eu-central-1
@@ -784,7 +699,7 @@ diff-prod:
     - job: publish_assets
   script:
     - npx projen install:ci
-    - "awslogin prodRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen diff:prod
   variables:
     AWS_REGION: eu-central-1
@@ -806,7 +721,7 @@ deploy-prod:
     - job: diff-prod
   script:
     - npx projen install:ci
-    - "awslogin prodRole "
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:prod
   variables:
     AWS_REGION: eu-central-1
