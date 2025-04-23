@@ -224,19 +224,20 @@ exports[`Github snapshot 4`] = `
     "constructs": "^10.0.5",
   },
   "devDependencies": {
+    "@stylistic/eslint-plugin": "^2",
     "@types/jest": "*",
-    "@types/node": "^18",
+    "@types/node": "*",
     "@types/standard-version": "*",
-    "@typescript-eslint/eslint-plugin": "^7",
-    "@typescript-eslint/parser": "^7",
-    "aws-cdk": "^2.102.0",
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "^8",
+    "aws-cdk": "^2",
     "cdk-assets": "*",
     "esbuild": "*",
-    "eslint": "^8",
+    "eslint": "^9",
     "eslint-import-resolver-typescript": "*",
     "eslint-plugin-import": "*",
     "jest": "*",
-    "jest-junit": "^15",
+    "jest-junit": "^16",
     "projen": "*",
     "standard-version": "*",
     "ts-jest": "*",
@@ -463,6 +464,9 @@ exports[`Github snapshot 5`] = `
     },
     "eslint": {
       "description": "Runs eslint against the codebase",
+      "env": {
+        "ESLINT_USE_FLAT_CONFIG": "false",
+      },
       "name": "eslint",
       "steps": [
         {
@@ -623,13 +627,13 @@ exports[`Github snapshot 5`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/jest,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
+          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
         },
         {
           "exec": "npx projen",
@@ -1926,6 +1930,9 @@ exports[`Github snapshot with multi stack 2`] = `
     },
     "eslint": {
       "description": "Runs eslint against the codebase",
+      "env": {
+        "ESLINT_USE_FLAT_CONFIG": "false",
+      },
       "name": "eslint",
       "steps": [
         {
@@ -2051,13 +2058,13 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/jest,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
+          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
         },
         {
           "exec": "npx projen",
