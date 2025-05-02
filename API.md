@@ -194,6 +194,178 @@ public readonly stackPrefix: string;
 ---
 
 
+### BashTerraformPipeline <a name="BashTerraformPipeline" id="projen-pipelines.BashTerraformPipeline"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.BashTerraformPipeline.Initializer"></a>
+
+```typescript
+import { BashTerraformPipeline } from 'projen-pipelines'
+
+new BashTerraformPipeline(project: Project, options: TerraformPipelineOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.TerraformPipelineOptions">TerraformPipelineOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.BashTerraformPipeline.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.BashTerraformPipeline.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.TerraformPipelineOptions">TerraformPipelineOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.engineType">engineType</a></code> | The type of engine this implementation of TerraformPipeline is for. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.BashTerraformPipeline.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.BashTerraformPipeline.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.BashTerraformPipeline.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.BashTerraformPipeline.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+##### `engineType` <a name="engineType" id="projen-pipelines.BashTerraformPipeline.engineType"></a>
+
+```typescript
+public engineType(): PipelineEngine
+```
+
+The type of engine this implementation of TerraformPipeline is for.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.BashTerraformPipeline.isConstruct"></a>
+
+```typescript
+import { BashTerraformPipeline } from 'projen-pipelines'
+
+BashTerraformPipeline.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.BashTerraformPipeline.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.BashTerraformPipeline.isComponent"></a>
+
+```typescript
+import { BashTerraformPipeline } from 'projen-pipelines'
+
+BashTerraformPipeline.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.BashTerraformPipeline.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.BashTerraformPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.BashTerraformPipeline.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.BashTerraformPipeline.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+
 ### CDKPipeline <a name="CDKPipeline" id="projen-pipelines.CDKPipeline"></a>
 
 The CDKPipeline class extends the Component class and sets up the necessary configuration for deploying AWS CDK (Cloud Development Kit) applications across multiple stages.
@@ -646,6 +818,192 @@ Indicates if versioned artifacts are needed based on manual approval requirement
 ---
 
 
+### GithubTerraformPipeline <a name="GithubTerraformPipeline" id="projen-pipelines.GithubTerraformPipeline"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GithubTerraformPipeline.Initializer"></a>
+
+```typescript
+import { GithubTerraformPipeline } from 'projen-pipelines'
+
+new GithubTerraformPipeline(project: GitHubProject, options: GithubTerraformPipelineOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.Initializer.parameter.project">project</a></code> | <code>projen.github.GitHubProject</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GithubTerraformPipelineOptions">GithubTerraformPipelineOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubTerraformPipeline.Initializer.parameter.project"></a>
+
+- *Type:* projen.github.GitHubProject
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GithubTerraformPipeline.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GithubTerraformPipelineOptions">GithubTerraformPipelineOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.engineType">engineType</a></code> | The type of engine this implementation of TerraformPipeline is for. |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.createDeployment">createDeployment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.createPlan">createPlan</a></code> | *No description.* |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GithubTerraformPipeline.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GithubTerraformPipeline.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GithubTerraformPipeline.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GithubTerraformPipeline.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+##### `engineType` <a name="engineType" id="projen-pipelines.GithubTerraformPipeline.engineType"></a>
+
+```typescript
+public engineType(): PipelineEngine
+```
+
+The type of engine this implementation of TerraformPipeline is for.
+
+##### `createDeployment` <a name="createDeployment" id="projen-pipelines.GithubTerraformPipeline.createDeployment"></a>
+
+```typescript
+public createDeployment(): void
+```
+
+##### `createPlan` <a name="createPlan" id="projen-pipelines.GithubTerraformPipeline.createPlan"></a>
+
+```typescript
+public createPlan(): void
+```
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GithubTerraformPipeline.isConstruct"></a>
+
+```typescript
+import { GithubTerraformPipeline } from 'projen-pipelines'
+
+GithubTerraformPipeline.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubTerraformPipeline.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GithubTerraformPipeline.isComponent"></a>
+
+```typescript
+import { GithubTerraformPipeline } from 'projen-pipelines'
+
+GithubTerraformPipeline.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubTerraformPipeline.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GithubTerraformPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GithubTerraformPipeline.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubTerraformPipeline.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+
 ### GitlabCDKPipeline <a name="GitlabCDKPipeline" id="projen-pipelines.GitlabCDKPipeline"></a>
 
 The GitlabCDKPipeline class extends CDKPipeline to provide a way to configure and execute AWS CDK deployment pipelines within GitLab CI/CD environments.
@@ -903,6 +1261,392 @@ public readonly needsVersionedArtifacts: boolean;
 Indicates if versioned artifacts are required.
 
 Currently set to false
+
+---
+
+
+### GitlabTerraformPipeline <a name="GitlabTerraformPipeline" id="projen-pipelines.GitlabTerraformPipeline"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GitlabTerraformPipeline.Initializer"></a>
+
+```typescript
+import { GitlabTerraformPipeline } from 'projen-pipelines'
+
+new GitlabTerraformPipeline(project: Project, options: GitlabTerraformPipelineOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions">GitlabTerraformPipelineOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitlabTerraformPipeline.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GitlabTerraformPipeline.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GitlabTerraformPipelineOptions">GitlabTerraformPipelineOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.engineType">engineType</a></code> | The type of engine this implementation of TerraformPipeline is for. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.createDeployment">createDeployment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.createPlan">createPlan</a></code> | *No description.* |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GitlabTerraformPipeline.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitlabTerraformPipeline.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GitlabTerraformPipeline.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GitlabTerraformPipeline.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+##### `engineType` <a name="engineType" id="projen-pipelines.GitlabTerraformPipeline.engineType"></a>
+
+```typescript
+public engineType(): PipelineEngine
+```
+
+The type of engine this implementation of TerraformPipeline is for.
+
+##### `createDeployment` <a name="createDeployment" id="projen-pipelines.GitlabTerraformPipeline.createDeployment"></a>
+
+```typescript
+public createDeployment(): void
+```
+
+##### `createPlan` <a name="createPlan" id="projen-pipelines.GitlabTerraformPipeline.createPlan"></a>
+
+```typescript
+public createPlan(): void
+```
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GitlabTerraformPipeline.isConstruct"></a>
+
+```typescript
+import { GitlabTerraformPipeline } from 'projen-pipelines'
+
+GitlabTerraformPipeline.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitlabTerraformPipeline.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GitlabTerraformPipeline.isComponent"></a>
+
+```typescript
+import { GitlabTerraformPipeline } from 'projen-pipelines'
+
+GitlabTerraformPipeline.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitlabTerraformPipeline.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.property.config">config</a></code> | <code>projen.gitlab.GitlabConfiguration</code> | GitLab CI/CD configuration object. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipeline.property.jobImage">jobImage</a></code> | <code>string</code> | The Docker image used for pipeline jobs. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GitlabTerraformPipeline.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitlabTerraformPipeline.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GitlabTerraformPipeline.property.config"></a>
+
+```typescript
+public readonly config: GitlabConfiguration;
+```
+
+- *Type:* projen.gitlab.GitlabConfiguration
+
+GitLab CI/CD configuration object.
+
+---
+
+##### `jobImage`<sup>Required</sup> <a name="jobImage" id="projen-pipelines.GitlabTerraformPipeline.property.jobImage"></a>
+
+```typescript
+public readonly jobImage: string;
+```
+
+- *Type:* string
+
+The Docker image used for pipeline jobs.
+
+Defaults to a specified image or a default value.
+
+---
+
+
+### TerraformPipeline <a name="TerraformPipeline" id="projen-pipelines.TerraformPipeline"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.TerraformPipeline.Initializer"></a>
+
+```typescript
+import { TerraformPipeline } from 'projen-pipelines'
+
+new TerraformPipeline(project: Project, baseOptions: TerraformPipelineOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.TerraformPipeline.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.TerraformPipeline.Initializer.parameter.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.TerraformPipelineOptions">TerraformPipelineOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.TerraformPipeline.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.TerraformPipeline.Initializer.parameter.baseOptions"></a>
+
+- *Type:* <a href="#projen-pipelines.TerraformPipelineOptions">TerraformPipelineOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.TerraformPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.TerraformPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.TerraformPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.TerraformPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+| <code><a href="#projen-pipelines.TerraformPipeline.engineType">engineType</a></code> | The type of engine this implementation of TerraformPipeline is for. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.TerraformPipeline.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.TerraformPipeline.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.TerraformPipeline.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.TerraformPipeline.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+##### `engineType` <a name="engineType" id="projen-pipelines.TerraformPipeline.engineType"></a>
+
+```typescript
+public engineType(): PipelineEngine
+```
+
+The type of engine this implementation of TerraformPipeline is for.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.TerraformPipeline.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.TerraformPipeline.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.TerraformPipeline.isConstruct"></a>
+
+```typescript
+import { TerraformPipeline } from 'projen-pipelines'
+
+TerraformPipeline.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.TerraformPipeline.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.TerraformPipeline.isComponent"></a>
+
+```typescript
+import { TerraformPipeline } from 'projen-pipelines'
+
+TerraformPipeline.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.TerraformPipeline.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.TerraformPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.TerraformPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.TerraformPipeline.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.TerraformPipeline.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
 
 ---
 
@@ -2096,6 +2840,171 @@ Additional job permissions needed.
 
 ---
 
+### GithubTerraformPipelineOptions <a name="GithubTerraformPipelineOptions" id="projen-pipelines.GithubTerraformPipelineOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GithubTerraformPipelineOptions.Initializer"></a>
+
+```typescript
+import { GithubTerraformPipelineOptions } from 'projen-pipelines'
+
+const githubTerraformPipelineOptions: GithubTerraformPipelineOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.TerraformIamRoleArns">TerraformIamRoleArns</a></code> | IAM role ARNs for different operations. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | Branch name to trigger the pipeline on. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.folder">folder</a></code> | <code>string</code> | The folder containing Terraform files. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.name">name</a></code> | <code>string</code> | Name of the pipeline Required if using a folder structure Will be used to prefix all tasks and pipeline names. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.postApplySteps">postApplySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to run after deployment. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.postPlanSteps">postPlanSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run after planning. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.preApplySteps">preApplySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to run before deployment. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before installing dependencies. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.prePlanSteps">prePlanSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before planning. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.terraformVersion">terraformVersion</a></code> | <code>string</code> | Terraform version to use. |
+| <code><a href="#projen-pipelines.GithubTerraformPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
+
+---
+
+##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.GithubTerraformPipelineOptions.property.iamRoleArns"></a>
+
+```typescript
+public readonly iamRoleArns: TerraformIamRoleArns;
+```
+
+- *Type:* <a href="#projen-pipelines.TerraformIamRoleArns">TerraformIamRoleArns</a>
+
+IAM role ARNs for different operations.
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.GithubTerraformPipelineOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+Branch name to trigger the pipeline on.
+
+---
+
+##### `folder`<sup>Optional</sup> <a name="folder" id="projen-pipelines.GithubTerraformPipelineOptions.property.folder"></a>
+
+```typescript
+public readonly folder: string;
+```
+
+- *Type:* string
+- *Default:* '.'
+
+The folder containing Terraform files.
+
+---
+
+##### `name`<sup>Optional</sup> <a name="name" id="projen-pipelines.GithubTerraformPipelineOptions.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+- *Default:* 
+
+Name of the pipeline Required if using a folder structure Will be used to prefix all tasks and pipeline names.
+
+---
+
+##### `postApplySteps`<sup>Optional</sup> <a name="postApplySteps" id="projen-pipelines.GithubTerraformPipelineOptions.property.postApplySteps"></a>
+
+```typescript
+public readonly postApplySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Additional steps to run after deployment.
+
+---
+
+##### `postPlanSteps`<sup>Optional</sup> <a name="postPlanSteps" id="projen-pipelines.GithubTerraformPipelineOptions.property.postPlanSteps"></a>
+
+```typescript
+public readonly postPlanSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run after planning.
+
+---
+
+##### `preApplySteps`<sup>Optional</sup> <a name="preApplySteps" id="projen-pipelines.GithubTerraformPipelineOptions.property.preApplySteps"></a>
+
+```typescript
+public readonly preApplySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Additional steps to run before deployment.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.GithubTerraformPipelineOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before installing dependencies.
+
+---
+
+##### `prePlanSteps`<sup>Optional</sup> <a name="prePlanSteps" id="projen-pipelines.GithubTerraformPipelineOptions.property.prePlanSteps"></a>
+
+```typescript
+public readonly prePlanSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before planning.
+
+---
+
+##### `terraformVersion`<sup>Optional</sup> <a name="terraformVersion" id="projen-pipelines.GithubTerraformPipelineOptions.property.terraformVersion"></a>
+
+```typescript
+public readonly terraformVersion: string;
+```
+
+- *Type:* string
+- *Default:* 'latest'
+
+Terraform version to use.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GithubTerraformPipelineOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['ubuntu-latest']
+
+runner tags to use to select runners.
+
+---
+
 ### GitlabCDKPipelineOptions <a name="GitlabCDKPipelineOptions" id="projen-pipelines.GitlabCDKPipelineOptions"></a>
 
 Options for configuring the GitLab CDK pipeline, extending the base CDK pipeline options.
@@ -2492,6 +3401,183 @@ Dependencies which need to be completed before this step.
 
 ---
 
+### GitlabTerraformPipelineOptions <a name="GitlabTerraformPipelineOptions" id="projen-pipelines.GitlabTerraformPipelineOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitlabTerraformPipelineOptions.Initializer"></a>
+
+```typescript
+import { GitlabTerraformPipelineOptions } from 'projen-pipelines'
+
+const gitlabTerraformPipelineOptions: GitlabTerraformPipelineOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.TerraformIamRoleArns">TerraformIamRoleArns</a></code> | IAM role ARNs for different operations. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | Branch name to trigger the pipeline on. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.folder">folder</a></code> | <code>string</code> | The folder containing Terraform files. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.name">name</a></code> | <code>string</code> | Name of the pipeline Required if using a folder structure Will be used to prefix all tasks and pipeline names. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.postApplySteps">postApplySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to run after deployment. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.postPlanSteps">postPlanSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run after planning. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.preApplySteps">preApplySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to run before deployment. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before installing dependencies. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.prePlanSteps">prePlanSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before planning. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.terraformVersion">terraformVersion</a></code> | <code>string</code> | Terraform version to use. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.image">image</a></code> | <code>string</code> | The Docker image to use for running the pipeline jobs. |
+| <code><a href="#projen-pipelines.GitlabTerraformPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
+
+---
+
+##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.GitlabTerraformPipelineOptions.property.iamRoleArns"></a>
+
+```typescript
+public readonly iamRoleArns: TerraformIamRoleArns;
+```
+
+- *Type:* <a href="#projen-pipelines.TerraformIamRoleArns">TerraformIamRoleArns</a>
+
+IAM role ARNs for different operations.
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.GitlabTerraformPipelineOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+Branch name to trigger the pipeline on.
+
+---
+
+##### `folder`<sup>Optional</sup> <a name="folder" id="projen-pipelines.GitlabTerraformPipelineOptions.property.folder"></a>
+
+```typescript
+public readonly folder: string;
+```
+
+- *Type:* string
+- *Default:* '.'
+
+The folder containing Terraform files.
+
+---
+
+##### `name`<sup>Optional</sup> <a name="name" id="projen-pipelines.GitlabTerraformPipelineOptions.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+- *Default:* 
+
+Name of the pipeline Required if using a folder structure Will be used to prefix all tasks and pipeline names.
+
+---
+
+##### `postApplySteps`<sup>Optional</sup> <a name="postApplySteps" id="projen-pipelines.GitlabTerraformPipelineOptions.property.postApplySteps"></a>
+
+```typescript
+public readonly postApplySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Additional steps to run after deployment.
+
+---
+
+##### `postPlanSteps`<sup>Optional</sup> <a name="postPlanSteps" id="projen-pipelines.GitlabTerraformPipelineOptions.property.postPlanSteps"></a>
+
+```typescript
+public readonly postPlanSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run after planning.
+
+---
+
+##### `preApplySteps`<sup>Optional</sup> <a name="preApplySteps" id="projen-pipelines.GitlabTerraformPipelineOptions.property.preApplySteps"></a>
+
+```typescript
+public readonly preApplySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Additional steps to run before deployment.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.GitlabTerraformPipelineOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before installing dependencies.
+
+---
+
+##### `prePlanSteps`<sup>Optional</sup> <a name="prePlanSteps" id="projen-pipelines.GitlabTerraformPipelineOptions.property.prePlanSteps"></a>
+
+```typescript
+public readonly prePlanSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before planning.
+
+---
+
+##### `terraformVersion`<sup>Optional</sup> <a name="terraformVersion" id="projen-pipelines.GitlabTerraformPipelineOptions.property.terraformVersion"></a>
+
+```typescript
+public readonly terraformVersion: string;
+```
+
+- *Type:* string
+- *Default:* 'latest'
+
+Terraform version to use.
+
+---
+
+##### `image`<sup>Optional</sup> <a name="image" id="projen-pipelines.GitlabTerraformPipelineOptions.property.image"></a>
+
+```typescript
+public readonly image: string;
+```
+
+- *Type:* string
+
+The Docker image to use for running the pipeline jobs.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GitlabTerraformPipelineOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+
+runner tags to use to select runners.
+
+---
+
 ### IamRoleConfig <a name="IamRoleConfig" id="projen-pipelines.IamRoleConfig"></a>
 
 Configuration interface for IAM roles used in the CDK pipeline.
@@ -2800,6 +3886,217 @@ public readonly env: Environment;
 ```
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
+
+---
+
+### TerraformIamRoleArns <a name="TerraformIamRoleArns" id="projen-pipelines.TerraformIamRoleArns"></a>
+
+IAM role ARNs for different Terraform operations.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.TerraformIamRoleArns.Initializer"></a>
+
+```typescript
+import { TerraformIamRoleArns } from 'projen-pipelines'
+
+const terraformIamRoleArns: TerraformIamRoleArns = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.TerraformIamRoleArns.property.default">default</a></code> | <code>string</code> | Default role ARN to use if no specific role is provided. |
+| <code><a href="#projen-pipelines.TerraformIamRoleArns.property.apply">apply</a></code> | <code>string</code> | Role ARN for applying Terraform changes. |
+| <code><a href="#projen-pipelines.TerraformIamRoleArns.property.plan">plan</a></code> | <code>string</code> | Role ARN for planning Terraform changes. |
+
+---
+
+##### `default`<sup>Required</sup> <a name="default" id="projen-pipelines.TerraformIamRoleArns.property.default"></a>
+
+```typescript
+public readonly default: string;
+```
+
+- *Type:* string
+
+Default role ARN to use if no specific role is provided.
+
+---
+
+##### `apply`<sup>Optional</sup> <a name="apply" id="projen-pipelines.TerraformIamRoleArns.property.apply"></a>
+
+```typescript
+public readonly apply: string;
+```
+
+- *Type:* string
+- *Default:* uses default role ARN
+
+Role ARN for applying Terraform changes.
+
+---
+
+##### `plan`<sup>Optional</sup> <a name="plan" id="projen-pipelines.TerraformIamRoleArns.property.plan"></a>
+
+```typescript
+public readonly plan: string;
+```
+
+- *Type:* string
+- *Default:* uses default role ARN
+
+Role ARN for planning Terraform changes.
+
+---
+
+### TerraformPipelineOptions <a name="TerraformPipelineOptions" id="projen-pipelines.TerraformPipelineOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.TerraformPipelineOptions.Initializer"></a>
+
+```typescript
+import { TerraformPipelineOptions } from 'projen-pipelines'
+
+const terraformPipelineOptions: TerraformPipelineOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.TerraformIamRoleArns">TerraformIamRoleArns</a></code> | IAM role ARNs for different operations. |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | Branch name to trigger the pipeline on. |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.folder">folder</a></code> | <code>string</code> | The folder containing Terraform files. |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.name">name</a></code> | <code>string</code> | Name of the pipeline Required if using a folder structure Will be used to prefix all tasks and pipeline names. |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.postApplySteps">postApplySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to run after deployment. |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.postPlanSteps">postPlanSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run after planning. |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.preApplySteps">preApplySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to run before deployment. |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before installing dependencies. |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.prePlanSteps">prePlanSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before planning. |
+| <code><a href="#projen-pipelines.TerraformPipelineOptions.property.terraformVersion">terraformVersion</a></code> | <code>string</code> | Terraform version to use. |
+
+---
+
+##### `iamRoleArns`<sup>Required</sup> <a name="iamRoleArns" id="projen-pipelines.TerraformPipelineOptions.property.iamRoleArns"></a>
+
+```typescript
+public readonly iamRoleArns: TerraformIamRoleArns;
+```
+
+- *Type:* <a href="#projen-pipelines.TerraformIamRoleArns">TerraformIamRoleArns</a>
+
+IAM role ARNs for different operations.
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.TerraformPipelineOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+Branch name to trigger the pipeline on.
+
+---
+
+##### `folder`<sup>Optional</sup> <a name="folder" id="projen-pipelines.TerraformPipelineOptions.property.folder"></a>
+
+```typescript
+public readonly folder: string;
+```
+
+- *Type:* string
+- *Default:* '.'
+
+The folder containing Terraform files.
+
+---
+
+##### `name`<sup>Optional</sup> <a name="name" id="projen-pipelines.TerraformPipelineOptions.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+- *Default:* 
+
+Name of the pipeline Required if using a folder structure Will be used to prefix all tasks and pipeline names.
+
+---
+
+##### `postApplySteps`<sup>Optional</sup> <a name="postApplySteps" id="projen-pipelines.TerraformPipelineOptions.property.postApplySteps"></a>
+
+```typescript
+public readonly postApplySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Additional steps to run after deployment.
+
+---
+
+##### `postPlanSteps`<sup>Optional</sup> <a name="postPlanSteps" id="projen-pipelines.TerraformPipelineOptions.property.postPlanSteps"></a>
+
+```typescript
+public readonly postPlanSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run after planning.
+
+---
+
+##### `preApplySteps`<sup>Optional</sup> <a name="preApplySteps" id="projen-pipelines.TerraformPipelineOptions.property.preApplySteps"></a>
+
+```typescript
+public readonly preApplySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Additional steps to run before deployment.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.TerraformPipelineOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before installing dependencies.
+
+---
+
+##### `prePlanSteps`<sup>Optional</sup> <a name="prePlanSteps" id="projen-pipelines.TerraformPipelineOptions.property.prePlanSteps"></a>
+
+```typescript
+public readonly prePlanSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before planning.
+
+---
+
+##### `terraformVersion`<sup>Optional</sup> <a name="terraformVersion" id="projen-pipelines.TerraformPipelineOptions.property.terraformVersion"></a>
+
+```typescript
+public readonly terraformVersion: string;
+```
+
+- *Type:* string
+- *Default:* 'latest'
+
+Terraform version to use.
 
 ---
 
