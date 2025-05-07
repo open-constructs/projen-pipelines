@@ -87,7 +87,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-my-dev
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
     steps:
@@ -189,7 +189,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-prod
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
     steps:
@@ -869,7 +869,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-independent2
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
       TEST: me
@@ -916,7 +916,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-independent1
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
       TEST: me
@@ -1089,7 +1089,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-stage1
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
     steps:
@@ -1127,7 +1127,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-stage2
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
       TEST: me
@@ -1296,7 +1296,7 @@ jobs:
     environment: my-dev
     concurrency:
       group: deploy-my-dev
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
     steps:
@@ -1333,7 +1333,7 @@ jobs:
     environment: independent
     concurrency:
       group: deploy-independent
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
     steps:
@@ -1384,7 +1384,7 @@ jobs:
     environment: prod
     concurrency:
       group: deploy-prod
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
     steps:
@@ -1489,7 +1489,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-independent2
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
       FOO: bar
@@ -1536,7 +1536,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-independent1
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
       FOO: bar
@@ -1685,7 +1685,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-prod
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
     steps:
@@ -1790,7 +1790,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-dev
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
     steps:
@@ -2162,7 +2162,7 @@ jobs:
       id-token: write
     concurrency:
       group: deploy-prod
-      cancelInProgress: false
+      cancel-in-progress: false
     env:
       CI: "true"
       FOO: bar

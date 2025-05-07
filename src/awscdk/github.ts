@@ -243,8 +243,8 @@ export class GithubCDKPipeline extends CDKPipeline {
           environment: stage.name,
         },
         concurrency: {
-          group: `deploy-${stage.name}`,
-          cancelInProgress: false,
+          'group': `deploy-${stage.name}`,
+          'cancel-in-progress': false,
         },
         env: {
           CI: 'true',
@@ -294,8 +294,8 @@ export class GithubCDKPipeline extends CDKPipeline {
         environment: stage.name,
       },
       concurrency: {
-        group: `deploy-${stage.name}`,
-        cancelInProgress: false,
+        'group': `deploy-${stage.name}`,
+        'cancel-in-progress': false,
       },
       needs: ['assetUpload', ...steps.flatMap(s => s.needs), ...jobDependencies],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
@@ -351,8 +351,8 @@ export class GithubCDKPipeline extends CDKPipeline {
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         concurrency: {
-          group: `deploy-${stage.name}`,
-          cancelInProgress: false,
+          'group': `deploy-${stage.name}`,
+          'cancel-in-progress': false,
         },
         env: {
           CI: 'true',
