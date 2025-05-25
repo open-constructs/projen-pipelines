@@ -3,6 +3,7 @@
     ".eslintrc.json",
     ".gitattributes",
     ".github/pull_request_template.md",
+    ".github/workflows/assign-approver.yml",
     ".github/workflows/auto-approve.yml",
     ".github/workflows/build.yml",
     ".github/workflows/integ.yml",

@@ -1,5 +1,6 @@
 import { ReleasableCommits, cdk, github, javascript } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
+import { GitHubAssignApprover } from './src/assign-approver';
 
 const project = new cdk.JsiiProject({
   author: 'The Open Construct Foundation',
@@ -118,6 +119,14 @@ integWf?.addJobs({
       { name: 'Run Test', run: 'cd integ/existing && npx npm install' },
     ],
   },
+});
+
+new GitHubAssignApprover(project, {
+  approverMapping: [
+    { author: 'hoegertn', approvers: ['Lock128'] },
+    { author: 'Lock128', approvers: ['hoegertn'] },
+  ],
+  defaultApprovers: ['hoegertn', 'Lock128'],
 });
 
 project.synth();
