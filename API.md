@@ -2,6 +2,169 @@
 
 ## Constructs <a name="Constructs" id="Constructs"></a>
 
+### AssignApprover <a name="AssignApprover" id="projen-pipelines.AssignApprover"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.AssignApprover.Initializer"></a>
+
+```typescript
+import { AssignApprover } from 'projen-pipelines'
+
+new AssignApprover(scope: Project, baseOptions: AssignApproverOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AssignApprover.Initializer.parameter.scope">scope</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.AssignApprover.Initializer.parameter.baseOptions">baseOptions</a></code> | <code><a href="#projen-pipelines.AssignApproverOptions">AssignApproverOptions</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="projen-pipelines.AssignApprover.Initializer.parameter.scope"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `baseOptions`<sup>Required</sup> <a name="baseOptions" id="projen-pipelines.AssignApprover.Initializer.parameter.baseOptions"></a>
+
+- *Type:* <a href="#projen-pipelines.AssignApproverOptions">AssignApproverOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.AssignApprover.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.AssignApprover.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.AssignApprover.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.AssignApprover.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.AssignApprover.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.AssignApprover.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.AssignApprover.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.AssignApprover.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.AssignApprover.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.AssignApprover.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.AssignApprover.isConstruct"></a>
+
+```typescript
+import { AssignApprover } from 'projen-pipelines'
+
+AssignApprover.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.AssignApprover.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.AssignApprover.isComponent"></a>
+
+```typescript
+import { AssignApprover } from 'projen-pipelines'
+
+AssignApprover.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.AssignApprover.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AssignApprover.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.AssignApprover.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.AssignApprover.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.AssignApprover.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+
 ### BashCDKPipeline <a name="BashCDKPipeline" id="projen-pipelines.BashCDKPipeline"></a>
 
 #### Initializers <a name="Initializers" id="projen-pipelines.BashCDKPipeline.Initializer"></a>
@@ -386,6 +549,178 @@ public readonly stackPrefix: string;
 ```
 
 - *Type:* string
+
+---
+
+
+### GitHubAssignApprover <a name="GitHubAssignApprover" id="projen-pipelines.GitHubAssignApprover"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GitHubAssignApprover.Initializer"></a>
+
+```typescript
+import { GitHubAssignApprover } from 'projen-pipelines'
+
+new GitHubAssignApprover(scope: GitHubProject, options: GitHubAssignApproverOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.Initializer.parameter.scope">scope</a></code> | <code>projen.github.GitHubProject</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GitHubAssignApproverOptions">GitHubAssignApproverOptions</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="projen-pipelines.GitHubAssignApprover.Initializer.parameter.scope"></a>
+
+- *Type:* projen.github.GitHubProject
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GitHubAssignApprover.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GitHubAssignApproverOptions">GitHubAssignApproverOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.renderPermissions">renderPermissions</a></code> | Get the required permissions for the GitHub workflow. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GitHubAssignApprover.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitHubAssignApprover.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GitHubAssignApprover.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GitHubAssignApprover.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+##### `renderPermissions` <a name="renderPermissions" id="projen-pipelines.GitHubAssignApprover.renderPermissions"></a>
+
+```typescript
+public renderPermissions(): JobPermissions
+```
+
+Get the required permissions for the GitHub workflow.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GitHubAssignApprover.isConstruct"></a>
+
+```typescript
+import { GitHubAssignApprover } from 'projen-pipelines'
+
+GitHubAssignApprover.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitHubAssignApprover.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GitHubAssignApprover.isComponent"></a>
+
+```typescript
+import { GitHubAssignApprover } from 'projen-pipelines'
+
+GitHubAssignApprover.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitHubAssignApprover.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GitHubAssignApprover.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitHubAssignApprover.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
 
 ---
 
@@ -908,6 +1243,88 @@ Currently set to false
 
 
 ## Structs <a name="Structs" id="Structs"></a>
+
+### ApproverMapping <a name="ApproverMapping" id="projen-pipelines.ApproverMapping"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.ApproverMapping.Initializer"></a>
+
+```typescript
+import { ApproverMapping } from 'projen-pipelines'
+
+const approverMapping: ApproverMapping = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ApproverMapping.property.approvers">approvers</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.ApproverMapping.property.author">author</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `approvers`<sup>Required</sup> <a name="approvers" id="projen-pipelines.ApproverMapping.property.approvers"></a>
+
+```typescript
+public readonly approvers: string[];
+```
+
+- *Type:* string[]
+
+---
+
+##### `author`<sup>Required</sup> <a name="author" id="projen-pipelines.ApproverMapping.property.author"></a>
+
+```typescript
+public readonly author: string;
+```
+
+- *Type:* string
+
+---
+
+### AssignApproverOptions <a name="AssignApproverOptions" id="projen-pipelines.AssignApproverOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.AssignApproverOptions.Initializer"></a>
+
+```typescript
+import { AssignApproverOptions } from 'projen-pipelines'
+
+const assignApproverOptions: AssignApproverOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AssignApproverOptions.property.approverMapping">approverMapping</a></code> | <code><a href="#projen-pipelines.ApproverMapping">ApproverMapping</a>[]</code> | The mapping of authors to approvers. |
+| <code><a href="#projen-pipelines.AssignApproverOptions.property.defaultApprovers">defaultApprovers</a></code> | <code>string[]</code> | The GitHub token to use for the API calls. |
+
+---
+
+##### `approverMapping`<sup>Required</sup> <a name="approverMapping" id="projen-pipelines.AssignApproverOptions.property.approverMapping"></a>
+
+```typescript
+public readonly approverMapping: ApproverMapping[];
+```
+
+- *Type:* <a href="#projen-pipelines.ApproverMapping">ApproverMapping</a>[]
+
+The mapping of authors to approvers.
+
+---
+
+##### `defaultApprovers`<sup>Required</sup> <a name="defaultApprovers" id="projen-pipelines.AssignApproverOptions.property.defaultApprovers"></a>
+
+```typescript
+public readonly defaultApprovers: string[];
+```
+
+- *Type:* string[]
+
+The GitHub token to use for the API calls.
+
+---
 
 ### AwsAssumeRoleStepConfig <a name="AwsAssumeRoleStepConfig" id="projen-pipelines.AwsAssumeRoleStepConfig"></a>
 
@@ -1733,6 +2150,63 @@ The AWS Region for the environment.
 This determines where your resources
 are created and where your application will run. It can affect latency,
 availability, and pricing.
+
+---
+
+### GitHubAssignApproverOptions <a name="GitHubAssignApproverOptions" id="projen-pipelines.GitHubAssignApproverOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitHubAssignApproverOptions.Initializer"></a>
+
+```typescript
+import { GitHubAssignApproverOptions } from 'projen-pipelines'
+
+const gitHubAssignApproverOptions: GitHubAssignApproverOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitHubAssignApproverOptions.property.approverMapping">approverMapping</a></code> | <code><a href="#projen-pipelines.ApproverMapping">ApproverMapping</a>[]</code> | The mapping of authors to approvers. |
+| <code><a href="#projen-pipelines.GitHubAssignApproverOptions.property.defaultApprovers">defaultApprovers</a></code> | <code>string[]</code> | The GitHub token to use for the API calls. |
+| <code><a href="#projen-pipelines.GitHubAssignApproverOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
+
+---
+
+##### `approverMapping`<sup>Required</sup> <a name="approverMapping" id="projen-pipelines.GitHubAssignApproverOptions.property.approverMapping"></a>
+
+```typescript
+public readonly approverMapping: ApproverMapping[];
+```
+
+- *Type:* <a href="#projen-pipelines.ApproverMapping">ApproverMapping</a>[]
+
+The mapping of authors to approvers.
+
+---
+
+##### `defaultApprovers`<sup>Required</sup> <a name="defaultApprovers" id="projen-pipelines.GitHubAssignApproverOptions.property.defaultApprovers"></a>
+
+```typescript
+public readonly defaultApprovers: string[];
+```
+
+- *Type:* string[]
+
+The GitHub token to use for the API calls.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GitHubAssignApproverOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['ubuntu-latest']
+
+runner tags to use to select runners.
 
 ---
 
