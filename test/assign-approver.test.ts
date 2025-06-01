@@ -25,6 +25,25 @@ describe('GitHubAssignApprover', () => {
     expect(snapshot['.github/workflows/assign-approver.yml']).toMatchSnapshot();
   });
 
+  test('creates workflow with correct configuration with no approver mapping', () => {
+    const app = new AwsCdkTypeScriptApp({
+      cdkVersion: '2.102.0',
+      defaultReleaseBranch: 'main',
+      name: 'test-project',
+    });
+
+    new GitHubAssignApprover(app, {
+      approverMapping: [],
+      defaultApprovers: ['admin1', 'admin2'],
+    });
+
+    const workflow = app.github!.tryFindWorkflow('assign-approver');
+    expect(workflow).toBeDefined();
+
+    const snapshot = synthSnapshot(app);
+    expect(snapshot['.github/workflows/assign-approver.yml']).toMatchSnapshot();
+  });
+
   test('generates correct approver mapping script', () => {
     const app = new AwsCdkTypeScriptApp({
       cdkVersion: '2.102.0',
