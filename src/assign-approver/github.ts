@@ -74,7 +74,7 @@ export class GitHubAssignApprover extends AssignApprover {
 
 // Define approver mapping
 const approverMapping = {
-${mappingEntries},
+${mappingEntries}${mappingEntries.length > 0 ? ',' : ''}
   'default': [${defaultApprovers}] // Default approver(s) if author not in mapping
 };
 
