@@ -1,12 +1,12 @@
 import { VersioningOutputs } from './outputs';
 import { VersioningStrategy } from './strategy';
-import { VersioningConfig, IVersioningStrategy } from './types';
+import { VersioningConfig, MutableVersioningConfig, IVersioningStrategy, StandardConfigOptions } from './types';
 
 /**
  * Builder class for versioning configuration
  */
 export class VersioningConfigBuilder {
-  private config: Partial<VersioningConfig> = {
+  private config: MutableVersioningConfig = {
     enabled: true,
   };
 
@@ -76,10 +76,7 @@ export class VersioningConfigurations {
   /**
    * Standard configuration with git tag strategy
    */
-  public static standard(options?: {
-    parameterStore?: boolean | string;
-    format?: 'plain' | 'structured';
-  }): VersioningConfig {
+  public static standard(options?: StandardConfigOptions): VersioningConfig {
     return new VersioningConfigBuilder()
       .strategy(VersioningStrategy.commitCount())
       .outputs(VersioningOutputs.standard({

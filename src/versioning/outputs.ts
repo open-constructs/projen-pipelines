@@ -1,4 +1,4 @@
-import { CloudFormationOutputConfig, ParameterStoreConfig, VersioningOutputConfig } from './types';
+import { CloudFormationOutputConfig, ParameterStoreConfig, VersioningOutputConfig, StandardOutputOptions, CloudFormationOnlyOptions, HierarchicalParametersOptions } from './types';
 
 /**
  * Base class for output configurations
@@ -123,10 +123,7 @@ export class VersioningOutputs {
   /**
    * Create output configuration with CloudFormation and SSM Parameter Store
    */
-  public static standard(options?: {
-    parameterName?: string;
-    format?: 'plain' | 'structured';
-  }): VersioningOutputConfig {
+  public static standard(options?: StandardOutputOptions): VersioningOutputConfig {
     return {
       cloudFormation: true,
       parameterStore: options?.parameterName
@@ -139,11 +136,7 @@ export class VersioningOutputs {
   /**
    * Create output configuration with only CloudFormation
    */
-  public static cloudFormationOnly(options?: {
-    format?: 'plain' | 'structured';
-    stackOutputName?: string;
-    exportName?: string;
-  }): VersioningOutputConfig {
+  public static cloudFormationOnly(options?: CloudFormationOnlyOptions): VersioningOutputConfig {
     const cfConfig = options?.stackOutputName || options?.exportName
       ? CloudFormationOutput.withConfig({
         stackOutputName: options.stackOutputName,
@@ -161,10 +154,7 @@ export class VersioningOutputs {
   /**
    * Create output configuration with hierarchical SSM parameters
    */
-  public static hierarchicalParameters(basePath: string, options?: {
-    includeCloudFormation?: boolean;
-    format?: 'plain' | 'structured';
-  }): VersioningOutputConfig {
+  public static hierarchicalParameters(basePath: string, options?: HierarchicalParametersOptions): VersioningOutputConfig {
     return {
       cloudFormation: options?.includeCloudFormation ?? true,
       parameterStore: ParameterStoreOutput.hierarchical(basePath, {}).toConfig(),

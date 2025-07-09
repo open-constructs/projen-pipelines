@@ -1,4 +1,4 @@
-import { GitTagConfig, PackageJsonConfig, CommitCountConfig, IVersioningStrategy } from './types';
+import { GitTagConfig, PackageJsonConfig, CommitCountConfig, IVersioningStrategy, VersioningStrategyComponents, BuildNumberConfig } from './types';
 
 
 /**
@@ -8,7 +8,7 @@ export class VersioningStrategy implements IVersioningStrategy {
 
   private constructor(
     public readonly format: string,
-    public readonly components: IVersioningStrategy['components'],
+    public readonly components: VersioningStrategyComponents,
   ) {
     //
   }
@@ -18,7 +18,7 @@ export class VersioningStrategy implements IVersioningStrategy {
    */
   public static create(
     format: string,
-    components: IVersioningStrategy['components'],
+    components: VersioningStrategyComponents,
   ): VersioningStrategy {
     return new VersioningStrategy(format, components);
   }
@@ -26,10 +26,7 @@ export class VersioningStrategy implements IVersioningStrategy {
   /**
    * Create a build number based strategy
    */
-  public static buildNumber(config?: {
-    prefix?: string;
-    commitCount?: CommitCountConfig;
-  }): VersioningStrategy {
+  public static buildNumber(config?: BuildNumberConfig): VersioningStrategy {
     const prefix = config?.prefix ?? 'build';
     return new VersioningStrategy(`${prefix}-{commit-count}-{commit-hash:8}`, {
       commitCount: config?.commitCount ?? { countFrom: 'all', padding: 5 },

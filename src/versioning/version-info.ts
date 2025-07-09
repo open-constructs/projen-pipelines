@@ -1,4 +1,4 @@
-import { VersionInfo as IVersionInfo } from './types';
+import { IVersionInfo, MutableVersionInfo, GitInfoInput, DeploymentInfoInput } from './types';
 
 /**
  * Represents complete version information for a deployment
@@ -46,26 +46,32 @@ export class VersionInfo implements IVersionInfo {
   /**
    * Create a VersionInfo instance from environment variables
    */
-  public static fromEnvironment(env: Record<string, string | undefined>): VersionInfo {
-    const commitHash = env.GITHUB_SHA ?? env.GIT_COMMIT_HASH ?? '';
+  public static fromEnvironment(env: { [key: string]: string }): VersionInfo {
+    const commitHash = env.GITHUB_SHA || env.GIT_COMMIT_HASH || '';
     const commitHashShort = commitHash.substring(0, 8);
 
-    return new VersionInfo({
-      version: env.VERSION ?? '0.0.0',
+    const props: MutableVersionInfo = {
+      version: env.VERSION || '0.0.0',
       commitHash,
       commitHashShort,
-      branch: env.GIT_BRANCH ?? env.GITHUB_REF_NAME ?? 'unknown',
-      tag: env.GIT_TAG,
-      commitsSinceTag: env.COMMITS_SINCE_TAG ? parseInt(env.COMMITS_SINCE_TAG, 10) : undefined,
-      commitCount: parseInt(env.GIT_COMMIT_COUNT ?? '0', 10),
-      packageVersion: env.PACKAGE_VERSION,
+      branch: env.GIT_BRANCH || env.GITHUB_REF_NAME || 'unknown',
+      commitCount: parseInt(env.GIT_COMMIT_COUNT || '0', 10),
       deployedAt: new Date().toISOString(),
-      deployedBy: env.GITHUB_ACTOR ?? env.GITLAB_USER_LOGIN ?? env.USER ?? 'unknown',
-      buildNumber: env.GITHUB_RUN_NUMBER ?? env.CI_PIPELINE_ID,
-      environment: env.STAGE ?? env.ENVIRONMENT ?? 'unknown',
-      repository: env.GITHUB_REPOSITORY ?? env.CI_PROJECT_PATH,
-      pipelineVersion: env.PIPELINE_VERSION,
-    });
+      deployedBy: env.GITHUB_ACTOR || env.GITLAB_USER_LOGIN || env.USER || 'unknown',
+      environment: env.STAGE || env.ENVIRONMENT || 'unknown',
+    };
+
+    // Add optional fields only if they exist
+    if (env.GIT_TAG) props.tag = env.GIT_TAG;
+    if (env.COMMITS_SINCE_TAG) props.commitsSinceTag = parseInt(env.COMMITS_SINCE_TAG, 10);
+    if (env.PACKAGE_VERSION) props.packageVersion = env.PACKAGE_VERSION;
+    if (env.GITHUB_RUN_NUMBER) props.buildNumber = env.GITHUB_RUN_NUMBER;
+    else if (env.CI_PIPELINE_ID) props.buildNumber = env.CI_PIPELINE_ID;
+    if (env.GITHUB_REPOSITORY) props.repository = env.GITHUB_REPOSITORY;
+    else if (env.CI_PROJECT_PATH) props.repository = env.CI_PROJECT_PATH;
+    if (env.PIPELINE_VERSION) props.pipelineVersion = env.PIPELINE_VERSION;
+
+    return new VersionInfo(props as IVersionInfo);
   }
 
   /**
@@ -87,7 +93,7 @@ export class VersionInfo implements IVersionInfo {
    * Convert to JSON string
    */
   public toJson(pretty = false): string {
-    const data: IVersionInfo = {
+    const data: MutableVersionInfo = {
       version: this.version,
       commitHash: this.commitHash,
       commitHashShort: this.commitHashShort,
@@ -179,7 +185,7 @@ export class VersionInfo implements IVersionInfo {
  * Builder class for creating VersionInfo instances
  */
 export class VersionInfoBuilder {
-  private props: Partial<IVersionInfo> = {};
+  private props: MutableVersionInfo = {};
 
   /**
    * Set the version string
@@ -192,13 +198,7 @@ export class VersionInfoBuilder {
   /**
    * Set git information
    */
-  public gitInfo(info: {
-    commitHash: string;
-    branch: string;
-    tag?: string;
-    commitsSinceTag?: number;
-    commitCount: number;
-  }): this {
+  public gitInfo(info: GitInfoInput): this {
     this.props.commitHash = info.commitHash;
     this.props.commitHashShort = info.commitHash.substring(0, 8);
     this.props.branch = info.branch;
@@ -219,11 +219,7 @@ export class VersionInfoBuilder {
   /**
    * Set deployment metadata
    */
-  public deploymentInfo(info: {
-    environment: string;
-    deployedBy?: string;
-    buildNumber?: string;
-  }): this {
+  public deploymentInfo(info: DeploymentInfoInput): this {
     this.props.environment = info.environment;
     this.props.deployedBy = info.deployedBy ?? 'unknown';
     this.props.buildNumber = info.buildNumber;
@@ -250,7 +246,7 @@ export class VersionInfoBuilder {
   /**
    * Build the VersionInfo instance
    */
-  public build(): VersionInfo {
+  public create(): VersionInfo {
     if (!this.props.version) {
       throw new Error('Version is required');
     }

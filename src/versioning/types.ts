@@ -1,25 +1,38 @@
 
+export interface MutableVersioningConfig {
+  enabled?: boolean;
+  strategy?: IVersioningStrategy;
+  outputs?: VersioningOutputConfig;
+  stageOverrides?: { [stage: string]: Partial<VersioningConfig> };
+}
+
 export interface VersioningConfig {
   /**
    * Enable versioning feature
    * @default true
    */
-  enabled: boolean;
+  readonly enabled: boolean;
 
   /**
    * Primary versioning strategy
    */
-  strategy: IVersioningStrategy;
+  readonly strategy: IVersioningStrategy;
 
   /**
    * Output configuration
    */
-  outputs: VersioningOutputConfig;
+  readonly outputs: VersioningOutputConfig;
 
   /**
    * Stage-specific overrides
    */
-  stageOverrides?: Record<string, Partial<VersioningConfig>>;
+  readonly stageOverrides?: { [stage: string]: Partial<VersioningConfig> };
+}
+
+export interface VersioningStrategyComponents {
+  readonly gitTag?: GitTagConfig;
+  readonly packageJson?: PackageJsonConfig;
+  readonly commitCount?: CommitCountConfig;
 }
 
 export interface IVersioningStrategy {
@@ -28,69 +41,65 @@ export interface IVersioningStrategy {
    * Variables: {git-tag}, {package-version}, {commit-count}, {commit-hash},
    *            {commit-hash:8}, {branch}, {build-number}
    */
-  format: string;
+  readonly format: string;
 
   /**
    * Components to include
    */
-  components: {
-    gitTag?: GitTagConfig;
-    packageJson?: PackageJsonConfig;
-    commitCount?: CommitCountConfig;
-  };
+  readonly components: VersioningStrategyComponents;
 }
 
 export interface GitTagConfig {
   /**
    * Only use annotated tags
    */
-  annotatedOnly?: boolean;
+  readonly annotatedOnly?: boolean;
   /**
    * Tag pattern to match
    */
-  pattern?: RegExp;
+  readonly pattern?: string;
   /**
    * Strip prefix from tag
    */
-  stripPrefix?: string;
+  readonly stripPrefix?: string;
   /**
    * Include commits since tag
    */
-  includeSinceTag?: boolean;
+  readonly includeSinceTag?: boolean;
 }
 
 export interface PackageJsonConfig {
   /**
    * Path to package.json
    */
-  path?: string;
+  readonly path?: string;
   /**
    * Include pre-release version
    */
-  includePrerelease?: boolean;
+  readonly includePrerelease?: boolean;
   /**
    * Append commit info
    */
-  appendCommitInfo?: boolean;
+  readonly appendCommitInfo?: boolean;
 }
 
 export interface CommitCountConfig {
   /**
    * Count from: 'all' | 'branch' | 'since-tag'
    */
-  countFrom?: 'all' | 'branch' | 'since-tag';
+  readonly countFrom?: 'all' | 'branch' | 'since-tag';
   /**
    * Include branch name
    */
-  includeBranch?: boolean;
+  readonly includeBranch?: boolean;
   /**
    * Reset on major version
    */
-  resetOnMajor?: boolean;
+  readonly resetOnMajor?: boolean;
   /**
    * Padding for count
    */
-  padding?: number;
+  readonly padding?: number;
 }
 
 export interface VersioningOutputConfig {
@@ -98,86 +107,143 @@ export interface VersioningOutputConfig {
    * Output to CloudFormation stack outputs
    * @default true
    */
-  cloudFormation: boolean | CloudFormationOutputConfig;
+  readonly cloudFormation: boolean | CloudFormationOutputConfig;
 
   /**
    * Output to SSM Parameter Store
    * @default false
    */
-  parameterStore: boolean | ParameterStoreConfig;
+  readonly parameterStore: boolean | ParameterStoreConfig;
 
   /**
    * Output format
    * @default 'structured'
    */
-  format: 'plain' | 'structured';
+  readonly format: 'plain' | 'structured';
 
   /**
    * Custom output targets
    */
-  custom?: CustomOutputConfig[];
+  readonly custom?: CustomOutputConfig[];
 }
 
 export interface CloudFormationOutputConfig {
-  enabled: boolean;
-  stackOutputName?: string;
-  exportName?: string;
+  readonly enabled: boolean;
+  readonly stackOutputName?: string;
+  readonly exportName?: string;
 }
 
 export interface ParameterStoreConfig {
-  enabled: boolean;
-  parameterName: string;
-  description?: string;
-  allowOverwrite?: boolean;
-  splitParameters?: boolean;
-  hierarchical?: boolean;
+  readonly enabled: boolean;
+  readonly parameterName: string;
+  readonly description?: string;
+  readonly allowOverwrite?: boolean;
+  readonly splitParameters?: boolean;
+  readonly hierarchical?: boolean;
 }
 
 export interface CustomOutputConfig {
-  type: string;
-  [key: string]: any;
+  readonly type: string;
+  readonly [key: string]: any;
 }
 
-export interface VersionInfo {
+export interface BuildNumberConfig {
+  readonly prefix?: string;
+  readonly commitCount?: CommitCountConfig;
+}
+
+export interface GitInfoInput {
+  readonly commitHash: string;
+  readonly branch: string;
+  readonly tag?: string;
+  readonly commitsSinceTag?: number;
+  readonly commitCount: number;
+}
+
+export interface DeploymentInfoInput {
+  readonly environment: string;
+  readonly deployedBy?: string;
+  readonly buildNumber?: string;
+}
+
+export interface StandardConfigOptions {
+  readonly parameterStore?: boolean | string;
+  readonly format?: 'plain' | 'structured';
+}
+
+export interface CloudFormationOnlyOptions {
+  readonly format?: 'plain' | 'structured';
+  readonly stackOutputName?: string;
+  readonly exportName?: string;
+}
+
+export interface HierarchicalParametersOptions {
+  readonly includeCloudFormation?: boolean;
+  readonly format?: 'plain' | 'structured';
+}
+
+export interface StandardOutputOptions {
+  readonly parameterName?: string;
+  readonly format?: 'plain' | 'structured';
+}
+
+export interface MutableVersionInfo {
+  version?: string;
+  commitHash?: string;
+  commitHashShort?: string;
+  branch?: string;
+  tag?: string;
+  commitsSinceTag?: number;
+  commitCount?: number;
+  packageVersion?: string;
+  deployedAt?: string;
+  deployedBy?: string;
+  buildNumber?: string;
+  environment?: string;
+  repository?: string;
+  pipelineVersion?: string;
+}
+
+export interface IVersionInfo {
   /**
    * Primary version string
    */
-  version: string;
+  readonly version: string;
 
   /**
    * Git information (ALWAYS included)
    */
-  commitHash: string;
-  commitHashShort: string;
-  branch: string;
+  readonly commitHash: string;
+  readonly commitHashShort: string;
+  readonly branch: string;
 
   /**
    * Optional git tag information
    */
-  tag?: string;
-  commitsSinceTag?: number;
+  readonly tag?: string;
+  readonly commitsSinceTag?: number;
 
   /**
    * Commit count information
    */
-  commitCount: number;
+  readonly commitCount: number;
 
   /**
    * Package.json information (if applicable)
    */
-  packageVersion?: string;
+  readonly packageVersion?: string;
 
   /**
    * Deployment metadata
    */
-  deployedAt: string;
-  deployedBy: string;
-  buildNumber?: string;
-  environment: string;
+  readonly deployedAt: string;
+  readonly deployedBy: string;
+  readonly buildNumber?: string;
+  readonly environment: string;
 
   /**
    * Additional metadata
    */
-  repository?: string;
-  pipelineVersion?: string;
+  readonly repository?: string;
+  readonly pipelineVersion?: string;
 }
