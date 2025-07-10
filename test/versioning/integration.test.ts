@@ -32,9 +32,9 @@ describe('Versioning Integration Tests', () => {
       const versionInfo = await computer.computeVersionInfo(context);
 
       expect(versionInfo.version).toBe('1.2.3');
-      expect(versionInfo.isTaggedRelease()).toBe(true);
-      expect(versionInfo.isMainBranch()).toBe(true);
-      expect(versionInfo.getDisplayVersion()).toBe('v1.2.3');
+      expect(versionInfo.taggedRelease()).toBe(true);
+      expect(versionInfo.mainBranch()).toBe(true);
+      expect(versionInfo.displayVersion()).toBe('v1.2.3');
     });
 
     it('should create version info from composite strategy', async () => {
@@ -63,7 +63,7 @@ describe('Versioning Integration Tests', () => {
       const versionInfo = await computer.computeVersionInfo(context);
 
       expect(versionInfo.version).toBe('1.2.3+5-12345678');
-      expect(versionInfo.isTaggedRelease()).toBe(false);
+      expect(versionInfo.taggedRelease()).toBe(false);
       expect(versionInfo.commitsSinceTag).toBe(5);
     });
 
@@ -86,41 +86,46 @@ describe('Versioning Integration Tests', () => {
       const versionInfo = await computer.computeVersionInfo(context);
 
       expect(versionInfo.version).toBe('1.2.3-beta.1');
-      expect(versionInfo.isMainBranch()).toBe(false);
+      expect(versionInfo.mainBranch()).toBe(false);
       expect(versionInfo.packageVersion).toBe('1.2.3-beta.1');
     });
   });
 
   describe('Configuration Integration', () => {
     it('should configure CloudFormation-only outputs', () => {
-      const config = VersioningConfigurations.builder()
-        .strategy(VersioningStrategy.gitTag())
-        .outputs(VersioningOutputs.cloudFormationOnly({
+      const config = VersioningConfigurations.custom({
+        strategy: VersioningStrategy.gitTag(),
+        outputs: VersioningOutputs.cloudFormationOnly({
           format: 'structured',
           stackOutputName: 'DeploymentInfo',
           exportName: 'MyApp-Version',
-        }))
-        .build();
+        }),
+      });
 
       expect(config.outputs.cloudFormation).toEqual({
         enabled: true,
         stackOutputName: 'DeploymentInfo',
         exportName: 'MyApp-Version',
       });
-      expect(config.outputs.parameterStore).toBe(false);
+      expect(config.outputs.parameterStore).toEqual({
+        enabled: false,
+        parameterName: '',
+      });
       expect(config.outputs.format).toBe('structured');
     });
 
     it('should configure hierarchical parameter store', () => {
-      const config = VersioningConfigurations.builder()
-        .strategy(VersioningStrategy.gitTag())
-        .outputs(VersioningOutputs.hierarchicalParameters('/myapp/{stage}/version', {
+      const config = VersioningConfigurations.custom({
+        strategy: VersioningStrategy.gitTag(),
+        outputs: VersioningOutputs.hierarchicalParameters('/myapp/{stage}/version', {
           format: 'structured',
           includeCloudFormation: true,
-        }))
-        .build();
+        }),
+      });
 
-      expect(config.outputs.cloudFormation).toBe(true);
+      expect(config.outputs.cloudFormation).toEqual({
+        enabled: true,
+      });
       expect(config.outputs.parameterStore).toEqual({
         enabled: true,
         parameterName: '/myapp/{stage}/version',
@@ -213,10 +218,10 @@ describe('Versioning Integration Tests', () => {
         environment: 'production',
       });
 
-      const parameterName = versionInfo.getParameterName('/myapp/{stage}/version/{branch}');
+      const parameterName = versionInfo.parameterName('/myapp/{stage}/version/{branch}');
       expect(parameterName).toBe('/myapp/production/version/main');
 
-      const exportName = versionInfo.getExportName('MyApp-{stage}-{version}');
+      const exportName = versionInfo.exportName('MyApp-{stage}-{version}');
       expect(exportName).toBe('MyApp-production-1.2.3');
     });
   });
@@ -244,8 +249,8 @@ describe('Versioning Integration Tests', () => {
 
       const versionInfo = await computer.computeVersionInfo(context);
       expect(versionInfo.version).toBe('feature/awesome-feature-75-12345678');
-      expect(versionInfo.isMainBranch()).toBe(false);
-      expect(versionInfo.isTaggedRelease()).toBe(false);
+      expect(versionInfo.mainBranch()).toBe(false);
+      expect(versionInfo.taggedRelease()).toBe(false);
     });
 
     it('should handle release candidate deployment to staging', async () => {
@@ -294,8 +299,8 @@ describe('Versioning Integration Tests', () => {
 
       const versionInfo = await computer.computeVersionInfo(context);
       expect(versionInfo.version).toBe('1.2.3');
-      expect(versionInfo.isTaggedRelease()).toBe(true);
-      expect(versionInfo.isMainBranch()).toBe(true);
+      expect(versionInfo.taggedRelease()).toBe(true);
+      expect(versionInfo.mainBranch()).toBe(true);
     });
 
     it('should handle build number strategy', async () => {

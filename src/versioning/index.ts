@@ -29,7 +29,7 @@ export {
 
 // Configuration
 export {
-  VersioningConfigBuilder,
+  CustomVersioningConfig,
   VersioningConfigurations,
   VersioningConfigUtils,
 } from './config';

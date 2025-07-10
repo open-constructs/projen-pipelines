@@ -18,10 +18,6 @@ export abstract class OutputConfigBase {
 export class CloudFormationOutput extends OutputConfigBase {
   public static readonly TYPE = 'cloudformation';
 
-  private constructor(private readonly config?: CloudFormationOutputConfig) {
-    super(CloudFormationOutput.TYPE);
-  }
-
   /**
    * Enable CloudFormation outputs with default configuration
    */
@@ -39,15 +35,19 @@ export class CloudFormationOutput extends OutputConfigBase {
   /**
    * Configure CloudFormation outputs with custom settings
    */
-  public static withConfig(config: Omit<CloudFormationOutputConfig, 'enabled'>): CloudFormationOutput {
-    return new CloudFormationOutput({ ...config, enabled: true });
+  public static withConfig(config: CloudFormationOutputConfig): CloudFormationOutput {
+    return new CloudFormationOutput({ ...config });
   }
 
-  public toConfig(): boolean | CloudFormationOutputConfig {
+  private constructor(private readonly config?: CloudFormationOutputConfig) {
+    super(CloudFormationOutput.TYPE);
+  }
+
+  public toConfig(): any {
     if (!this.config) {
-      return true;
+      return { enabled: true };
     }
-    return this.config.enabled ? this.config : false;
+    return this.config;
   }
 }
 
@@ -56,10 +56,6 @@ export class CloudFormationOutput extends OutputConfigBase {
  */
 export class ParameterStoreOutput extends OutputConfigBase {
   public static readonly TYPE = 'parameterStore';
-
-  private constructor(private readonly config?: ParameterStoreConfig) {
-    super(ParameterStoreOutput.TYPE);
-  }
 
   /**
    * Enable Parameter Store outputs with parameter name
@@ -78,17 +74,14 @@ export class ParameterStoreOutput extends OutputConfigBase {
   /**
    * Configure Parameter Store outputs with custom settings
    */
-  public static withConfig(config: Omit<ParameterStoreConfig, 'enabled'>): ParameterStoreOutput {
-    return new ParameterStoreOutput({ ...config, enabled: true });
+  public static withConfig(config: ParameterStoreConfig): ParameterStoreOutput {
+    return new ParameterStoreOutput({ ...config });
   }
 
   /**
    * Configure Parameter Store with hierarchical parameters
    */
-  public static hierarchical(basePath: string, options?: {
-    description?: string;
-    allowOverwrite?: boolean;
-  }): ParameterStoreOutput {
+  public static hierarchical(basePath: string, options?: HierarchicalParametersOptions): ParameterStoreOutput {
     return new ParameterStoreOutput({
       enabled: true,
       parameterName: basePath,
@@ -98,11 +91,15 @@ export class ParameterStoreOutput extends OutputConfigBase {
     });
   }
 
-  public toConfig(): boolean | ParameterStoreConfig {
+  private constructor(private readonly config?: ParameterStoreConfig) {
+    super(ParameterStoreOutput.TYPE);
+  }
+
+  public toConfig(): any {
     if (!this.config) {
-      return false;
+      return { enabled: false, parameterName: '' };
     }
-    return this.config.enabled ? this.config : false;
+    return this.config;
   }
 }
 
@@ -125,10 +122,10 @@ export class VersioningOutputs {
    */
   public static standard(options?: StandardOutputOptions): VersioningOutputConfig {
     return {
-      cloudFormation: true,
+      cloudFormation: CloudFormationOutput.enabled().toConfig(),
       parameterStore: options?.parameterName
         ? ParameterStoreOutput.enabled(options.parameterName).toConfig()
-        : false,
+        : ParameterStoreOutput.disabled().toConfig(),
       format: options?.format ?? 'plain',
     };
   }
@@ -139,14 +136,15 @@ export class VersioningOutputs {
   public static cloudFormationOnly(options?: CloudFormationOnlyOptions): VersioningOutputConfig {
     const cfConfig = options?.stackOutputName || options?.exportName
       ? CloudFormationOutput.withConfig({
+        enabled: true,
         stackOutputName: options.stackOutputName,
         exportName: options.exportName,
       }).toConfig()
-      : true;
+      : CloudFormationOutput.enabled().toConfig();
 
     return {
       cloudFormation: cfConfig,
-      parameterStore: false,
+      parameterStore: ParameterStoreOutput.disabled().toConfig(),
       format: options?.format ?? 'plain',
     };
   }
@@ -156,7 +154,7 @@ export class VersioningOutputs {
    */
   public static hierarchicalParameters(basePath: string, options?: HierarchicalParametersOptions): VersioningOutputConfig {
     return {
-      cloudFormation: options?.includeCloudFormation ?? true,
+      cloudFormation: options?.includeCloudFormation ? CloudFormationOutput.enabled().toConfig() : CloudFormationOutput.disabled().toConfig(),
       parameterStore: ParameterStoreOutput.hierarchical(basePath, {}).toConfig(),
       format: options?.format ?? 'plain',
     };
@@ -167,8 +165,8 @@ export class VersioningOutputs {
    */
   public static minimal(): VersioningOutputConfig {
     return {
-      cloudFormation: true,
-      parameterStore: false,
+      cloudFormation: CloudFormationOutput.enabled().toConfig(),
+      parameterStore: ParameterStoreOutput.disabled().toConfig(),
       format: 'plain',
     };
   }

@@ -1,3 +1,4 @@
+import { CloudFormationOutputConfig, HierarchicalParametersOptions, ParameterStoreConfig } from '../../src/versioning';
 import {
   CloudFormationOutput,
   ParameterStoreOutput,
@@ -15,20 +16,18 @@ describe('CloudFormationOutput', () => {
   it('should create disabled CloudFormation output', () => {
     const output = CloudFormationOutput.disabled();
     expect(output.type).toBe('cloudformation');
-    expect(output.toConfig()).toBe(false);
+    expect(output.toConfig()).toEqual({ enabled: false });
   });
 
   it('should create CloudFormation output with config', () => {
-    const config = {
+    const config: CloudFormationOutputConfig = {
+      enabled: true,
       stackOutputName: 'DeploymentInfo',
       exportName: 'MyApp-Version',
     };
     const output = CloudFormationOutput.withConfig(config);
     expect(output.type).toBe('cloudformation');
-    expect(output.toConfig()).toEqual({
-      enabled: true,
-      ...config,
-    });
+    expect(output.toConfig()).toEqual(config);
   });
 });
 
@@ -46,28 +45,26 @@ describe('ParameterStoreOutput', () => {
   it('should create disabled Parameter Store output', () => {
     const output = ParameterStoreOutput.disabled();
     expect(output.type).toBe('parameterStore');
-    expect(output.toConfig()).toBe(false);
+    expect(output.toConfig()).toEqual({ enabled: false, parameterName: '' });
   });
 
   it('should create Parameter Store output with config', () => {
-    const config = {
+    const config: ParameterStoreConfig = {
+      enabled: true,
       parameterName: '/myapp/version',
       description: 'Application version',
       allowOverwrite: true,
     };
     const output = ParameterStoreOutput.withConfig(config);
     expect(output.type).toBe('parameterStore');
-    expect(output.toConfig()).toEqual({
-      enabled: true,
-      ...config,
-    });
+    expect(output.toConfig()).toEqual(config);
   });
 
   it('should create hierarchical Parameter Store output', () => {
     const basePath = '/myapp/{stage}/version';
-    const options = {
-      description: 'Version info',
-      allowOverwrite: true,
+    const options: HierarchicalParametersOptions = {
+      includeCloudFormation: true,
+      format: 'structured',
     };
     const output = ParameterStoreOutput.hierarchical(basePath, options);
     expect(output.type).toBe('parameterStore');
@@ -93,8 +90,13 @@ describe('VersioningOutputs', () => {
     it('should create standard output configuration', () => {
       const config = VersioningOutputs.standard();
       expect(config).toEqual({
-        cloudFormation: true,
-        parameterStore: false,
+        cloudFormation: {
+          enabled: true,
+        },
+        parameterStore: {
+          enabled: false,
+          parameterName: '',
+        },
         format: 'plain',
       });
     });
@@ -103,7 +105,9 @@ describe('VersioningOutputs', () => {
       const parameterName = '/myapp/version';
       const config = VersioningOutputs.standard({ parameterName });
       expect(config).toEqual({
-        cloudFormation: true,
+        cloudFormation: {
+          enabled: true,
+        },
         parameterStore: {
           enabled: true,
           parameterName,
@@ -115,8 +119,13 @@ describe('VersioningOutputs', () => {
     it('should create standard output configuration with structured format', () => {
       const config = VersioningOutputs.standard({ format: 'structured' });
       expect(config).toEqual({
-        cloudFormation: true,
-        parameterStore: false,
+        cloudFormation: {
+          enabled: true,
+        },
+        parameterStore: {
+          enabled: false,
+          parameterName: '',
+        },
         format: 'structured',
       });
     });
@@ -126,8 +135,13 @@ describe('VersioningOutputs', () => {
     it('should create CloudFormation-only output configuration', () => {
       const config = VersioningOutputs.cloudFormationOnly();
       expect(config).toEqual({
-        cloudFormation: true,
-        parameterStore: false,
+        cloudFormation: {
+          enabled: true,
+        },
+        parameterStore: {
+          enabled: false,
+          parameterName: '',
+        },
         format: 'plain',
       });
     });
@@ -145,7 +159,10 @@ describe('VersioningOutputs', () => {
           stackOutputName: 'DeploymentInfo',
           exportName: 'MyApp-Version',
         },
-        parameterStore: false,
+        parameterStore: {
+          enabled: false,
+          parameterName: '',
+        },
         format: 'structured',
       });
     });
@@ -156,7 +173,9 @@ describe('VersioningOutputs', () => {
       const basePath = '/myapp/{stage}/version';
       const config = VersioningOutputs.hierarchicalParameters(basePath);
       expect(config).toEqual({
-        cloudFormation: true,
+        cloudFormation: {
+          enabled: false,
+        },
         parameterStore: {
           enabled: true,
           parameterName: basePath,
@@ -175,7 +194,9 @@ describe('VersioningOutputs', () => {
       };
       const config = VersioningOutputs.hierarchicalParameters(basePath, options);
       expect(config).toEqual({
-        cloudFormation: false,
+        cloudFormation: {
+          enabled: false,
+        },
         parameterStore: {
           enabled: true,
           parameterName: basePath,
@@ -191,8 +212,13 @@ describe('VersioningOutputs', () => {
     it('should create minimal output configuration', () => {
       const config = VersioningOutputs.minimal();
       expect(config).toEqual({
-        cloudFormation: true,
-        parameterStore: false,
+        cloudFormation: {
+          enabled: true,
+        },
+        parameterStore: {
+          enabled: false,
+          parameterName: '',
+        },
         format: 'plain',
       });
     });

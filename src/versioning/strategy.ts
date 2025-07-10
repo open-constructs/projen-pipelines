@@ -6,13 +6,6 @@ import { GitTagConfig, PackageJsonConfig, CommitCountConfig, IVersioningStrategy
  */
 export class VersioningStrategy implements IVersioningStrategy {
 
-  private constructor(
-    public readonly format: string,
-    public readonly components: VersioningStrategyComponents,
-  ) {
-    //
-  }
-
   /**
    * Create a composite strategy with custom format and components
    */
@@ -52,6 +45,13 @@ export class VersioningStrategy implements IVersioningStrategy {
 
   public static commitHash(): VersioningStrategy {
     return new VersioningStrategy('{commit-hash}', {});
+  }
+
+  private constructor(
+    public readonly format: string,
+    public readonly components: VersioningStrategyComponents,
+  ) {
+    //
   }
 
 }

@@ -1,40 +1,26 @@
-import { IVersionInfo, MutableVersionInfo, GitInfoInput, DeploymentInfoInput } from './types';
+import { IVersionInfo, GitInfoInput, DeploymentInfoInput } from './types';
 
+
+interface MutableVersionInfo {
+  version?: string;
+  commitHash?: string;
+  commitHashShort?: string;
+  branch?: string;
+  tag?: string;
+  commitsSinceTag?: number;
+  commitCount?: number;
+  packageVersion?: string;
+  deployedAt?: string;
+  deployedBy?: string;
+  buildNumber?: string;
+  environment?: string;
+  repository?: string;
+  pipelineVersion?: string;
+}
 /**
  * Represents complete version information for a deployment
  */
 export class VersionInfo implements IVersionInfo {
-  public readonly version: string;
-  public readonly commitHash: string;
-  public readonly commitHashShort: string;
-  public readonly branch: string;
-  public readonly tag?: string;
-  public readonly commitsSinceTag?: number;
-  public readonly commitCount: number;
-  public readonly packageVersion?: string;
-  public readonly deployedAt: string;
-  public readonly deployedBy: string;
-  public readonly buildNumber?: string;
-  public readonly environment: string;
-  public readonly repository?: string;
-  public readonly pipelineVersion?: string;
-
-  private constructor(props: IVersionInfo) {
-    this.version = props.version;
-    this.commitHash = props.commitHash;
-    this.commitHashShort = props.commitHashShort;
-    this.branch = props.branch;
-    this.tag = props.tag;
-    this.commitsSinceTag = props.commitsSinceTag;
-    this.commitCount = props.commitCount;
-    this.packageVersion = props.packageVersion;
-    this.deployedAt = props.deployedAt;
-    this.deployedBy = props.deployedBy;
-    this.buildNumber = props.buildNumber;
-    this.environment = props.environment;
-    this.repository = props.repository;
-    this.pipelineVersion = props.pipelineVersion;
-  }
 
   /**
    * Create a VersionInfo instance from raw data
@@ -82,6 +68,38 @@ export class VersionInfo implements IVersionInfo {
     return new VersionInfo(data);
   }
 
+  public readonly version: string;
+  public readonly commitHash: string;
+  public readonly commitHashShort: string;
+  public readonly branch: string;
+  public readonly tag?: string;
+  public readonly commitsSinceTag?: number;
+  public readonly commitCount: number;
+  public readonly packageVersion?: string;
+  public readonly deployedAt: string;
+  public readonly deployedBy: string;
+  public readonly buildNumber?: string;
+  public readonly environment: string;
+  public readonly repository?: string;
+  public readonly pipelineVersion?: string;
+
+  private constructor(props: IVersionInfo) {
+    this.version = props.version;
+    this.commitHash = props.commitHash;
+    this.commitHashShort = props.commitHashShort;
+    this.branch = props.branch;
+    this.tag = props.tag;
+    this.commitsSinceTag = props.commitsSinceTag;
+    this.commitCount = props.commitCount;
+    this.packageVersion = props.packageVersion;
+    this.deployedAt = props.deployedAt;
+    this.deployedBy = props.deployedBy;
+    this.buildNumber = props.buildNumber;
+    this.environment = props.environment;
+    this.repository = props.repository;
+    this.pipelineVersion = props.pipelineVersion;
+  }
+
   /**
    * Convert to plain version string
    */
@@ -124,7 +142,7 @@ export class VersionInfo implements IVersionInfo {
   /**
    * Get formatted version for display
    */
-  public getDisplayVersion(): string {
+  public displayVersion(): string {
     if (this.tag && this.commitsSinceTag === 0) {
       return this.tag;
     }
@@ -134,14 +152,14 @@ export class VersionInfo implements IVersionInfo {
   /**
    * Check if this version is from a tagged release
    */
-  public isTaggedRelease(): boolean {
+  public taggedRelease(): boolean {
     return this.tag !== undefined && this.commitsSinceTag === 0;
   }
 
   /**
    * Check if this version is from the main branch
    */
-  public isMainBranch(): boolean {
+  public mainBranch(): boolean {
     return this.branch === 'main' || this.branch === 'master';
   }
 
@@ -161,7 +179,7 @@ export class VersionInfo implements IVersionInfo {
   /**
    * Create a parameter name for SSM Parameter Store
    */
-  public getParameterName(template: string): string {
+  public parameterName(template: string): string {
     return template
       .replace('{stage}', this.environment)
       .replace('{environment}', this.environment)
@@ -172,7 +190,7 @@ export class VersionInfo implements IVersionInfo {
   /**
    * Create CloudFormation export name
    */
-  public getExportName(template: string): string {
+  public exportName(template: string): string {
     return template
       .replace('{stage}', this.environment)
       .replace('{environment}', this.environment)

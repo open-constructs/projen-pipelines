@@ -1,10 +1,6 @@
 
-export interface MutableVersioningConfig {
-  enabled?: boolean;
-  strategy?: IVersioningStrategy;
-  outputs?: VersioningOutputConfig;
-  stageOverrides?: { [stage: string]: Partial<VersioningConfig> };
-}
+
+export type StageOverrides = { [stage: string]: VersioningConfig };
 
 export interface VersioningConfig {
   /**
@@ -26,7 +22,7 @@ export interface VersioningConfig {
   /**
    * Stage-specific overrides
    */
-  readonly stageOverrides?: { [stage: string]: Partial<VersioningConfig> };
+  readonly stageOverrides?: StageOverrides;
 }
 
 export interface VersioningStrategyComponents {
@@ -107,13 +103,13 @@ export interface VersioningOutputConfig {
    * Output to CloudFormation stack outputs
    * @default true
    */
-  readonly cloudFormation: boolean | CloudFormationOutputConfig;
+  readonly cloudFormation: CloudFormationOutputConfig;
 
   /**
    * Output to SSM Parameter Store
    * @default false
    */
-  readonly parameterStore: boolean | ParameterStoreConfig;
+  readonly parameterStore: ParameterStoreConfig;
 
   /**
    * Output format
@@ -121,10 +117,6 @@ export interface VersioningOutputConfig {
    */
   readonly format: 'plain' | 'structured';
 
-  /**
-   * Custom output targets
-   */
-  readonly custom?: CustomOutputConfig[];
 }
 
 export interface CloudFormationOutputConfig {
@@ -135,16 +127,11 @@ export interface CloudFormationOutputConfig {
 
 export interface ParameterStoreConfig {
   readonly enabled: boolean;
-  readonly parameterName: string;
+  readonly parameterName?: string;
   readonly description?: string;
   readonly allowOverwrite?: boolean;
   readonly splitParameters?: boolean;
   readonly hierarchical?: boolean;
-}
-
-export interface CustomOutputConfig {
-  readonly type: string;
-  readonly [key: string]: any;
 }
 
 export interface BuildNumberConfig {
@@ -185,23 +172,6 @@ export interface HierarchicalParametersOptions {
 export interface StandardOutputOptions {
   readonly parameterName?: string;
   readonly format?: 'plain' | 'structured';
-}
-
-export interface MutableVersionInfo {
-  version?: string;
-  commitHash?: string;
-  commitHashShort?: string;
-  branch?: string;
-  tag?: string;
-  commitsSinceTag?: number;
-  commitCount?: number;
-  packageVersion?: string;
-  deployedAt?: string;
-  deployedBy?: string;
-  buildNumber?: string;
-  environment?: string;
-  repository?: string;
-  pipelineVersion?: string;
 }
 
 export interface IVersionInfo {

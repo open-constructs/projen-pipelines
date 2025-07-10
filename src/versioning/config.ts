@@ -1,65 +1,13 @@
 import { VersioningOutputs } from './outputs';
 import { VersioningStrategy } from './strategy';
-import { VersioningConfig, MutableVersioningConfig, IVersioningStrategy, StandardConfigOptions } from './types';
+import { VersioningConfig, IVersioningStrategy, StandardConfigOptions, VersioningOutputConfig, StageOverrides } from './types';
 
-/**
- * Builder class for versioning configuration
- */
-export class VersioningConfigBuilder {
-  private config: MutableVersioningConfig = {
-    enabled: true,
-  };
 
-  /**
-   * Enable or disable versioning
-   */
-  public enabled(enabled: boolean): this {
-    this.config.enabled = enabled;
-    return this;
-  }
-
-  /**
-   * Set the primary versioning strategy
-   */
-  public strategy(strategy: IVersioningStrategy): this {
-    this.config.strategy = strategy;
-    return this;
-  }
-
-  /**
-   * Configure outputs
-   */
-  public outputs(outputs: VersioningConfig['outputs']): this {
-    this.config.outputs = outputs;
-    return this;
-  }
-
-  /**
-   * Set stage-specific overrides
-   */
-  public stageOverrides(overrides: VersioningConfig['stageOverrides']): this {
-    this.config.stageOverrides = overrides;
-    return this;
-  }
-
-  /**
-   * Build the configuration
-   */
-  public build(): VersioningConfig {
-    if (!this.config.strategy) {
-      throw new Error('Strategy is required');
-    }
-    if (!this.config.outputs) {
-      throw new Error('Outputs configuration is required');
-    }
-
-    return {
-      enabled: this.config.enabled!,
-      strategy: this.config.strategy,
-      outputs: this.config.outputs,
-      stageOverrides: this.config.stageOverrides,
-    };
-  }
+export interface CustomVersioningConfig {
+  readonly enabled?: boolean;
+  readonly strategy: IVersioningStrategy;
+  readonly outputs: VersioningOutputConfig;
+  readonly stageOverrides?: StageOverrides;
 }
 
 /**
@@ -67,33 +15,40 @@ export class VersioningConfigBuilder {
  */
 export class VersioningConfigurations {
   /**
-   * Create a new configuration builder
-   */
-  public static builder(): VersioningConfigBuilder {
-    return new VersioningConfigBuilder();
-  }
-
-  /**
-   * Standard configuration with git tag strategy
+   * Standard configuration with commit count strategy
    */
   public static standard(options?: StandardConfigOptions): VersioningConfig {
-    return new VersioningConfigBuilder()
-      .strategy(VersioningStrategy.commitCount())
-      .outputs(VersioningOutputs.standard({
+    return {
+      enabled: true,
+      strategy: VersioningStrategy.commitCount(),
+      outputs: VersioningOutputs.standard({
         parameterName: typeof options?.parameterStore === 'string' ? options.parameterStore : undefined,
         format: options?.format,
-      }))
-      .build();
+      }),
+    };
   }
 
   /**
    * Minimal configuration for testing
    */
   public static minimal(): VersioningConfig {
-    return new VersioningConfigBuilder()
-      .strategy(VersioningStrategy.commitHash())
-      .outputs(VersioningOutputs.minimal())
-      .build();
+    return {
+      enabled: true,
+      strategy: VersioningStrategy.commitHash(),
+      outputs: VersioningOutputs.minimal(),
+    };
+  }
+
+  /**
+   * Create a custom configuration
+   */
+  public static custom(config: CustomVersioningConfig): VersioningConfig {
+    return {
+      enabled: config.enabled ?? true,
+      strategy: config.strategy,
+      outputs: config.outputs,
+      stageOverrides: config.stageOverrides,
+    };
   }
 }
 
@@ -131,20 +86,13 @@ export class VersioningConfigUtils {
       errors.push('Outputs configuration is required');
     }
 
-    if (config.outputs?.parameterStore && typeof config.outputs.parameterStore === 'object') {
-      const paramConfig = config.outputs.parameterStore;
-      if (!paramConfig.parameterName) {
-        errors.push('Parameter name is required when parameterStore is enabled');
-      }
-    }
-
     return errors;
   }
 
   /**
    * Get default configuration
    */
-  public static getDefault(): VersioningConfig {
+  public static default(): VersioningConfig {
     return VersioningConfigurations.standard();
   }
 }

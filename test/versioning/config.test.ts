@@ -1,81 +1,63 @@
 import {
-  VersioningConfigBuilder,
   VersioningConfigurations,
   VersioningConfigUtils,
 } from '../../src/versioning/config';
 import { VersioningOutputs } from '../../src/versioning/outputs';
 import { VersioningStrategy } from '../../src/versioning/strategy';
+import { StageOverrides, VersioningConfig } from '../../src/versioning/types';
 
 describe('VersioningConfigBuilder', () => {
   it('should build basic configuration', () => {
-    const config = new VersioningConfigBuilder()
-      .enabled(true)
-      .strategy(VersioningStrategy.gitTag())
-      .outputs(VersioningOutputs.standard())
-      .build();
+    const config = VersioningConfigurations.standard();
 
     expect(config.enabled).toBe(true);
-    expect(config.strategy.format).toBe('{git-tag}');
+    expect(config.strategy.format).toBe('{commit-count}');
     expect(config.outputs).toEqual({
-      cloudFormation: true,
-      parameterStore: false,
+      cloudFormation: {
+        enabled: true,
+      },
+      parameterStore: {
+        enabled: false,
+        parameterName: '',
+      },
       format: 'plain',
     });
   });
 
   it('should build configuration with stage overrides', () => {
-    const stageOverrides = {
+    const stageOverrides: StageOverrides = {
       dev: {
+        enabled: true,
         strategy: VersioningStrategy.commitCount(),
         outputs: VersioningOutputs.minimal(),
       },
       prod: {
+        enabled: true,
         strategy: VersioningStrategy.gitTag(),
+        outputs: VersioningOutputs.standard(),
       },
     };
 
-    const config = new VersioningConfigBuilder()
-      .strategy(VersioningStrategy.gitTag())
-      .outputs(VersioningOutputs.standard())
-      .stageOverrides(stageOverrides)
-      .build();
+    const config = VersioningConfigurations.custom({
+      strategy: VersioningStrategy.gitTag(),
+      outputs: VersioningOutputs.standard(),
+      stageOverrides,
+    });
 
     expect(config.stageOverrides).toEqual(stageOverrides);
   });
 
-  it('should throw error when strategy is missing', () => {
-    expect(() => {
-      new VersioningConfigBuilder()
-        .outputs(VersioningOutputs.standard())
-        .build();
-    }).toThrow('Strategy is required');
-  });
-
-  it('should throw error when outputs configuration is missing', () => {
-    expect(() => {
-      new VersioningConfigBuilder()
-        .strategy(VersioningStrategy.gitTag())
-        .build();
-    }).toThrow('Outputs configuration is required');
-  });
-
   it('should use default enabled value', () => {
-    const config = new VersioningConfigBuilder()
-      .strategy(VersioningStrategy.gitTag())
-      .outputs(VersioningOutputs.standard())
-      .build();
+    const config = VersioningConfigurations.custom({
+      strategy: VersioningStrategy.gitTag(),
+      outputs: VersioningOutputs.standard(),
+    });
 
     expect(config.enabled).toBe(true);
   });
 });
 
 describe('VersioningConfigurations', () => {
-  describe('builder', () => {
-    it('should create a new builder instance', () => {
-      const builder = VersioningConfigurations.builder();
-      expect(builder).toBeInstanceOf(VersioningConfigBuilder);
-    });
-  });
 
   describe('standard', () => {
     it('should create standard configuration', () => {
@@ -83,8 +65,13 @@ describe('VersioningConfigurations', () => {
       expect(config.enabled).toBe(true);
       expect(config.strategy.format).toBe('{commit-count}');
       expect(config.outputs).toEqual({
-        cloudFormation: true,
-        parameterStore: false,
+        cloudFormation: {
+          enabled: true,
+        },
+        parameterStore: {
+          enabled: false,
+          parameterName: '',
+        },
         format: 'plain',
       });
     });
@@ -113,8 +100,13 @@ describe('VersioningConfigurations', () => {
       expect(config.enabled).toBe(true);
       expect(config.strategy.format).toBe('{commit-hash}');
       expect(config.outputs).toEqual({
-        cloudFormation: true,
-        parameterStore: false,
+        cloudFormation: {
+          enabled: true,
+        },
+        parameterStore: {
+          enabled: false,
+          parameterName: '',
+        },
         format: 'plain',
       });
     });
@@ -131,10 +123,11 @@ describe('VersioningConfigUtils', () => {
 
     it('should merge stage overrides', () => {
       const baseConfig = VersioningConfigurations.standard();
-      const configWithOverrides = {
+      const configWithOverrides: VersioningConfig = {
         ...baseConfig,
         stageOverrides: {
           dev: {
+            enabled: true,
             strategy: VersioningStrategy.commitHash(),
             outputs: VersioningOutputs.minimal(),
           },
@@ -142,29 +135,10 @@ describe('VersioningConfigUtils', () => {
       };
 
       const resolved = VersioningConfigUtils.resolveForStage(configWithOverrides, 'dev');
-      expect(resolved.strategy).toEqual(configWithOverrides.stageOverrides.dev.strategy);
-      expect(resolved.outputs).toEqual(configWithOverrides.stageOverrides.dev.outputs);
+      expect(resolved.strategy).toEqual(configWithOverrides.stageOverrides?.dev.strategy);
+      expect(resolved.outputs).toEqual(configWithOverrides.stageOverrides?.dev.outputs);
     });
 
-    it('should merge partial stage overrides', () => {
-      const baseConfig = VersioningConfigurations.standard();
-      const configWithOverrides = {
-        ...baseConfig,
-        stageOverrides: {
-          dev: {
-            outputs: {
-              ...baseConfig.outputs,
-              format: 'structured' as const,
-            },
-          },
-        },
-      };
-
-      const resolved = VersioningConfigUtils.resolveForStage(configWithOverrides, 'dev');
-      expect(resolved.outputs.format).toBe('structured');
-      expect(resolved.outputs.cloudFormation).toBe(true); // Original value preserved
-      expect(resolved.outputs.parameterStore).toBe(false); // Original value preserved
-    });
   });
 
   describe('validate', () => {
@@ -193,28 +167,11 @@ describe('VersioningConfigUtils', () => {
       const errors = VersioningConfigUtils.validate(config);
       expect(errors).toContain('Outputs configuration is required');
     });
-
-    it('should fail validation when parameter store is enabled but parameter name is missing', () => {
-      const config = {
-        enabled: true,
-        strategy: VersioningStrategy.gitTag(),
-        outputs: {
-          cloudFormation: true,
-          parameterStore: {
-            enabled: true,
-            parameterName: '',
-          },
-          format: 'plain' as const,
-        },
-      };
-      const errors = VersioningConfigUtils.validate(config);
-      expect(errors).toContain('Parameter name is required when parameterStore is enabled');
-    });
   });
 
-  describe('getDefault', () => {
+  describe('default', () => {
     it('should return default configuration', () => {
-      const config = VersioningConfigUtils.getDefault();
+      const config = VersioningConfigUtils.default();
       expect(config).toEqual(VersioningConfigurations.standard());
     });
   });

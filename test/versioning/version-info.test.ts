@@ -161,7 +161,7 @@ describe('VersionInfo', () => {
         tag: 'v1.2.3',
         commitsSinceTag: 0,
       });
-      expect(versionInfo.getDisplayVersion()).toBe('v1.2.3');
+      expect(versionInfo.displayVersion()).toBe('v1.2.3');
     });
 
     it('should return version for non-tagged release', () => {
@@ -170,7 +170,7 @@ describe('VersionInfo', () => {
         tag: 'v1.2.3',
         commitsSinceTag: 5,
       });
-      expect(versionInfo.getDisplayVersion()).toBe('1.2.3');
+      expect(versionInfo.displayVersion()).toBe('1.2.3');
     });
 
     it('should return version when no tag', () => {
@@ -178,7 +178,7 @@ describe('VersionInfo', () => {
         ...sampleVersionInfo,
         tag: undefined,
       });
-      expect(versionInfo.getDisplayVersion()).toBe('1.2.3');
+      expect(versionInfo.displayVersion()).toBe('1.2.3');
     });
   });
 
@@ -189,7 +189,7 @@ describe('VersionInfo', () => {
         tag: 'v1.2.3',
         commitsSinceTag: 0,
       });
-      expect(versionInfo.isTaggedRelease()).toBe(true);
+      expect(versionInfo.taggedRelease()).toBe(true);
     });
 
     it('should return false for non-tagged release', () => {
@@ -198,7 +198,7 @@ describe('VersionInfo', () => {
         tag: 'v1.2.3',
         commitsSinceTag: 5,
       });
-      expect(versionInfo.isTaggedRelease()).toBe(false);
+      expect(versionInfo.taggedRelease()).toBe(false);
     });
 
     it('should return false when no tag', () => {
@@ -206,7 +206,7 @@ describe('VersionInfo', () => {
         ...sampleVersionInfo,
         tag: undefined,
       });
-      expect(versionInfo.isTaggedRelease()).toBe(false);
+      expect(versionInfo.taggedRelease()).toBe(false);
     });
   });
 
@@ -216,7 +216,7 @@ describe('VersionInfo', () => {
         ...sampleVersionInfo,
         branch: 'main',
       });
-      expect(versionInfo.isMainBranch()).toBe(true);
+      expect(versionInfo.mainBranch()).toBe(true);
     });
 
     it('should return true for master branch', () => {
@@ -224,7 +224,7 @@ describe('VersionInfo', () => {
         ...sampleVersionInfo,
         branch: 'master',
       });
-      expect(versionInfo.isMainBranch()).toBe(true);
+      expect(versionInfo.mainBranch()).toBe(true);
     });
 
     it('should return false for other branches', () => {
@@ -232,7 +232,7 @@ describe('VersionInfo', () => {
         ...sampleVersionInfo,
         branch: 'feature/test',
       });
-      expect(versionInfo.isMainBranch()).toBe(false);
+      expect(versionInfo.mainBranch()).toBe(false);
     });
   });
 
@@ -283,7 +283,7 @@ describe('VersionInfo', () => {
         version: '1.2.3',
       });
       const template = '/myapp/{stage}/version/{branch}';
-      const result = versionInfo.getParameterName(template);
+      const result = versionInfo.parameterName(template);
       expect(result).toBe('/myapp/prod/version/main');
     });
   });
@@ -296,7 +296,7 @@ describe('VersionInfo', () => {
         version: '1.2.3',
       });
       const template = 'MyApp-{stage}-{version}';
-      const result = versionInfo.getExportName(template);
+      const result = versionInfo.exportName(template);
       expect(result).toBe('MyApp-prod-1.2.3');
     });
   });
@@ -322,7 +322,7 @@ describe('VersionInfoBuilder', () => {
       })
       .repository('owner/repo')
       .pipelineVersion('1.0.0')
-      .build();
+      .create();
 
     expect(versionInfo.version).toBe('1.2.3');
     expect(versionInfo.commitHash).toBe('1234567890abcdef');
@@ -341,12 +341,12 @@ describe('VersionInfoBuilder', () => {
 
   it('should throw error when required fields are missing', () => {
     const builder = new VersionInfoBuilder();
-    expect(() => builder.build()).toThrow('Version is required');
+    expect(() => builder.create()).toThrow('Version is required');
   });
 
   it('should throw error when commit hash is missing', () => {
     const builder = new VersionInfoBuilder();
-    expect(() => builder.version('1.2.3').build()).toThrow('Commit hash is required');
+    expect(() => builder.version('1.2.3').create()).toThrow('Commit hash is required');
   });
 
   it('should throw error when branch is missing', () => {
@@ -358,7 +358,7 @@ describe('VersionInfoBuilder', () => {
         branch: '',
         commitCount: 100,
       })
-      .build()).toThrow('Branch is required');
+      .create()).toThrow('Branch is required');
   });
 
   it('should throw error when commit count is missing', () => {
@@ -370,7 +370,7 @@ describe('VersionInfoBuilder', () => {
         branch: 'main',
         commitCount: undefined as any,
       })
-      .build()).toThrow('Commit count is required');
+      .create()).toThrow('Commit count is required');
   });
 
   it('should throw error when environment is missing', () => {
@@ -382,7 +382,7 @@ describe('VersionInfoBuilder', () => {
         branch: 'main',
         commitCount: 100,
       })
-      .build()).toThrow('Environment is required');
+      .create()).toThrow('Environment is required');
   });
 
   it('should use defaults for optional fields', () => {
@@ -397,7 +397,7 @@ describe('VersionInfoBuilder', () => {
       .deploymentInfo({
         environment: 'production',
       })
-      .build();
+      .create();
 
     expect(versionInfo.deployedBy).toBe('unknown');
     expect(versionInfo.deployedAt).toBeTruthy();

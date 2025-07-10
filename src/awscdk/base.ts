@@ -3,6 +3,7 @@ import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence } from '../steps';
+import { VersioningConfig } from '../versioning';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -174,6 +175,11 @@ export interface CDKPipelineOptions {
   readonly preInstallSteps?: PipelineStep[];
   readonly preSynthSteps?: PipelineStep[];
   readonly postSynthSteps?: PipelineStep[];
+
+  /**
+   * Versioning configuration
+   */
+  readonly versioning?: VersioningConfig;
 }
 
 /**
@@ -209,6 +215,11 @@ export abstract class CDKPipeline extends Component {
     this.project.removeTask('diff');
     this.project.removeTask('destroy');
     this.project.removeTask('watch');
+
+    // Setup versioning if enabled
+    if (baseOptions.versioning?.enabled) {
+      this.setupVersioning();
+    }
 
     // Creates different deployment stages
     if (baseOptions.personalStage) {
@@ -423,10 +434,105 @@ export abstract class CDKPipeline extends Component {
 `;
     }
 
+    // Add versioning logic to apply to all stacks
+    if (this.baseOptions.versioning?.enabled) {
+      appCode += `
+    // Apply versioning to all stacks
+    this.node.children.forEach((child) => {
+      if (child instanceof Stack) {
+        const stageName = child.stackName.split('-').pop() || 'default';
+        addVersioningToStack(child, stageName);
+      }
+    });
+`;
+    }
+
     const appFile = new TextFile(this.project, `${this.app.srcdir}/app.ts`);
+
+    // Generate versioning-aware imports and utilities
+    const versioningImports = this.baseOptions.versioning?.enabled
+      ? `import { CfnOutput } from 'aws-cdk-lib';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import * as fs from 'fs';`
+      : '';
+
+    const versioningUtilities = this.baseOptions.versioning?.enabled
+      ? `
+/**
+ * Load version information from generated file
+ */
+function loadVersionInfo(): any {
+  try {
+    return JSON.parse(fs.readFileSync('src/generated/version.json', 'utf8'));
+  } catch (error) {
+    console.warn('Could not load version info, using fallback');
+    return {
+      version: '0.0.0',
+      commitHash: 'unknown',
+      commitHashShort: 'unknown',
+      branch: 'unknown',
+      commitCount: 0,
+      packageVersion: '0.0.0',
+      deployedAt: new Date().toISOString(),
+      deployedBy: 'unknown',
+      environment: 'unknown'
+    };
+  }
+}
+
+/**
+ * Add versioning outputs to a stack
+ */
+function addVersioningToStack(stack: Stack, stageName: string): void {
+  const versionInfo = loadVersionInfo();
+  
+  ${this.baseOptions.versioning?.outputs?.cloudFormation.enabled ? `
+  // Add CloudFormation outputs
+  new CfnOutput(stack, '${this.baseOptions.versioning.outputs?.cloudFormation.stackOutputName || 'AppVersion'}', {
+    value: versionInfo.version,
+    description: 'Application version',
+    ${this.baseOptions.versioning.outputs?.cloudFormation.exportName ? `
+    exportName: '${this.baseOptions.versioning.outputs?.cloudFormation.exportName}',
+    ` : ''}
+  });
+  
+  new CfnOutput(stack, '${this.baseOptions.versioning.outputs?.cloudFormation.stackOutputName || 'AppVersion'}CommitHash', {
+    value: versionInfo.commitHash,
+    description: 'Git commit hash',
+    ${this.baseOptions.versioning.outputs?.cloudFormation.exportName ? `
+    exportName: '${this.baseOptions.versioning.outputs?.cloudFormation.exportName}CommitHash',
+    ` : ''}
+  });
+  
+  new CfnOutput(stack, '${this.baseOptions.versioning.outputs?.cloudFormation.stackOutputName || 'AppVersion'}Branch', {
+    value: versionInfo.branch,
+    description: 'Git branch',
+    ${this.baseOptions.versioning.outputs?.cloudFormation.exportName ? `
+    exportName: '${this.baseOptions.versioning.outputs?.cloudFormation.exportName}Branch',
+    ` : ''}
+  });
+  ` : ''}
+  
+  ${this.baseOptions.versioning?.outputs?.parameterStore.enabled ? `
+  // Add SSM Parameter Store parameters
+  const parameterName = '${this.baseOptions.versioning.outputs?.parameterStore.parameterName || '/{stackName}/version'}'
+    .replace('{stackName}', stack.stackName)
+    .replace('{stageName}', stageName);
+    
+  new StringParameter(stack, 'VersionParameter', {
+    parameterName,
+    stringValue: JSON.stringify(versionInfo),
+    description: 'Complete version information',
+  });
+  ` : ''}
+}`
+      : '';
+
     appFile.addLine(`// ${PROJEN_MARKER}
 /* eslint-disable */
 import { App, AppProps, Stack, StackProps } from 'aws-cdk-lib';
+${versioningImports}
+${versioningUtilities}
 
 /**
  * PipelineAppProps is an extension of AppProps, which is part of the AWS CDK core.
@@ -461,6 +567,58 @@ ${appCode}
   }
 }
 `);
+  }
+
+  /**
+   * Setup versioning by creating version computation task and files
+   */
+  protected setupVersioning() {
+    // Create version computation task
+    this.project.addTask('version:compute', {
+      description: 'Compute version information from git',
+      steps: [
+        { exec: 'echo "Computing version information..."' },
+        { exec: 'mkdir -p src/generated' },
+        {
+          exec: 'node -e "' +
+            'const fs = require(\'fs\'); ' +
+            'const cp = require(\'child_process\'); ' +
+            'try { ' +
+            '  const commitHash = cp.execSync(\'git rev-parse HEAD\', {encoding: \'utf8\'}).trim(); ' +
+            '  const commitCount = cp.execSync(\'git rev-list --count HEAD\', {encoding: \'utf8\'}).trim(); ' +
+            '  const branch = cp.execSync(\'git rev-parse --abbrev-ref HEAD\', {encoding: \'utf8\'}).trim(); ' +
+            '  let tag = \'\'; ' +
+            '  try { tag = cp.execSync(\'git describe --tags --exact-match\', {encoding: \'utf8\'}).trim(); } catch {} ' +
+            '  const packageVersion = JSON.parse(fs.readFileSync(\'package.json\', \'utf8\')).version; ' +
+            '  const version = tag || packageVersion; ' +
+            '  const versionInfo = { ' +
+            '    version, ' +
+            '    commitHash, ' +
+            '    commitHashShort: commitHash.substring(0, 8), ' +
+            '    branch, ' +
+            '    tag, ' +
+            '    commitCount: parseInt(commitCount), ' +
+            '    packageVersion, ' +
+            '    deployedAt: new Date().toISOString(), ' +
+            '    deployedBy: process.env.GITHUB_ACTOR || process.env.GITLAB_USER_LOGIN || process.env.USER || \'unknown\', ' +
+            '    environment: process.env.STAGE || process.env.ENVIRONMENT || \'unknown\' ' +
+            '  }; ' +
+            '  fs.writeFileSync(\'src/generated/version.json\', JSON.stringify(versionInfo, null, 2)); ' +
+            '  console.log(\'Version computed:\', version, \'(commit:\', commitHash.substring(0, 8) + \')\'); ' +
+            '} catch (e) { ' +
+            '  console.error(\'Error computing version:\', e.message); ' +
+            '  const fallback = {version: \'0.0.0\', commitHash: \'unknown\', commitHashShort: \'unknown\', branch: \'unknown\', commitCount: 0, packageVersion: \'0.0.0\', deployedAt: new Date().toISOString(), deployedBy: \'unknown\', environment: \'unknown\'}; ' +
+            '  fs.writeFileSync(\'src/generated/version.json\', JSON.stringify(fallback, null, 2)); ' +
+            '}"',
+        },
+      ],
+    });
+
+    // Add version computation to build task
+    const buildTask = this.project.tasks.tryFind('build');
+    if (buildTask) {
+      buildTask.prependSpawn(this.project.tasks.tryFind('version:compute')!);
+    }
   }
 
   /**
