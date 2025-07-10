@@ -463,7 +463,7 @@ import * as fs from 'fs';`
  */
 function loadVersionInfo(): any {
   try {
-    return JSON.parse(fs.readFileSync('src/generated/version.json', 'utf8'));
+    return JSON.parse(fs.readFileSync('~version.json', 'utf8'));
   } catch (error) {
     console.warn('Could not load version info, using fallback');
     return {
@@ -578,7 +578,6 @@ ${appCode}
       description: 'Compute version information from git',
       steps: [
         { exec: 'echo "Computing version information..."' },
-        { exec: 'mkdir -p src/generated' },
         {
           exec: 'node -e "' +
             'const fs = require(\'fs\'); ' +
@@ -603,22 +602,31 @@ ${appCode}
             '    deployedBy: process.env.GITHUB_ACTOR || process.env.GITLAB_USER_LOGIN || process.env.USER || \'unknown\', ' +
             '    environment: process.env.STAGE || process.env.ENVIRONMENT || \'unknown\' ' +
             '  }; ' +
-            '  fs.writeFileSync(\'src/generated/version.json\', JSON.stringify(versionInfo, null, 2)); ' +
+            '  fs.writeFileSync(\'~version.json\', JSON.stringify(versionInfo, null, 2)); ' +
             '  console.log(\'Version computed:\', version, \'(commit:\', commitHash.substring(0, 8) + \')\'); ' +
             '} catch (e) { ' +
             '  console.error(\'Error computing version:\', e.message); ' +
             '  const fallback = {version: \'0.0.0\', commitHash: \'unknown\', commitHashShort: \'unknown\', branch: \'unknown\', commitCount: 0, packageVersion: \'0.0.0\', deployedAt: new Date().toISOString(), deployedBy: \'unknown\', environment: \'unknown\'}; ' +
-            '  fs.writeFileSync(\'src/generated/version.json\', JSON.stringify(fallback, null, 2)); ' +
+            '  fs.writeFileSync(\'~version.json\', JSON.stringify(fallback, null, 2)); ' +
             '}"',
         },
       ],
     });
+    this.project.addTask('version:print', {
+      description: 'Print version information',
+      steps: [
+        { exec: 'cat ~version.json' },
+      ],
+    });
 
     // Add version computation to build task
-    const buildTask = this.project.tasks.tryFind('build');
-    if (buildTask) {
-      buildTask.prependSpawn(this.project.tasks.tryFind('version:compute')!);
+    const compileTask = this.project.tasks.tryFind('compile');
+    if (compileTask) {
+      compileTask.prependSpawn(this.project.tasks.tryFind('version:compute')!);
+      compileTask.prependSpawn(this.project.tasks.tryFind('version:print')!);
     }
+
+    this.project.gitignore.exclude('~version.json');
   }
 
   /**

@@ -4050,10 +4050,10 @@ const parameterStoreConfig: ParameterStoreConfig = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.ParameterStoreConfig.property.enabled">enabled</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#projen-pipelines.ParameterStoreConfig.property.parameterName">parameterName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.ParameterStoreConfig.property.allowOverwrite">allowOverwrite</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#projen-pipelines.ParameterStoreConfig.property.description">description</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.ParameterStoreConfig.property.hierarchical">hierarchical</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.ParameterStoreConfig.property.parameterName">parameterName</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.ParameterStoreConfig.property.splitParameters">splitParameters</a></code> | <code>boolean</code> | *No description.* |
 
 ---
@@ -4065,16 +4065,6 @@ public readonly enabled: boolean;
 ```
 
 - *Type:* boolean
-
----
-
-##### `parameterName`<sup>Required</sup> <a name="parameterName" id="projen-pipelines.ParameterStoreConfig.property.parameterName"></a>
-
-```typescript
-public readonly parameterName: string;
-```
-
-- *Type:* string
 
 ---
 
@@ -4105,6 +4095,16 @@ public readonly hierarchical: boolean;
 ```
 
 - *Type:* boolean
+
+---
+
+##### `parameterName`<sup>Optional</sup> <a name="parameterName" id="projen-pipelines.ParameterStoreConfig.property.parameterName"></a>
+
+```typescript
+public readonly parameterName: string;
+```
+
+- *Type:* string
 
 ---
 
