@@ -87,7 +87,7 @@ test('Bash snapshot with versioning enabled', () => {
     iamRoleArns: {},
     versioning: {
       enabled: true,
-      outputs: VersioningOutputs.standard(),
+      outputs: VersioningOutputs.standard({ parameterName: '/{stackName}/version' }),
       strategy: VersioningStrategy.commitCount(),
     },
     stages: [{

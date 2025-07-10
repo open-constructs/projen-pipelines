@@ -20,7 +20,6 @@ describe('VersioningConfigBuilder', () => {
         enabled: false,
         parameterName: '',
       },
-      format: 'plain',
     });
   });
 
@@ -72,7 +71,6 @@ describe('VersioningConfigurations', () => {
           enabled: false,
           parameterName: '',
         },
-        format: 'plain',
       });
     });
 
@@ -84,13 +82,6 @@ describe('VersioningConfigurations', () => {
         enabled: true,
         parameterName: '/myapp/version',
       });
-    });
-
-    it('should create standard configuration with structured format', () => {
-      const config = VersioningConfigurations.standard({
-        format: 'structured',
-      });
-      expect(config.outputs.format).toBe('structured');
     });
   });
 
@@ -107,7 +98,6 @@ describe('VersioningConfigurations', () => {
           enabled: false,
           parameterName: '',
         },
-        format: 'plain',
       });
     });
   });

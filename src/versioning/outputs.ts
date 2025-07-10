@@ -126,7 +126,6 @@ export class VersioningOutputs {
       parameterStore: options?.parameterName
         ? ParameterStoreOutput.enabled(options.parameterName).toConfig()
         : ParameterStoreOutput.disabled().toConfig(),
-      format: options?.format ?? 'plain',
     };
   }
 
@@ -137,7 +136,6 @@ export class VersioningOutputs {
     const cfConfig = options?.stackOutputName || options?.exportName
       ? CloudFormationOutput.withConfig({
         enabled: true,
-        stackOutputName: options.stackOutputName,
         exportName: options.exportName,
       }).toConfig()
       : CloudFormationOutput.enabled().toConfig();
@@ -145,7 +143,6 @@ export class VersioningOutputs {
     return {
       cloudFormation: cfConfig,
       parameterStore: ParameterStoreOutput.disabled().toConfig(),
-      format: options?.format ?? 'plain',
     };
   }
 
@@ -156,7 +153,6 @@ export class VersioningOutputs {
     return {
       cloudFormation: options?.includeCloudFormation ? CloudFormationOutput.enabled().toConfig() : CloudFormationOutput.disabled().toConfig(),
       parameterStore: ParameterStoreOutput.hierarchical(basePath, {}).toConfig(),
-      format: options?.format ?? 'plain',
     };
   }
 
@@ -167,7 +163,6 @@ export class VersioningOutputs {
     return {
       cloudFormation: CloudFormationOutput.enabled().toConfig(),
       parameterStore: ParameterStoreOutput.disabled().toConfig(),
-      format: 'plain',
     };
   }
 }

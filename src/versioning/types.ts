@@ -111,17 +111,10 @@ export interface VersioningOutputConfig {
    */
   readonly parameterStore: ParameterStoreConfig;
 
-  /**
-   * Output format
-   * @default 'structured'
-   */
-  readonly format: 'plain' | 'structured';
-
 }
 
 export interface CloudFormationOutputConfig {
   readonly enabled: boolean;
-  readonly stackOutputName?: string;
   readonly exportName?: string;
 }
 

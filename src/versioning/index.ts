@@ -33,3 +33,8 @@ export {
   VersioningConfigurations,
   VersioningConfigUtils,
 } from './config';
+
+// Setup
+export {
+  VersioningSetup,
+} from './setup';

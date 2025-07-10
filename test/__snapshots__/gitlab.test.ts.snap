@@ -911,8 +911,25 @@ function addVersioningToStack(stack: Stack, stageName: string): void {
     description: 'Git branch',
     
   });
+
+  new CfnOutput(stack, 'AppVersionInfo', {
+    value: JSON.stringify(versionInfo),
+    description: 'Complete version information',
+    
+  });
   
   
+  
+  // Add SSM Parameter Store parameters
+  const parameterName = '/{stackName}/version'
+    .replace('{stackName}', stack.stackName)
+    .replace('{stageName}', stageName);
+    
+  new StringParameter(stack, 'VersionParameter', {
+    parameterName,
+    stringValue: JSON.stringify(versionInfo),
+    description: 'Complete version information',
+  });
   
 }
 
@@ -964,7 +981,6 @@ export class PipelineApp extends App {
         addVersioningToStack(child, stageName);
       }
     });
-
 
   }
 }
@@ -1153,10 +1169,10 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "compile",
       "steps": [
         {
-          "spawn": "version:print",
+          "spawn": "version:compute",
         },
         {
-          "spawn": "version:compute",
+          "spawn": "version:print",
         },
       ],
     },
@@ -1386,7 +1402,97 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
           "exec": "echo "Computing version information..."",
         },
         {
-          "exec": "node -e "const fs = require('fs'); const cp = require('child_process'); try {   const commitHash = cp.execSync('git rev-parse HEAD', {encoding: 'utf8'}).trim();   const commitCount = cp.execSync('git rev-list --count HEAD', {encoding: 'utf8'}).trim();   const branch = cp.execSync('git rev-parse --abbrev-ref HEAD', {encoding: 'utf8'}).trim();   let tag = '';   try { tag = cp.execSync('git describe --tags --exact-match', {encoding: 'utf8'}).trim(); } catch {}   const packageVersion = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;   const version = tag || packageVersion;   const versionInfo = {     version,     commitHash,     commitHashShort: commitHash.substring(0, 8),     branch,     tag,     commitCount: parseInt(commitCount),     packageVersion,     deployedAt: new Date().toISOString(),     deployedBy: process.env.GITHUB_ACTOR || process.env.GITLAB_USER_LOGIN || process.env.USER || 'unknown',     environment: process.env.STAGE || process.env.ENVIRONMENT || 'unknown'   };   fs.writeFileSync('~version.json', JSON.stringify(versionInfo, null, 2));   console.log('Version computed:', version, '(commit:', commitHash.substring(0, 8) + ')'); } catch (e) {   console.error('Error computing version:', e.message);   const fallback = {version: '0.0.0', commitHash: 'unknown', commitHashShort: 'unknown', branch: 'unknown', commitCount: 0, packageVersion: '0.0.0', deployedAt: new Date().toISOString(), deployedBy: 'unknown', environment: 'unknown'};   fs.writeFileSync('~version.json', JSON.stringify(fallback, null, 2)); }"",
+          "exec": "node -e "
+const fs = require('fs');
+const cp = require('child_process');
+
+// Import versioning modules
+const { VersionComputer, VersioningStrategy } = require('projen-pipelines');
+
+try {
+  // Gather git information
+  const commitHash = cp.execSync('git rev-parse HEAD', {encoding: 'utf8'}).trim();
+  const commitHashShort = commitHash.substring(0, 8);
+  const commitCount = parseInt(cp.execSync('git rev-list --count HEAD', {encoding: 'utf8'}).trim());
+  const branch = cp.execSync('git rev-parse --abbrev-ref HEAD', {encoding: 'utf8'}).trim();
+  
+  let tag = '';
+  let commitsSinceTag = 0;
+  try { 
+    tag = cp.execSync('git describe --tags --exact-match --all', {encoding: 'utf8'}).trim();
+  } catch {
+    try {
+      const describeOutput = cp.execSync('git describe --tags --long --all', {encoding: 'utf8'}).trim();
+      const match = describeOutput.match(/^(.+)-(\\\\d+)-g[0-9a-f]+$/);
+      if (match) {
+        tag = match[1];
+        commitsSinceTag = parseInt(match[2]);
+      }
+    } catch {}
+  }
+  
+  let packageVersion = '0.0.0';
+  try {
+    packageVersion = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
+  } catch {}
+  
+  // Create computation context
+  const context = {
+    gitInfo: {
+      commitHash,
+      commitHashShort,
+      branch,
+      tag,
+      commitsSinceTag,
+      commitCount,
+      packageVersion
+    },
+    environment: process.env.STAGE || process.env.ENVIRONMENT || 'unknown',
+    deployedBy: process.env.GITHUB_ACTOR || process.env.GITLAB_USER_LOGIN || process.env.USER || 'unknown',
+    buildNumber: process.env.BUILD_NUMBER || process.env.GITHUB_RUN_NUMBER,
+    repository: process.env.GITHUB_REPOSITORY || process.env.CI_PROJECT_PATH,
+    pipelineVersion: process.env.PIPELINE_VERSION
+  };
+  
+  // Create strategy from configuration
+  const strategyConfig = {\\"format\\":\\"{commit-count}\\",\\"components\\":{\\"commitCount\\":{\\"countFrom\\":\\"all\\"}}};
+  const strategy = new VersioningStrategy(strategyConfig.format, strategyConfig.components);
+  
+  // Compute version
+  const computer = new VersionComputer(strategy);
+  computer.computeVersionInfo(context).then(versionInfo => {
+    fs.writeFileSync('~version.json', versionInfo.toJson());
+    console.log('Version computed:', versionInfo.version, '(commit:', versionInfo.commitHashShort + ')');
+  }).catch(error => {
+    console.error('Error computing version:', error.message);
+    const fallback = {
+      version: '0.0.0',
+      commitHash: 'unknown',
+      commitHashShort: 'unknown',
+      branch: 'unknown',
+      commitCount: 0,
+      packageVersion: '0.0.0',
+      deployedAt: new Date().toISOString(),
+      deployedBy: 'unknown',
+      environment: 'unknown'
+    };
+    fs.writeFileSync('~version.json', JSON.stringify(fallback, null, 2));
+  });
+} catch (e) {
+  console.error('Error in version computation:', e.message);
+  const fallback = {
+    version: '0.0.0',
+    commitHash: 'unknown',
+    commitHashShort: 'unknown',
+    branch: 'unknown',
+    commitCount: 0,
+    packageVersion: '0.0.0',
+    deployedAt: new Date().toISOString(),
+    deployedBy: 'unknown',
+    environment: 'unknown'
+  };
+  fs.writeFileSync('~version.json', JSON.stringify(fallback, null, 2));
+}"",
         },
       ],
     },

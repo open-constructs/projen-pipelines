@@ -104,14 +104,12 @@ describe('Versioning Integration Tests', () => {
 
       expect(config.outputs.cloudFormation).toEqual({
         enabled: true,
-        stackOutputName: 'DeploymentInfo',
         exportName: 'MyApp-Version',
       });
       expect(config.outputs.parameterStore).toEqual({
         enabled: false,
         parameterName: '',
       });
-      expect(config.outputs.format).toBe('structured');
     });
 
     it('should configure hierarchical parameter store', () => {
@@ -132,7 +130,6 @@ describe('Versioning Integration Tests', () => {
         hierarchical: true,
         splitParameters: true,
       });
-      expect(config.outputs.format).toBe('structured');
     });
   });
 

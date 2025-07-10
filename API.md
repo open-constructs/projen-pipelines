@@ -203,6 +203,9 @@ new BashCDKPipeline(app: AwsCdkTypeScriptApp, options: BashCDKPipelineOptions)
 | <code><a href="#projen-pipelines.BashCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.engineType">engineType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.BashCDKPipeline.generateVersioningAppCode">generateVersioningAppCode</a></code> | Generate CDK application code for versioning. |
+| <code><a href="#projen-pipelines.BashCDKPipeline.generateVersioningImports">generateVersioningImports</a></code> | Generate versioning imports for CDK application. |
+| <code><a href="#projen-pipelines.BashCDKPipeline.generateVersioningUtilities">generateVersioningUtilities</a></code> | Generate versioning utility functions for CDK application. |
 
 ---
 
@@ -245,6 +248,48 @@ Synthesizes files to the project output directory.
 ```typescript
 public engineType(): PipelineEngine
 ```
+
+##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.BashCDKPipeline.generateVersioningAppCode"></a>
+
+```typescript
+public generateVersioningAppCode(_config: VersioningConfig): string
+```
+
+Generate CDK application code for versioning.
+
+###### `_config`<sup>Required</sup> <a name="_config" id="projen-pipelines.BashCDKPipeline.generateVersioningAppCode.parameter._config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.BashCDKPipeline.generateVersioningImports"></a>
+
+```typescript
+public generateVersioningImports(config: VersioningConfig): string
+```
+
+Generate versioning imports for CDK application.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.BashCDKPipeline.generateVersioningImports.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.BashCDKPipeline.generateVersioningUtilities"></a>
+
+```typescript
+public generateVersioningUtilities(config: VersioningConfig): string
+```
+
+Generate versioning utility functions for CDK application.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.BashCDKPipeline.generateVersioningUtilities.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -399,6 +444,9 @@ new CDKPipeline(app: AwsCdkTypeScriptApp, baseOptions: CDKPipelineOptions)
 | <code><a href="#projen-pipelines.CDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.CDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 | <code><a href="#projen-pipelines.CDKPipeline.engineType">engineType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.CDKPipeline.generateVersioningAppCode">generateVersioningAppCode</a></code> | Generate CDK application code for versioning. |
+| <code><a href="#projen-pipelines.CDKPipeline.generateVersioningImports">generateVersioningImports</a></code> | Generate versioning imports for CDK application. |
+| <code><a href="#projen-pipelines.CDKPipeline.generateVersioningUtilities">generateVersioningUtilities</a></code> | Generate versioning utility functions for CDK application. |
 
 ---
 
@@ -441,6 +489,48 @@ Synthesizes files to the project output directory.
 ```typescript
 public engineType(): PipelineEngine
 ```
+
+##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.CDKPipeline.generateVersioningAppCode"></a>
+
+```typescript
+public generateVersioningAppCode(_config: VersioningConfig): string
+```
+
+Generate CDK application code for versioning.
+
+###### `_config`<sup>Required</sup> <a name="_config" id="projen-pipelines.CDKPipeline.generateVersioningAppCode.parameter._config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.CDKPipeline.generateVersioningImports"></a>
+
+```typescript
+public generateVersioningImports(config: VersioningConfig): string
+```
+
+Generate versioning imports for CDK application.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.CDKPipeline.generateVersioningImports.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.CDKPipeline.generateVersioningUtilities"></a>
+
+```typescript
+public generateVersioningUtilities(config: VersioningConfig): string
+```
+
+Generate versioning utility functions for CDK application.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.CDKPipeline.generateVersioningUtilities.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -769,6 +859,9 @@ Configuration options for the pipeline.
 | <code><a href="#projen-pipelines.GithubCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.engineType">engineType</a></code> | the type of engine this implementation of CDKPipeline is for. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.generateVersioningAppCode">generateVersioningAppCode</a></code> | Generate CDK application code for versioning. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.generateVersioningImports">generateVersioningImports</a></code> | Generate versioning imports for CDK application. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.generateVersioningUtilities">generateVersioningUtilities</a></code> | Generate versioning utility functions for CDK application. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.createAssetUpload">createAssetUpload</a></code> | Creates a job to upload assets to AWS as part of the pipeline. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.createDeployment">createDeployment</a></code> | Creates a job to deploy the CDK application to AWS. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.createIndependentDeployment">createIndependentDeployment</a></code> | Creates a job to deploy the CDK application to AWS. |
@@ -816,6 +909,48 @@ public engineType(): PipelineEngine
 ```
 
 the type of engine this implementation of CDKPipeline is for.
+
+##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.GithubCDKPipeline.generateVersioningAppCode"></a>
+
+```typescript
+public generateVersioningAppCode(_config: VersioningConfig): string
+```
+
+Generate CDK application code for versioning.
+
+###### `_config`<sup>Required</sup> <a name="_config" id="projen-pipelines.GithubCDKPipeline.generateVersioningAppCode.parameter._config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.GithubCDKPipeline.generateVersioningImports"></a>
+
+```typescript
+public generateVersioningImports(config: VersioningConfig): string
+```
+
+Generate versioning imports for CDK application.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GithubCDKPipeline.generateVersioningImports.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.GithubCDKPipeline.generateVersioningUtilities"></a>
+
+```typescript
+public generateVersioningUtilities(config: VersioningConfig): string
+```
+
+Generate versioning utility functions for CDK application.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GithubCDKPipeline.generateVersioningUtilities.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
 
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.GithubCDKPipeline.createAssetUpload"></a>
 
@@ -1028,6 +1163,9 @@ Configuration options for the pipeline.
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.engineType">engineType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.generateVersioningAppCode">generateVersioningAppCode</a></code> | Generate CDK application code for versioning. |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.generateVersioningImports">generateVersioningImports</a></code> | Generate versioning imports for CDK application. |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.generateVersioningUtilities">generateVersioningUtilities</a></code> | Generate versioning utility functions for CDK application. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.createIndependentDeployment">createIndependentDeployment</a></code> | Creates a job to deploy the CDK application to AWS. |
 
 ---
@@ -1071,6 +1209,48 @@ Synthesizes files to the project output directory.
 ```typescript
 public engineType(): PipelineEngine
 ```
+
+##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.GitlabCDKPipeline.generateVersioningAppCode"></a>
+
+```typescript
+public generateVersioningAppCode(_config: VersioningConfig): string
+```
+
+Generate CDK application code for versioning.
+
+###### `_config`<sup>Required</sup> <a name="_config" id="projen-pipelines.GitlabCDKPipeline.generateVersioningAppCode.parameter._config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.GitlabCDKPipeline.generateVersioningImports"></a>
+
+```typescript
+public generateVersioningImports(config: VersioningConfig): string
+```
+
+Generate versioning imports for CDK application.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GitlabCDKPipeline.generateVersioningImports.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.GitlabCDKPipeline.generateVersioningUtilities"></a>
+
+```typescript
+public generateVersioningUtilities(config: VersioningConfig): string
+```
+
+Generate versioning utility functions for CDK application.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GitlabCDKPipeline.generateVersioningUtilities.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
 
 ##### `createIndependentDeployment` <a name="createIndependentDeployment" id="projen-pipelines.GitlabCDKPipeline.createIndependentDeployment"></a>
 
@@ -1975,7 +2155,6 @@ const cloudFormationOutputConfig: CloudFormationOutputConfig = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.CloudFormationOutputConfig.property.enabled">enabled</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#projen-pipelines.CloudFormationOutputConfig.property.exportName">exportName</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.CloudFormationOutputConfig.property.stackOutputName">stackOutputName</a></code> | <code>string</code> | *No description.* |
 
 ---
 
@@ -1993,16 +2172,6 @@ public readonly enabled: boolean;
 
 ```typescript
 public readonly exportName: string;
-```
-
-- *Type:* string
-
----
-
-##### `stackOutputName`<sup>Optional</sup> <a name="stackOutputName" id="projen-pipelines.CloudFormationOutputConfig.property.stackOutputName"></a>
-
-```typescript
-public readonly stackOutputName: string;
 ```
 
 - *Type:* string
@@ -4350,7 +4519,6 @@ const versioningOutputConfig: VersioningOutputConfig = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.VersioningOutputConfig.property.cloudFormation">cloudFormation</a></code> | <code><a href="#projen-pipelines.CloudFormationOutputConfig">CloudFormationOutputConfig</a></code> | Output to CloudFormation stack outputs. |
-| <code><a href="#projen-pipelines.VersioningOutputConfig.property.format">format</a></code> | <code>string</code> | Output format. |
 | <code><a href="#projen-pipelines.VersioningOutputConfig.property.parameterStore">parameterStore</a></code> | <code><a href="#projen-pipelines.ParameterStoreConfig">ParameterStoreConfig</a></code> | Output to SSM Parameter Store. |
 
 ---
@@ -4365,19 +4533,6 @@ public readonly cloudFormation: CloudFormationOutputConfig;
 - *Default:* true
 
 Output to CloudFormation stack outputs.
-
----
-
-##### `format`<sup>Required</sup> <a name="format" id="projen-pipelines.VersioningOutputConfig.property.format"></a>
-
-```typescript
-public readonly format: string;
-```
-
-- *Type:* string
-- *Default:* 'structured'
-
-Output format.
 
 ---
 
@@ -6497,6 +6652,56 @@ Create output configuration with CloudFormation and SSM Parameter Store.
 - *Type:* <a href="#projen-pipelines.StandardOutputOptions">StandardOutputOptions</a>
 
 ---
+
+
+
+### VersioningSetup <a name="VersioningSetup" id="projen-pipelines.VersioningSetup"></a>
+
+Sets up versioning tasks and integration for a project.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.VersioningSetup.Initializer"></a>
+
+```typescript
+import { VersioningSetup } from 'projen-pipelines'
+
+new VersioningSetup(project: Project, config: VersioningConfig)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersioningSetup.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.VersioningSetup.Initializer.parameter.config">config</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.VersioningSetup.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.VersioningSetup.Initializer.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersioningSetup.setup">setup</a></code> | Set up all versioning-related tasks and configurations. |
+
+---
+
+##### `setup` <a name="setup" id="projen-pipelines.VersioningSetup.setup"></a>
+
+```typescript
+public setup(): void
+```
+
+Set up all versioning-related tasks and configurations.
+
 
 
 

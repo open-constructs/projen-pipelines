@@ -22,7 +22,6 @@ describe('CloudFormationOutput', () => {
   it('should create CloudFormation output with config', () => {
     const config: CloudFormationOutputConfig = {
       enabled: true,
-      stackOutputName: 'DeploymentInfo',
       exportName: 'MyApp-Version',
     };
     const output = CloudFormationOutput.withConfig(config);
@@ -97,7 +96,6 @@ describe('VersioningOutputs', () => {
           enabled: false,
           parameterName: '',
         },
-        format: 'plain',
       });
     });
 
@@ -112,7 +110,6 @@ describe('VersioningOutputs', () => {
           enabled: true,
           parameterName,
         },
-        format: 'plain',
       });
     });
 
@@ -126,7 +123,6 @@ describe('VersioningOutputs', () => {
           enabled: false,
           parameterName: '',
         },
-        format: 'structured',
       });
     });
   });
@@ -142,7 +138,6 @@ describe('VersioningOutputs', () => {
           enabled: false,
           parameterName: '',
         },
-        format: 'plain',
       });
     });
 
@@ -156,14 +151,12 @@ describe('VersioningOutputs', () => {
       expect(config).toEqual({
         cloudFormation: {
           enabled: true,
-          stackOutputName: 'DeploymentInfo',
           exportName: 'MyApp-Version',
         },
         parameterStore: {
           enabled: false,
           parameterName: '',
         },
-        format: 'structured',
       });
     });
   });
@@ -182,7 +175,6 @@ describe('VersioningOutputs', () => {
           hierarchical: true,
           splitParameters: true,
         },
-        format: 'plain',
       });
     });
 
@@ -203,7 +195,6 @@ describe('VersioningOutputs', () => {
           hierarchical: true,
           splitParameters: true,
         },
-        format: 'structured',
       });
     });
   });
@@ -219,7 +210,6 @@ describe('VersioningOutputs', () => {
           enabled: false,
           parameterName: '',
         },
-        format: 'plain',
       });
     });
   });

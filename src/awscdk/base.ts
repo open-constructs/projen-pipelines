@@ -3,7 +3,7 @@ import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence } from '../steps';
-import { VersioningConfig } from '../versioning';
+import { VersioningConfig, VersioningSetup } from '../versioning';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -218,7 +218,7 @@ export abstract class CDKPipeline extends Component {
 
     // Setup versioning if enabled
     if (baseOptions.versioning?.enabled) {
-      this.setupVersioning();
+      new VersioningSetup(this.project, baseOptions.versioning).setup();
     }
 
     // Creates different deployment stages
@@ -436,96 +436,18 @@ export abstract class CDKPipeline extends Component {
 
     // Add versioning logic to apply to all stacks
     if (this.baseOptions.versioning?.enabled) {
-      appCode += `
-    // Apply versioning to all stacks
-    this.node.children.forEach((child) => {
-      if (child instanceof Stack) {
-        const stageName = child.stackName.split('-').pop() || 'default';
-        addVersioningToStack(child, stageName);
-      }
-    });
-`;
+      appCode += this.generateVersioningAppCode(this.baseOptions.versioning);
     }
 
     const appFile = new TextFile(this.project, `${this.app.srcdir}/app.ts`);
 
     // Generate versioning-aware imports and utilities
     const versioningImports = this.baseOptions.versioning?.enabled
-      ? `import { CfnOutput } from 'aws-cdk-lib';
-import { StringParameter } from 'aws-cdk-lib/aws-ssm';
-import * as fs from 'fs';`
+      ? this.generateVersioningImports(this.baseOptions.versioning)
       : '';
 
     const versioningUtilities = this.baseOptions.versioning?.enabled
-      ? `
-/**
- * Load version information from generated file
- */
-function loadVersionInfo(): any {
-  try {
-    return JSON.parse(fs.readFileSync('~version.json', 'utf8'));
-  } catch (error) {
-    console.warn('Could not load version info, using fallback');
-    return {
-      version: '0.0.0',
-      commitHash: 'unknown',
-      commitHashShort: 'unknown',
-      branch: 'unknown',
-      commitCount: 0,
-      packageVersion: '0.0.0',
-      deployedAt: new Date().toISOString(),
-      deployedBy: 'unknown',
-      environment: 'unknown'
-    };
-  }
-}
-
-/**
- * Add versioning outputs to a stack
- */
-function addVersioningToStack(stack: Stack, stageName: string): void {
-  const versionInfo = loadVersionInfo();
-  
-  ${this.baseOptions.versioning?.outputs?.cloudFormation.enabled ? `
-  // Add CloudFormation outputs
-  new CfnOutput(stack, '${this.baseOptions.versioning.outputs?.cloudFormation.stackOutputName || 'AppVersion'}', {
-    value: versionInfo.version,
-    description: 'Application version',
-    ${this.baseOptions.versioning.outputs?.cloudFormation.exportName ? `
-    exportName: '${this.baseOptions.versioning.outputs?.cloudFormation.exportName}',
-    ` : ''}
-  });
-  
-  new CfnOutput(stack, '${this.baseOptions.versioning.outputs?.cloudFormation.stackOutputName || 'AppVersion'}CommitHash', {
-    value: versionInfo.commitHash,
-    description: 'Git commit hash',
-    ${this.baseOptions.versioning.outputs?.cloudFormation.exportName ? `
-    exportName: '${this.baseOptions.versioning.outputs?.cloudFormation.exportName}CommitHash',
-    ` : ''}
-  });
-  
-  new CfnOutput(stack, '${this.baseOptions.versioning.outputs?.cloudFormation.stackOutputName || 'AppVersion'}Branch', {
-    value: versionInfo.branch,
-    description: 'Git branch',
-    ${this.baseOptions.versioning.outputs?.cloudFormation.exportName ? `
-    exportName: '${this.baseOptions.versioning.outputs?.cloudFormation.exportName}Branch',
-    ` : ''}
-  });
-  ` : ''}
-  
-  ${this.baseOptions.versioning?.outputs?.parameterStore.enabled ? `
-  // Add SSM Parameter Store parameters
-  const parameterName = '${this.baseOptions.versioning.outputs?.parameterStore.parameterName || '/{stackName}/version'}'
-    .replace('{stackName}', stack.stackName)
-    .replace('{stageName}', stageName);
-    
-  new StringParameter(stack, 'VersionParameter', {
-    parameterName,
-    stringValue: JSON.stringify(versionInfo),
-    description: 'Complete version information',
-  });
-  ` : ''}
-}`
+      ? this.generateVersioningUtilities(this.baseOptions.versioning)
       : '';
 
     appFile.addLine(`// ${PROJEN_MARKER}
@@ -569,65 +491,6 @@ ${appCode}
 `);
   }
 
-  /**
-   * Setup versioning by creating version computation task and files
-   */
-  protected setupVersioning() {
-    // Create version computation task
-    this.project.addTask('version:compute', {
-      description: 'Compute version information from git',
-      steps: [
-        { exec: 'echo "Computing version information..."' },
-        {
-          exec: 'node -e "' +
-            'const fs = require(\'fs\'); ' +
-            'const cp = require(\'child_process\'); ' +
-            'try { ' +
-            '  const commitHash = cp.execSync(\'git rev-parse HEAD\', {encoding: \'utf8\'}).trim(); ' +
-            '  const commitCount = cp.execSync(\'git rev-list --count HEAD\', {encoding: \'utf8\'}).trim(); ' +
-            '  const branch = cp.execSync(\'git rev-parse --abbrev-ref HEAD\', {encoding: \'utf8\'}).trim(); ' +
-            '  let tag = \'\'; ' +
-            '  try { tag = cp.execSync(\'git describe --tags --exact-match\', {encoding: \'utf8\'}).trim(); } catch {} ' +
-            '  const packageVersion = JSON.parse(fs.readFileSync(\'package.json\', \'utf8\')).version; ' +
-            '  const version = tag || packageVersion; ' +
-            '  const versionInfo = { ' +
-            '    version, ' +
-            '    commitHash, ' +
-            '    commitHashShort: commitHash.substring(0, 8), ' +
-            '    branch, ' +
-            '    tag, ' +
-            '    commitCount: parseInt(commitCount), ' +
-            '    packageVersion, ' +
-            '    deployedAt: new Date().toISOString(), ' +
-            '    deployedBy: process.env.GITHUB_ACTOR || process.env.GITLAB_USER_LOGIN || process.env.USER || \'unknown\', ' +
-            '    environment: process.env.STAGE || process.env.ENVIRONMENT || \'unknown\' ' +
-            '  }; ' +
-            '  fs.writeFileSync(\'~version.json\', JSON.stringify(versionInfo, null, 2)); ' +
-            '  console.log(\'Version computed:\', version, \'(commit:\', commitHash.substring(0, 8) + \')\'); ' +
-            '} catch (e) { ' +
-            '  console.error(\'Error computing version:\', e.message); ' +
-            '  const fallback = {version: \'0.0.0\', commitHash: \'unknown\', commitHashShort: \'unknown\', branch: \'unknown\', commitCount: 0, packageVersion: \'0.0.0\', deployedAt: new Date().toISOString(), deployedBy: \'unknown\', environment: \'unknown\'}; ' +
-            '  fs.writeFileSync(\'~version.json\', JSON.stringify(fallback, null, 2)); ' +
-            '}"',
-        },
-      ],
-    });
-    this.project.addTask('version:print', {
-      description: 'Print version information',
-      steps: [
-        { exec: 'cat ~version.json' },
-      ],
-    });
-
-    // Add version computation to build task
-    const compileTask = this.project.tasks.tryFind('compile');
-    if (compileTask) {
-      compileTask.prependSpawn(this.project.tasks.tryFind('version:compute')!);
-      compileTask.prependSpawn(this.project.tasks.tryFind('version:print')!);
-    }
-
-    this.project.gitignore.exclude('~version.json');
-  }
 
   /**
    * This method sets up tasks to publish CDK assets to all accounts and handle versioning, including bumping the version
@@ -780,5 +643,121 @@ ${appCode}
       sep = '';
     }
     return this.baseOptions.deploySubStacks ? `${this.stackPrefix}${sep}${stage} ${this.stackPrefix}${sep}${stage}/*` : `${this.stackPrefix}${sep}${stage}`;
+  }
+
+  /**
+   * Generate CDK application code for versioning
+   */
+  public generateVersioningAppCode(_config: VersioningConfig): string {
+    return `
+    // Apply versioning to all stacks
+    this.node.children.forEach((child) => {
+      if (child instanceof Stack) {
+        const stageName = child.stackName.split('-').pop() || 'default';
+        addVersioningToStack(child, stageName);
+      }
+    });`;
+  }
+
+  /**
+   * Generate versioning imports for CDK application
+   */
+  public generateVersioningImports(config: VersioningConfig): string {
+    const imports: string[] = [];
+
+    if (config.outputs.cloudFormation.enabled) {
+      imports.push("import { CfnOutput } from 'aws-cdk-lib';");
+    }
+
+    if (config.outputs.parameterStore.enabled) {
+      imports.push("import { StringParameter } from 'aws-cdk-lib/aws-ssm';");
+    }
+
+    imports.push("import * as fs from 'fs';");
+
+    return imports.join('\n');
+  }
+
+  /**
+   * Generate versioning utility functions for CDK application
+   */
+  public generateVersioningUtilities(config: VersioningConfig): string {
+    return `
+/**
+ * Load version information from generated file
+ */
+function loadVersionInfo(): any {
+  try {
+    return JSON.parse(fs.readFileSync('~version.json', 'utf8'));
+  } catch (error) {
+    console.warn('Could not load version info, using fallback');
+    return {
+      version: '0.0.0',
+      commitHash: 'unknown',
+      commitHashShort: 'unknown',
+      branch: 'unknown',
+      commitCount: 0,
+      packageVersion: '0.0.0',
+      deployedAt: new Date().toISOString(),
+      deployedBy: 'unknown',
+      environment: 'unknown'
+    };
+  }
+}
+
+/**
+ * Add versioning outputs to a stack
+ */
+function addVersioningToStack(stack: Stack${config.outputs.parameterStore.enabled ? ', stageName: string' : ', _stageName: string'}): void {
+  const versionInfo = loadVersionInfo();
+  
+  ${config.outputs.cloudFormation.enabled ? `
+  // Add CloudFormation outputs
+  new CfnOutput(stack, 'AppVersion', {
+    value: versionInfo.version,
+    description: 'Application version',
+    ${config.outputs.cloudFormation.exportName ? `
+    exportName: '${config.outputs.cloudFormation.exportName}',
+    ` : ''}
+  });
+  
+  new CfnOutput(stack, 'AppVersionCommitHash', {
+    value: versionInfo.commitHash,
+    description: 'Git commit hash',
+    ${config.outputs.cloudFormation.exportName ? `
+    exportName: '${config.outputs.cloudFormation.exportName}CommitHash',
+    ` : ''}
+  });
+  
+  new CfnOutput(stack, 'AppVersionBranch', {
+    value: versionInfo.branch,
+    description: 'Git branch',
+    ${config.outputs.cloudFormation.exportName ? `
+    exportName: '${config.outputs.cloudFormation.exportName}Branch',
+    ` : ''}
+  });
+
+  new CfnOutput(stack, 'AppVersionInfo', {
+    value: JSON.stringify(versionInfo),
+    description: 'Complete version information',
+    ${config.outputs.cloudFormation.exportName ? `
+    exportName: '${config.outputs.cloudFormation.exportName}Info',
+    ` : ''}
+  });
+  ` : ''}
+  
+  ${config.outputs.parameterStore.enabled ? `
+  // Add SSM Parameter Store parameters
+  const parameterName = '${config.outputs.parameterStore.parameterName || '/{stackName}/version'}'
+    .replace('{stackName}', stack.stackName)
+    .replace('{stageName}', stageName);
+    
+  new StringParameter(stack, 'VersionParameter', {
+    parameterName,
+    stringValue: JSON.stringify(versionInfo),
+    description: 'Complete version information',
+  });
+  ` : ''}
+}`;
   }
 }
