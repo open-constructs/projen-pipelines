@@ -252,12 +252,12 @@ public engineType(): PipelineEngine
 ##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.BashCDKPipeline.generateVersioningAppCode"></a>
 
 ```typescript
-public generateVersioningAppCode(_config: VersioningConfig): string
+public generateVersioningAppCode(config: VersioningConfig): string
 ```
 
 Generate CDK application code for versioning.
 
-###### `_config`<sup>Required</sup> <a name="_config" id="projen-pipelines.BashCDKPipeline.generateVersioningAppCode.parameter._config"></a>
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.BashCDKPipeline.generateVersioningAppCode.parameter.config"></a>
 
 - *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
 
@@ -493,12 +493,12 @@ public engineType(): PipelineEngine
 ##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.CDKPipeline.generateVersioningAppCode"></a>
 
 ```typescript
-public generateVersioningAppCode(_config: VersioningConfig): string
+public generateVersioningAppCode(config: VersioningConfig): string
 ```
 
 Generate CDK application code for versioning.
 
-###### `_config`<sup>Required</sup> <a name="_config" id="projen-pipelines.CDKPipeline.generateVersioningAppCode.parameter._config"></a>
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.CDKPipeline.generateVersioningAppCode.parameter.config"></a>
 
 - *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
 
@@ -913,12 +913,12 @@ the type of engine this implementation of CDKPipeline is for.
 ##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.GithubCDKPipeline.generateVersioningAppCode"></a>
 
 ```typescript
-public generateVersioningAppCode(_config: VersioningConfig): string
+public generateVersioningAppCode(config: VersioningConfig): string
 ```
 
 Generate CDK application code for versioning.
 
-###### `_config`<sup>Required</sup> <a name="_config" id="projen-pipelines.GithubCDKPipeline.generateVersioningAppCode.parameter._config"></a>
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GithubCDKPipeline.generateVersioningAppCode.parameter.config"></a>
 
 - *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
 
@@ -1213,12 +1213,12 @@ public engineType(): PipelineEngine
 ##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.GitlabCDKPipeline.generateVersioningAppCode"></a>
 
 ```typescript
-public generateVersioningAppCode(_config: VersioningConfig): string
+public generateVersioningAppCode(config: VersioningConfig): string
 ```
 
 Generate CDK application code for versioning.
 
-###### `_config`<sup>Required</sup> <a name="_config" id="projen-pipelines.GitlabCDKPipeline.generateVersioningAppCode.parameter._config"></a>
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GitlabCDKPipeline.generateVersioningAppCode.parameter.config"></a>
 
 - *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
 
