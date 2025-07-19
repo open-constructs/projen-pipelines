@@ -195,6 +195,42 @@ test('Github snapshot with manual approval and GH packages', () => {
   expect(snapshot['.github/workflows/release-prod.yml']).toMatchSnapshot();
 });
 
+test('Github snapshot with feature stages', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        feature: 'featureRole',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+    featureStages: {
+      env: {
+        account: '123456789012',
+        region: 'us-east-1',
+      },
+    },
+  });
+
+  const snapshot = synthSnapshot(p);
+  expect(snapshot['.github/workflows/deploy-feature.yml']).toMatchSnapshot();
+  expect(snapshot['.github/workflows/destroy-feature.yml']).toMatchSnapshot();
+  expect(snapshot['.projen/tasks.json']).toMatchSnapshot();
+});
+
 test('Github snapshot with preInstallStep', () => {
   const p = new AwsCdkTypeScriptApp({
     cdkVersion: '2.132.0',
