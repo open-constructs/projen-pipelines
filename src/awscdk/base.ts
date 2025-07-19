@@ -739,9 +739,24 @@ ${appCode}
   public generateVersioningUtilities(config: VersioningConfig): string {
     return `
 /**
+ * Version information interface
+ */
+export interface VersionInfo {
+  version: string;
+  commitHash: string;
+  commitHashShort: string;
+  branch: string;
+  commitCount: number;
+  packageVersion: string;
+  deployedAt: string;
+  deployedBy: string;
+  environment: string;
+}
+
+/**
  * Load version information from generated file
  */
-function loadVersionInfo(): any {
+export function loadVersionInfo(): VersionInfo {
   try {
     return JSON.parse(fs.readFileSync('~version.json', 'utf8'));
   } catch (error) {
@@ -763,7 +778,7 @@ function loadVersionInfo(): any {
 /**
  * Get versioning configuration for a specific stage
  */
-function getStageConfig(stageName: string, baseConfig: any, stageOverrides?: any): any {
+function getStageConfig(stageName: string, baseConfig: any, stageOverrides?: Record<string, any>): any {
   if (!stageOverrides || !stageOverrides[stageName]) {
     return baseConfig;
   }
