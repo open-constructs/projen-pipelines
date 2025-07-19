@@ -1616,7 +1616,7 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "destroy:feature",
       "steps": [
         {
-          "exec": "cdk destroy testapp-feature",
+          "exec": "cdk destroy --force testapp-feature",
         },
       ],
     },
