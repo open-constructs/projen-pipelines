@@ -447,7 +447,7 @@ export abstract class CDKPipeline extends Component {
       : '';
 
     const versioningUtilities = this.baseOptions.versioning?.enabled
-      ? this.generateVersioningUtilities(this.baseOptions.versioning)
+      ? this.generateVersioningUtilities()
       : '';
 
     const versioningConfigDeclaration = this.baseOptions.versioning?.enabled
@@ -736,7 +736,7 @@ ${appCode}
   /**
    * Generate versioning utility functions for CDK application
    */
-  public generateVersioningUtilities(config: VersioningConfig): string {
+  public generateVersioningUtilities(): string {
     return `
 /**
  * Version information interface
@@ -799,7 +799,7 @@ function getStageConfig(stageName: string, baseConfig: any, stageOverrides?: Rec
  */
 function addVersioningToStack(stack: Stack, stageName: string, stageOverrides?: any): void {
   const versionInfo = loadVersionInfo();
-  const baseConfig = ${JSON.stringify(config)};
+  const baseConfig = versioningConfig;
   const config = getStageConfig(stageName, baseConfig, stageOverrides);
   
   // Check if format is specified in CloudFormation or ParameterStore configs

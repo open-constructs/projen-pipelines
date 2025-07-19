@@ -947,7 +947,7 @@ function getStageConfig(stageName: string, baseConfig: any, stageOverrides?: Rec
  */
 function addVersioningToStack(stack: Stack, stageName: string, stageOverrides?: any): void {
   const versionInfo = loadVersionInfo();
-  const baseConfig = {"enabled":true,"outputs":{"cloudFormation":{"enabled":true},"parameterStore":{"enabled":true,"parameterName":"/{stackName}/version"}},"strategy":{"format":"{commit-count}","components":{"commitCount":{"countFrom":"all"}}}};
+  const baseConfig = versioningConfig;
   const config = getStageConfig(stageName, baseConfig, stageOverrides);
   
   // Check if format is specified in CloudFormation or ParameterStore configs

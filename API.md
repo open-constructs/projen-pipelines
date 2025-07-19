@@ -274,16 +274,10 @@ Generate versioning imports for CDK application.
 ##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.BashCDKPipeline.generateVersioningUtilities"></a>
 
 ```typescript
-public generateVersioningUtilities(config: VersioningConfig): string
+public generateVersioningUtilities(): string
 ```
 
 Generate versioning utility functions for CDK application.
-
-###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.BashCDKPipeline.generateVersioningUtilities.parameter.config"></a>
-
-- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
-
----
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -509,16 +503,10 @@ Generate versioning imports for CDK application.
 ##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.CDKPipeline.generateVersioningUtilities"></a>
 
 ```typescript
-public generateVersioningUtilities(config: VersioningConfig): string
+public generateVersioningUtilities(): string
 ```
 
 Generate versioning utility functions for CDK application.
-
-###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.CDKPipeline.generateVersioningUtilities.parameter.config"></a>
-
-- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
-
----
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -923,16 +911,10 @@ Generate versioning imports for CDK application.
 ##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.GithubCDKPipeline.generateVersioningUtilities"></a>
 
 ```typescript
-public generateVersioningUtilities(config: VersioningConfig): string
+public generateVersioningUtilities(): string
 ```
 
 Generate versioning utility functions for CDK application.
-
-###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GithubCDKPipeline.generateVersioningUtilities.parameter.config"></a>
-
-- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
-
----
 
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.GithubCDKPipeline.createAssetUpload"></a>
 
@@ -1217,16 +1199,10 @@ Generate versioning imports for CDK application.
 ##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.GitlabCDKPipeline.generateVersioningUtilities"></a>
 
 ```typescript
-public generateVersioningUtilities(config: VersioningConfig): string
+public generateVersioningUtilities(): string
 ```
 
 Generate versioning utility functions for CDK application.
-
-###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GitlabCDKPipeline.generateVersioningUtilities.parameter.config"></a>
-
-- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
-
----
 
 ##### `createIndependentDeployment` <a name="createIndependentDeployment" id="projen-pipelines.GitlabCDKPipeline.createIndependentDeployment"></a>
 
