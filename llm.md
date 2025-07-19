@@ -44,9 +44,10 @@ For AWS CDK applications, the library provides:
 
 - `CDKPipeline` (abstract base class)
 - Platform-specific implementations (e.g., `GithubCDKPipeline`)
-- Support for multi-stage deployments (dev, prod, personal)
+- Support for multi-stage deployments (dev, prod, personal, feature)
 - Asset publishing and versioning
 - Automated CloudFormation deployment
+- Feature branch deployments with automatic lifecycle management
 
 ## Usage Example
 
@@ -128,6 +129,7 @@ When creating a CDK pipeline, these are key configuration options:
 | `pkgNamespace` | Namespace for published packages |
 | `stages` | Array of deployment stages with environment settings |
 | `useGithubPackagesForAssembly` | Use GitHub Packages for assembly storage |
+| `featureStages` | Configuration for feature branch deployments |
 
 ## Deployment Stages
 
@@ -185,6 +187,26 @@ The CDK pipeline adds these tasks to your projen project:
 | `publish:assets` | Publish CDK assets to all accounts |
 | `bump` | Bump version based on git tags |
 | `release:push-assembly` | Publish cloud assembly to registry |
+
+## Feature Branch Deployments
+
+When `featureStages` is configured, the library creates automated workflows for feature branch lifecycle management:
+
+### GitHub Actions Implementation
+
+- **deploy-feature workflow**: Triggered when a PR is labeled with 'feature-deployment'
+- **destroy-feature workflow**: Triggered when PR is closed or 'feature-deployment' label is removed
+- Uses branch name in stack naming for isolation
+
+### Configuration Example
+
+```typescript
+{
+  featureStages: {
+    env: { account: '123456789013', region: 'eu-central-1' }
+  }
+}
+```
 
 ## Best Practices
 
