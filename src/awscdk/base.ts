@@ -443,7 +443,7 @@ export abstract class CDKPipeline extends Component {
 
     // Generate versioning-aware imports and utilities
     const versioningImports = this.baseOptions.versioning?.enabled
-      ? this.generateVersioningImports(this.baseOptions.versioning)
+      ? this.generateVersioningImports()
       : '';
 
     const versioningUtilities = this.baseOptions.versioning?.enabled
@@ -723,17 +723,11 @@ ${appCode}
   /**
    * Generate versioning imports for CDK application
    */
-  public generateVersioningImports(config: VersioningConfig): string {
+  public generateVersioningImports(): string {
     const imports: string[] = [];
 
-    if (config.outputs.cloudFormation.enabled) {
-      imports.push("import { CfnOutput } from 'aws-cdk-lib';");
-    }
-
-    if (config.outputs.parameterStore.enabled) {
-      imports.push("import { StringParameter } from 'aws-cdk-lib/aws-ssm';");
-    }
-
+    imports.push("import { CfnOutput } from 'aws-cdk-lib';");
+    imports.push("import { StringParameter } from 'aws-cdk-lib/aws-ssm';");
     imports.push("import * as fs from 'fs';");
 
     return imports.join('\n');

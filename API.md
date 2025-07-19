@@ -266,16 +266,10 @@ Generate CDK application code for versioning.
 ##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.BashCDKPipeline.generateVersioningImports"></a>
 
 ```typescript
-public generateVersioningImports(config: VersioningConfig): string
+public generateVersioningImports(): string
 ```
 
 Generate versioning imports for CDK application.
-
-###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.BashCDKPipeline.generateVersioningImports.parameter.config"></a>
-
-- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
-
----
 
 ##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.BashCDKPipeline.generateVersioningUtilities"></a>
 
@@ -507,16 +501,10 @@ Generate CDK application code for versioning.
 ##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.CDKPipeline.generateVersioningImports"></a>
 
 ```typescript
-public generateVersioningImports(config: VersioningConfig): string
+public generateVersioningImports(): string
 ```
 
 Generate versioning imports for CDK application.
-
-###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.CDKPipeline.generateVersioningImports.parameter.config"></a>
-
-- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
-
----
 
 ##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.CDKPipeline.generateVersioningUtilities"></a>
 
@@ -927,16 +915,10 @@ Generate CDK application code for versioning.
 ##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.GithubCDKPipeline.generateVersioningImports"></a>
 
 ```typescript
-public generateVersioningImports(config: VersioningConfig): string
+public generateVersioningImports(): string
 ```
 
 Generate versioning imports for CDK application.
-
-###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GithubCDKPipeline.generateVersioningImports.parameter.config"></a>
-
-- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
-
----
 
 ##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.GithubCDKPipeline.generateVersioningUtilities"></a>
 
@@ -1227,16 +1209,10 @@ Generate CDK application code for versioning.
 ##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.GitlabCDKPipeline.generateVersioningImports"></a>
 
 ```typescript
-public generateVersioningImports(config: VersioningConfig): string
+public generateVersioningImports(): string
 ```
 
 Generate versioning imports for CDK application.
-
-###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GitlabCDKPipeline.generateVersioningImports.parameter.config"></a>
-
-- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
-
----
 
 ##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.GitlabCDKPipeline.generateVersioningUtilities"></a>
 
