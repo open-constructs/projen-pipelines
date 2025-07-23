@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DriftDetectionStep should generate correct GitHub job configuration 1`] = `
+{
+  "env": {
+    "AWS_DEFAULT_REGION": "us-east-1",
+    "AWS_REGION": "us-east-1",
+    "DRIFT_DETECTION_OUTPUT": "drift-results-drift-check.json",
+    "STAGE_NAME": "drift-check",
+  },
+  "needs": [],
+  "permissions": {
+    "idToken": "write",
+  },
+  "steps": [
+    {
+      "name": "AWS Credentials",
+      "uses": "aws-actions/configure-aws-credentials@v4",
+      "with": {
+        "aws-region": "us-east-1",
+        "role-session-name": "GitHubAction",
+        "role-to-assume": "arn:aws:iam::123456789012:role/DriftDetectionRole",
+      },
+    },
+    {
+      "run": "npx ts-node src/drift/detect-drift.ts --region us-east-1 --stacks Stack1,Stack2",
+    },
+  ],
+}
+`;
+
+exports[`DriftDetectionStep should generate correct GitLab configuration 1`] = `
+{
+  "commands": [
+    "export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "arn:aws:iam::123456789012:role/DriftDetectionRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))",
+    "npx ts-node src/drift/detect-drift.ts --region eu-west-1 --stacks MyStack --no-fail-on-drift",
+  ],
+  "env": {
+    "AWS_DEFAULT_REGION": "eu-west-1",
+    "AWS_REGION": "eu-west-1",
+    "DRIFT_DETECTION_OUTPUT": "drift-results-drift-check.json",
+    "STAGE_NAME": "drift-check",
+  },
+  "extensions": [],
+  "needs": [],
+}
+`;

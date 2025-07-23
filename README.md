@@ -16,6 +16,7 @@ specifically designed to work with the projen project configuration engine.
 * Allows easy switching between different CI/CD platforms without rewriting pipeline configurations
 * Handles complex deployment scenarios with less code
 * Manages AWS infrastructure more efficiently and straightforwardly
+* Automated drift detection for CloudFormation/CDK stacks with scheduled checks and issue creation
 
 ### Benefits
 
@@ -150,6 +151,29 @@ const app = new PipelineApp({
 
 app.synth();
 ```
+
+### Drift Detection
+
+Projen Pipelines includes built-in support for automated drift detection of your CloudFormation/CDK stacks. This feature helps you identify when your deployed infrastructure has diverged from your code definitions.
+
+```typescript
+import { GitHubDriftDetectionWorkflow } from 'projen-pipelines';
+
+new GitHubDriftDetectionWorkflow(app, {
+  schedule: '0 0 * * *', // Daily at midnight
+  createIssues: true, // Automatically create GitHub issues
+  stages: [
+    {
+      name: 'production',
+      region: 'us-east-1',
+      roleArn: 'arn:aws:iam::123456789012:role/DriftDetectionRole',
+      failOnDrift: true,
+    },
+  ],
+});
+```
+
+See the [drift detection documentation](docs/drift-detection.md) for detailed configuration options and examples.
 
 ### Setting Up Trust Relationships Between Accounts
 
