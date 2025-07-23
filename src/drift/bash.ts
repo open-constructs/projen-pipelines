@@ -31,7 +31,6 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
       'set -euo pipefail',
       '',
       '# Drift Detection Script',
-      `# Generated on ${new Date().toISOString()}`,
       '',
       '# Parse command line arguments',
       'STAGE=""',
