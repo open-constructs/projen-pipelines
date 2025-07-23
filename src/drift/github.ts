@@ -37,18 +37,12 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           stage: {
             description: 'Stage to check for drift (leave empty for all)',
             required: false,
-            type: 'string',
+            type: 'choice',
+            options: this.stages.map(s => s.name),
           },
         },
       },
     });
-
-
-    // permissions: {
-    //   'contents': JobPermission.READ,
-    //   ...(this.createIssues ? { issues: JobPermission.WRITE } : {}),
-    //   ...this.permissions,
-    // },
 
     // Add job for each stage
     for (const stage of this.stages) {
@@ -86,7 +80,6 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           ...driftStep.steps,
           {
             name: 'Upload results',
-            if: 'always()',
             uses: 'actions/upload-artifact@v4',
             with: {
               name: `drift-results-${stage.name}`,
@@ -113,7 +106,6 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
         permissions: {
           contents: JobPermission.READ,
         },
-        if: '${{ always() }}',
         needs: this.stages.map(stage => `drift-${stage.name}`),
         steps: [
           {
@@ -217,7 +209,7 @@ total_stacks=0
 total_drifted=0
 total_errors=0
 
-for file in drift-results/*/drift-results-*.json; do
+for file in drift-results-*.json; do
   if [[ -f "$file" ]]; then
     stage=$(basename $(dirname "$file"))
     echo "### Stage: $stage" >> $GITHUB_STEP_SUMMARY

@@ -1,4 +1,4 @@
-import { JsonFile, Project } from 'projen';
+import { gitlab, Project } from 'projen';
 import { DriftDetectionWorkflow, DriftDetectionWorkflowOptions } from './base';
 import { DriftDetectionStep } from './step';
 
@@ -18,37 +18,45 @@ export interface GitLabDriftDetectionWorkflowOptions extends DriftDetectionWorkf
 export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
   private readonly runnerTags: string[];
   private readonly image: string;
+  private readonly config: gitlab.GitlabConfiguration;
 
   constructor(project: Project, options: GitLabDriftDetectionWorkflowOptions) {
     super(project, options);
     this.runnerTags = options.runnerTags ?? [];
     this.image = options.image ?? 'node:18';
+    this.config = new gitlab.GitlabConfiguration(project, {
+      stages: [],
+      jobs: {},
+    });
 
-    const pipeline: any = {
-      'stages': ['drift-detection', 'summary'],
-      'variables': {
-        AWS_DEFAULT_REGION: 'us-east-1',
-      },
+    this.config.addStages('drift-detection', 'summary');
+
+    this.config.addJobs({
       '.drift-detection': {
         stage: 'drift-detection',
-        image: this.image,
         tags: this.runnerTags,
+        image: { name: this.image },
+        idTokens: {
+          AWS_TOKEN: {
+            aud: 'https://sts.amazonaws.com',
+          },
+        },
         only: {
           refs: ['schedules'],
           variables: ['$CI_PIPELINE_SOURCE == "schedule"', '$DRIFT_DETECTION == "true"'],
         },
-        before_script: [
+        beforeScript: [
           'apt-get update && apt-get install -y python3 python3-pip',
           'pip3 install awscli',
           'npm ci',
         ],
         artifacts: {
           paths: ['drift-results-*.json'],
-          expire_in: '1 week',
-          when: 'always',
+          expireIn: '1 week',
+          when: gitlab.CacheWhen.ALWAYS,
         },
       },
-    };
+    });
 
     // Add job for each stage
     for (const stage of this.stages) {
@@ -57,42 +65,37 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
       const driftStep = new DriftDetectionStep(this.project, stage);
       const stepConfig = driftStep.toGitlab();
 
-      pipeline[jobName] = {
-        extends: '.drift-detection',
-        variables: {
-          ...stepConfig.env,
+      this.config.addJobs({
+        [jobName]: {
+          extends: ['.drift-detection'],
+          variables: {
+            ...stepConfig.env,
+          },
+          script: stepConfig.commands,
+          allowFailure: !stage.failOnDrift,
         },
-        script: stepConfig.commands,
-        allow_failure: !stage.failOnDrift,
-      };
+      });
     }
 
     // Add summary job
-    pipeline['drift:summary'] = {
-      stage: 'summary',
-      image: this.image,
-      tags: this.runnerTags,
-      needs: this.stages.map(s => `drift:${s.name}`),
-      only: {
-        refs: ['schedules'],
-        variables: ['$CI_PIPELINE_SOURCE == "schedule"', '$DRIFT_DETECTION == "true"'],
+    this.config.addJobs({
+      'drift:summary': {
+        stage: 'summary',
+        tags: this.runnerTags,
+        needs: this.stages.map(s => `drift:${s.name}`),
+        only: {
+          refs: ['schedules'],
+          variables: ['$CI_PIPELINE_SOURCE == "schedule"', '$DRIFT_DETECTION == "true"'],
+        },
+        script: [
+          'echo "## Drift Detection Summary"',
+          'echo ""',
+          this.generateSummaryScript(),
+        ],
+        when: gitlab.JobWhen.ALWAYS,
       },
-      script: [
-        'echo "## Drift Detection Summary"',
-        'echo ""',
-        this.generateSummaryScript(),
-      ],
-      when: 'always',
-    };
-
-    new JsonFile(this.project, `.gitlab/${this.name}.yml`, {
-      obj: pipeline,
     });
 
-    // Note: Main GitLab CI file should be updated to include this pipeline
-    // Add the following to your .gitlab-ci.yml:
-    // include:
-    //   - local: '.gitlab/drift-detection.yml'
   }
 
   private generateSummaryScript(): string {

@@ -1,5 +1,6 @@
 import { Project } from 'projen';
 import { GitHubProject } from 'projen/lib/github';
+import { synthSnapshot } from 'projen/lib/util/synth';
 import {
   DriftDetectionStep,
   GitHubDriftDetectionWorkflow,
@@ -101,8 +102,8 @@ describe('GitHubDriftDetectionWorkflow', () => {
       ],
     });
 
-    const workflowFile = project.tryFindFile('.github/workflows/drift-detection.yml');
-    expect(workflowFile).toBeDefined();
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.github/workflows/drift-detection.yml']).toMatchSnapshot();
   });
 
   it('should support custom schedule', () => {
@@ -116,8 +117,8 @@ describe('GitHubDriftDetectionWorkflow', () => {
       ],
     });
 
-    const workflowFile = project.tryFindFile('.github/workflows/drift-detection.yml');
-    expect(workflowFile).toBeDefined();
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.github/workflows/drift-detection.yml']).toMatchSnapshot();
   });
 
   it('should include environment variables in stages', () => {
@@ -134,8 +135,8 @@ describe('GitHubDriftDetectionWorkflow', () => {
       ],
     });
 
-    const workflowFile = project.tryFindFile('.github/workflows/drift-detection.yml');
-    expect(workflowFile).toBeDefined();
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.github/workflows/drift-detection.yml']).toMatchSnapshot();
   });
 
   it('should support disabling issue creation', () => {
@@ -149,8 +150,8 @@ describe('GitHubDriftDetectionWorkflow', () => {
       ],
     });
 
-    const workflowFile = project.tryFindFile('.github/workflows/drift-detection.yml');
-    expect(workflowFile).toBeDefined();
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.github/workflows/drift-detection.yml']).toMatchSnapshot();
   });
 });
 
@@ -174,8 +175,8 @@ describe('GitLabDriftDetectionWorkflow', () => {
       ],
     });
 
-    const pipelineFile = project.tryFindFile('.gitlab/drift-detection.yml');
-    expect(pipelineFile).toBeDefined();
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.gitlab/drift-detection.yml']).toMatchSnapshot();
   });
 
   it('should add GitLab runner tags when specified', () => {
@@ -189,8 +190,8 @@ describe('GitLabDriftDetectionWorkflow', () => {
       ],
     });
 
-    const pipelineFile = project.tryFindFile('.gitlab/drift-detection.yml');
-    expect(pipelineFile).toBeDefined();
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.gitlab/drift-detection.yml']).toMatchSnapshot();
   });
 
   it('should support custom docker image', () => {
@@ -204,8 +205,8 @@ describe('GitLabDriftDetectionWorkflow', () => {
       ],
     });
 
-    const pipelineFile = project.tryFindFile('.gitlab/drift-detection.yml');
-    expect(pipelineFile).toBeDefined();
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.gitlab/drift-detection.yml']).toMatchSnapshot();
   });
 });
 
@@ -233,8 +234,8 @@ describe('BashDriftDetectionWorkflow', () => {
       ],
     });
 
-    const scriptFile = project.tryFindFile('drift-detection.sh');
-    expect(scriptFile).toBeDefined();
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['drift-detection.sh']).toMatchSnapshot();
   });
 
   it('should support custom script path', () => {
@@ -248,7 +249,7 @@ describe('BashDriftDetectionWorkflow', () => {
       ],
     });
 
-    const scriptFile = project.tryFindFile('scripts/check-drift.sh');
-    expect(scriptFile).toBeDefined();
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['scripts/check-drift.sh']).toMatchSnapshot();
   });
 });

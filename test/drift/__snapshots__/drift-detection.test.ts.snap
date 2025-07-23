@@ -1,5 +1,286 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`BashDriftDetectionWorkflow should create bash script 1`] = `
+"#!/bin/bash
+set -euo pipefail
+
+# Drift Detection Script
+# Generated on 2025-07-23T09:55:39.238Z
+
+# Parse command line arguments
+STAGE=""
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --stage)
+      STAGE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--stage STAGE_NAME]"
+      exit 1
+      ;;
+  esac
+done
+
+# Install dependencies if not already installed
+if ! command -v ts-node &> /dev/null; then
+  echo "Installing dependencies..."
+  npm ci
+fi
+
+# Function to run drift detection for a stage
+run_drift_detection() {
+  local stage_name=$1
+  local region=$2
+  local role_arn=$3
+  local stacks=$4
+  local fail_on_drift=$5
+  local error_handlers=$6
+  local env_vars=$7
+
+  echo "========================================"
+  echo "Running drift detection for stage: $stage_name"
+  echo "========================================"
+
+  # Set environment variables
+  export AWS_DEFAULT_REGION="$region"
+  export DRIFT_DETECTION_OUTPUT="drift-results-$stage_name.json"
+  eval "$env_vars"
+
+  # Assume role if provided
+  if [[ -n "$role_arn" ]]; then
+    echo "Assuming role: $role_arn"
+    CREDS=$(aws sts assume-role \\
+      --role-arn "$role_arn" \\
+      --role-session-name "drift-detection-$stage_name" \\
+      --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \\
+      --output text)
+    export AWS_ACCESS_KEY_ID=$(echo $CREDS | cut -d' ' -f1)
+    export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | cut -d' ' -f2)
+    export AWS_SESSION_TOKEN=$(echo $CREDS | cut -d' ' -f3)
+  fi
+
+  # Build command
+  local cmd="npx ts-node src/drift/detect-drift.ts --region $region"
+  
+  if [[ -n "$stacks" ]]; then
+    cmd="$cmd --stacks $stacks"
+  fi
+  
+  if [[ "$fail_on_drift" == "false" ]]; then
+    cmd="$cmd --no-fail-on-drift"
+  fi
+  
+  if [[ -n "$error_handlers" ]]; then
+    cmd="$cmd --error-handlers '$error_handlers'"
+  fi
+
+  # Run drift detection
+  echo "Running: $cmd"
+  eval "$cmd" || {
+    local exit_code=$?
+    echo "Drift detection failed with exit code: $exit_code"
+    if [[ "$fail_on_drift" == "true" ]]; then
+      return $exit_code
+    fi
+  }
+}
+
+# Stage configurations
+# Stage: production
+run_stage_production() {
+  echo "Login to AWS using role arn:aws:iam::123456789012:role/ProdRole for region us-east-1"
+  export AWS_DEFAULT_REGION="us-east-1"
+  export DRIFT_DETECTION_OUTPUT="drift-results-production.json"
+  export AWS_REGION="us-east-1"
+  export STAGE_NAME="production"
+  detect-drift --region us-east-1
+}
+
+# Stage: staging
+run_stage_staging() {
+  export AWS_DEFAULT_REGION="eu-west-1"
+  export DRIFT_DETECTION_OUTPUT="drift-results-staging.json"
+  export AWS_REGION="eu-west-1"
+  export STAGE_NAME="staging"
+  detect-drift --region eu-west-1
+}
+
+# Main execution
+FAILED_STAGES=()
+
+if [[ -n "$STAGE" ]]; then
+  # Run specific stage
+  case "$STAGE" in
+    production)
+      run_stage_production || FAILED_STAGES+=("production")
+      ;;
+    staging)
+      run_stage_staging || FAILED_STAGES+=("staging")
+      ;;
+    *)
+      echo "Unknown stage: $STAGE"
+      echo "Available stages:"
+      echo "  - production"
+      echo "  - staging"
+      exit 1
+      ;;
+  esac
+else
+  # Run all stages
+  run_stage_production || FAILED_STAGES+=("production")
+  run_stage_staging || FAILED_STAGES+=("staging")
+fi
+
+# Summary
+echo ""
+echo "========================================"
+echo "DRIFT DETECTION COMPLETE"
+echo "========================================"
+
+if [[ \${#FAILED_STAGES[@]} -gt 0 ]]; then
+  echo "Failed stages:"
+  printf '  - %s\\n' "\${FAILED_STAGES[@]}"
+  exit 1
+else
+  echo "All stages completed successfully"
+fi"
+`;
+
+exports[`BashDriftDetectionWorkflow should support custom script path 1`] = `
+"#!/bin/bash
+set -euo pipefail
+
+# Drift Detection Script
+# Generated on 2025-07-23T09:55:39.241Z
+
+# Parse command line arguments
+STAGE=""
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --stage)
+      STAGE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--stage STAGE_NAME]"
+      exit 1
+      ;;
+  esac
+done
+
+# Install dependencies if not already installed
+if ! command -v ts-node &> /dev/null; then
+  echo "Installing dependencies..."
+  npm ci
+fi
+
+# Function to run drift detection for a stage
+run_drift_detection() {
+  local stage_name=$1
+  local region=$2
+  local role_arn=$3
+  local stacks=$4
+  local fail_on_drift=$5
+  local error_handlers=$6
+  local env_vars=$7
+
+  echo "========================================"
+  echo "Running drift detection for stage: $stage_name"
+  echo "========================================"
+
+  # Set environment variables
+  export AWS_DEFAULT_REGION="$region"
+  export DRIFT_DETECTION_OUTPUT="drift-results-$stage_name.json"
+  eval "$env_vars"
+
+  # Assume role if provided
+  if [[ -n "$role_arn" ]]; then
+    echo "Assuming role: $role_arn"
+    CREDS=$(aws sts assume-role \\
+      --role-arn "$role_arn" \\
+      --role-session-name "drift-detection-$stage_name" \\
+      --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \\
+      --output text)
+    export AWS_ACCESS_KEY_ID=$(echo $CREDS | cut -d' ' -f1)
+    export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | cut -d' ' -f2)
+    export AWS_SESSION_TOKEN=$(echo $CREDS | cut -d' ' -f3)
+  fi
+
+  # Build command
+  local cmd="npx ts-node src/drift/detect-drift.ts --region $region"
+  
+  if [[ -n "$stacks" ]]; then
+    cmd="$cmd --stacks $stacks"
+  fi
+  
+  if [[ "$fail_on_drift" == "false" ]]; then
+    cmd="$cmd --no-fail-on-drift"
+  fi
+  
+  if [[ -n "$error_handlers" ]]; then
+    cmd="$cmd --error-handlers '$error_handlers'"
+  fi
+
+  # Run drift detection
+  echo "Running: $cmd"
+  eval "$cmd" || {
+    local exit_code=$?
+    echo "Drift detection failed with exit code: $exit_code"
+    if [[ "$fail_on_drift" == "true" ]]; then
+      return $exit_code
+    fi
+  }
+}
+
+# Stage configurations
+# Stage: production
+run_stage_production() {
+  export AWS_DEFAULT_REGION="us-east-1"
+  export DRIFT_DETECTION_OUTPUT="drift-results-production.json"
+  export AWS_REGION="us-east-1"
+  export STAGE_NAME="production"
+  detect-drift --region us-east-1
+}
+
+# Main execution
+FAILED_STAGES=()
+
+if [[ -n "$STAGE" ]]; then
+  # Run specific stage
+  case "$STAGE" in
+    production)
+      run_stage_production || FAILED_STAGES+=("production")
+      ;;
+    *)
+      echo "Unknown stage: $STAGE"
+      echo "Available stages:"
+      echo "  - production"
+      exit 1
+      ;;
+  esac
+else
+  # Run all stages
+  run_stage_production || FAILED_STAGES+=("production")
+fi
+
+# Summary
+echo ""
+echo "========================================"
+echo "DRIFT DETECTION COMPLETE"
+echo "========================================"
+
+if [[ \${#FAILED_STAGES[@]} -gt 0 ]]; then
+  echo "Failed stages:"
+  printf '  - %s\\n' "\${FAILED_STAGES[@]}"
+  exit 1
+else
+  echo "All stages completed successfully"
+fi"
+`;
+
 exports[`DriftDetectionStep should generate correct GitHub job configuration 1`] = `
 {
   "env": {
@@ -45,3 +326,466 @@ exports[`DriftDetectionStep should generate correct GitLab configuration 1`] = `
   "needs": [],
 }
 `;
+
+exports[`GitHubDriftDetectionWorkflow should create GitHub workflow 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: drift-detection
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Stage to check for drift (leave empty for all)
+        required: false
+        type: choice
+        options:
+          - production
+          - staging
+jobs:
+  drift-production:
+    name: Drift Detection - production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+      DRIFT_DETECTION_OUTPUT: drift-results-production.json
+      AWS_REGION: us-east-1
+      STAGE_NAME: production
+    if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/ProdRole
+          role-session-name: GitHubAction
+          aws-region: us-east-1
+      - run: detect-drift --region us-east-1
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-results-production
+          path: drift-results-production.json
+  drift-staging:
+    name: Drift Detection - staging
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_DEFAULT_REGION: eu-west-1
+      DRIFT_DETECTION_OUTPUT: drift-results-staging.json
+      AWS_REGION: eu-west-1
+      STAGE_NAME: staging
+    if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'staging' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/StagingRole
+          role-session-name: GitHubAction
+          aws-region: eu-west-1
+      - run: detect-drift --region eu-west-1 --no-fail-on-drift
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-results-staging
+          path: drift-results-staging.json
+  drift-summary:
+    name: Drift Detection Summary
+    needs:
+      - drift-production
+      - drift-staging
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: drift-results
+      - name: Generate summary
+        run: |
+          
+          #!/bin/bash
+          echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          total_stacks=0
+          total_drifted=0
+          total_errors=0
+
+          for file in drift-results-*.json; do
+            if [[ -f "$file" ]]; then
+              stage=$(basename $(dirname "$file"))
+              echo "### Stage: $stage" >> $GITHUB_STEP_SUMMARY
+              
+              # Parse JSON and generate summary
+              jq -r '
+                . as $results |
+                "- Total stacks: " + ($results | length | tostring) + "\\n" +
+                "- Drifted: " + ([$results[] | select(.driftStatus == "DRIFTED")] | length | tostring) + "\\n" +
+                "- Errors: " + ([$results[] | select(.error)] | length | tostring) + "\\n" +
+                ([$results[] | select(.driftStatus == "DRIFTED")] | 
+                  if length > 0 then
+                    "\\n**Drifted stacks:**\\n" + 
+                    (map("  - " + .stackName + " (" + ((.driftedResources // []) | length | tostring) + " resources)") | join("\\n"))
+                  else "" end)
+              ' "$file" >> $GITHUB_STEP_SUMMARY
+              
+              echo "" >> $GITHUB_STEP_SUMMARY
+              
+              # Count totals
+              total_stacks=$((total_stacks + $(jq 'length' "$file")))
+              total_drifted=$((total_drifted + $(jq '[.[] | select(.driftStatus == "DRIFTED")] | length' "$file")))
+              total_errors=$((total_errors + $(jq '[.[] | select(.error)] | length' "$file")))
+            fi
+          done
+
+          echo "### Overall Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Total stacks checked: $total_stacks" >> $GITHUB_STEP_SUMMARY
+          echo "- Total drifted stacks: $total_drifted" >> $GITHUB_STEP_SUMMARY
+          echo "- Total errors: $total_errors" >> $GITHUB_STEP_SUMMARY
+
+          if [[ $total_drifted -gt 0 ]]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Action required:** Drift detected in $total_drifted stacks" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubDriftDetectionWorkflow should include environment variables in stages 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: drift-detection
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Stage to check for drift (leave empty for all)
+        required: false
+        type: choice
+        options:
+          - production
+jobs:
+  drift-production:
+    name: Drift Detection - production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+      DRIFT_DETECTION_OUTPUT: drift-results-production.json
+      AWS_REGION: us-east-1
+      STAGE_NAME: production
+      CUSTOM_VAR: value
+      ANOTHER_VAR: another-value
+    if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm ci
+      - run: detect-drift --region us-east-1
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-results-production
+          path: drift-results-production.json
+  drift-summary:
+    name: Drift Detection Summary
+    needs: drift-production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: drift-results
+      - name: Generate summary
+        run: |
+          
+          #!/bin/bash
+          echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          total_stacks=0
+          total_drifted=0
+          total_errors=0
+
+          for file in drift-results-*.json; do
+            if [[ -f "$file" ]]; then
+              stage=$(basename $(dirname "$file"))
+              echo "### Stage: $stage" >> $GITHUB_STEP_SUMMARY
+              
+              # Parse JSON and generate summary
+              jq -r '
+                . as $results |
+                "- Total stacks: " + ($results | length | tostring) + "\\n" +
+                "- Drifted: " + ([$results[] | select(.driftStatus == "DRIFTED")] | length | tostring) + "\\n" +
+                "- Errors: " + ([$results[] | select(.error)] | length | tostring) + "\\n" +
+                ([$results[] | select(.driftStatus == "DRIFTED")] | 
+                  if length > 0 then
+                    "\\n**Drifted stacks:**\\n" + 
+                    (map("  - " + .stackName + " (" + ((.driftedResources // []) | length | tostring) + " resources)") | join("\\n"))
+                  else "" end)
+              ' "$file" >> $GITHUB_STEP_SUMMARY
+              
+              echo "" >> $GITHUB_STEP_SUMMARY
+              
+              # Count totals
+              total_stacks=$((total_stacks + $(jq 'length' "$file")))
+              total_drifted=$((total_drifted + $(jq '[.[] | select(.driftStatus == "DRIFTED")] | length' "$file")))
+              total_errors=$((total_errors + $(jq '[.[] | select(.error)] | length' "$file")))
+            fi
+          done
+
+          echo "### Overall Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Total stacks checked: $total_stacks" >> $GITHUB_STEP_SUMMARY
+          echo "- Total drifted stacks: $total_drifted" >> $GITHUB_STEP_SUMMARY
+          echo "- Total errors: $total_errors" >> $GITHUB_STEP_SUMMARY
+
+          if [[ $total_drifted -gt 0 ]]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Action required:** Drift detected in $total_drifted stacks" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubDriftDetectionWorkflow should support custom schedule 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: drift-detection
+on:
+  schedule:
+    - cron: 0 */6 * * *
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Stage to check for drift (leave empty for all)
+        required: false
+        type: choice
+        options:
+          - production
+jobs:
+  drift-production:
+    name: Drift Detection - production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+      DRIFT_DETECTION_OUTPUT: drift-results-production.json
+      AWS_REGION: us-east-1
+      STAGE_NAME: production
+    if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm ci
+      - run: detect-drift --region us-east-1
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-results-production
+          path: drift-results-production.json
+  drift-summary:
+    name: Drift Detection Summary
+    needs: drift-production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: drift-results
+      - name: Generate summary
+        run: |
+          
+          #!/bin/bash
+          echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          total_stacks=0
+          total_drifted=0
+          total_errors=0
+
+          for file in drift-results-*.json; do
+            if [[ -f "$file" ]]; then
+              stage=$(basename $(dirname "$file"))
+              echo "### Stage: $stage" >> $GITHUB_STEP_SUMMARY
+              
+              # Parse JSON and generate summary
+              jq -r '
+                . as $results |
+                "- Total stacks: " + ($results | length | tostring) + "\\n" +
+                "- Drifted: " + ([$results[] | select(.driftStatus == "DRIFTED")] | length | tostring) + "\\n" +
+                "- Errors: " + ([$results[] | select(.error)] | length | tostring) + "\\n" +
+                ([$results[] | select(.driftStatus == "DRIFTED")] | 
+                  if length > 0 then
+                    "\\n**Drifted stacks:**\\n" + 
+                    (map("  - " + .stackName + " (" + ((.driftedResources // []) | length | tostring) + " resources)") | join("\\n"))
+                  else "" end)
+              ' "$file" >> $GITHUB_STEP_SUMMARY
+              
+              echo "" >> $GITHUB_STEP_SUMMARY
+              
+              # Count totals
+              total_stacks=$((total_stacks + $(jq 'length' "$file")))
+              total_drifted=$((total_drifted + $(jq '[.[] | select(.driftStatus == "DRIFTED")] | length' "$file")))
+              total_errors=$((total_errors + $(jq '[.[] | select(.error)] | length' "$file")))
+            fi
+          done
+
+          echo "### Overall Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Total stacks checked: $total_stacks" >> $GITHUB_STEP_SUMMARY
+          echo "- Total drifted stacks: $total_drifted" >> $GITHUB_STEP_SUMMARY
+          echo "- Total errors: $total_errors" >> $GITHUB_STEP_SUMMARY
+
+          if [[ $total_drifted -gt 0 ]]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Action required:** Drift detected in $total_drifted stacks" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubDriftDetectionWorkflow should support disabling issue creation 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: drift-detection
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Stage to check for drift (leave empty for all)
+        required: false
+        type: choice
+        options:
+          - production
+jobs:
+  drift-production:
+    name: Drift Detection - production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+      DRIFT_DETECTION_OUTPUT: drift-results-production.json
+      AWS_REGION: us-east-1
+      STAGE_NAME: production
+    if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm ci
+      - run: detect-drift --region us-east-1
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-results-production
+          path: drift-results-production.json
+  drift-summary:
+    name: Drift Detection Summary
+    needs: drift-production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: drift-results
+      - name: Generate summary
+        run: |
+          
+          #!/bin/bash
+          echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          total_stacks=0
+          total_drifted=0
+          total_errors=0
+
+          for file in drift-results-*.json; do
+            if [[ -f "$file" ]]; then
+              stage=$(basename $(dirname "$file"))
+              echo "### Stage: $stage" >> $GITHUB_STEP_SUMMARY
+              
+              # Parse JSON and generate summary
+              jq -r '
+                . as $results |
+                "- Total stacks: " + ($results | length | tostring) + "\\n" +
+                "- Drifted: " + ([$results[] | select(.driftStatus == "DRIFTED")] | length | tostring) + "\\n" +
+                "- Errors: " + ([$results[] | select(.error)] | length | tostring) + "\\n" +
+                ([$results[] | select(.driftStatus == "DRIFTED")] | 
+                  if length > 0 then
+                    "\\n**Drifted stacks:**\\n" + 
+                    (map("  - " + .stackName + " (" + ((.driftedResources // []) | length | tostring) + " resources)") | join("\\n"))
+                  else "" end)
+              ' "$file" >> $GITHUB_STEP_SUMMARY
+              
+              echo "" >> $GITHUB_STEP_SUMMARY
+              
+              # Count totals
+              total_stacks=$((total_stacks + $(jq 'length' "$file")))
+              total_drifted=$((total_drifted + $(jq '[.[] | select(.driftStatus == "DRIFTED")] | length' "$file")))
+              total_errors=$((total_errors + $(jq '[.[] | select(.error)] | length' "$file")))
+            fi
+          done
+
+          echo "### Overall Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Total stacks checked: $total_stacks" >> $GITHUB_STEP_SUMMARY
+          echo "- Total drifted stacks: $total_drifted" >> $GITHUB_STEP_SUMMARY
+          echo "- Total errors: $total_errors" >> $GITHUB_STEP_SUMMARY
+
+          if [[ $total_drifted -gt 0 ]]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Action required:** Drift detected in $total_drifted stacks" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitLabDriftDetectionWorkflow should add GitLab runner tags when specified 1`] = `undefined`;
+
+exports[`GitLabDriftDetectionWorkflow should create GitLab pipeline 1`] = `undefined`;
+
+exports[`GitLabDriftDetectionWorkflow should support custom docker image 1`] = `undefined`;
