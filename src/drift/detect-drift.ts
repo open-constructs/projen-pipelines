@@ -8,13 +8,6 @@ interface DriftDetectionOptions {
   stackNames?: string[];
   timeout?: number;
   failOnDrift?: boolean;
-  errorHandlers?: Record<string, ErrorHandler>;
-}
-
-interface ErrorHandler {
-  readonly pattern: string;
-  readonly action: 'ignore' | 'warn' | 'fail';
-  readonly message?: string;
 }
 
 interface DriftResult {
@@ -104,15 +97,6 @@ class DriftDetector {
     };
 
     try {
-      // Check if this matches any error handler patterns
-      const errorHandler = this.getErrorHandler(stackName);
-      if (errorHandler && errorHandler.action === 'ignore') {
-        console.log(`Skipping stack ${stackName}: ${errorHandler.message || 'Matched ignore pattern'}`);
-        result.driftStatus = 'NOT_CHECKED';
-        this.results.push(result);
-        return;
-      }
-
       // Start drift detection
       const driftId = await this.startDriftDetection(stackName);
       console.log(`Started drift detection with ID: ${driftId}`);
@@ -126,30 +110,16 @@ class DriftDetector {
         console.log(`DRIFT DETECTED in stack ${stackName}!`);
 
         // Handle known drift errors
-        result.knownErrorsHandled = await this.handleKnownDriftErrors(stackName, result.driftedResources);
+        result.knownErrorsHandled = await this.handleKnownDriftErrors(result.driftedResources);
 
         // Print drift details
         this.printDriftDetails(result);
-
-        // Check error handler
-        if (errorHandler) {
-          if (errorHandler.action === 'warn') {
-            console.warn(`Warning: ${errorHandler.message || 'Drift detected but configured to warn only'}`);
-            result.driftStatus = 'IN_SYNC'; // Override status for warning case
-          }
-        }
       } else if (driftStatus === 'IN_SYNC') {
         console.log(`Stack ${stackName} is in sync`);
       }
     } catch (error: any) {
       console.error(`Error checking drift for stack ${stackName}:`, error.message);
       result.error = error.message;
-
-      const errorHandler = this.getErrorHandler(stackName);
-      if (errorHandler && errorHandler.action !== 'fail') {
-        console.log(`Applying error handler: ${errorHandler.message || 'Continuing despite error'}`);
-        result.driftStatus = 'UNKNOWN';
-      }
     }
 
     this.results.push(result);
@@ -214,71 +184,51 @@ class DriftDetector {
     }));
   }
 
-  private getErrorHandler(stackName: string): ErrorHandler | undefined {
-    if (!this.options.errorHandlers) {
-      return undefined;
-    }
-
-    for (const [pattern, handler] of Object.entries(this.options.errorHandlers)) {
-      if (new RegExp(pattern).test(stackName)) {
-        return handler;
-      }
-    }
-
-    return undefined;
-  }
-
   /**
    * Handle known drift errors for specific resources
    * This method can be extended later to implement custom logic for known issues
    */
-  private async handleKnownDriftErrors(_stackName: string, driftedResources?: DriftedResource[]): Promise<KnownErrorResult[]> {
+  private async handleKnownDriftErrors(driftedResources?: DriftedResource[]): Promise<KnownErrorResult[]> {
     const knownErrors: KnownErrorResult[] = [];
 
     if (!driftedResources) {
       return knownErrors;
     }
 
-    // TODO: Implement custom logic here for known drift errors
-    // Example structure for handling known errors:
+    for (const _resource of driftedResources) {
 
-    for (const resource of driftedResources) {
+      // TODO: Implement custom logic here for known drift errors
+      // Example structure for handling known errors:
+
       // Check for Lambda runtime drift (common issue)
-      if (resource.resourceType === 'AWS::Lambda::Function' && resource.propertyDifferences) {
-        const runtimeDrift = resource.propertyDifferences.find(diff =>
-          diff.propertyPath === '/Runtime' || diff.propertyPath === 'Runtime',
-        );
+      // if (resource.resourceType === 'AWS::Lambda::Function' && resource.propertyDifferences) {
+      //   const runtimeDrift = resource.propertyDifferences.find(diff =>
+      //     diff.propertyPath === '/Runtime' || diff.propertyPath === 'Runtime',
+      //   );
 
-        if (runtimeDrift) {
-          knownErrors.push({
-            resourceId: resource.logicalResourceId,
-            errorType: 'lambda-runtime-drift',
-            originalError: runtimeDrift,
-            handled: false, // Will be implemented later
-            message: 'Lambda runtime drift detected - manual implementation needed',
-          });
-        }
-      }
+      //   if (runtimeDrift) {
+      //     knownErrors.push({
+      //       resourceId: resource.logicalResourceId,
+      //       errorType: 'lambda-runtime-drift',
+      //       originalError: runtimeDrift,
+      //       handled: false, // Will be implemented later
+      //       message: 'Lambda runtime drift detected - manual implementation needed',
+      //     });
+      //   }
+      // }
 
-      // Check for auto-scaling related drift
-      if (resource.resourceType.includes('AutoScaling') && resource.propertyDifferences) {
-        knownErrors.push({
-          resourceId: resource.logicalResourceId,
-          errorType: 'autoscaling-drift',
-          originalError: resource.propertyDifferences,
-          handled: false, // Will be implemented later
-          message: 'Auto-scaling drift detected - manual implementation needed',
-        });
-      }
+      // // Check for auto-scaling related drift
+      // if (resource.resourceType.includes('AutoScaling') && resource.propertyDifferences) {
+      //   knownErrors.push({
+      //     resourceId: resource.logicalResourceId,
+      //     errorType: 'autoscaling-drift',
+      //     originalError: resource.propertyDifferences,
+      //     handled: false, // Will be implemented later
+      //     message: 'Auto-scaling drift detected - manual implementation needed',
+      //   });
+      // }
 
       // Add more patterns here as needed
-    }
-
-    if (knownErrors.length > 0) {
-      console.log(`\nFound ${knownErrors.length} known error patterns that need manual implementation`);
-      for (const error of knownErrors) {
-        console.log(`  - ${error.resourceId}: ${error.errorType} - ${error.message}`);
-      }
     }
 
     return knownErrors;
@@ -372,9 +322,6 @@ function parseArgs(): DriftDetectionOptions {
       case '--no-fail-on-drift':
         options.failOnDrift = false;
         break;
-      case '--error-handlers':
-        options.errorHandlers = JSON.parse(args[++i]);
-        break;
       default:
         console.error(`Unknown argument: ${args[i]}`);
         printUsage();
@@ -394,20 +341,10 @@ Options:
   --stacks <stack1,stack2>    Comma-separated list of stack names (default: all stacks)
   --timeout <minutes>         Timeout in minutes (default: 30)
   --no-fail-on-drift         Don't exit with error code if drift is detected
-  --error-handlers <json>     JSON object with error handlers
 
 Environment variables:
   AWS_REGION                  Default AWS region
   DRIFT_DETECTION_OUTPUT      Output file path (default: drift-detection-results.json)
-
-Error handlers format:
-  {
-    "pattern": {
-      "pattern": "regex",
-      "action": "ignore|warn|fail",
-      "message": "optional message"
-    }
-  }
 `);
 }
 
