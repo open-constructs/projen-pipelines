@@ -494,6 +494,8 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | *No description.* |
 
 ---
 
@@ -516,6 +518,26 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.BashDriftDetectionWorkflow.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.BashDriftDetectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -853,6 +875,8 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | *No description.* |
 
 ---
 
@@ -875,6 +899,26 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.DriftDetectionWorkflow.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.DriftDetectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -1444,6 +1488,8 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | *No description.* |
 
 ---
 
@@ -1466,6 +1512,26 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.GitHubDriftDetectionWorkflow.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.GitHubDriftDetectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -1868,6 +1934,8 @@ Test whether the given construct is a component.
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | *No description.* |
 
 ---
 
@@ -1890,6 +1958,26 @@ public readonly project: Project;
 ```
 
 - *Type:* projen.Project
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.GitLabDriftDetectionWorkflow.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.GitLabDriftDetectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -2839,7 +2927,6 @@ const driftDetectionStageOptions: DriftDetectionStageOptions = { ... }
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.name">name</a></code> | <code>string</code> | Name of the stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.region">region</a></code> | <code>string</code> | AWS region for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
-| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.errorHandlers">errorHandlers</a></code> | <code>{[ key: string ]: <a href="#projen-pipelines.DriftErrorHandler">DriftErrorHandler</a>}</code> | Custom error handlers for known issues. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
@@ -2879,18 +2966,6 @@ public readonly environment: {[ key: string ]: string};
 - *Type:* {[ key: string ]: string}
 
 Environment variables for this stage.
-
----
-
-##### `errorHandlers`<sup>Optional</sup> <a name="errorHandlers" id="projen-pipelines.DriftDetectionStageOptions.property.errorHandlers"></a>
-
-```typescript
-public readonly errorHandlers: {[ key: string ]: DriftErrorHandler};
-```
-
-- *Type:* {[ key: string ]: <a href="#projen-pipelines.DriftErrorHandler">DriftErrorHandler</a>}
-
-Custom error handlers for known issues.
 
 ---
 
@@ -2948,7 +3023,6 @@ const driftDetectionStepProps: DriftDetectionStepProps = { ... }
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.name">name</a></code> | <code>string</code> | Name of the stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.region">region</a></code> | <code>string</code> | AWS region for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
-| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.errorHandlers">errorHandlers</a></code> | <code>{[ key: string ]: <a href="#projen-pipelines.DriftErrorHandler">DriftErrorHandler</a>}</code> | Custom error handlers for known issues. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
@@ -2989,18 +3063,6 @@ public readonly environment: {[ key: string ]: string};
 - *Type:* {[ key: string ]: string}
 
 Environment variables for this stage.
-
----
-
-##### `errorHandlers`<sup>Optional</sup> <a name="errorHandlers" id="projen-pipelines.DriftDetectionStepProps.property.errorHandlers"></a>
-
-```typescript
-public readonly errorHandlers: {[ key: string ]: DriftErrorHandler};
-```
-
-- *Type:* {[ key: string ]: <a href="#projen-pipelines.DriftErrorHandler">DriftErrorHandler</a>}
-
-Custom error handlers for known issues.
 
 ---
 
@@ -3605,7 +3667,7 @@ public readonly createIssues: boolean;
 ```
 
 - *Type:* boolean
-- *Default:* true
+- *Default:* false
 
 Whether to create issues on drift detection.
 
@@ -4866,10 +4928,12 @@ The projen project reference.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftDetectionStep.prependSteps">prependSteps</a></code> | *No description.* |
 
 ---
 
@@ -4879,9 +4943,7 @@ The projen project reference.
 public toBash(): BashStepConfig
 ```
 
-Generates a configuration for a bash script step.
-
-Should be implemented by subclasses.
+Converts the sequence of steps into a Bash script configuration.
 
 ##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DriftDetectionStep.toCodeCatalyst"></a>
 
@@ -4889,9 +4951,7 @@ Should be implemented by subclasses.
 public toCodeCatalyst(): CodeCatalystStepConfig
 ```
 
-Generates a configuration for a CodeCatalyst Actions step.
-
-Should be implemented by subclasses.
+Converts the sequence of steps into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.DriftDetectionStep.toGithub"></a>
 
@@ -4899,9 +4959,7 @@ Should be implemented by subclasses.
 public toGithub(): GithubStepConfig
 ```
 
-Generates a configuration for a GitHub Actions step.
-
-Should be implemented by subclasses.
+Converts the sequence of steps into a GitHub Actions step configuration.
 
 ##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DriftDetectionStep.toGitlab"></a>
 
@@ -4909,9 +4967,31 @@ Should be implemented by subclasses.
 public toGitlab(): GitlabStepConfig
 ```
 
-Generates a configuration for a GitLab CI step.
+Converts the sequence of steps into a GitLab CI configuration.
 
-Should be implemented by subclasses.
+##### `addSteps` <a name="addSteps" id="projen-pipelines.DriftDetectionStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftDetectionStep.addSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.DriftDetectionStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftDetectionStep.prependSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
 
 
 
@@ -5174,13 +5254,14 @@ Concrete implementation of PipelineStep that executes simple commands.
 ```typescript
 import { SimpleCommandStep } from 'projen-pipelines'
 
-new SimpleCommandStep(project: Project, commands: string[])
+new SimpleCommandStep(project: Project, commands: string[], env?: {[ key: string ]: string})
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
 | <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.commands">commands</a></code> | <code>string[]</code> | - Shell commands to execute. |
+| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.env">env</a></code> | <code>{[ key: string ]: string}</code> | *No description.* |
 
 ---
 
@@ -5197,6 +5278,12 @@ The projen project reference.
 - *Type:* string[]
 
 Shell commands to execute.
+
+---
+
+##### `env`<sup>Optional</sup> <a name="env" id="projen-pipelines.SimpleCommandStep.Initializer.parameter.env"></a>
+
+- *Type:* {[ key: string ]: string}
 
 ---
 
