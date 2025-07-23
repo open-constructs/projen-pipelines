@@ -23,7 +23,7 @@ exports[`DriftDetectionStep should generate correct GitHub job configuration 1`]
       },
     },
     {
-      "run": "npx ts-node src/drift/detect-drift.ts --region us-east-1 --stacks Stack1,Stack2",
+      "run": "detect-drift --region us-east-1 --stacks Stack1,Stack2",
     },
   ],
 }
@@ -33,7 +33,7 @@ exports[`DriftDetectionStep should generate correct GitLab configuration 1`] = `
 {
   "commands": [
     "export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "arn:aws:iam::123456789012:role/DriftDetectionRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))",
-    "npx ts-node src/drift/detect-drift.ts --region eu-west-1 --stacks MyStack --no-fail-on-drift",
+    "detect-drift --region eu-west-1 --stacks MyStack --no-fail-on-drift",
   ],
   "env": {
     "AWS_DEFAULT_REGION": "eu-west-1",

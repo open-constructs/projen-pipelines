@@ -28,11 +28,6 @@ export interface DriftDetectionStageOptions {
   readonly failOnDrift?: boolean;
 
   /**
-   * Custom error handlers for known issues
-   */
-  readonly errorHandlers?: Record<string, DriftErrorHandler>;
-
-  /**
    * Environment variables for this stage
    */
   readonly environment?: Record<string, string>;

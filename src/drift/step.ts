@@ -13,7 +13,7 @@ export interface DriftDetectionStepProps extends DriftDetectionStageOptions {
 export class DriftDetectionStep extends StepSequence {
   private static generateCommand(props: DriftDetectionStepProps): string {
     const args: string[] = [
-      'npx', 'ts-node', 'src/drift/detect-drift.ts',
+      'detect-drift',
       '--region', props.region,
     ];
 
@@ -27,10 +27,6 @@ export class DriftDetectionStep extends StepSequence {
 
     if (props.failOnDrift === false) {
       args.push('--no-fail-on-drift');
-    }
-
-    if (props.errorHandlers) {
-      args.push('--error-handlers', `'${JSON.stringify(props.errorHandlers)}'`);
     }
 
     return args.join(' ');

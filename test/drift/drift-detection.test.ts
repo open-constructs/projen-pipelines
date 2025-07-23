@@ -50,31 +50,6 @@ describe('DriftDetectionStep', () => {
     expect(config).toMatchSnapshot();
   });
 
-  it('should include error handlers in generated command', () => {
-    const step = new DriftDetectionStep(project, {
-      name: 'drift-check',
-      region: 'us-east-1',
-      errorHandlers: {
-        'Lambda.*': {
-          pattern: 'Lambda.*',
-          action: 'ignore',
-          message: 'Ignoring Lambda drift',
-        },
-        '^DynamoDB-.*': {
-          pattern: '^DynamoDB-.*',
-          action: 'warn',
-          message: 'Known DynamoDB issue',
-        },
-      },
-    });
-
-    const bashConfig = step.toBash();
-    const command = bashConfig.commands.find(cmd => cmd.includes('detect-drift.ts'));
-    expect(command).toContain('--error-handlers');
-    expect(command).toContain('Lambda.*');
-    expect(command).toContain('DynamoDB-.*');
-  });
-
   it('should check all stacks when stackNames not provided', () => {
     const step = new DriftDetectionStep(project, {
       name: 'drift-check',
@@ -82,7 +57,7 @@ describe('DriftDetectionStep', () => {
     });
 
     const bashConfig = step.toBash();
-    const command = bashConfig.commands.find(cmd => cmd.includes('detect-drift.ts'));
+    const command = bashConfig.commands.find(cmd => cmd.includes('detect-drift'));
     expect(command).not.toContain('--stacks');
   });
 
@@ -94,7 +69,7 @@ describe('DriftDetectionStep', () => {
     });
 
     const bashConfig = step.toBash();
-    const command = bashConfig.commands.find(cmd => cmd.includes('detect-drift.ts'));
+    const command = bashConfig.commands.find(cmd => cmd.includes('detect-drift'));
     expect(command).toContain('--timeout 60');
   });
 });
