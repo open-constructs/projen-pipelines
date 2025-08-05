@@ -593,7 +593,7 @@ ${appCode}
       exec: `cdk diff --no-changeset ${stackId}`,
     });
     this.project.addTask('destroy:feature', {
-      exec: `cdk destroy ${stackId}`,
+      exec: `cdk destroy --force ${stackId}`,
     });
     this.project.addTask('watch:feature', {
       exec: `cdk deploy --outputs-file cdk-outputs-feature.json --watch --hotswap ${stackId}`,

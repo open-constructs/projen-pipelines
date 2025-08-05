@@ -432,6 +432,47 @@ All strategies support these template variables:
 5. **Zero Configuration**: Works out-of-the-box with sensible defaults
 6. **CI/CD Integration**: Automatically detects version info from CI/CD environments
 
+### Feature Branch Deployments
+
+Projen Pipelines supports automated feature branch deployments for GitHub Actions. This allows you to deploy and test your changes in isolated environments before merging to the main branch. Gitlab support is currently missing.
+
+#### Configuration
+
+To enable feature branch deployments, add the `featureStages` configuration to your pipeline:
+
+```typescript
+new GithubCDKPipeline(app, {
+  stackPrefix: 'MyApp',
+  iamRoleArns: {
+    default: 'arn:aws:iam::123456789012:role/GithubDeploymentRole',
+  },
+  featureStages: {
+    env: { account: '123456789013', region: 'eu-central-1' },
+  },
+  stages: [
+    // ... your regular stages
+  ],
+});
+```
+
+#### How It Works
+
+When feature stages are configured, two GitHub workflows are created:
+
+1. **deploy-feature** - Automatically deploys your feature branch when a pull request is labeled with `feature-deployment`
+2. **destroy-feature** - Automatically destroys the feature deployment when:
+   - The pull request is closed
+   - The `feature-deployment` label is removed from the pull request
+
+#### Using Feature Deployments
+
+1. Create a pull request with your changes
+2. Add the `feature-deployment` label to trigger deployment
+3. The feature environment will be deployed with a stack name including your branch name
+4. Remove the label or close the PR to destroy the feature environment
+
+The feature deployment uses the `--force` flag when destroying to ensure cleanup without manual confirmation.
+
 ## Current Status
 
 Projen-Pipelines is currently in version 0.x, awaiting Projen's 1.0 release. Despite its pre-1.0 status, it's being used in several production environments.

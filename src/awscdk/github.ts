@@ -4,7 +4,7 @@ import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model
 import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage, NamedStageOptions } from './base';
 import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
-import { PipelineStep, SimpleCommandStep } from '../steps';
+import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep } from '../steps';
 import { DownloadArtifactStep, UploadArtifactStep } from '../steps/artifact-steps';
 import { GithubPackagesLoginStep } from '../steps/registries';
 
@@ -103,11 +103,136 @@ export class GithubCDKPipeline extends CDKPipeline {
     for (const stage of (options.independentStages ?? [])) {
       this.createIndependentDeployment(stage);
     }
+
+    // Create feature workflows if feature stages are configured
+    if (options.featureStages) {
+      this.createFeatureWorkflows();
+    }
   }
 
   /** the type of engine this implementation of CDKPipeline is for */
   public engineType(): PipelineEngine {
     return PipelineEngine.GITHUB;
+  }
+
+  /**
+   * Creates feature branch workflows for deploying and destroying feature environments.
+   */
+  protected createFeatureWorkflows(): void {
+    this.createFeatureDeployWorkflow();
+    this.createFeatureDestroyWorkflow();
+  }
+
+  /**
+   * Creates a workflow for deploying feature branches when PRs are labeled with 'feature-deployment'.
+   */
+  private createFeatureDeployWorkflow(): void {
+    const workflow = this.app.github!.addWorkflow('deploy-feature');
+
+    workflow.on({
+      pullRequestTarget: {
+        types: ['synchronize', 'labeled', 'opened', 'reopened'],
+      },
+      workflowDispatch: {},
+    });
+
+    const steps = [
+      this.provideInstallStep(),
+      this.provideSynthStep(),
+      this.provideDeployStep({ name: 'feature', env: this.baseOptions.featureStages!.env }),
+      new UploadArtifactStep(this.project, {
+        name: 'cdk-outputs-feature',
+        path: 'cdk-outputs-feature.json',
+      }),
+    ].map(s => s.toGithub());
+
+    workflow.addJob('synth-and-deploy', {
+      name: 'Synth and deploy CDK application to feature stage',
+      if: "contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')",
+      needs: [],
+      runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      permissions: mergeJobPermissions({
+        contents: JobPermission.READ,
+        idToken: JobPermission.WRITE,
+      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+      concurrency: {
+        'group': 'deploy-feature-${{ github.event.pull_request.number }}',
+        'cancel-in-progress': false,
+      },
+      env: {
+        CI: 'true',
+        BRANCH: '${{ github.head_ref }}',
+        ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+      },
+      tools: {
+        node: {
+          version: this.minNodeVersion ?? '20',
+        },
+      },
+      steps: [
+        {
+          name: 'Checkout',
+          uses: 'actions/checkout@v4',
+        },
+        ...steps.flatMap(s => s.steps),
+      ],
+    });
+  }
+
+  /**
+   * Creates a workflow for destroying feature branches when PRs are closed or unlabeled.
+   */
+  private createFeatureDestroyWorkflow(): void {
+    const workflow = this.app.github!.addWorkflow('destroy-feature');
+
+    workflow.on({
+      pullRequestTarget: {
+        types: ['closed', 'unlabeled'],
+      },
+      workflowDispatch: {},
+    });
+
+    const steps = [
+      this.provideInstallStep(),
+      this.provideSynthStep(),
+      new AwsAssumeRoleStep(this.project, {
+        roleArn: this.baseOptions.iamRoleArns?.deployment?.feature ?? this.baseOptions.iamRoleArns?.default!,
+        region: this.baseOptions.featureStages!.env.region,
+      }),
+      new ProjenScriptStep(this.project, 'destroy:feature'),
+    ].map(s => s.toGithub());
+
+    workflow.addJob('destroy-feature', {
+      name: 'Destroy CDK feature stage',
+      if: "github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')",
+      needs: [],
+      runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      permissions: mergeJobPermissions({
+        contents: JobPermission.READ,
+        idToken: JobPermission.WRITE,
+      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+      concurrency: {
+        'group': 'destroy-feature-${{ github.event.pull_request.number }}',
+        'cancel-in-progress': false,
+      },
+      env: {
+        CI: 'true',
+        BRANCH: '${{ github.head_ref }}',
+        ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+      },
+      tools: {
+        node: {
+          version: this.minNodeVersion ?? '20',
+        },
+      },
+      steps: [
+        {
+          name: 'Checkout',
+          uses: 'actions/checkout@v4',
+        },
+        ...steps.flatMap(s => s.steps),
+      ],
+    });
   }
 
   /**
