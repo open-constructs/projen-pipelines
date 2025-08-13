@@ -83,6 +83,10 @@ export class GitlabCDKPipeline extends CDKPipeline {
     for (const stage of (options.independentStages ?? [])) {
       this.createIndependentDeployment(stage);
     }
+
+    if (options.featureStages) {
+      this.createFeatureWorkflows();
+    }
   }
 
   /**
@@ -123,6 +127,10 @@ export class GitlabCDKPipeline extends CDKPipeline {
         },
       },
     });
+  }
+
+  protected createFeatureWorkflows(): void {
+    // TODO deploy and destroy feature stages
   }
 
   /**
