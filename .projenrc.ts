@@ -48,6 +48,7 @@ const project = new cdk.JsiiProject({
   ],
   bin: {
     'pipelines-release': 'lib/release.js',
+    'detect-drift': 'lib/drift/detect-drift.js',
   },
   releaseToNpm: true,
   gitpod: true,

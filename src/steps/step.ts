@@ -112,15 +112,17 @@ export abstract class PipelineStep {
 export class SimpleCommandStep extends PipelineStep {
 
   protected commands: string[];
+  protected env: { [key: string]: string };
 
   /**
    * Constructs a simple command step with a specified set of commands.
    * @param project - The projen project reference.
    * @param commands - Shell commands to execute.
    */
-  constructor(project: Project, commands: string[]) {
+  constructor(project: Project, commands: string[], env: { [key: string]: string } = {}) {
     super(project);
     this.commands = [...commands];
+    this.env = { ...env };
   }
 
   /**
@@ -131,7 +133,7 @@ export class SimpleCommandStep extends PipelineStep {
       extensions: [], // No job extensions specified for this step.
       commands: this.commands, // Commands to be run.
       needs: [], // No dependencies.
-      env: {}, // No environment variables.
+      env: this.env, // No environment variables.
     };
   }
 
@@ -140,7 +142,10 @@ export class SimpleCommandStep extends PipelineStep {
    */
   public toBash(): BashStepConfig {
     return {
-      commands: this.commands, // Commands to be run.
+      commands: [
+        ...Object.entries(this.env).map(([key, value]) => `export ${key}="${value}"`),
+        ...this.commands,
+      ], // Commands to be run.
     };
   }
 
@@ -151,7 +156,7 @@ export class SimpleCommandStep extends PipelineStep {
     return {
       needs: [], // No dependencies.
       steps: this.commands.map(c => ({ run: c })), // Maps each command into a GitHub Action job step.
-      env: {}, // No environment variables.
+      env: this.env, // No environment variables.
     };
   }
 
@@ -162,7 +167,7 @@ export class SimpleCommandStep extends PipelineStep {
     return {
       needs: [], // No dependencies.
       commands: this.commands.map(c => (c)), // Maps each command into a CodeCatalyst Action job step.
-      env: {}, // No environment variables.
+      env: this.env, // No environment variables.
     };
   }
 }

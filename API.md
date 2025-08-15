@@ -390,6 +390,191 @@ public readonly stackPrefix: string;
 ---
 
 
+### BashDriftDetectionWorkflow <a name="BashDriftDetectionWorkflow" id="projen-pipelines.BashDriftDetectionWorkflow"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.BashDriftDetectionWorkflow.Initializer"></a>
+
+```typescript
+import { BashDriftDetectionWorkflow } from 'projen-pipelines'
+
+new BashDriftDetectionWorkflow(project: Project, options: BashDriftDetectionWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions">BashDriftDetectionWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.BashDriftDetectionWorkflow.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.BashDriftDetectionWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.BashDriftDetectionWorkflowOptions">BashDriftDetectionWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.BashDriftDetectionWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.BashDriftDetectionWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.BashDriftDetectionWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.BashDriftDetectionWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.BashDriftDetectionWorkflow.isConstruct"></a>
+
+```typescript
+import { BashDriftDetectionWorkflow } from 'projen-pipelines'
+
+BashDriftDetectionWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.BashDriftDetectionWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.BashDriftDetectionWorkflow.isComponent"></a>
+
+```typescript
+import { BashDriftDetectionWorkflow } from 'projen-pipelines'
+
+BashDriftDetectionWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.BashDriftDetectionWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.BashDriftDetectionWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.BashDriftDetectionWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.BashDriftDetectionWorkflow.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.BashDriftDetectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+
+---
+
+
 ### CDKPipeline <a name="CDKPipeline" id="projen-pipelines.CDKPipeline"></a>
 
 The CDKPipeline class extends the Component class and sets up the necessary configuration for deploying AWS CDK (Cloud Development Kit) applications across multiple stages.
@@ -612,6 +797,191 @@ public readonly branchName: string;
 
 ```typescript
 public readonly stackPrefix: string;
+```
+
+- *Type:* string
+
+---
+
+
+### DriftDetectionWorkflow <a name="DriftDetectionWorkflow" id="projen-pipelines.DriftDetectionWorkflow"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DriftDetectionWorkflow.Initializer"></a>
+
+```typescript
+import { DriftDetectionWorkflow } from 'projen-pipelines'
+
+new DriftDetectionWorkflow(project: Project, options: DriftDetectionWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions">DriftDetectionWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DriftDetectionWorkflow.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.DriftDetectionWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.DriftDetectionWorkflowOptions">DriftDetectionWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.DriftDetectionWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.DriftDetectionWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.DriftDetectionWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.DriftDetectionWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.DriftDetectionWorkflow.isConstruct"></a>
+
+```typescript
+import { DriftDetectionWorkflow } from 'projen-pipelines'
+
+DriftDetectionWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.DriftDetectionWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.DriftDetectionWorkflow.isComponent"></a>
+
+```typescript
+import { DriftDetectionWorkflow } from 'projen-pipelines'
+
+DriftDetectionWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.DriftDetectionWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.DriftDetectionWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DriftDetectionWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.DriftDetectionWorkflow.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.DriftDetectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
 ```
 
 - *Type:* string
@@ -1080,6 +1450,191 @@ Indicates if versioned artifacts are needed based on manual approval requirement
 ---
 
 
+### GitHubDriftDetectionWorkflow <a name="GitHubDriftDetectionWorkflow" id="projen-pipelines.GitHubDriftDetectionWorkflow"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GitHubDriftDetectionWorkflow.Initializer"></a>
+
+```typescript
+import { GitHubDriftDetectionWorkflow } from 'projen-pipelines'
+
+new GitHubDriftDetectionWorkflow(project: Project, options: GitHubDriftDetectionWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions">GitHubDriftDetectionWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitHubDriftDetectionWorkflow.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GitHubDriftDetectionWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions">GitHubDriftDetectionWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GitHubDriftDetectionWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitHubDriftDetectionWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GitHubDriftDetectionWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GitHubDriftDetectionWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GitHubDriftDetectionWorkflow.isConstruct"></a>
+
+```typescript
+import { GitHubDriftDetectionWorkflow } from 'projen-pipelines'
+
+GitHubDriftDetectionWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitHubDriftDetectionWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GitHubDriftDetectionWorkflow.isComponent"></a>
+
+```typescript
+import { GitHubDriftDetectionWorkflow } from 'projen-pipelines'
+
+GitHubDriftDetectionWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitHubDriftDetectionWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GitHubDriftDetectionWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitHubDriftDetectionWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.GitHubDriftDetectionWorkflow.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.GitHubDriftDetectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+
+---
+
+
 ### GitlabCDKPipeline <a name="GitlabCDKPipeline" id="projen-pipelines.GitlabCDKPipeline"></a>
 
 The GitlabCDKPipeline class extends CDKPipeline to provide a way to configure and execute AWS CDK deployment pipelines within GitLab CI/CD environments.
@@ -1370,6 +1925,191 @@ public readonly needsVersionedArtifacts: boolean;
 Indicates if versioned artifacts are required.
 
 Currently set to false
+
+---
+
+
+### GitLabDriftDetectionWorkflow <a name="GitLabDriftDetectionWorkflow" id="projen-pipelines.GitLabDriftDetectionWorkflow"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GitLabDriftDetectionWorkflow.Initializer"></a>
+
+```typescript
+import { GitLabDriftDetectionWorkflow } from 'projen-pipelines'
+
+new GitLabDriftDetectionWorkflow(project: Project, options: GitLabDriftDetectionWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions">GitLabDriftDetectionWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitLabDriftDetectionWorkflow.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GitLabDriftDetectionWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions">GitLabDriftDetectionWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GitLabDriftDetectionWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitLabDriftDetectionWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GitLabDriftDetectionWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GitLabDriftDetectionWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GitLabDriftDetectionWorkflow.isConstruct"></a>
+
+```typescript
+import { GitLabDriftDetectionWorkflow } from 'projen-pipelines'
+
+GitLabDriftDetectionWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitLabDriftDetectionWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GitLabDriftDetectionWorkflow.isComponent"></a>
+
+```typescript
+import { GitLabDriftDetectionWorkflow } from 'projen-pipelines'
+
+GitLabDriftDetectionWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitLabDriftDetectionWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GitLabDriftDetectionWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitLabDriftDetectionWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.GitLabDriftDetectionWorkflow.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.GitLabDriftDetectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -1737,6 +2477,78 @@ public readonly versioning: VersioningConfig;
 - *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
 
 Versioning configuration.
+
+---
+
+### BashDriftDetectionWorkflowOptions <a name="BashDriftDetectionWorkflowOptions" id="projen-pipelines.BashDriftDetectionWorkflowOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.BashDriftDetectionWorkflowOptions.Initializer"></a>
+
+```typescript
+import { BashDriftDetectionWorkflowOptions } from 'projen-pipelines'
+
+const bashDriftDetectionWorkflowOptions: BashDriftDetectionWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.scriptPath">scriptPath</a></code> | <code>string</code> | Path to the output script. |
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.BashDriftDetectionWorkflowOptions.property.stages"></a>
+
+```typescript
+public readonly stages: DriftDetectionStageOptions[];
+```
+
+- *Type:* <a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]
+
+Drift detection configurations for different environments.
+
+---
+
+##### `name`<sup>Optional</sup> <a name="name" id="projen-pipelines.BashDriftDetectionWorkflowOptions.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+- *Default:* "drift-detection"
+
+Name of the workflow.
+
+---
+
+##### `schedule`<sup>Optional</sup> <a name="schedule" id="projen-pipelines.BashDriftDetectionWorkflowOptions.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+- *Default:* "0 0 * * *" (daily at midnight)
+
+Cron schedule for drift detection.
+
+---
+
+##### `scriptPath`<sup>Optional</sup> <a name="scriptPath" id="projen-pipelines.BashDriftDetectionWorkflowOptions.property.scriptPath"></a>
+
+```typescript
+public readonly scriptPath: string;
+```
+
+- *Type:* string
+- *Default:* "drift-detection.sh"
+
+Path to the output script.
 
 ---
 
@@ -2649,6 +3461,326 @@ public readonly path: string;
 
 ---
 
+### DriftDetectionStageOptions <a name="DriftDetectionStageOptions" id="projen-pipelines.DriftDetectionStageOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DriftDetectionStageOptions.Initializer"></a>
+
+```typescript
+import { DriftDetectionStageOptions } from 'projen-pipelines'
+
+const driftDetectionStageOptions: DriftDetectionStageOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.name">name</a></code> | <code>string</code> | Name of the stage. |
+| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.region">region</a></code> | <code>string</code> | AWS region for this stage. |
+| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
+| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
+| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
+| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.DriftDetectionStageOptions.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+Name of the stage.
+
+---
+
+##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.DriftDetectionStageOptions.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+AWS region for this stage.
+
+---
+
+##### `environment`<sup>Optional</sup> <a name="environment" id="projen-pipelines.DriftDetectionStageOptions.property.environment"></a>
+
+```typescript
+public readonly environment: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Environment variables for this stage.
+
+---
+
+##### `failOnDrift`<sup>Optional</sup> <a name="failOnDrift" id="projen-pipelines.DriftDetectionStageOptions.property.failOnDrift"></a>
+
+```typescript
+public readonly failOnDrift: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to fail if drift is detected.
+
+---
+
+##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.DriftDetectionStageOptions.property.roleArn"></a>
+
+```typescript
+public readonly roleArn: string;
+```
+
+- *Type:* string
+
+Role to assume for drift detection.
+
+---
+
+##### `stackNames`<sup>Optional</sup> <a name="stackNames" id="projen-pipelines.DriftDetectionStageOptions.property.stackNames"></a>
+
+```typescript
+public readonly stackNames: string[];
+```
+
+- *Type:* string[]
+
+Stack names to check in this stage.
+
+---
+
+### DriftDetectionStepProps <a name="DriftDetectionStepProps" id="projen-pipelines.DriftDetectionStepProps"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DriftDetectionStepProps.Initializer"></a>
+
+```typescript
+import { DriftDetectionStepProps } from 'projen-pipelines'
+
+const driftDetectionStepProps: DriftDetectionStepProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.name">name</a></code> | <code>string</code> | Name of the stage. |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.region">region</a></code> | <code>string</code> | AWS region for this stage. |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.timeout">timeout</a></code> | <code>number</code> | Timeout in minutes for drift detection. |
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.DriftDetectionStepProps.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+Name of the stage.
+
+---
+
+##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.DriftDetectionStepProps.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+AWS region for this stage.
+
+---
+
+##### `environment`<sup>Optional</sup> <a name="environment" id="projen-pipelines.DriftDetectionStepProps.property.environment"></a>
+
+```typescript
+public readonly environment: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Environment variables for this stage.
+
+---
+
+##### `failOnDrift`<sup>Optional</sup> <a name="failOnDrift" id="projen-pipelines.DriftDetectionStepProps.property.failOnDrift"></a>
+
+```typescript
+public readonly failOnDrift: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to fail if drift is detected.
+
+---
+
+##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.DriftDetectionStepProps.property.roleArn"></a>
+
+```typescript
+public readonly roleArn: string;
+```
+
+- *Type:* string
+
+Role to assume for drift detection.
+
+---
+
+##### `stackNames`<sup>Optional</sup> <a name="stackNames" id="projen-pipelines.DriftDetectionStepProps.property.stackNames"></a>
+
+```typescript
+public readonly stackNames: string[];
+```
+
+- *Type:* string[]
+
+Stack names to check in this stage.
+
+---
+
+##### `timeout`<sup>Optional</sup> <a name="timeout" id="projen-pipelines.DriftDetectionStepProps.property.timeout"></a>
+
+```typescript
+public readonly timeout: number;
+```
+
+- *Type:* number
+- *Default:* 30
+
+Timeout in minutes for drift detection.
+
+---
+
+### DriftDetectionWorkflowOptions <a name="DriftDetectionWorkflowOptions" id="projen-pipelines.DriftDetectionWorkflowOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DriftDetectionWorkflowOptions.Initializer"></a>
+
+```typescript
+import { DriftDetectionWorkflowOptions } from 'projen-pipelines'
+
+const driftDetectionWorkflowOptions: DriftDetectionWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.DriftDetectionWorkflowOptions.property.stages"></a>
+
+```typescript
+public readonly stages: DriftDetectionStageOptions[];
+```
+
+- *Type:* <a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]
+
+Drift detection configurations for different environments.
+
+---
+
+##### `name`<sup>Optional</sup> <a name="name" id="projen-pipelines.DriftDetectionWorkflowOptions.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+- *Default:* "drift-detection"
+
+Name of the workflow.
+
+---
+
+##### `schedule`<sup>Optional</sup> <a name="schedule" id="projen-pipelines.DriftDetectionWorkflowOptions.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+- *Default:* "0 0 * * *" (daily at midnight)
+
+Cron schedule for drift detection.
+
+---
+
+### DriftErrorHandler <a name="DriftErrorHandler" id="projen-pipelines.DriftErrorHandler"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DriftErrorHandler.Initializer"></a>
+
+```typescript
+import { DriftErrorHandler } from 'projen-pipelines'
+
+const driftErrorHandler: DriftErrorHandler = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftErrorHandler.property.action">action</a></code> | <code>string</code> | Action to take when pattern matches. |
+| <code><a href="#projen-pipelines.DriftErrorHandler.property.pattern">pattern</a></code> | <code>string</code> | Pattern to match stack names. |
+| <code><a href="#projen-pipelines.DriftErrorHandler.property.message">message</a></code> | <code>string</code> | Optional message to display. |
+
+---
+
+##### `action`<sup>Required</sup> <a name="action" id="projen-pipelines.DriftErrorHandler.property.action"></a>
+
+```typescript
+public readonly action: string;
+```
+
+- *Type:* string
+
+Action to take when pattern matches.
+
+---
+
+##### `pattern`<sup>Required</sup> <a name="pattern" id="projen-pipelines.DriftErrorHandler.property.pattern"></a>
+
+```typescript
+public readonly pattern: string;
+```
+
+- *Type:* string
+
+Pattern to match stack names.
+
+---
+
+##### `message`<sup>Optional</sup> <a name="message" id="projen-pipelines.DriftErrorHandler.property.message"></a>
+
+```typescript
+public readonly message: string;
+```
+
+- *Type:* string
+
+Optional message to display.
+
+---
+
 ### Environment <a name="Environment" id="projen-pipelines.Environment"></a>
 
 The Environment interface is designed to hold AWS related information for a specific deployment environment within your infrastructure.
@@ -3029,6 +4161,91 @@ public readonly useGithubPackagesForAssembly: boolean;
 use GitHub Packages to store vesioned artifacts of cloud assembly;
 
 also needed for manual approvals
+
+---
+
+### GitHubDriftDetectionWorkflowOptions <a name="GitHubDriftDetectionWorkflowOptions" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions.Initializer"></a>
+
+```typescript
+import { GitHubDriftDetectionWorkflowOptions } from 'projen-pipelines'
+
+const gitHubDriftDetectionWorkflowOptions: GitHubDriftDetectionWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.createIssues">createIssues</a></code> | <code>boolean</code> | Whether to create issues on drift detection. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.permissions">permissions</a></code> | <code>{[ key: string ]: string}</code> | Additional permissions for GitHub workflow. |
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.stages"></a>
+
+```typescript
+public readonly stages: DriftDetectionStageOptions[];
+```
+
+- *Type:* <a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]
+
+Drift detection configurations for different environments.
+
+---
+
+##### `name`<sup>Optional</sup> <a name="name" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+- *Default:* "drift-detection"
+
+Name of the workflow.
+
+---
+
+##### `schedule`<sup>Optional</sup> <a name="schedule" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+- *Default:* "0 0 * * *" (daily at midnight)
+
+Cron schedule for drift detection.
+
+---
+
+##### `createIssues`<sup>Optional</sup> <a name="createIssues" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.createIssues"></a>
+
+```typescript
+public readonly createIssues: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Whether to create issues on drift detection.
+
+---
+
+##### `permissions`<sup>Optional</sup> <a name="permissions" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.permissions"></a>
+
+```typescript
+public readonly permissions: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Additional permissions for GitHub workflow.
 
 ---
 
@@ -3551,6 +4768,91 @@ public readonly runnerTags: GitlabRunnerTags;
 - *Type:* <a href="#projen-pipelines.GitlabRunnerTags">GitlabRunnerTags</a>
 
 Runner tags configuration for the pipeline.
+
+---
+
+### GitLabDriftDetectionWorkflowOptions <a name="GitLabDriftDetectionWorkflowOptions" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.Initializer"></a>
+
+```typescript
+import { GitLabDriftDetectionWorkflowOptions } from 'projen-pipelines'
+
+const gitLabDriftDetectionWorkflowOptions: GitLabDriftDetectionWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.image">image</a></code> | <code>string</code> | Docker image to use for drift detection. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | GitLab runner tags. |
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.stages"></a>
+
+```typescript
+public readonly stages: DriftDetectionStageOptions[];
+```
+
+- *Type:* <a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]
+
+Drift detection configurations for different environments.
+
+---
+
+##### `name`<sup>Optional</sup> <a name="name" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+- *Default:* "drift-detection"
+
+Name of the workflow.
+
+---
+
+##### `schedule`<sup>Optional</sup> <a name="schedule" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+- *Default:* "0 0 * * *" (daily at midnight)
+
+Cron schedule for drift detection.
+
+---
+
+##### `image`<sup>Optional</sup> <a name="image" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.image"></a>
+
+```typescript
+public readonly image: string;
+```
+
+- *Type:* string
+- *Default:* "node:18"
+
+Docker image to use for drift detection.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+
+GitLab runner tags.
 
 ---
 
@@ -5009,6 +6311,109 @@ Should be implemented by subclasses.
 
 
 
+### DriftDetectionStep <a name="DriftDetectionStep" id="projen-pipelines.DriftDetectionStep"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DriftDetectionStep.Initializer"></a>
+
+```typescript
+import { DriftDetectionStep } from 'projen-pipelines'
+
+new DriftDetectionStep(project: Project, props: DriftDetectionStepProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.Initializer.parameter.props">props</a></code> | <code><a href="#projen-pipelines.DriftDetectionStepProps">DriftDetectionStepProps</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DriftDetectionStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="projen-pipelines.DriftDetectionStep.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#projen-pipelines.DriftDetectionStepProps">DriftDetectionStepProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftDetectionStep.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.DriftDetectionStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DriftDetectionStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the sequence of steps into a CodeCatalyst Actions step configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DriftDetectionStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DriftDetectionStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.DriftDetectionStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftDetectionStep.addSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.DriftDetectionStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftDetectionStep.prependSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+
+
+
 ### GithubPackagesLoginStep <a name="GithubPackagesLoginStep" id="projen-pipelines.GithubPackagesLoginStep"></a>
 
 #### Initializers <a name="Initializers" id="projen-pipelines.GithubPackagesLoginStep.Initializer"></a>
@@ -5494,13 +6899,14 @@ Concrete implementation of PipelineStep that executes simple commands.
 ```typescript
 import { SimpleCommandStep } from 'projen-pipelines'
 
-new SimpleCommandStep(project: Project, commands: string[])
+new SimpleCommandStep(project: Project, commands: string[], env?: {[ key: string ]: string})
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
 | <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.commands">commands</a></code> | <code>string[]</code> | - Shell commands to execute. |
+| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.env">env</a></code> | <code>{[ key: string ]: string}</code> | *No description.* |
 
 ---
 
@@ -5517,6 +6923,12 @@ The projen project reference.
 - *Type:* string[]
 
 Shell commands to execute.
+
+---
+
+##### `env`<sup>Optional</sup> <a name="env" id="projen-pipelines.SimpleCommandStep.Initializer.parameter.env"></a>
+
+- *Type:* {[ key: string ]: string}
 
 ---
 
