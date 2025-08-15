@@ -203,6 +203,9 @@ new BashCDKPipeline(app: AwsCdkTypeScriptApp, options: BashCDKPipelineOptions)
 | <code><a href="#projen-pipelines.BashCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.engineType">engineType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.BashCDKPipeline.generateVersioningAppCode">generateVersioningAppCode</a></code> | Generate CDK application code for versioning. |
+| <code><a href="#projen-pipelines.BashCDKPipeline.generateVersioningImports">generateVersioningImports</a></code> | Generate versioning imports for CDK application. |
+| <code><a href="#projen-pipelines.BashCDKPipeline.generateVersioningUtilities">generateVersioningUtilities</a></code> | Generate versioning utility functions for CDK application. |
 
 ---
 
@@ -245,6 +248,36 @@ Synthesizes files to the project output directory.
 ```typescript
 public engineType(): PipelineEngine
 ```
+
+##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.BashCDKPipeline.generateVersioningAppCode"></a>
+
+```typescript
+public generateVersioningAppCode(config: VersioningConfig): string
+```
+
+Generate CDK application code for versioning.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.BashCDKPipeline.generateVersioningAppCode.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.BashCDKPipeline.generateVersioningImports"></a>
+
+```typescript
+public generateVersioningImports(): string
+```
+
+Generate versioning imports for CDK application.
+
+##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.BashCDKPipeline.generateVersioningUtilities"></a>
+
+```typescript
+public generateVersioningUtilities(): string
+```
+
+Generate versioning utility functions for CDK application.
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -584,6 +617,9 @@ new CDKPipeline(app: AwsCdkTypeScriptApp, baseOptions: CDKPipelineOptions)
 | <code><a href="#projen-pipelines.CDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.CDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 | <code><a href="#projen-pipelines.CDKPipeline.engineType">engineType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.CDKPipeline.generateVersioningAppCode">generateVersioningAppCode</a></code> | Generate CDK application code for versioning. |
+| <code><a href="#projen-pipelines.CDKPipeline.generateVersioningImports">generateVersioningImports</a></code> | Generate versioning imports for CDK application. |
+| <code><a href="#projen-pipelines.CDKPipeline.generateVersioningUtilities">generateVersioningUtilities</a></code> | Generate versioning utility functions for CDK application. |
 
 ---
 
@@ -626,6 +662,36 @@ Synthesizes files to the project output directory.
 ```typescript
 public engineType(): PipelineEngine
 ```
+
+##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.CDKPipeline.generateVersioningAppCode"></a>
+
+```typescript
+public generateVersioningAppCode(config: VersioningConfig): string
+```
+
+Generate CDK application code for versioning.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.CDKPipeline.generateVersioningAppCode.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.CDKPipeline.generateVersioningImports"></a>
+
+```typescript
+public generateVersioningImports(): string
+```
+
+Generate versioning imports for CDK application.
+
+##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.CDKPipeline.generateVersioningUtilities"></a>
+
+```typescript
+public generateVersioningUtilities(): string
+```
+
+Generate versioning utility functions for CDK application.
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -1139,6 +1205,9 @@ Configuration options for the pipeline.
 | <code><a href="#projen-pipelines.GithubCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.engineType">engineType</a></code> | the type of engine this implementation of CDKPipeline is for. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.generateVersioningAppCode">generateVersioningAppCode</a></code> | Generate CDK application code for versioning. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.generateVersioningImports">generateVersioningImports</a></code> | Generate versioning imports for CDK application. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.generateVersioningUtilities">generateVersioningUtilities</a></code> | Generate versioning utility functions for CDK application. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.createAssetUpload">createAssetUpload</a></code> | Creates a job to upload assets to AWS as part of the pipeline. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.createDeployment">createDeployment</a></code> | Creates a job to deploy the CDK application to AWS. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.createIndependentDeployment">createIndependentDeployment</a></code> | Creates a job to deploy the CDK application to AWS. |
@@ -1186,6 +1255,36 @@ public engineType(): PipelineEngine
 ```
 
 the type of engine this implementation of CDKPipeline is for.
+
+##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.GithubCDKPipeline.generateVersioningAppCode"></a>
+
+```typescript
+public generateVersioningAppCode(config: VersioningConfig): string
+```
+
+Generate CDK application code for versioning.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GithubCDKPipeline.generateVersioningAppCode.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.GithubCDKPipeline.generateVersioningImports"></a>
+
+```typescript
+public generateVersioningImports(): string
+```
+
+Generate versioning imports for CDK application.
+
+##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.GithubCDKPipeline.generateVersioningUtilities"></a>
+
+```typescript
+public generateVersioningUtilities(): string
+```
+
+Generate versioning utility functions for CDK application.
 
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.GithubCDKPipeline.createAssetUpload"></a>
 
@@ -1583,6 +1682,9 @@ Configuration options for the pipeline.
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.engineType">engineType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.generateVersioningAppCode">generateVersioningAppCode</a></code> | Generate CDK application code for versioning. |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.generateVersioningImports">generateVersioningImports</a></code> | Generate versioning imports for CDK application. |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.generateVersioningUtilities">generateVersioningUtilities</a></code> | Generate versioning utility functions for CDK application. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.createIndependentDeployment">createIndependentDeployment</a></code> | Creates a job to deploy the CDK application to AWS. |
 
 ---
@@ -1626,6 +1728,36 @@ Synthesizes files to the project output directory.
 ```typescript
 public engineType(): PipelineEngine
 ```
+
+##### `generateVersioningAppCode` <a name="generateVersioningAppCode" id="projen-pipelines.GitlabCDKPipeline.generateVersioningAppCode"></a>
+
+```typescript
+public generateVersioningAppCode(config: VersioningConfig): string
+```
+
+Generate CDK application code for versioning.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GitlabCDKPipeline.generateVersioningAppCode.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+##### `generateVersioningImports` <a name="generateVersioningImports" id="projen-pipelines.GitlabCDKPipeline.generateVersioningImports"></a>
+
+```typescript
+public generateVersioningImports(): string
+```
+
+Generate versioning imports for CDK application.
+
+##### `generateVersioningUtilities` <a name="generateVersioningUtilities" id="projen-pipelines.GitlabCDKPipeline.generateVersioningUtilities"></a>
+
+```typescript
+public generateVersioningUtilities(): string
+```
+
+Generate versioning utility functions for CDK application.
 
 ##### `createIndependentDeployment` <a name="createIndependentDeployment" id="projen-pipelines.GitlabCDKPipeline.createIndependentDeployment"></a>
 
@@ -2153,6 +2285,7 @@ const bashCDKPipelineOptions: BashCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 
 ---
 
@@ -2407,6 +2540,18 @@ Path to the output script.
 
 ---
 
+##### `versioning`<sup>Optional</sup> <a name="versioning" id="projen-pipelines.BashCDKPipelineOptions.property.versioning"></a>
+
+```typescript
+public readonly versioning: VersioningConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+Versioning configuration.
+
+---
+
 ### BashStepConfig <a name="BashStepConfig" id="projen-pipelines.BashStepConfig"></a>
 
 Configuration interface for a bash script step.
@@ -2436,6 +2581,45 @@ public readonly commands: string[];
 - *Type:* string[]
 
 Shell commands to execute.
+
+---
+
+### BuildNumberConfig <a name="BuildNumberConfig" id="projen-pipelines.BuildNumberConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.BuildNumberConfig.Initializer"></a>
+
+```typescript
+import { BuildNumberConfig } from 'projen-pipelines'
+
+const buildNumberConfig: BuildNumberConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BuildNumberConfig.property.commitCount">commitCount</a></code> | <code><a href="#projen-pipelines.CommitCountConfig">CommitCountConfig</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.BuildNumberConfig.property.prefix">prefix</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `commitCount`<sup>Optional</sup> <a name="commitCount" id="projen-pipelines.BuildNumberConfig.property.commitCount"></a>
+
+```typescript
+public readonly commitCount: CommitCountConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.CommitCountConfig">CommitCountConfig</a>
+
+---
+
+##### `prefix`<sup>Optional</sup> <a name="prefix" id="projen-pipelines.BuildNumberConfig.property.prefix"></a>
+
+```typescript
+public readonly prefix: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -2474,6 +2658,7 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 
 ---
 
@@ -2656,6 +2841,107 @@ This field is used to define a prefix for the AWS Stack resources created during
 
 ---
 
+##### `versioning`<sup>Optional</sup> <a name="versioning" id="projen-pipelines.CDKPipelineOptions.property.versioning"></a>
+
+```typescript
+public readonly versioning: VersioningConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+Versioning configuration.
+
+---
+
+### CloudFormationOnlyOptions <a name="CloudFormationOnlyOptions" id="projen-pipelines.CloudFormationOnlyOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.CloudFormationOnlyOptions.Initializer"></a>
+
+```typescript
+import { CloudFormationOnlyOptions } from 'projen-pipelines'
+
+const cloudFormationOnlyOptions: CloudFormationOnlyOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CloudFormationOnlyOptions.property.exportName">exportName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.CloudFormationOnlyOptions.property.format">format</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.CloudFormationOnlyOptions.property.stackOutputName">stackOutputName</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `exportName`<sup>Optional</sup> <a name="exportName" id="projen-pipelines.CloudFormationOnlyOptions.property.exportName"></a>
+
+```typescript
+public readonly exportName: string;
+```
+
+- *Type:* string
+
+---
+
+##### `format`<sup>Optional</sup> <a name="format" id="projen-pipelines.CloudFormationOnlyOptions.property.format"></a>
+
+```typescript
+public readonly format: string;
+```
+
+- *Type:* string
+
+---
+
+##### `stackOutputName`<sup>Optional</sup> <a name="stackOutputName" id="projen-pipelines.CloudFormationOnlyOptions.property.stackOutputName"></a>
+
+```typescript
+public readonly stackOutputName: string;
+```
+
+- *Type:* string
+
+---
+
+### CloudFormationOutputConfig <a name="CloudFormationOutputConfig" id="projen-pipelines.CloudFormationOutputConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.CloudFormationOutputConfig.Initializer"></a>
+
+```typescript
+import { CloudFormationOutputConfig } from 'projen-pipelines'
+
+const cloudFormationOutputConfig: CloudFormationOutputConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CloudFormationOutputConfig.property.enabled">enabled</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.CloudFormationOutputConfig.property.exportName">exportName</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `enabled`<sup>Required</sup> <a name="enabled" id="projen-pipelines.CloudFormationOutputConfig.property.enabled"></a>
+
+```typescript
+public readonly enabled: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `exportName`<sup>Optional</sup> <a name="exportName" id="projen-pipelines.CloudFormationOutputConfig.property.exportName"></a>
+
+```typescript
+public readonly exportName: string;
+```
+
+- *Type:* string
+
+---
+
 ### CodeArtifactLoginStepOptions <a name="CodeArtifactLoginStepOptions" id="projen-pipelines.CodeArtifactLoginStepOptions"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.CodeArtifactLoginStepOptions.Initializer"></a>
@@ -2775,46 +3061,43 @@ Dependencies which need to be completed before this step.
 
 ---
 
-### DeploymentStage <a name="DeploymentStage" id="projen-pipelines.DeploymentStage"></a>
+### CommitCountConfig <a name="CommitCountConfig" id="projen-pipelines.CommitCountConfig"></a>
 
-Options for stages that are part of the pipeline.
-
-#### Initializer <a name="Initializer" id="projen-pipelines.DeploymentStage.Initializer"></a>
+#### Initializer <a name="Initializer" id="projen-pipelines.CommitCountConfig.Initializer"></a>
 
 ```typescript
-import { DeploymentStage } from 'projen-pipelines'
+import { CommitCountConfig } from 'projen-pipelines'
 
-const deploymentStage: DeploymentStage = { ... }
+const commitCountConfig: CommitCountConfig = { ... }
 ```
 
 #### Properties <a name="Properties" id="Properties"></a>
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#projen-pipelines.DeploymentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.DeploymentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#projen-pipelines.DeploymentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.DeploymentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.DeploymentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
-| <code><a href="#projen-pipelines.DeploymentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#projen-pipelines.DeploymentStage.property.manualApproval">manualApproval</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.CommitCountConfig.property.countFrom">countFrom</a></code> | <code>string</code> | Count from: 'all' \| 'branch' \| 'since-tag'. |
+| <code><a href="#projen-pipelines.CommitCountConfig.property.includeBranch">includeBranch</a></code> | <code>boolean</code> | Include branch name. |
+| <code><a href="#projen-pipelines.CommitCountConfig.property.padding">padding</a></code> | <code>number</code> | Padding for count. |
+| <code><a href="#projen-pipelines.CommitCountConfig.property.resetOnMajor">resetOnMajor</a></code> | <code>boolean</code> | Reset on major version. |
 
 ---
 
-##### `env`<sup>Required</sup> <a name="env" id="projen-pipelines.DeploymentStage.property.env"></a>
+##### `countFrom`<sup>Optional</sup> <a name="countFrom" id="projen-pipelines.CommitCountConfig.property.countFrom"></a>
 
 ```typescript
-public readonly env: Environment;
+public readonly countFrom: string;
 ```
 
-- *Type:* <a href="#projen-pipelines.Environment">Environment</a>
+- *Type:* string
+
+Count from: 'all' | 'branch' | 'since-tag'.
 
 ---
 
-##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.DeploymentStage.property.name"></a>
+##### `includeBranch`<sup>Optional</sup> <a name="includeBranch" id="projen-pipelines.CommitCountConfig.property.includeBranch"></a>
 
 ```typescript
-public readonly name: string;
+public readonly includeBranch: boolean;
 ```
 
 - *Type:* string
@@ -3198,6 +3481,96 @@ const driftErrorHandler: DriftErrorHandler = { ... }
 
 ```typescript
 public readonly action: string;
+
+- *Type:* boolean
+
+Include branch name.
+
+---
+
+##### `padding`<sup>Optional</sup> <a name="padding" id="projen-pipelines.CommitCountConfig.property.padding"></a>
+
+```typescript
+public readonly padding: number;
+```
+
+- *Type:* number
+
+Padding for count.
+
+---
+
+##### `resetOnMajor`<sup>Optional</sup> <a name="resetOnMajor" id="projen-pipelines.CommitCountConfig.property.resetOnMajor"></a>
+
+```typescript
+public readonly resetOnMajor: boolean;
+```
+
+- *Type:* boolean
+
+Reset on major version.
+
+---
+
+### ComputationContext <a name="ComputationContext" id="projen-pipelines.ComputationContext"></a>
+
+Context for version computation.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.ComputationContext.Initializer"></a>
+
+```typescript
+import { ComputationContext } from 'projen-pipelines'
+
+const computationContext: ComputationContext = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ComputationContext.property.deployedBy">deployedBy</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.ComputationContext.property.environment">environment</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.ComputationContext.property.gitInfo">gitInfo</a></code> | <code><a href="#projen-pipelines.GitInfo">GitInfo</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.ComputationContext.property.buildNumber">buildNumber</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.ComputationContext.property.pipelineVersion">pipelineVersion</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.ComputationContext.property.repository">repository</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `deployedBy`<sup>Required</sup> <a name="deployedBy" id="projen-pipelines.ComputationContext.property.deployedBy"></a>
+
+```typescript
+public readonly deployedBy: string;
+```
+
+- *Type:* string
+
+---
+
+##### `environment`<sup>Required</sup> <a name="environment" id="projen-pipelines.ComputationContext.property.environment"></a>
+
+```typescript
+public readonly environment: string;
+```
+
+- *Type:* string
+
+---
+
+##### `gitInfo`<sup>Required</sup> <a name="gitInfo" id="projen-pipelines.ComputationContext.property.gitInfo"></a>
+
+```typescript
+public readonly gitInfo: GitInfo;
+```
+
+- *Type:* <a href="#projen-pipelines.GitInfo">GitInfo</a>
+
+---
+
+##### `buildNumber`<sup>Optional</sup> <a name="buildNumber" id="projen-pipelines.ComputationContext.property.buildNumber"></a>
+
+```typescript
+public readonly buildNumber: string;
 ```
 
 - *Type:* string
@@ -3222,11 +3595,272 @@ Pattern to match stack names.
 
 ```typescript
 public readonly message: string;
+=======
+##### `pipelineVersion`<sup>Optional</sup> <a name="pipelineVersion" id="projen-pipelines.ComputationContext.property.pipelineVersion"></a>
+
+```typescript
+public readonly pipelineVersion: string;
 ```
 
 - *Type:* string
 
 Optional message to display.
+
+---
+
+##### `repository`<sup>Optional</sup> <a name="repository" id="projen-pipelines.ComputationContext.property.repository"></a>
+
+```typescript
+public readonly repository: string;
+```
+
+- *Type:* string
+
+---
+
+### CustomVersioningConfig <a name="CustomVersioningConfig" id="projen-pipelines.CustomVersioningConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.CustomVersioningConfig.Initializer"></a>
+
+```typescript
+import { CustomVersioningConfig } from 'projen-pipelines'
+
+const customVersioningConfig: CustomVersioningConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CustomVersioningConfig.property.outputs">outputs</a></code> | <code><a href="#projen-pipelines.VersioningOutputConfig">VersioningOutputConfig</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.CustomVersioningConfig.property.strategy">strategy</a></code> | <code><a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.CustomVersioningConfig.property.enabled">enabled</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.CustomVersioningConfig.property.stageOverrides">stageOverrides</a></code> | <code>{[ key: string ]: <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>}</code> | *No description.* |
+
+---
+
+##### `outputs`<sup>Required</sup> <a name="outputs" id="projen-pipelines.CustomVersioningConfig.property.outputs"></a>
+
+```typescript
+public readonly outputs: VersioningOutputConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningOutputConfig">VersioningOutputConfig</a>
+
+---
+
+##### `strategy`<sup>Required</sup> <a name="strategy" id="projen-pipelines.CustomVersioningConfig.property.strategy"></a>
+
+```typescript
+public readonly strategy: IVersioningStrategy;
+```
+
+- *Type:* <a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a>
+
+---
+
+##### `enabled`<sup>Optional</sup> <a name="enabled" id="projen-pipelines.CustomVersioningConfig.property.enabled"></a>
+
+```typescript
+public readonly enabled: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `stageOverrides`<sup>Optional</sup> <a name="stageOverrides" id="projen-pipelines.CustomVersioningConfig.property.stageOverrides"></a>
+
+```typescript
+public readonly stageOverrides: {[ key: string ]: VersioningConfig};
+```
+
+- *Type:* {[ key: string ]: <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>}
+
+---
+
+### DeploymentInfoInput <a name="DeploymentInfoInput" id="projen-pipelines.DeploymentInfoInput"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DeploymentInfoInput.Initializer"></a>
+
+```typescript
+import { DeploymentInfoInput } from 'projen-pipelines'
+
+const deploymentInfoInput: DeploymentInfoInput = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DeploymentInfoInput.property.environment">environment</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentInfoInput.property.buildNumber">buildNumber</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentInfoInput.property.deployedBy">deployedBy</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `environment`<sup>Required</sup> <a name="environment" id="projen-pipelines.DeploymentInfoInput.property.environment"></a>
+
+```typescript
+public readonly environment: string;
+```
+
+- *Type:* string
+
+---
+
+##### `buildNumber`<sup>Optional</sup> <a name="buildNumber" id="projen-pipelines.DeploymentInfoInput.property.buildNumber"></a>
+
+```typescript
+public readonly buildNumber: string;
+```
+
+- *Type:* string
+
+---
+
+##### `deployedBy`<sup>Optional</sup> <a name="deployedBy" id="projen-pipelines.DeploymentInfoInput.property.deployedBy"></a>
+
+```typescript
+public readonly deployedBy: string;
+```
+
+- *Type:* string
+
+---
+
+### DeploymentStage <a name="DeploymentStage" id="projen-pipelines.DeploymentStage"></a>
+
+Options for stages that are part of the pipeline.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DeploymentStage.Initializer"></a>
+
+```typescript
+import { DeploymentStage } from 'projen-pipelines'
+
+const deploymentStage: DeploymentStage = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DeploymentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.manualApproval">manualApproval</a></code> | <code>boolean</code> | *No description.* |
+
+---
+
+##### `env`<sup>Required</sup> <a name="env" id="projen-pipelines.DeploymentStage.property.env"></a>
+
+```typescript
+public readonly env: Environment;
+```
+
+- *Type:* <a href="#projen-pipelines.Environment">Environment</a>
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.DeploymentStage.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `diffType`<sup>Optional</sup> <a name="diffType" id="projen-pipelines.DeploymentStage.property.diffType"></a>
+
+```typescript
+public readonly diffType: CdkDiffType;
+```
+
+- *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
+
+---
+
+##### `postDeploySteps`<sup>Optional</sup> <a name="postDeploySteps" id="projen-pipelines.DeploymentStage.property.postDeploySteps"></a>
+
+```typescript
+public readonly postDeploySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `postDiffSteps`<sup>Optional</sup> <a name="postDiffSteps" id="projen-pipelines.DeploymentStage.property.postDiffSteps"></a>
+
+```typescript
+public readonly postDiffSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `watchable`<sup>Optional</sup> <a name="watchable" id="projen-pipelines.DeploymentStage.property.watchable"></a>
+
+```typescript
+public readonly watchable: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `manualApproval`<sup>Optional</sup> <a name="manualApproval" id="projen-pipelines.DeploymentStage.property.manualApproval"></a>
+
+```typescript
+public readonly manualApproval: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+### DownloadArtifactStepConfig <a name="DownloadArtifactStepConfig" id="projen-pipelines.DownloadArtifactStepConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DownloadArtifactStepConfig.Initializer"></a>
+
+```typescript
+import { DownloadArtifactStepConfig } from 'projen-pipelines'
+
+const downloadArtifactStepConfig: DownloadArtifactStepConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DownloadArtifactStepConfig.property.name">name</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.DownloadArtifactStepConfig.property.path">path</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.DownloadArtifactStepConfig.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+---
+
+##### `path`<sup>Required</sup> <a name="path" id="projen-pipelines.DownloadArtifactStepConfig.property.path"></a>
+
+```typescript
+public readonly path: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -3373,6 +4007,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironments">useGithubEnvironments</a></code> | <code>boolean</code> | whether to use GitHub environments for deployment stages. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubPackagesForAssembly">useGithubPackagesForAssembly</a></code> | <code>boolean</code> | use GitHub Packages to store vesioned artifacts of cloud assembly; |
@@ -3555,6 +4190,18 @@ public readonly stackPrefix: string;
 - *Default:* project name
 
 This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation.
+
+---
+
+##### `versioning`<sup>Optional</sup> <a name="versioning" id="projen-pipelines.GithubCDKPipelineOptions.property.versioning"></a>
+
+```typescript
+public readonly versioning: VersioningConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+Versioning configuration.
 
 ---
 
@@ -3787,6 +4434,174 @@ Additional job permissions needed.
 
 ---
 
+### GitInfo <a name="GitInfo" id="projen-pipelines.GitInfo"></a>
+
+Git information extracted from repository.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitInfo.Initializer"></a>
+
+```typescript
+import { GitInfo } from 'projen-pipelines'
+
+const gitInfo: GitInfo = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitInfo.property.branch">branch</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfo.property.commitCount">commitCount</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfo.property.commitHash">commitHash</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfo.property.commitHashShort">commitHashShort</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfo.property.commitsSinceTag">commitsSinceTag</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfo.property.packageVersion">packageVersion</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfo.property.tag">tag</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `branch`<sup>Required</sup> <a name="branch" id="projen-pipelines.GitInfo.property.branch"></a>
+
+```typescript
+public readonly branch: string;
+```
+
+- *Type:* string
+
+---
+
+##### `commitCount`<sup>Required</sup> <a name="commitCount" id="projen-pipelines.GitInfo.property.commitCount"></a>
+
+```typescript
+public readonly commitCount: number;
+```
+
+- *Type:* number
+
+---
+
+##### `commitHash`<sup>Required</sup> <a name="commitHash" id="projen-pipelines.GitInfo.property.commitHash"></a>
+
+```typescript
+public readonly commitHash: string;
+```
+
+- *Type:* string
+
+---
+
+##### `commitHashShort`<sup>Required</sup> <a name="commitHashShort" id="projen-pipelines.GitInfo.property.commitHashShort"></a>
+
+```typescript
+public readonly commitHashShort: string;
+```
+
+- *Type:* string
+
+---
+
+##### `commitsSinceTag`<sup>Optional</sup> <a name="commitsSinceTag" id="projen-pipelines.GitInfo.property.commitsSinceTag"></a>
+
+```typescript
+public readonly commitsSinceTag: number;
+```
+
+- *Type:* number
+
+---
+
+##### `packageVersion`<sup>Optional</sup> <a name="packageVersion" id="projen-pipelines.GitInfo.property.packageVersion"></a>
+
+```typescript
+public readonly packageVersion: string;
+```
+
+- *Type:* string
+
+---
+
+##### `tag`<sup>Optional</sup> <a name="tag" id="projen-pipelines.GitInfo.property.tag"></a>
+
+```typescript
+public readonly tag: string;
+```
+
+- *Type:* string
+
+---
+
+### GitInfoInput <a name="GitInfoInput" id="projen-pipelines.GitInfoInput"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitInfoInput.Initializer"></a>
+
+```typescript
+import { GitInfoInput } from 'projen-pipelines'
+
+const gitInfoInput: GitInfoInput = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitInfoInput.property.branch">branch</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfoInput.property.commitCount">commitCount</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfoInput.property.commitHash">commitHash</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfoInput.property.commitsSinceTag">commitsSinceTag</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitInfoInput.property.tag">tag</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `branch`<sup>Required</sup> <a name="branch" id="projen-pipelines.GitInfoInput.property.branch"></a>
+
+```typescript
+public readonly branch: string;
+```
+
+- *Type:* string
+
+---
+
+##### `commitCount`<sup>Required</sup> <a name="commitCount" id="projen-pipelines.GitInfoInput.property.commitCount"></a>
+
+```typescript
+public readonly commitCount: number;
+```
+
+- *Type:* number
+
+---
+
+##### `commitHash`<sup>Required</sup> <a name="commitHash" id="projen-pipelines.GitInfoInput.property.commitHash"></a>
+
+```typescript
+public readonly commitHash: string;
+```
+
+- *Type:* string
+
+---
+
+##### `commitsSinceTag`<sup>Optional</sup> <a name="commitsSinceTag" id="projen-pipelines.GitInfoInput.property.commitsSinceTag"></a>
+
+```typescript
+public readonly commitsSinceTag: number;
+```
+
+- *Type:* number
+
+---
+
+##### `tag`<sup>Optional</sup> <a name="tag" id="projen-pipelines.GitInfoInput.property.tag"></a>
+
+```typescript
+public readonly tag: string;
+```
+
+- *Type:* string
+
+---
+
 ### GitlabCDKPipelineOptions <a name="GitlabCDKPipelineOptions" id="projen-pipelines.GitlabCDKPipelineOptions"></a>
 
 Options for configuring the GitLab CDK pipeline, extending the base CDK pipeline options.
@@ -3818,6 +4633,7 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.image">image</a></code> | <code>string</code> | The Docker image to use for running the pipeline jobs. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code><a href="#projen-pipelines.GitlabRunnerTags">GitlabRunnerTags</a></code> | Runner tags configuration for the pipeline. |
 
@@ -3999,6 +4815,18 @@ public readonly stackPrefix: string;
 - *Default:* project name
 
 This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation.
+
+---
+
+##### `versioning`<sup>Optional</sup> <a name="versioning" id="projen-pipelines.GitlabCDKPipelineOptions.property.versioning"></a>
+
+```typescript
+public readonly versioning: VersioningConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+Versioning configuration.
 
 ---
 
@@ -4265,6 +5093,114 @@ public readonly needs: Need[];
 - *Type:* projen.gitlab.Need[]
 
 Dependencies which need to be completed before this step.
+
+---
+
+### GitTagConfig <a name="GitTagConfig" id="projen-pipelines.GitTagConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitTagConfig.Initializer"></a>
+
+```typescript
+import { GitTagConfig } from 'projen-pipelines'
+
+const gitTagConfig: GitTagConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitTagConfig.property.annotatedOnly">annotatedOnly</a></code> | <code>boolean</code> | Only use annotated tags. |
+| <code><a href="#projen-pipelines.GitTagConfig.property.includeSinceTag">includeSinceTag</a></code> | <code>boolean</code> | Include commits since tag. |
+| <code><a href="#projen-pipelines.GitTagConfig.property.pattern">pattern</a></code> | <code>string</code> | Tag pattern to match. |
+| <code><a href="#projen-pipelines.GitTagConfig.property.stripPrefix">stripPrefix</a></code> | <code>string</code> | Strip prefix from tag. |
+
+---
+
+##### `annotatedOnly`<sup>Optional</sup> <a name="annotatedOnly" id="projen-pipelines.GitTagConfig.property.annotatedOnly"></a>
+
+```typescript
+public readonly annotatedOnly: boolean;
+```
+
+- *Type:* boolean
+
+Only use annotated tags.
+
+---
+
+##### `includeSinceTag`<sup>Optional</sup> <a name="includeSinceTag" id="projen-pipelines.GitTagConfig.property.includeSinceTag"></a>
+
+```typescript
+public readonly includeSinceTag: boolean;
+```
+
+- *Type:* boolean
+
+Include commits since tag.
+
+---
+
+##### `pattern`<sup>Optional</sup> <a name="pattern" id="projen-pipelines.GitTagConfig.property.pattern"></a>
+
+```typescript
+public readonly pattern: string;
+```
+
+- *Type:* string
+
+Tag pattern to match.
+
+---
+
+##### `stripPrefix`<sup>Optional</sup> <a name="stripPrefix" id="projen-pipelines.GitTagConfig.property.stripPrefix"></a>
+
+```typescript
+public readonly stripPrefix: string;
+```
+
+- *Type:* string
+
+Strip prefix from tag.
+
+---
+
+### HierarchicalParametersOptions <a name="HierarchicalParametersOptions" id="projen-pipelines.HierarchicalParametersOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.HierarchicalParametersOptions.Initializer"></a>
+
+```typescript
+import { HierarchicalParametersOptions } from 'projen-pipelines'
+
+const hierarchicalParametersOptions: HierarchicalParametersOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.HierarchicalParametersOptions.property.format">format</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.HierarchicalParametersOptions.property.includeCloudFormation">includeCloudFormation</a></code> | <code>boolean</code> | *No description.* |
+
+---
+
+##### `format`<sup>Optional</sup> <a name="format" id="projen-pipelines.HierarchicalParametersOptions.property.format"></a>
+
+```typescript
+public readonly format: string;
+```
+
+- *Type:* string
+
+---
+
+##### `includeCloudFormation`<sup>Optional</sup> <a name="includeCloudFormation" id="projen-pipelines.HierarchicalParametersOptions.property.includeCloudFormation"></a>
+
+```typescript
+public readonly includeCloudFormation: boolean;
+```
+
+- *Type:* boolean
 
 ---
 
@@ -4549,6 +5485,145 @@ public readonly watchable: boolean;
 
 ---
 
+### PackageJsonConfig <a name="PackageJsonConfig" id="projen-pipelines.PackageJsonConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.PackageJsonConfig.Initializer"></a>
+
+```typescript
+import { PackageJsonConfig } from 'projen-pipelines'
+
+const packageJsonConfig: PackageJsonConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.PackageJsonConfig.property.appendCommitInfo">appendCommitInfo</a></code> | <code>boolean</code> | Append commit info. |
+| <code><a href="#projen-pipelines.PackageJsonConfig.property.includePrerelease">includePrerelease</a></code> | <code>boolean</code> | Include pre-release version. |
+| <code><a href="#projen-pipelines.PackageJsonConfig.property.path">path</a></code> | <code>string</code> | Path to package.json. |
+
+---
+
+##### `appendCommitInfo`<sup>Optional</sup> <a name="appendCommitInfo" id="projen-pipelines.PackageJsonConfig.property.appendCommitInfo"></a>
+
+```typescript
+public readonly appendCommitInfo: boolean;
+```
+
+- *Type:* boolean
+
+Append commit info.
+
+---
+
+##### `includePrerelease`<sup>Optional</sup> <a name="includePrerelease" id="projen-pipelines.PackageJsonConfig.property.includePrerelease"></a>
+
+```typescript
+public readonly includePrerelease: boolean;
+```
+
+- *Type:* boolean
+
+Include pre-release version.
+
+---
+
+##### `path`<sup>Optional</sup> <a name="path" id="projen-pipelines.PackageJsonConfig.property.path"></a>
+
+```typescript
+public readonly path: string;
+```
+
+- *Type:* string
+
+Path to package.json.
+
+---
+
+### ParameterStoreConfig <a name="ParameterStoreConfig" id="projen-pipelines.ParameterStoreConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.ParameterStoreConfig.Initializer"></a>
+
+```typescript
+import { ParameterStoreConfig } from 'projen-pipelines'
+
+const parameterStoreConfig: ParameterStoreConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ParameterStoreConfig.property.enabled">enabled</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.ParameterStoreConfig.property.allowOverwrite">allowOverwrite</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.ParameterStoreConfig.property.description">description</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.ParameterStoreConfig.property.hierarchical">hierarchical</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#projen-pipelines.ParameterStoreConfig.property.parameterName">parameterName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.ParameterStoreConfig.property.splitParameters">splitParameters</a></code> | <code>boolean</code> | *No description.* |
+
+---
+
+##### `enabled`<sup>Required</sup> <a name="enabled" id="projen-pipelines.ParameterStoreConfig.property.enabled"></a>
+
+```typescript
+public readonly enabled: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `allowOverwrite`<sup>Optional</sup> <a name="allowOverwrite" id="projen-pipelines.ParameterStoreConfig.property.allowOverwrite"></a>
+
+```typescript
+public readonly allowOverwrite: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `description`<sup>Optional</sup> <a name="description" id="projen-pipelines.ParameterStoreConfig.property.description"></a>
+
+```typescript
+public readonly description: string;
+```
+
+- *Type:* string
+
+---
+
+##### `hierarchical`<sup>Optional</sup> <a name="hierarchical" id="projen-pipelines.ParameterStoreConfig.property.hierarchical"></a>
+
+```typescript
+public readonly hierarchical: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `parameterName`<sup>Optional</sup> <a name="parameterName" id="projen-pipelines.ParameterStoreConfig.property.parameterName"></a>
+
+```typescript
+public readonly parameterName: string;
+```
+
+- *Type:* string
+
+---
+
+##### `splitParameters`<sup>Optional</sup> <a name="splitParameters" id="projen-pipelines.ParameterStoreConfig.property.splitParameters"></a>
+
+```typescript
+public readonly splitParameters: boolean;
+```
+
+- *Type:* boolean
+
+---
+
 ### StageOptions <a name="StageOptions" id="projen-pipelines.StageOptions"></a>
 
 Options for a CDK stage like the target environment.
@@ -4576,6 +5651,84 @@ public readonly env: Environment;
 ```
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
+
+---
+
+### StandardConfigOptions <a name="StandardConfigOptions" id="projen-pipelines.StandardConfigOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.StandardConfigOptions.Initializer"></a>
+
+```typescript
+import { StandardConfigOptions } from 'projen-pipelines'
+
+const standardConfigOptions: StandardConfigOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.StandardConfigOptions.property.format">format</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.StandardConfigOptions.property.parameterStore">parameterStore</a></code> | <code>string \| boolean</code> | *No description.* |
+
+---
+
+##### `format`<sup>Optional</sup> <a name="format" id="projen-pipelines.StandardConfigOptions.property.format"></a>
+
+```typescript
+public readonly format: string;
+```
+
+- *Type:* string
+
+---
+
+##### `parameterStore`<sup>Optional</sup> <a name="parameterStore" id="projen-pipelines.StandardConfigOptions.property.parameterStore"></a>
+
+```typescript
+public readonly parameterStore: string | boolean;
+```
+
+- *Type:* string | boolean
+
+---
+
+### StandardOutputOptions <a name="StandardOutputOptions" id="projen-pipelines.StandardOutputOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.StandardOutputOptions.Initializer"></a>
+
+```typescript
+import { StandardOutputOptions } from 'projen-pipelines'
+
+const standardOutputOptions: StandardOutputOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.StandardOutputOptions.property.format">format</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.StandardOutputOptions.property.parameterName">parameterName</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `format`<sup>Optional</sup> <a name="format" id="projen-pipelines.StandardOutputOptions.property.format"></a>
+
+```typescript
+public readonly format: string;
+```
+
+- *Type:* string
+
+---
+
+##### `parameterName`<sup>Optional</sup> <a name="parameterName" id="projen-pipelines.StandardOutputOptions.property.parameterName"></a>
+
+```typescript
+public readonly parameterName: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -4615,6 +5768,171 @@ public readonly path: string;
 ```
 
 - *Type:* string
+
+---
+
+### VersioningConfig <a name="VersioningConfig" id="projen-pipelines.VersioningConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.VersioningConfig.Initializer"></a>
+
+```typescript
+import { VersioningConfig } from 'projen-pipelines'
+
+const versioningConfig: VersioningConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersioningConfig.property.enabled">enabled</a></code> | <code>boolean</code> | Enable versioning feature. |
+| <code><a href="#projen-pipelines.VersioningConfig.property.outputs">outputs</a></code> | <code><a href="#projen-pipelines.VersioningOutputConfig">VersioningOutputConfig</a></code> | Output configuration. |
+| <code><a href="#projen-pipelines.VersioningConfig.property.strategy">strategy</a></code> | <code><a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a></code> | Primary versioning strategy. |
+| <code><a href="#projen-pipelines.VersioningConfig.property.stageOverrides">stageOverrides</a></code> | <code>{[ key: string ]: <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>}</code> | Stage-specific overrides. |
+
+---
+
+##### `enabled`<sup>Required</sup> <a name="enabled" id="projen-pipelines.VersioningConfig.property.enabled"></a>
+
+```typescript
+public readonly enabled: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Enable versioning feature.
+
+---
+
+##### `outputs`<sup>Required</sup> <a name="outputs" id="projen-pipelines.VersioningConfig.property.outputs"></a>
+
+```typescript
+public readonly outputs: VersioningOutputConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningOutputConfig">VersioningOutputConfig</a>
+
+Output configuration.
+
+---
+
+##### `strategy`<sup>Required</sup> <a name="strategy" id="projen-pipelines.VersioningConfig.property.strategy"></a>
+
+```typescript
+public readonly strategy: IVersioningStrategy;
+```
+
+- *Type:* <a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a>
+
+Primary versioning strategy.
+
+---
+
+##### `stageOverrides`<sup>Optional</sup> <a name="stageOverrides" id="projen-pipelines.VersioningConfig.property.stageOverrides"></a>
+
+```typescript
+public readonly stageOverrides: {[ key: string ]: VersioningConfig};
+```
+
+- *Type:* {[ key: string ]: <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>}
+
+Stage-specific overrides.
+
+---
+
+### VersioningOutputConfig <a name="VersioningOutputConfig" id="projen-pipelines.VersioningOutputConfig"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.VersioningOutputConfig.Initializer"></a>
+
+```typescript
+import { VersioningOutputConfig } from 'projen-pipelines'
+
+const versioningOutputConfig: VersioningOutputConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersioningOutputConfig.property.cloudFormation">cloudFormation</a></code> | <code><a href="#projen-pipelines.CloudFormationOutputConfig">CloudFormationOutputConfig</a></code> | Output to CloudFormation stack outputs. |
+| <code><a href="#projen-pipelines.VersioningOutputConfig.property.parameterStore">parameterStore</a></code> | <code><a href="#projen-pipelines.ParameterStoreConfig">ParameterStoreConfig</a></code> | Output to SSM Parameter Store. |
+
+---
+
+##### `cloudFormation`<sup>Required</sup> <a name="cloudFormation" id="projen-pipelines.VersioningOutputConfig.property.cloudFormation"></a>
+
+```typescript
+public readonly cloudFormation: CloudFormationOutputConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.CloudFormationOutputConfig">CloudFormationOutputConfig</a>
+- *Default:* true
+
+Output to CloudFormation stack outputs.
+
+---
+
+##### `parameterStore`<sup>Required</sup> <a name="parameterStore" id="projen-pipelines.VersioningOutputConfig.property.parameterStore"></a>
+
+```typescript
+public readonly parameterStore: ParameterStoreConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.ParameterStoreConfig">ParameterStoreConfig</a>
+- *Default:* false
+
+Output to SSM Parameter Store.
+
+---
+
+### VersioningStrategyComponents <a name="VersioningStrategyComponents" id="projen-pipelines.VersioningStrategyComponents"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.VersioningStrategyComponents.Initializer"></a>
+
+```typescript
+import { VersioningStrategyComponents } from 'projen-pipelines'
+
+const versioningStrategyComponents: VersioningStrategyComponents = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersioningStrategyComponents.property.commitCount">commitCount</a></code> | <code><a href="#projen-pipelines.CommitCountConfig">CommitCountConfig</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.VersioningStrategyComponents.property.gitTag">gitTag</a></code> | <code><a href="#projen-pipelines.GitTagConfig">GitTagConfig</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.VersioningStrategyComponents.property.packageJson">packageJson</a></code> | <code><a href="#projen-pipelines.PackageJsonConfig">PackageJsonConfig</a></code> | *No description.* |
+
+---
+
+##### `commitCount`<sup>Optional</sup> <a name="commitCount" id="projen-pipelines.VersioningStrategyComponents.property.commitCount"></a>
+
+```typescript
+public readonly commitCount: CommitCountConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.CommitCountConfig">CommitCountConfig</a>
+
+---
+
+##### `gitTag`<sup>Optional</sup> <a name="gitTag" id="projen-pipelines.VersioningStrategyComponents.property.gitTag"></a>
+
+```typescript
+public readonly gitTag: GitTagConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.GitTagConfig">GitTagConfig</a>
+
+---
+
+##### `packageJson`<sup>Optional</sup> <a name="packageJson" id="projen-pipelines.VersioningStrategyComponents.property.packageJson"></a>
+
+```typescript
+public readonly packageJson: PackageJsonConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.PackageJsonConfig">PackageJsonConfig</a>
 
 ---
 
@@ -4706,6 +6024,108 @@ Should be implemented by subclasses.
 
 
 
+
+### CloudFormationOutput <a name="CloudFormationOutput" id="projen-pipelines.CloudFormationOutput"></a>
+
+CloudFormation output configuration.
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CloudFormationOutput.toConfig">toConfig</a></code> | Convert to configuration object. |
+
+---
+
+##### `toConfig` <a name="toConfig" id="projen-pipelines.CloudFormationOutput.toConfig"></a>
+
+```typescript
+public toConfig(): any
+```
+
+Convert to configuration object.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CloudFormationOutput.disabled">disabled</a></code> | Disable CloudFormation outputs. |
+| <code><a href="#projen-pipelines.CloudFormationOutput.enabled">enabled</a></code> | Enable CloudFormation outputs with default configuration. |
+| <code><a href="#projen-pipelines.CloudFormationOutput.withConfig">withConfig</a></code> | Configure CloudFormation outputs with custom settings. |
+
+---
+
+##### `disabled` <a name="disabled" id="projen-pipelines.CloudFormationOutput.disabled"></a>
+
+```typescript
+import { CloudFormationOutput } from 'projen-pipelines'
+
+CloudFormationOutput.disabled()
+```
+
+Disable CloudFormation outputs.
+
+##### `enabled` <a name="enabled" id="projen-pipelines.CloudFormationOutput.enabled"></a>
+
+```typescript
+import { CloudFormationOutput } from 'projen-pipelines'
+
+CloudFormationOutput.enabled()
+```
+
+Enable CloudFormation outputs with default configuration.
+
+##### `withConfig` <a name="withConfig" id="projen-pipelines.CloudFormationOutput.withConfig"></a>
+
+```typescript
+import { CloudFormationOutput } from 'projen-pipelines'
+
+CloudFormationOutput.withConfig(config: CloudFormationOutputConfig)
+```
+
+Configure CloudFormation outputs with custom settings.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.CloudFormationOutput.withConfig.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.CloudFormationOutputConfig">CloudFormationOutputConfig</a>
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CloudFormationOutput.property.type">type</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `type`<sup>Required</sup> <a name="type" id="projen-pipelines.CloudFormationOutput.property.type"></a>
+
+```typescript
+public readonly type: string;
+```
+
+- *Type:* string
+
+---
+
+#### Constants <a name="Constants" id="Constants"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CloudFormationOutput.property.TYPE">TYPE</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `TYPE`<sup>Required</sup> <a name="TYPE" id="projen-pipelines.CloudFormationOutput.property.TYPE"></a>
+
+```typescript
+public readonly TYPE: string;
+```
+
+- *Type:* string
+
+---
 
 ### CodeArtifactLoginStep <a name="CodeArtifactLoginStep" id="projen-pipelines.CodeArtifactLoginStep"></a>
 
@@ -4810,6 +6230,87 @@ public prependSteps(steps: ...PipelineStep[]): void
 
 
 
+### CompositeComputation <a name="CompositeComputation" id="projen-pipelines.CompositeComputation"></a>
+
+Composite version computation that combines multiple strategies.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.CompositeComputation.Initializer"></a>
+
+```typescript
+import { CompositeComputation } from 'projen-pipelines'
+
+new CompositeComputation(strategy: VersioningStrategy)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CompositeComputation.Initializer.parameter.strategy">strategy</a></code> | <code><a href="#projen-pipelines.VersioningStrategy">VersioningStrategy</a></code> | *No description.* |
+
+---
+
+##### `strategy`<sup>Required</sup> <a name="strategy" id="projen-pipelines.CompositeComputation.Initializer.parameter.strategy"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningStrategy">VersioningStrategy</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CompositeComputation.computeVersion">computeVersion</a></code> | Compute version string from context. |
+| <code><a href="#projen-pipelines.CompositeComputation.createVersionInfo">createVersionInfo</a></code> | Create VersionInfo from context. |
+
+---
+
+##### `computeVersion` <a name="computeVersion" id="projen-pipelines.CompositeComputation.computeVersion"></a>
+
+```typescript
+public computeVersion(context: ComputationContext): string
+```
+
+Compute version string from context.
+
+###### `context`<sup>Required</sup> <a name="context" id="projen-pipelines.CompositeComputation.computeVersion.parameter.context"></a>
+
+- *Type:* <a href="#projen-pipelines.ComputationContext">ComputationContext</a>
+
+---
+
+##### `createVersionInfo` <a name="createVersionInfo" id="projen-pipelines.CompositeComputation.createVersionInfo"></a>
+
+```typescript
+public createVersionInfo(context: ComputationContext): VersionInfo
+```
+
+Create VersionInfo from context.
+
+###### `context`<sup>Required</sup> <a name="context" id="projen-pipelines.CompositeComputation.createVersionInfo.parameter.context"></a>
+
+- *Type:* <a href="#projen-pipelines.ComputationContext">ComputationContext</a>
+
+---
+
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CompositeComputation.property.strategy">strategy</a></code> | <code><a href="#projen-pipelines.VersioningStrategy">VersioningStrategy</a></code> | *No description.* |
+
+---
+
+##### `strategy`<sup>Required</sup> <a name="strategy" id="projen-pipelines.CompositeComputation.property.strategy"></a>
+
+```typescript
+public readonly strategy: VersioningStrategy;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningStrategy">VersioningStrategy</a>
+
+---
+
+
 ### DownloadArtifactStep <a name="DownloadArtifactStep" id="projen-pipelines.DownloadArtifactStep"></a>
 
 #### Initializers <a name="Initializers" id="projen-pipelines.DownloadArtifactStep.Initializer"></a>
@@ -4889,109 +6390,6 @@ public toGitlab(): GitlabStepConfig
 Generates a configuration for a GitLab CI step.
 
 Should be implemented by subclasses.
-
-
-
-
-### DriftDetectionStep <a name="DriftDetectionStep" id="projen-pipelines.DriftDetectionStep"></a>
-
-#### Initializers <a name="Initializers" id="projen-pipelines.DriftDetectionStep.Initializer"></a>
-
-```typescript
-import { DriftDetectionStep } from 'projen-pipelines'
-
-new DriftDetectionStep(project: Project, props: DriftDetectionStepProps)
-```
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.DriftDetectionStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.Initializer.parameter.props">props</a></code> | <code><a href="#projen-pipelines.DriftDetectionStepProps">DriftDetectionStepProps</a></code> | *No description.* |
-
----
-
-##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DriftDetectionStep.Initializer.parameter.project"></a>
-
-- *Type:* projen.Project
-
-The projen project reference.
-
----
-
-##### `props`<sup>Required</sup> <a name="props" id="projen-pipelines.DriftDetectionStep.Initializer.parameter.props"></a>
-
-- *Type:* <a href="#projen-pipelines.DriftDetectionStepProps">DriftDetectionStepProps</a>
-
----
-
-#### Methods <a name="Methods" id="Methods"></a>
-
-| **Name** | **Description** |
-| --- | --- |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.addSteps">addSteps</a></code> | *No description.* |
-| <code><a href="#projen-pipelines.DriftDetectionStep.prependSteps">prependSteps</a></code> | *No description.* |
-
----
-
-##### `toBash` <a name="toBash" id="projen-pipelines.DriftDetectionStep.toBash"></a>
-
-```typescript
-public toBash(): BashStepConfig
-```
-
-Converts the sequence of steps into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DriftDetectionStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the sequence of steps into a CodeCatalyst Actions step configuration.
-
-##### `toGithub` <a name="toGithub" id="projen-pipelines.DriftDetectionStep.toGithub"></a>
-
-```typescript
-public toGithub(): GithubStepConfig
-```
-
-Converts the sequence of steps into a GitHub Actions step configuration.
-
-##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DriftDetectionStep.toGitlab"></a>
-
-```typescript
-public toGitlab(): GitlabStepConfig
-```
-
-Converts the sequence of steps into a GitLab CI configuration.
-
-##### `addSteps` <a name="addSteps" id="projen-pipelines.DriftDetectionStep.addSteps"></a>
-
-```typescript
-public addSteps(steps: ...PipelineStep[]): void
-```
-
-###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftDetectionStep.addSteps.parameter.steps"></a>
-
-- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
-
----
-
-##### `prependSteps` <a name="prependSteps" id="projen-pipelines.DriftDetectionStep.prependSteps"></a>
-
-```typescript
-public prependSteps(steps: ...PipelineStep[]): void
-```
-
-###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftDetectionStep.prependSteps.parameter.steps"></a>
-
-- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
-
----
 
 
 
@@ -5080,6 +6478,233 @@ Should be implemented by subclasses.
 
 
 
+
+### OutputConfigBase <a name="OutputConfigBase" id="projen-pipelines.OutputConfigBase"></a>
+
+Base class for output configurations.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.OutputConfigBase.Initializer"></a>
+
+```typescript
+import { OutputConfigBase } from 'projen-pipelines'
+
+new OutputConfigBase(type: string)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.OutputConfigBase.Initializer.parameter.type">type</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `type`<sup>Required</sup> <a name="type" id="projen-pipelines.OutputConfigBase.Initializer.parameter.type"></a>
+
+- *Type:* string
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.OutputConfigBase.toConfig">toConfig</a></code> | Convert to configuration object. |
+
+---
+
+##### `toConfig` <a name="toConfig" id="projen-pipelines.OutputConfigBase.toConfig"></a>
+
+```typescript
+public toConfig(): any
+```
+
+Convert to configuration object.
+
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.OutputConfigBase.property.type">type</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `type`<sup>Required</sup> <a name="type" id="projen-pipelines.OutputConfigBase.property.type"></a>
+
+```typescript
+public readonly type: string;
+```
+
+- *Type:* string
+
+---
+
+
+### OutputFormat <a name="OutputFormat" id="projen-pipelines.OutputFormat"></a>
+
+Output format types.
+
+
+
+
+#### Constants <a name="Constants" id="Constants"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.OutputFormat.property.PLAIN">PLAIN</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.OutputFormat.property.STRUCTURED">STRUCTURED</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `PLAIN`<sup>Required</sup> <a name="PLAIN" id="projen-pipelines.OutputFormat.property.PLAIN"></a>
+
+```typescript
+public readonly PLAIN: string;
+```
+
+- *Type:* string
+
+---
+
+##### `STRUCTURED`<sup>Required</sup> <a name="STRUCTURED" id="projen-pipelines.OutputFormat.property.STRUCTURED"></a>
+
+```typescript
+public readonly STRUCTURED: string;
+```
+
+- *Type:* string
+
+---
+
+### ParameterStoreOutput <a name="ParameterStoreOutput" id="projen-pipelines.ParameterStoreOutput"></a>
+
+SSM Parameter Store output configuration.
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.ParameterStoreOutput.toConfig">toConfig</a></code> | Convert to configuration object. |
+
+---
+
+##### `toConfig` <a name="toConfig" id="projen-pipelines.ParameterStoreOutput.toConfig"></a>
+
+```typescript
+public toConfig(): any
+```
+
+Convert to configuration object.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.ParameterStoreOutput.disabled">disabled</a></code> | Disable Parameter Store outputs. |
+| <code><a href="#projen-pipelines.ParameterStoreOutput.enabled">enabled</a></code> | Enable Parameter Store outputs with parameter name. |
+| <code><a href="#projen-pipelines.ParameterStoreOutput.hierarchical">hierarchical</a></code> | Configure Parameter Store with hierarchical parameters. |
+| <code><a href="#projen-pipelines.ParameterStoreOutput.withConfig">withConfig</a></code> | Configure Parameter Store outputs with custom settings. |
+
+---
+
+##### `disabled` <a name="disabled" id="projen-pipelines.ParameterStoreOutput.disabled"></a>
+
+```typescript
+import { ParameterStoreOutput } from 'projen-pipelines'
+
+ParameterStoreOutput.disabled()
+```
+
+Disable Parameter Store outputs.
+
+##### `enabled` <a name="enabled" id="projen-pipelines.ParameterStoreOutput.enabled"></a>
+
+```typescript
+import { ParameterStoreOutput } from 'projen-pipelines'
+
+ParameterStoreOutput.enabled(parameterName: string)
+```
+
+Enable Parameter Store outputs with parameter name.
+
+###### `parameterName`<sup>Required</sup> <a name="parameterName" id="projen-pipelines.ParameterStoreOutput.enabled.parameter.parameterName"></a>
+
+- *Type:* string
+
+---
+
+##### `hierarchical` <a name="hierarchical" id="projen-pipelines.ParameterStoreOutput.hierarchical"></a>
+
+```typescript
+import { ParameterStoreOutput } from 'projen-pipelines'
+
+ParameterStoreOutput.hierarchical(basePath: string, options?: HierarchicalParametersOptions)
+```
+
+Configure Parameter Store with hierarchical parameters.
+
+###### `basePath`<sup>Required</sup> <a name="basePath" id="projen-pipelines.ParameterStoreOutput.hierarchical.parameter.basePath"></a>
+
+- *Type:* string
+
+---
+
+###### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.ParameterStoreOutput.hierarchical.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.HierarchicalParametersOptions">HierarchicalParametersOptions</a>
+
+---
+
+##### `withConfig` <a name="withConfig" id="projen-pipelines.ParameterStoreOutput.withConfig"></a>
+
+```typescript
+import { ParameterStoreOutput } from 'projen-pipelines'
+
+ParameterStoreOutput.withConfig(config: ParameterStoreConfig)
+```
+
+Configure Parameter Store outputs with custom settings.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.ParameterStoreOutput.withConfig.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.ParameterStoreConfig">ParameterStoreConfig</a>
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ParameterStoreOutput.property.type">type</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `type`<sup>Required</sup> <a name="type" id="projen-pipelines.ParameterStoreOutput.property.type"></a>
+
+```typescript
+public readonly type: string;
+```
+
+- *Type:* string
+
+---
+
+#### Constants <a name="Constants" id="Constants"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ParameterStoreOutput.property.TYPE">TYPE</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `TYPE`<sup>Required</sup> <a name="TYPE" id="projen-pipelines.ParameterStoreOutput.property.TYPE"></a>
+
+```typescript
+public readonly TYPE: string;
+```
+
+- *Type:* string
+
+---
 
 ### PipelineStep <a name="PipelineStep" id="projen-pipelines.PipelineStep"></a>
 
@@ -5254,14 +6879,13 @@ Concrete implementation of PipelineStep that executes simple commands.
 ```typescript
 import { SimpleCommandStep } from 'projen-pipelines'
 
-new SimpleCommandStep(project: Project, commands: string[], env?: {[ key: string ]: string})
+new SimpleCommandStep(project: Project, commands: string[])
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
 | <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.commands">commands</a></code> | <code>string[]</code> | - Shell commands to execute. |
-| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.env">env</a></code> | <code>{[ key: string ]: string}</code> | *No description.* |
 
 ---
 
@@ -5278,12 +6902,6 @@ The projen project reference.
 - *Type:* string[]
 
 Shell commands to execute.
-
----
-
-##### `env`<sup>Optional</sup> <a name="env" id="projen-pipelines.SimpleCommandStep.Initializer.parameter.env"></a>
-
-- *Type:* {[ key: string ]: string}
 
 ---
 
@@ -5521,6 +7139,1391 @@ Should be implemented by subclasses.
 
 
 
+### VersionComputationStrategy <a name="VersionComputationStrategy" id="projen-pipelines.VersionComputationStrategy"></a>
+
+Base class for version computation strategies.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.VersionComputationStrategy.Initializer"></a>
+
+```typescript
+import { VersionComputationStrategy } from 'projen-pipelines'
+
+new VersionComputationStrategy(strategy: VersioningStrategy)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersionComputationStrategy.Initializer.parameter.strategy">strategy</a></code> | <code><a href="#projen-pipelines.VersioningStrategy">VersioningStrategy</a></code> | *No description.* |
+
+---
+
+##### `strategy`<sup>Required</sup> <a name="strategy" id="projen-pipelines.VersionComputationStrategy.Initializer.parameter.strategy"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningStrategy">VersioningStrategy</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersionComputationStrategy.computeVersion">computeVersion</a></code> | Compute version string from context. |
+| <code><a href="#projen-pipelines.VersionComputationStrategy.createVersionInfo">createVersionInfo</a></code> | Create VersionInfo from context. |
+
+---
+
+##### `computeVersion` <a name="computeVersion" id="projen-pipelines.VersionComputationStrategy.computeVersion"></a>
+
+```typescript
+public computeVersion(context: ComputationContext): string
+```
+
+Compute version string from context.
+
+###### `context`<sup>Required</sup> <a name="context" id="projen-pipelines.VersionComputationStrategy.computeVersion.parameter.context"></a>
+
+- *Type:* <a href="#projen-pipelines.ComputationContext">ComputationContext</a>
+
+---
+
+##### `createVersionInfo` <a name="createVersionInfo" id="projen-pipelines.VersionComputationStrategy.createVersionInfo"></a>
+
+```typescript
+public createVersionInfo(context: ComputationContext): VersionInfo
+```
+
+Create VersionInfo from context.
+
+###### `context`<sup>Required</sup> <a name="context" id="projen-pipelines.VersionComputationStrategy.createVersionInfo.parameter.context"></a>
+
+- *Type:* <a href="#projen-pipelines.ComputationContext">ComputationContext</a>
+
+---
+
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersionComputationStrategy.property.strategy">strategy</a></code> | <code><a href="#projen-pipelines.VersioningStrategy">VersioningStrategy</a></code> | *No description.* |
+
+---
+
+##### `strategy`<sup>Required</sup> <a name="strategy" id="projen-pipelines.VersionComputationStrategy.property.strategy"></a>
+
+```typescript
+public readonly strategy: VersioningStrategy;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningStrategy">VersioningStrategy</a>
+
+---
+
+
+### VersionComputer <a name="VersionComputer" id="projen-pipelines.VersionComputer"></a>
+
+Main version computer that handles strategy selection.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.VersionComputer.Initializer"></a>
+
+```typescript
+import { VersionComputer } from 'projen-pipelines'
+
+new VersionComputer(strategy: IVersioningStrategy)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersionComputer.Initializer.parameter.strategy">strategy</a></code> | <code><a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a></code> | *No description.* |
+
+---
+
+##### `strategy`<sup>Required</sup> <a name="strategy" id="projen-pipelines.VersionComputer.Initializer.parameter.strategy"></a>
+
+- *Type:* <a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersionComputer.computeVersionInfo">computeVersionInfo</a></code> | Compute version info from context. |
+
+---
+
+##### `computeVersionInfo` <a name="computeVersionInfo" id="projen-pipelines.VersionComputer.computeVersionInfo"></a>
+
+```typescript
+public computeVersionInfo(context: ComputationContext): VersionInfo
+```
+
+Compute version info from context.
+
+###### `context`<sup>Required</sup> <a name="context" id="projen-pipelines.VersionComputer.computeVersionInfo.parameter.context"></a>
+
+- *Type:* <a href="#projen-pipelines.ComputationContext">ComputationContext</a>
+
+---
+
+
+
+
+### VersionInfo <a name="VersionInfo" id="projen-pipelines.VersionInfo"></a>
+
+- *Implements:* <a href="#projen-pipelines.IVersionInfo">IVersionInfo</a>
+
+Represents complete version information for a deployment.
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersionInfo.compare">compare</a></code> | Compare with another version Returns: -1 if this < other, 0 if equal, 1 if this > other. |
+| <code><a href="#projen-pipelines.VersionInfo.displayVersion">displayVersion</a></code> | Get formatted version for display. |
+| <code><a href="#projen-pipelines.VersionInfo.exportName">exportName</a></code> | Create CloudFormation export name. |
+| <code><a href="#projen-pipelines.VersionInfo.mainBranch">mainBranch</a></code> | Check if this version is from the main branch. |
+| <code><a href="#projen-pipelines.VersionInfo.parameterName">parameterName</a></code> | Create a parameter name for SSM Parameter Store. |
+| <code><a href="#projen-pipelines.VersionInfo.taggedRelease">taggedRelease</a></code> | Check if this version is from a tagged release. |
+| <code><a href="#projen-pipelines.VersionInfo.toJson">toJson</a></code> | Convert to JSON string. |
+| <code><a href="#projen-pipelines.VersionInfo.toObject">toObject</a></code> | Convert to object. |
+| <code><a href="#projen-pipelines.VersionInfo.toString">toString</a></code> | Convert to plain version string. |
+
+---
+
+##### `compare` <a name="compare" id="projen-pipelines.VersionInfo.compare"></a>
+
+```typescript
+public compare(other: VersionInfo): number
+```
+
+Compare with another version Returns: -1 if this < other, 0 if equal, 1 if this > other.
+
+###### `other`<sup>Required</sup> <a name="other" id="projen-pipelines.VersionInfo.compare.parameter.other"></a>
+
+- *Type:* <a href="#projen-pipelines.VersionInfo">VersionInfo</a>
+
+---
+
+##### `displayVersion` <a name="displayVersion" id="projen-pipelines.VersionInfo.displayVersion"></a>
+
+```typescript
+public displayVersion(): string
+```
+
+Get formatted version for display.
+
+##### `exportName` <a name="exportName" id="projen-pipelines.VersionInfo.exportName"></a>
+
+```typescript
+public exportName(template: string): string
+```
+
+Create CloudFormation export name.
+
+###### `template`<sup>Required</sup> <a name="template" id="projen-pipelines.VersionInfo.exportName.parameter.template"></a>
+
+- *Type:* string
+
+---
+
+##### `mainBranch` <a name="mainBranch" id="projen-pipelines.VersionInfo.mainBranch"></a>
+
+```typescript
+public mainBranch(): boolean
+```
+
+Check if this version is from the main branch.
+
+##### `parameterName` <a name="parameterName" id="projen-pipelines.VersionInfo.parameterName"></a>
+
+```typescript
+public parameterName(template: string): string
+```
+
+Create a parameter name for SSM Parameter Store.
+
+###### `template`<sup>Required</sup> <a name="template" id="projen-pipelines.VersionInfo.parameterName.parameter.template"></a>
+
+- *Type:* string
+
+---
+
+##### `taggedRelease` <a name="taggedRelease" id="projen-pipelines.VersionInfo.taggedRelease"></a>
+
+```typescript
+public taggedRelease(): boolean
+```
+
+Check if this version is from a tagged release.
+
+##### `toJson` <a name="toJson" id="projen-pipelines.VersionInfo.toJson"></a>
+
+```typescript
+public toJson(pretty?: boolean): string
+```
+
+Convert to JSON string.
+
+###### `pretty`<sup>Optional</sup> <a name="pretty" id="projen-pipelines.VersionInfo.toJson.parameter.pretty"></a>
+
+- *Type:* boolean
+
+---
+
+##### `toObject` <a name="toObject" id="projen-pipelines.VersionInfo.toObject"></a>
+
+```typescript
+public toObject(): IVersionInfo
+```
+
+Convert to object.
+
+##### `toString` <a name="toString" id="projen-pipelines.VersionInfo.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Convert to plain version string.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersionInfo.create">create</a></code> | Create a VersionInfo instance from raw data. |
+| <code><a href="#projen-pipelines.VersionInfo.fromEnvironment">fromEnvironment</a></code> | Create a VersionInfo instance from environment variables. |
+| <code><a href="#projen-pipelines.VersionInfo.fromJson">fromJson</a></code> | Create a VersionInfo instance from a JSON string. |
+
+---
+
+##### `create` <a name="create" id="projen-pipelines.VersionInfo.create"></a>
+
+```typescript
+import { VersionInfo } from 'projen-pipelines'
+
+VersionInfo.create(props: IVersionInfo)
+```
+
+Create a VersionInfo instance from raw data.
+
+###### `props`<sup>Required</sup> <a name="props" id="projen-pipelines.VersionInfo.create.parameter.props"></a>
+
+- *Type:* <a href="#projen-pipelines.IVersionInfo">IVersionInfo</a>
+
+---
+
+##### `fromEnvironment` <a name="fromEnvironment" id="projen-pipelines.VersionInfo.fromEnvironment"></a>
+
+```typescript
+import { VersionInfo } from 'projen-pipelines'
+
+VersionInfo.fromEnvironment(env: {[ key: string ]: string})
+```
+
+Create a VersionInfo instance from environment variables.
+
+###### `env`<sup>Required</sup> <a name="env" id="projen-pipelines.VersionInfo.fromEnvironment.parameter.env"></a>
+
+- *Type:* {[ key: string ]: string}
+
+---
+
+##### `fromJson` <a name="fromJson" id="projen-pipelines.VersionInfo.fromJson"></a>
+
+```typescript
+import { VersionInfo } from 'projen-pipelines'
+
+VersionInfo.fromJson(json: string)
+```
+
+Create a VersionInfo instance from a JSON string.
+
+###### `json`<sup>Required</sup> <a name="json" id="projen-pipelines.VersionInfo.fromJson.parameter.json"></a>
+
+- *Type:* string
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersionInfo.property.branch">branch</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.VersionInfo.property.commitCount">commitCount</a></code> | <code>number</code> | Commit count information. |
+| <code><a href="#projen-pipelines.VersionInfo.property.commitHash">commitHash</a></code> | <code>string</code> | Git information (ALWAYS included). |
+| <code><a href="#projen-pipelines.VersionInfo.property.commitHashShort">commitHashShort</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.VersionInfo.property.deployedAt">deployedAt</a></code> | <code>string</code> | Deployment metadata. |
+| <code><a href="#projen-pipelines.VersionInfo.property.deployedBy">deployedBy</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.VersionInfo.property.environment">environment</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.VersionInfo.property.version">version</a></code> | <code>string</code> | Primary version string. |
+| <code><a href="#projen-pipelines.VersionInfo.property.buildNumber">buildNumber</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.VersionInfo.property.commitsSinceTag">commitsSinceTag</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#projen-pipelines.VersionInfo.property.packageVersion">packageVersion</a></code> | <code>string</code> | Package.json information (if applicable). |
+| <code><a href="#projen-pipelines.VersionInfo.property.pipelineVersion">pipelineVersion</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.VersionInfo.property.repository">repository</a></code> | <code>string</code> | Additional metadata. |
+| <code><a href="#projen-pipelines.VersionInfo.property.tag">tag</a></code> | <code>string</code> | Optional git tag information. |
+
+---
+
+##### `branch`<sup>Required</sup> <a name="branch" id="projen-pipelines.VersionInfo.property.branch"></a>
+
+```typescript
+public readonly branch: string;
+```
+
+- *Type:* string
+
+---
+
+##### `commitCount`<sup>Required</sup> <a name="commitCount" id="projen-pipelines.VersionInfo.property.commitCount"></a>
+
+```typescript
+public readonly commitCount: number;
+```
+
+- *Type:* number
+
+Commit count information.
+
+---
+
+##### `commitHash`<sup>Required</sup> <a name="commitHash" id="projen-pipelines.VersionInfo.property.commitHash"></a>
+
+```typescript
+public readonly commitHash: string;
+```
+
+- *Type:* string
+
+Git information (ALWAYS included).
+
+---
+
+##### `commitHashShort`<sup>Required</sup> <a name="commitHashShort" id="projen-pipelines.VersionInfo.property.commitHashShort"></a>
+
+```typescript
+public readonly commitHashShort: string;
+```
+
+- *Type:* string
+
+---
+
+##### `deployedAt`<sup>Required</sup> <a name="deployedAt" id="projen-pipelines.VersionInfo.property.deployedAt"></a>
+
+```typescript
+public readonly deployedAt: string;
+```
+
+- *Type:* string
+
+Deployment metadata.
+
+---
+
+##### `deployedBy`<sup>Required</sup> <a name="deployedBy" id="projen-pipelines.VersionInfo.property.deployedBy"></a>
+
+```typescript
+public readonly deployedBy: string;
+```
+
+- *Type:* string
+
+---
+
+##### `environment`<sup>Required</sup> <a name="environment" id="projen-pipelines.VersionInfo.property.environment"></a>
+
+```typescript
+public readonly environment: string;
+```
+
+- *Type:* string
+
+---
+
+##### `version`<sup>Required</sup> <a name="version" id="projen-pipelines.VersionInfo.property.version"></a>
+
+```typescript
+public readonly version: string;
+```
+
+- *Type:* string
+
+Primary version string.
+
+---
+
+##### `buildNumber`<sup>Optional</sup> <a name="buildNumber" id="projen-pipelines.VersionInfo.property.buildNumber"></a>
+
+```typescript
+public readonly buildNumber: string;
+```
+
+- *Type:* string
+
+---
+
+##### `commitsSinceTag`<sup>Optional</sup> <a name="commitsSinceTag" id="projen-pipelines.VersionInfo.property.commitsSinceTag"></a>
+
+```typescript
+public readonly commitsSinceTag: number;
+```
+
+- *Type:* number
+
+---
+
+##### `packageVersion`<sup>Optional</sup> <a name="packageVersion" id="projen-pipelines.VersionInfo.property.packageVersion"></a>
+
+```typescript
+public readonly packageVersion: string;
+```
+
+- *Type:* string
+
+Package.json information (if applicable).
+
+---
+
+##### `pipelineVersion`<sup>Optional</sup> <a name="pipelineVersion" id="projen-pipelines.VersionInfo.property.pipelineVersion"></a>
+
+```typescript
+public readonly pipelineVersion: string;
+```
+
+- *Type:* string
+
+---
+
+##### `repository`<sup>Optional</sup> <a name="repository" id="projen-pipelines.VersionInfo.property.repository"></a>
+
+```typescript
+public readonly repository: string;
+```
+
+- *Type:* string
+
+Additional metadata.
+
+---
+
+##### `tag`<sup>Optional</sup> <a name="tag" id="projen-pipelines.VersionInfo.property.tag"></a>
+
+```typescript
+public readonly tag: string;
+```
+
+- *Type:* string
+
+Optional git tag information.
+
+---
+
+
+### VersionInfoBuilder <a name="VersionInfoBuilder" id="projen-pipelines.VersionInfoBuilder"></a>
+
+Builder class for creating VersionInfo instances.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.VersionInfoBuilder.Initializer"></a>
+
+```typescript
+import { VersionInfoBuilder } from 'projen-pipelines'
+
+new VersionInfoBuilder()
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersionInfoBuilder.create">create</a></code> | Build the VersionInfo instance. |
+| <code><a href="#projen-pipelines.VersionInfoBuilder.deploymentInfo">deploymentInfo</a></code> | Set deployment metadata. |
+| <code><a href="#projen-pipelines.VersionInfoBuilder.gitInfo">gitInfo</a></code> | Set git information. |
+| <code><a href="#projen-pipelines.VersionInfoBuilder.packageVersion">packageVersion</a></code> | Set package version. |
+| <code><a href="#projen-pipelines.VersionInfoBuilder.pipelineVersion">pipelineVersion</a></code> | Set pipeline version. |
+| <code><a href="#projen-pipelines.VersionInfoBuilder.repository">repository</a></code> | Set repository information. |
+| <code><a href="#projen-pipelines.VersionInfoBuilder.version">version</a></code> | Set the version string. |
+
+---
+
+##### `create` <a name="create" id="projen-pipelines.VersionInfoBuilder.create"></a>
+
+```typescript
+public create(): VersionInfo
+```
+
+Build the VersionInfo instance.
+
+##### `deploymentInfo` <a name="deploymentInfo" id="projen-pipelines.VersionInfoBuilder.deploymentInfo"></a>
+
+```typescript
+public deploymentInfo(info: DeploymentInfoInput): VersionInfoBuilder
+```
+
+Set deployment metadata.
+
+###### `info`<sup>Required</sup> <a name="info" id="projen-pipelines.VersionInfoBuilder.deploymentInfo.parameter.info"></a>
+
+- *Type:* <a href="#projen-pipelines.DeploymentInfoInput">DeploymentInfoInput</a>
+
+---
+
+##### `gitInfo` <a name="gitInfo" id="projen-pipelines.VersionInfoBuilder.gitInfo"></a>
+
+```typescript
+public gitInfo(info: GitInfoInput): VersionInfoBuilder
+```
+
+Set git information.
+
+###### `info`<sup>Required</sup> <a name="info" id="projen-pipelines.VersionInfoBuilder.gitInfo.parameter.info"></a>
+
+- *Type:* <a href="#projen-pipelines.GitInfoInput">GitInfoInput</a>
+
+---
+
+##### `packageVersion` <a name="packageVersion" id="projen-pipelines.VersionInfoBuilder.packageVersion"></a>
+
+```typescript
+public packageVersion(version: string): VersionInfoBuilder
+```
+
+Set package version.
+
+###### `version`<sup>Required</sup> <a name="version" id="projen-pipelines.VersionInfoBuilder.packageVersion.parameter.version"></a>
+
+- *Type:* string
+
+---
+
+##### `pipelineVersion` <a name="pipelineVersion" id="projen-pipelines.VersionInfoBuilder.pipelineVersion"></a>
+
+```typescript
+public pipelineVersion(version: string): VersionInfoBuilder
+```
+
+Set pipeline version.
+
+###### `version`<sup>Required</sup> <a name="version" id="projen-pipelines.VersionInfoBuilder.pipelineVersion.parameter.version"></a>
+
+- *Type:* string
+
+---
+
+##### `repository` <a name="repository" id="projen-pipelines.VersionInfoBuilder.repository"></a>
+
+```typescript
+public repository(repo: string): VersionInfoBuilder
+```
+
+Set repository information.
+
+###### `repo`<sup>Required</sup> <a name="repo" id="projen-pipelines.VersionInfoBuilder.repository.parameter.repo"></a>
+
+- *Type:* string
+
+---
+
+##### `version` <a name="version" id="projen-pipelines.VersionInfoBuilder.version"></a>
+
+```typescript
+public version(version: string): VersionInfoBuilder
+```
+
+Set the version string.
+
+###### `version`<sup>Required</sup> <a name="version" id="projen-pipelines.VersionInfoBuilder.version.parameter.version"></a>
+
+- *Type:* string
+
+---
+
+
+
+
+### VersioningConfigurations <a name="VersioningConfigurations" id="projen-pipelines.VersioningConfigurations"></a>
+
+Main versioning configuration class with factory methods.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.VersioningConfigurations.Initializer"></a>
+
+```typescript
+import { VersioningConfigurations } from 'projen-pipelines'
+
+new VersioningConfigurations()
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+
+---
+
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersioningConfigurations.custom">custom</a></code> | Create a custom configuration. |
+| <code><a href="#projen-pipelines.VersioningConfigurations.minimal">minimal</a></code> | Minimal configuration for testing. |
+| <code><a href="#projen-pipelines.VersioningConfigurations.standard">standard</a></code> | Standard configuration with commit count strategy. |
+
+---
+
+##### `custom` <a name="custom" id="projen-pipelines.VersioningConfigurations.custom"></a>
+
+```typescript
+import { VersioningConfigurations } from 'projen-pipelines'
+
+VersioningConfigurations.custom(config: CustomVersioningConfig)
+```
+
+Create a custom configuration.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.VersioningConfigurations.custom.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.CustomVersioningConfig">CustomVersioningConfig</a>
+
+---
+
+##### `minimal` <a name="minimal" id="projen-pipelines.VersioningConfigurations.minimal"></a>
+
+```typescript
+import { VersioningConfigurations } from 'projen-pipelines'
+
+VersioningConfigurations.minimal()
+```
+
+Minimal configuration for testing.
+
+##### `standard` <a name="standard" id="projen-pipelines.VersioningConfigurations.standard"></a>
+
+```typescript
+import { VersioningConfigurations } from 'projen-pipelines'
+
+VersioningConfigurations.standard(options?: StandardConfigOptions)
+```
+
+Standard configuration with commit count strategy.
+
+###### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.VersioningConfigurations.standard.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.StandardConfigOptions">StandardConfigOptions</a>
+
+---
+
+
+
+### DriftDetectionStep <a name="DriftDetectionStep" id="projen-pipelines.DriftDetectionStep"></a>
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DriftDetectionStep.Initializer"></a>
+
+```typescript
+import { DriftDetectionStep } from 'projen-pipelines'
+
+new DriftDetectionStep(project: Project, props: DriftDetectionStepProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.Initializer.parameter.props">props</a></code> | <code><a href="#projen-pipelines.DriftDetectionStepProps">DriftDetectionStepProps</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DriftDetectionStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="projen-pipelines.DriftDetectionStep.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#projen-pipelines.DriftDetectionStepProps">DriftDetectionStepProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.DriftDetectionStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftDetectionStep.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.DriftDetectionStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DriftDetectionStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the sequence of steps into a CodeCatalyst Actions step configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DriftDetectionStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DriftDetectionStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.DriftDetectionStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftDetectionStep.addSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.DriftDetectionStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftDetectionStep.prependSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+
+
+
+### GithubPackagesLoginStep <a name="GithubPackagesLoginStep" id="projen-pipelines.GithubPackagesLoginStep"></a>
+=======
+### VersioningConfigUtils <a name="VersioningConfigUtils" id="projen-pipelines.VersioningConfigUtils"></a>
+
+Utility functions for versioning configuration.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.VersioningConfigUtils.Initializer"></a>
+
+```typescript
+import { VersioningConfigUtils } from 'projen-pipelines'
+
+new VersioningConfigUtils()
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+
+---
+
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersioningConfigUtils.default">default</a></code> | Get default configuration. |
+| <code><a href="#projen-pipelines.VersioningConfigUtils.resolveForStage">resolveForStage</a></code> | Resolve configuration for a specific stage. |
+| <code><a href="#projen-pipelines.VersioningConfigUtils.validate">validate</a></code> | Validate configuration. |
+
+---
+
+##### `default` <a name="default" id="projen-pipelines.VersioningConfigUtils.default"></a>
+
+```typescript
+import { VersioningConfigUtils } from 'projen-pipelines'
+
+VersioningConfigUtils.default()
+```
+
+Get default configuration.
+
+##### `resolveForStage` <a name="resolveForStage" id="projen-pipelines.VersioningConfigUtils.resolveForStage"></a>
+
+```typescript
+import { VersioningConfigUtils } from 'projen-pipelines'
+
+VersioningConfigUtils.resolveForStage(config: VersioningConfig, stage: string)
+```
+
+Resolve configuration for a specific stage.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.VersioningConfigUtils.resolveForStage.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+###### `stage`<sup>Required</sup> <a name="stage" id="projen-pipelines.VersioningConfigUtils.resolveForStage.parameter.stage"></a>
+
+- *Type:* string
+
+---
+
+##### `validate` <a name="validate" id="projen-pipelines.VersioningConfigUtils.validate"></a>
+
+```typescript
+import { VersioningConfigUtils } from 'projen-pipelines'
+
+VersioningConfigUtils.validate(config: VersioningConfig)
+```
+
+Validate configuration.
+
+###### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.VersioningConfigUtils.validate.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+
+
+### VersioningOutputs <a name="VersioningOutputs" id="projen-pipelines.VersioningOutputs"></a>
+
+Factory class for output configurations.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.VersioningOutputs.Initializer"></a>
+
+```typescript
+import { VersioningOutputs } from 'projen-pipelines'
+
+new VersioningOutputs()
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+
+---
+
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersioningOutputs.cloudFormationOnly">cloudFormationOnly</a></code> | Create output configuration with only CloudFormation. |
+| <code><a href="#projen-pipelines.VersioningOutputs.hierarchicalParameters">hierarchicalParameters</a></code> | Create output configuration with hierarchical SSM parameters. |
+| <code><a href="#projen-pipelines.VersioningOutputs.minimal">minimal</a></code> | Create minimal output configuration (CloudFormation only, plain format). |
+| <code><a href="#projen-pipelines.VersioningOutputs.standard">standard</a></code> | Create output configuration with CloudFormation and SSM Parameter Store. |
+
+---
+
+##### `cloudFormationOnly` <a name="cloudFormationOnly" id="projen-pipelines.VersioningOutputs.cloudFormationOnly"></a>
+
+```typescript
+import { VersioningOutputs } from 'projen-pipelines'
+
+VersioningOutputs.cloudFormationOnly(options?: CloudFormationOnlyOptions)
+```
+
+Create output configuration with only CloudFormation.
+
+###### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.VersioningOutputs.cloudFormationOnly.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.CloudFormationOnlyOptions">CloudFormationOnlyOptions</a>
+
+---
+
+##### `hierarchicalParameters` <a name="hierarchicalParameters" id="projen-pipelines.VersioningOutputs.hierarchicalParameters"></a>
+
+```typescript
+import { VersioningOutputs } from 'projen-pipelines'
+
+VersioningOutputs.hierarchicalParameters(basePath: string, options?: HierarchicalParametersOptions)
+```
+
+Create output configuration with hierarchical SSM parameters.
+
+###### `basePath`<sup>Required</sup> <a name="basePath" id="projen-pipelines.VersioningOutputs.hierarchicalParameters.parameter.basePath"></a>
+
+- *Type:* string
+
+---
+
+###### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.VersioningOutputs.hierarchicalParameters.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.HierarchicalParametersOptions">HierarchicalParametersOptions</a>
+
+---
+
+##### `minimal` <a name="minimal" id="projen-pipelines.VersioningOutputs.minimal"></a>
+
+```typescript
+import { VersioningOutputs } from 'projen-pipelines'
+
+VersioningOutputs.minimal()
+```
+
+Create minimal output configuration (CloudFormation only, plain format).
+
+##### `standard` <a name="standard" id="projen-pipelines.VersioningOutputs.standard"></a>
+
+```typescript
+import { VersioningOutputs } from 'projen-pipelines'
+
+VersioningOutputs.standard(options?: StandardOutputOptions)
+```
+
+Create output configuration with CloudFormation and SSM Parameter Store.
+
+###### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.VersioningOutputs.standard.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.StandardOutputOptions">StandardOutputOptions</a>
+
+---
+
+
+
+### VersioningSetup <a name="VersioningSetup" id="projen-pipelines.VersioningSetup"></a>
+
+Sets up versioning tasks and integration for a project.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.VersioningSetup.Initializer"></a>
+
+```typescript
+import { VersioningSetup } from 'projen-pipelines'
+
+new VersioningSetup(project: Project, config: VersioningConfig)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersioningSetup.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.VersioningSetup.Initializer.parameter.config">config</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.VersioningSetup.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.VersioningSetup.Initializer.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersioningSetup.setup">setup</a></code> | Set up all versioning-related tasks and configurations. |
+
+---
+
+##### `setup` <a name="setup" id="projen-pipelines.VersioningSetup.setup"></a>
+
+```typescript
+public setup(): void
+```
+
+Set up all versioning-related tasks and configurations.
+
+
+
+
+### VersioningStrategy <a name="VersioningStrategy" id="projen-pipelines.VersioningStrategy"></a>
+
+- *Implements:* <a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a>
+
+Composite versioning strategy that combines multiple strategies.
+
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.VersioningStrategy.buildNumber">buildNumber</a></code> | Create a build number based strategy. |
+| <code><a href="#projen-pipelines.VersioningStrategy.commitCount">commitCount</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.VersioningStrategy.commitHash">commitHash</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.VersioningStrategy.create">create</a></code> | Create a composite strategy with custom format and components. |
+| <code><a href="#projen-pipelines.VersioningStrategy.gitTag">gitTag</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.VersioningStrategy.packageJson">packageJson</a></code> | *No description.* |
+
+---
+
+##### `buildNumber` <a name="buildNumber" id="projen-pipelines.VersioningStrategy.buildNumber"></a>
+
+```typescript
+import { VersioningStrategy } from 'projen-pipelines'
+
+VersioningStrategy.buildNumber(config?: BuildNumberConfig)
+```
+
+Create a build number based strategy.
+
+###### `config`<sup>Optional</sup> <a name="config" id="projen-pipelines.VersioningStrategy.buildNumber.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.BuildNumberConfig">BuildNumberConfig</a>
+
+---
+
+##### `commitCount` <a name="commitCount" id="projen-pipelines.VersioningStrategy.commitCount"></a>
+
+```typescript
+import { VersioningStrategy } from 'projen-pipelines'
+
+new SimpleCommandStep(project: Project, commands: string[], env?: {[ key: string ]: string})
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.commands">commands</a></code> | <code>string[]</code> | - Shell commands to execute. |
+| <code><a href="#projen-pipelines.SimpleCommandStep.Initializer.parameter.env">env</a></code> | <code>{[ key: string ]: string}</code> | *No description.* |
+VersioningStrategy.commitCount(config?: CommitCountConfig)
+```
+
+###### `config`<sup>Optional</sup> <a name="config" id="projen-pipelines.VersioningStrategy.commitCount.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.CommitCountConfig">CommitCountConfig</a>
+
+---
+
+##### `commitHash` <a name="commitHash" id="projen-pipelines.VersioningStrategy.commitHash"></a>
+
+```typescript
+import { VersioningStrategy } from 'projen-pipelines'
+
+VersioningStrategy.commitHash()
+```
+
+##### `create` <a name="create" id="projen-pipelines.VersioningStrategy.create"></a>
+
+```typescript
+import { VersioningStrategy } from 'projen-pipelines'
+
+VersioningStrategy.create(format: string, components: VersioningStrategyComponents)
+```
+
+Create a composite strategy with custom format and components.
+
+###### `format`<sup>Required</sup> <a name="format" id="projen-pipelines.VersioningStrategy.create.parameter.format"></a>
+
+- *Type:* string
+
+---
+
+##### `env`<sup>Optional</sup> <a name="env" id="projen-pipelines.SimpleCommandStep.Initializer.parameter.env"></a>
+
+- *Type:* {[ key: string ]: string}
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+=======
+###### `components`<sup>Required</sup> <a name="components" id="projen-pipelines.VersioningStrategy.create.parameter.components"></a>
+
+- *Type:* <a href="#projen-pipelines.VersioningStrategyComponents">VersioningStrategyComponents</a>
+
+---
+
+##### `gitTag` <a name="gitTag" id="projen-pipelines.VersioningStrategy.gitTag"></a>
+
+```typescript
+import { VersioningStrategy } from 'projen-pipelines'
+
+VersioningStrategy.gitTag(config?: GitTagConfig)
+```
+
+###### `config`<sup>Optional</sup> <a name="config" id="projen-pipelines.VersioningStrategy.gitTag.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.GitTagConfig">GitTagConfig</a>
+
+---
+
+##### `packageJson` <a name="packageJson" id="projen-pipelines.VersioningStrategy.packageJson"></a>
+
+```typescript
+import { VersioningStrategy } from 'projen-pipelines'
+
+VersioningStrategy.packageJson(config?: PackageJsonConfig)
+```
+
+###### `config`<sup>Optional</sup> <a name="config" id="projen-pipelines.VersioningStrategy.packageJson.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.PackageJsonConfig">PackageJsonConfig</a>
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersioningStrategy.property.components">components</a></code> | <code><a href="#projen-pipelines.VersioningStrategyComponents">VersioningStrategyComponents</a></code> | Components to include. |
+| <code><a href="#projen-pipelines.VersioningStrategy.property.format">format</a></code> | <code>string</code> | Version format template Variables: {git-tag}, {package-version}, {commit-count}, {commit-hash},            {commit-hash:8}, {branch}, {build-number}. |
+
+---
+
+##### `components`<sup>Required</sup> <a name="components" id="projen-pipelines.VersioningStrategy.property.components"></a>
+
+```typescript
+public readonly components: VersioningStrategyComponents;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningStrategyComponents">VersioningStrategyComponents</a>
+
+Components to include.
+
+---
+
+##### `format`<sup>Required</sup> <a name="format" id="projen-pipelines.VersioningStrategy.property.format"></a>
+
+```typescript
+public readonly format: string;
+```
+
+- *Type:* string
+
+Version format template Variables: {git-tag}, {package-version}, {commit-count}, {commit-hash},            {commit-hash:8}, {branch}, {build-number}.
+
+---
+
+
+## Protocols <a name="Protocols" id="Protocols"></a>
+
+### IVersionInfo <a name="IVersionInfo" id="projen-pipelines.IVersionInfo"></a>
+
+- *Implemented By:* <a href="#projen-pipelines.VersionInfo">VersionInfo</a>, <a href="#projen-pipelines.IVersionInfo">IVersionInfo</a>
+
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.IVersionInfo.property.branch">branch</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.IVersionInfo.property.commitCount">commitCount</a></code> | <code>number</code> | Commit count information. |
+| <code><a href="#projen-pipelines.IVersionInfo.property.commitHash">commitHash</a></code> | <code>string</code> | Git information (ALWAYS included). |
+| <code><a href="#projen-pipelines.IVersionInfo.property.commitHashShort">commitHashShort</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.IVersionInfo.property.deployedAt">deployedAt</a></code> | <code>string</code> | Deployment metadata. |
+| <code><a href="#projen-pipelines.IVersionInfo.property.deployedBy">deployedBy</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.IVersionInfo.property.environment">environment</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.IVersionInfo.property.version">version</a></code> | <code>string</code> | Primary version string. |
+| <code><a href="#projen-pipelines.IVersionInfo.property.buildNumber">buildNumber</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.IVersionInfo.property.commitsSinceTag">commitsSinceTag</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#projen-pipelines.IVersionInfo.property.packageVersion">packageVersion</a></code> | <code>string</code> | Package.json information (if applicable). |
+| <code><a href="#projen-pipelines.IVersionInfo.property.pipelineVersion">pipelineVersion</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.IVersionInfo.property.repository">repository</a></code> | <code>string</code> | Additional metadata. |
+| <code><a href="#projen-pipelines.IVersionInfo.property.tag">tag</a></code> | <code>string</code> | Optional git tag information. |
+
+---
+
+##### `branch`<sup>Required</sup> <a name="branch" id="projen-pipelines.IVersionInfo.property.branch"></a>
+
+```typescript
+public readonly branch: string;
+```
+
+- *Type:* string
+
+---
+
+##### `commitCount`<sup>Required</sup> <a name="commitCount" id="projen-pipelines.IVersionInfo.property.commitCount"></a>
+
+```typescript
+public readonly commitCount: number;
+```
+
+- *Type:* number
+
+Commit count information.
+
+---
+
+##### `commitHash`<sup>Required</sup> <a name="commitHash" id="projen-pipelines.IVersionInfo.property.commitHash"></a>
+
+```typescript
+public readonly commitHash: string;
+```
+
+- *Type:* string
+
+Git information (ALWAYS included).
+
+---
+
+##### `commitHashShort`<sup>Required</sup> <a name="commitHashShort" id="projen-pipelines.IVersionInfo.property.commitHashShort"></a>
+
+```typescript
+public readonly commitHashShort: string;
+```
+
+- *Type:* string
+
+---
+
+##### `deployedAt`<sup>Required</sup> <a name="deployedAt" id="projen-pipelines.IVersionInfo.property.deployedAt"></a>
+
+```typescript
+public readonly deployedAt: string;
+```
+
+- *Type:* string
+
+Deployment metadata.
+
+---
+
+##### `deployedBy`<sup>Required</sup> <a name="deployedBy" id="projen-pipelines.IVersionInfo.property.deployedBy"></a>
+
+```typescript
+public readonly deployedBy: string;
+```
+
+- *Type:* string
+
+---
+
+##### `environment`<sup>Required</sup> <a name="environment" id="projen-pipelines.IVersionInfo.property.environment"></a>
+
+```typescript
+public readonly environment: string;
+```
+
+- *Type:* string
+
+---
+
+##### `version`<sup>Required</sup> <a name="version" id="projen-pipelines.IVersionInfo.property.version"></a>
+
+```typescript
+public readonly version: string;
+```
+
+- *Type:* string
+
+Primary version string.
+
+---
+
+##### `buildNumber`<sup>Optional</sup> <a name="buildNumber" id="projen-pipelines.IVersionInfo.property.buildNumber"></a>
+
+```typescript
+public readonly buildNumber: string;
+```
+
+- *Type:* string
+
+---
+
+##### `commitsSinceTag`<sup>Optional</sup> <a name="commitsSinceTag" id="projen-pipelines.IVersionInfo.property.commitsSinceTag"></a>
+
+```typescript
+public readonly commitsSinceTag: number;
+```
+
+- *Type:* number
+
+---
+
+##### `packageVersion`<sup>Optional</sup> <a name="packageVersion" id="projen-pipelines.IVersionInfo.property.packageVersion"></a>
+
+```typescript
+public readonly packageVersion: string;
+```
+
+- *Type:* string
+
+Package.json information (if applicable).
+
+---
+
+##### `pipelineVersion`<sup>Optional</sup> <a name="pipelineVersion" id="projen-pipelines.IVersionInfo.property.pipelineVersion"></a>
+
+```typescript
+public readonly pipelineVersion: string;
+```
+
+- *Type:* string
+
+---
+
+##### `repository`<sup>Optional</sup> <a name="repository" id="projen-pipelines.IVersionInfo.property.repository"></a>
+
+```typescript
+public readonly repository: string;
+```
+
+- *Type:* string
+
+Additional metadata.
+
+---
+
+##### `tag`<sup>Optional</sup> <a name="tag" id="projen-pipelines.IVersionInfo.property.tag"></a>
+
+```typescript
+public readonly tag: string;
+```
+
+- *Type:* string
+
+Optional git tag information.
+
+---
+
+### IVersioningStrategy <a name="IVersioningStrategy" id="projen-pipelines.IVersioningStrategy"></a>
+
+- *Implemented By:* <a href="#projen-pipelines.VersioningStrategy">VersioningStrategy</a>, <a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a>
+
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.IVersioningStrategy.property.components">components</a></code> | <code><a href="#projen-pipelines.VersioningStrategyComponents">VersioningStrategyComponents</a></code> | Components to include. |
+| <code><a href="#projen-pipelines.IVersioningStrategy.property.format">format</a></code> | <code>string</code> | Version format template Variables: {git-tag}, {package-version}, {commit-count}, {commit-hash},            {commit-hash:8}, {branch}, {build-number}. |
+
+---
+
+##### `components`<sup>Required</sup> <a name="components" id="projen-pipelines.IVersioningStrategy.property.components"></a>
+
+```typescript
+public readonly components: VersioningStrategyComponents;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningStrategyComponents">VersioningStrategyComponents</a>
+
+Components to include.
+
+---
+
+##### `format`<sup>Required</sup> <a name="format" id="projen-pipelines.IVersioningStrategy.property.format"></a>
+
+```typescript
+public readonly format: string;
+```
+
+- *Type:* string
+
+Version format template Variables: {git-tag}, {package-version}, {commit-count}, {commit-hash},            {commit-hash:8}, {branch}, {build-number}.
+
+---
 
 ## Enums <a name="Enums" id="Enums"></a>
 

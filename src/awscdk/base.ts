@@ -3,6 +3,7 @@ import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence } from '../steps';
+import { VersioningConfig, VersioningSetup } from '../versioning';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -174,6 +175,11 @@ export interface CDKPipelineOptions {
   readonly preInstallSteps?: PipelineStep[];
   readonly preSynthSteps?: PipelineStep[];
   readonly postSynthSteps?: PipelineStep[];
+
+  /**
+   * Versioning configuration
+   */
+  readonly versioning?: VersioningConfig;
 }
 
 /**
@@ -209,6 +215,11 @@ export abstract class CDKPipeline extends Component {
     this.project.removeTask('diff');
     this.project.removeTask('destroy');
     this.project.removeTask('watch');
+
+    // Setup versioning if enabled
+    if (baseOptions.versioning?.enabled) {
+      new VersioningSetup(this.project, baseOptions.versioning).setup();
+    }
 
     // Creates different deployment stages
     if (baseOptions.personalStage) {
@@ -423,10 +434,34 @@ export abstract class CDKPipeline extends Component {
 `;
     }
 
+    // Add versioning logic to apply to all stacks
+    if (this.baseOptions.versioning?.enabled) {
+      appCode += this.generateVersioningAppCode(this.baseOptions.versioning);
+    }
+
     const appFile = new TextFile(this.project, `${this.app.srcdir}/app.ts`);
+
+    // Generate versioning-aware imports and utilities
+    const versioningImports = this.baseOptions.versioning?.enabled
+      ? this.generateVersioningImports()
+      : '';
+
+    const versioningUtilities = this.baseOptions.versioning?.enabled
+      ? this.generateVersioningUtilities()
+      : '';
+
+    const versioningConfigDeclaration = this.baseOptions.versioning?.enabled
+      ? `
+const versioningConfig = ${JSON.stringify(this.baseOptions.versioning, null, 2)};
+`
+      : '';
+
     appFile.addLine(`// ${PROJEN_MARKER}
 /* eslint-disable */
 import { App, AppProps, Stack, StackProps } from 'aws-cdk-lib';
+${versioningImports}
+${versioningConfigDeclaration}
+${versioningUtilities}
 
 /**
  * PipelineAppProps is an extension of AppProps, which is part of the AWS CDK core.
@@ -462,6 +497,7 @@ ${appCode}
 }
 `);
   }
+
 
   /**
    * This method sets up tasks to publish CDK assets to all accounts and handle versioning, including bumping the version
@@ -584,6 +620,10 @@ ${appCode}
         exec: `cdk deploy --outputs-file cdk-outputs-${stage.name}.json --watch --hotswap ${stackId}`,
       });
     }
+    // Add version fetch task if versioning is enabled
+    if (this.baseOptions.versioning?.enabled) {
+      this.createVersionFetchTask(stage);
+    }
   }
 
   /**
@@ -606,6 +646,10 @@ ${appCode}
         exec: `cdk deploy --outputs-file cdk-outputs-${stage.name}.json --watch --hotswap ${stackId}`,
       });
     }
+    // Add version fetch task if versioning is enabled
+    if (this.baseOptions.versioning?.enabled) {
+      this.createVersionFetchTask(stage);
+    }
   }
 
   protected getCliStackPattern(stage: string) {
@@ -614,5 +658,236 @@ ${appCode}
       sep = '';
     }
     return this.baseOptions.deploySubStacks ? `${this.stackPrefix}${sep}${stage} ${this.stackPrefix}${sep}${stage}/*` : `${this.stackPrefix}${sep}${stage}`;
+  }
+
+  /**
+   * Create version:fetch:<stage> task to fetch version data from deployed stack
+   */
+  protected createVersionFetchTask(stage: NamedStageOptions): void {
+    const stackName = `${this.stackPrefix}${this.stackPrefix ? '-' : ''}${stage.name}`;
+    const stageConfig = this.baseOptions.versioning?.stageOverrides?.[stage.name] || this.baseOptions.versioning;
+
+    if (!stageConfig?.outputs) return;
+
+    const commands: string[] = [];
+
+    // Fetch from CloudFormation outputs
+    if (stageConfig.outputs.cloudFormation?.enabled) {
+      commands.push(
+        `echo "Fetching version data from CloudFormation outputs for ${stage.name}..."`,
+        `aws cloudformation describe-stacks --stack-name ${stackName} --region ${stage.env.region} --query "Stacks[0].Outputs[?starts_with(OutputKey, 'AppVersion')].{Key:OutputKey,Value:OutputValue}" --output table`,
+      );
+    }
+
+    // Fetch from SSM Parameter Store
+    if (stageConfig.outputs.parameterStore?.enabled) {
+      const parameterName = (stageConfig.outputs.parameterStore.parameterName || '/{stackName}/version')
+        .replace('{stackName}', stackName)
+        .replace('{stageName}', stage.name);
+
+      if ((stageConfig.outputs.parameterStore as any)?.hierarchical) {
+        commands.push(
+          `echo "Fetching version data from SSM Parameter Store (hierarchical) for ${stage.name}..."`,
+          `aws ssm get-parameters-by-path --path "${parameterName}" --region ${stage.env.region} --recursive --query "Parameters[].{Name:Name,Value:Value}" --output table`,
+        );
+      } else {
+        commands.push(
+          `echo "Fetching version data from SSM Parameter Store for ${stage.name}..."`,
+          `aws ssm get-parameter --name "${parameterName}" --region ${stage.env.region} --query "Parameter.{Name:Name,Value:Value}" --output table`,
+        );
+      }
+    }
+
+    if (commands.length > 0) {
+      this.project.addTask(`version:fetch:${stage.name}`, {
+        description: `Fetch version data from deployed ${stage.name} stack`,
+        exec: commands.join(' && '),
+      });
+    }
+  }
+
+  /**
+   * Generate CDK application code for versioning
+   */
+  public generateVersioningAppCode(config: VersioningConfig): string {
+    return `
+    // Apply versioning to all stacks
+    this.node.children.forEach((child) => {
+      if (child instanceof Stack) {
+        const stageName = child.stackName.split('-').pop() || 'default';
+        addVersioningToStack(child, stageName, ${config.stageOverrides ? 'versioningConfig.stageOverrides' : 'undefined'});
+      }
+    });`;
+  }
+
+  /**
+   * Generate versioning imports for CDK application
+   */
+  public generateVersioningImports(): string {
+    const imports: string[] = [];
+
+    imports.push("import { CfnOutput } from 'aws-cdk-lib';");
+    imports.push("import { StringParameter } from 'aws-cdk-lib/aws-ssm';");
+    imports.push("import * as fs from 'fs';");
+
+    return imports.join('\n');
+  }
+
+  /**
+   * Generate versioning utility functions for CDK application
+   */
+  public generateVersioningUtilities(): string {
+    return `
+/**
+ * Version information interface
+ */
+export interface VersionInfo {
+  version: string;
+  commitHash: string;
+  commitHashShort: string;
+  branch: string;
+  commitCount: number;
+  packageVersion: string;
+  deployedAt: string;
+  deployedBy: string;
+  environment: string;
+}
+
+/**
+ * Load version information from generated file
+ */
+export function loadVersionInfo(): VersionInfo {
+  try {
+    return JSON.parse(fs.readFileSync('~version.json', 'utf8'));
+  } catch (error) {
+    console.warn('Could not load version info, using fallback');
+    return {
+      version: '0.0.0',
+      commitHash: 'unknown',
+      commitHashShort: 'unknown',
+      branch: 'unknown',
+      commitCount: 0,
+      packageVersion: '0.0.0',
+      deployedAt: new Date().toISOString(),
+      deployedBy: 'unknown',
+      environment: 'unknown'
+    };
+  }
+}
+
+/**
+ * Get versioning configuration for a specific stage
+ */
+function getStageConfig(stageName: string, baseConfig: any, stageOverrides?: Record<string, any>): any {
+  if (!stageOverrides || !stageOverrides[stageName]) {
+    return baseConfig;
+  }
+  
+  // Merge stage override with base config
+  const override = stageOverrides[stageName];
+  return {
+    ...baseConfig,
+    outputs: {
+      cloudFormation: override.outputs?.cloudFormation || baseConfig.outputs.cloudFormation,
+      parameterStore: override.outputs?.parameterStore || baseConfig.outputs.parameterStore,
+    }
+  };
+}
+
+/**
+ * Add versioning outputs to a stack
+ */
+function addVersioningToStack(stack: Stack, stageName: string, stageOverrides?: any): void {
+  const versionInfo = loadVersionInfo();
+  const baseConfig = versioningConfig;
+  const config = getStageConfig(stageName, baseConfig, stageOverrides);
+  
+  // Check if format is specified in CloudFormation or ParameterStore configs
+  const cfFormat = config.outputs.cloudFormation?.format || 'structured';
+  const ssmFormat = config.outputs.parameterStore?.format || 'structured';
+  
+  // Add CloudFormation outputs
+  if (config.outputs.cloudFormation?.enabled) {
+    if (cfFormat === 'plain') {
+      // Plain format - single output with version string
+      new CfnOutput(stack, 'AppVersion', {
+        value: versionInfo.version,
+        description: 'Application version',
+        exportName: config.outputs.cloudFormation.exportName,
+      });
+    } else {
+      // Structured format - multiple outputs
+      new CfnOutput(stack, 'AppVersion', {
+        value: versionInfo.version,
+        description: 'Application version',
+        exportName: config.outputs.cloudFormation.exportName,
+      });
+      
+      new CfnOutput(stack, 'AppVersionCommitHash', {
+        value: versionInfo.commitHash,
+        description: 'Git commit hash',
+        exportName: config.outputs.cloudFormation.exportName ? \`\${config.outputs.cloudFormation.exportName}CommitHash\` : undefined,
+      });
+      
+      new CfnOutput(stack, 'AppVersionBranch', {
+        value: versionInfo.branch,
+        description: 'Git branch',
+        exportName: config.outputs.cloudFormation.exportName ? \`\${config.outputs.cloudFormation.exportName}Branch\` : undefined,
+      });
+
+      new CfnOutput(stack, 'AppVersionInfo', {
+        value: JSON.stringify(versionInfo),
+        description: 'Complete version information',
+        exportName: config.outputs.cloudFormation.exportName ? \`\${config.outputs.cloudFormation.exportName}Info\` : undefined,
+      });
+    }
+  }
+  
+  // Add SSM Parameter Store parameters
+  if (config.outputs.parameterStore?.enabled) {
+    if (config.outputs.parameterStore.hierarchical) {
+      // Hierarchical parameters
+      const baseParameterName = (config.outputs.parameterStore.parameterName || '/{stackName}/version')
+        .replace('{stackName}', stack.stackName)
+        .replace('{stageName}', stageName);
+        
+      // Create hierarchical parameters
+      new StringParameter(stack, 'VersionParameterVersion', {
+        parameterName: \`\${baseParameterName}/version\`,
+        stringValue: versionInfo.version,
+        description: 'Application version',
+      });
+      
+      new StringParameter(stack, 'VersionParameterCommitHash', {
+        parameterName: \`\${baseParameterName}/commitHash\`,
+        stringValue: versionInfo.commitHash,
+        description: 'Git commit hash',
+      });
+      
+      new StringParameter(stack, 'VersionParameterBranch', {
+        parameterName: \`\${baseParameterName}/branch\`,
+        stringValue: versionInfo.branch,
+        description: 'Git branch',
+      });
+      
+      new StringParameter(stack, 'VersionParameterInfo', {
+        parameterName: \`\${baseParameterName}/info\`,
+        stringValue: JSON.stringify(versionInfo),
+        description: 'Complete version information',
+      });
+    } else {
+      // Single parameter
+      const parameterName = (config.outputs.parameterStore.parameterName || '/{stackName}/version')
+        .replace('{stackName}', stack.stackName)
+        .replace('{stageName}', stageName);
+        
+      new StringParameter(stack, 'VersionParameter', {
+        parameterName,
+        stringValue: ssmFormat === 'plain' ? versionInfo.version : JSON.stringify(versionInfo),
+        description: ssmFormat === 'plain' ? 'Application version' : 'Complete version information',
+      });
+    }
+  }
+}`;
   }
 }

@@ -17,6 +17,7 @@ specifically designed to work with the projen project configuration engine.
 * Handles complex deployment scenarios with less code
 * Manages AWS infrastructure more efficiently and straightforwardly
 * Automated drift detection for CloudFormation/CDK stacks with scheduled checks and issue creation
+* Automatic versioning with flexible strategies and multiple output targets
 
 ### Benefits
 
@@ -24,6 +25,7 @@ specifically designed to work with the projen project configuration engine.
 * Ensures consistency across projects by using proven defaults
 * Simplifies compliance management by integrating it directly into pipeline definitions
 * Facilitates platform migrations (e.g., from GitHub to GitLab) by abstracting pipeline definitions
+* Provides automatic version tracking and exposure through CloudFormation and SSM Parameter Store
 
 ## Beyond AWS CDK: A Vision for Universal CI/CD Pipeline Generation
 
@@ -226,6 +228,233 @@ Here's a brief description of each one:
 12. **release:push-assembly** - This task creates a manifest, bumps the version without creating a git tag, and publishes the cloud assembly to your registry.
 
 Remember that these tasks are created and managed automatically by the `CDKPipeline` class. You can run these tasks using the `npx projen TASK_NAME` command.
+
+## Versioning
+
+Projen Pipelines includes a comprehensive versioning system that automatically tracks and exposes deployment versions through various AWS services. This feature enables deployment traceability, automated rollback decisions, and comprehensive audit trails.
+
+### Basic Versioning Configuration
+
+To enable versioning in your pipeline, add the `versioning` configuration:
+
+```typescript
+import { awscdk } from 'projen';
+import { GithubCDKPipeline, VersioningStrategy, VersioningOutputs } from 'projen-pipelines';
+
+const app = new awscdk.AwsCdkTypeScriptApp({
+  // ... other config
+});
+
+new GithubCDKPipeline(app, {
+  // ... other pipeline config
+  
+  versioning: {
+    enabled: true,
+    strategy: VersioningStrategy.commitCount(),
+    outputs: VersioningOutputs.standard()
+  }
+});
+```
+
+### Versioning Strategies
+
+Projen Pipelines provides several built-in versioning strategies:
+
+#### Git Tag Strategy
+Uses git tags as the version source, with optional prefix stripping:
+
+```typescript
+// Basic git tag strategy
+const strategy = VersioningStrategy.gitTag();
+
+// With custom configuration
+const strategy = VersioningStrategy.gitTag({
+  stripPrefix: 'v',           // Strip 'v' from tags (v1.2.3 → 1.2.3)
+  annotatedOnly: true,        // Only use annotated tags
+  includeSinceTag: true       // Include commits since tag
+});
+```
+
+#### Package.json Strategy
+Uses the version from your package.json file:
+
+```typescript
+// Basic package.json strategy
+const strategy = VersioningStrategy.packageJson();
+
+// With custom configuration
+const strategy = VersioningStrategy.packageJson({
+  path: './package.json',
+  includePrerelease: true,
+  appendCommitInfo: true
+});
+```
+
+#### Commit Count Strategy
+Uses the number of commits as the version:
+
+```typescript
+// Basic commit count strategy
+const strategy = VersioningStrategy.commitCount();
+
+// With custom configuration
+const strategy = VersioningStrategy.commitCount({
+  countFrom: 'all',           // 'all' | 'since-tag' 
+  includeBranch: true,        // Include branch name
+  padding: 5                  // Zero-pad count (00001)
+});
+```
+
+#### Build Number Strategy
+Creates a version from build metadata:
+
+```typescript
+// Basic build number strategy
+const strategy = VersioningStrategy.buildNumber();
+
+// With custom configuration
+const strategy = VersioningStrategy.buildNumber({
+  prefix: 'release',
+  commitCount: { countFrom: 'all', padding: 5 }
+});
+// Output: release-01234-3a4b5c6d
+```
+
+#### Custom Composite Strategy
+Create your own version format using template variables:
+
+```typescript
+const strategy = VersioningStrategy.create(
+  '{git-tag}+{commit-count}-{commit-hash:8}',
+  {
+    gitTag: { stripPrefix: 'v' },
+    commitCount: { countFrom: 'since-tag' }
+  }
+);
+// Output: 1.2.3+45-3a4b5c6d
+```
+
+### Version Output Configurations
+
+Control how and where version information is exposed:
+
+#### CloudFormation Outputs
+Export version information as CloudFormation stack outputs:
+
+```typescript
+// Basic CloudFormation output
+const outputs = VersioningOutputs.cloudFormationOnly();
+
+// With custom configuration
+const outputs = VersioningOutputs.cloudFormationOnly({
+  exportName: 'MyApp-{stage}-Version'
+});
+```
+
+#### SSM Parameter Store
+Store version information in AWS Systems Manager Parameter Store:
+
+```typescript
+// Basic parameter store
+const outputs = VersioningOutputs.parameterStoreOnly('/myapp/{stage}/version');
+
+// Hierarchical parameters
+const outputs = VersioningOutputs.hierarchicalParameters('/myapp/{stage}/version', {
+  includeCloudFormation: true
+});
+```
+
+This creates parameters like:
+- `/myapp/prod/version` → Full version JSON
+- `/myapp/prod/version/commit` → Commit hash
+- `/myapp/prod/version/tag` → Git tag
+- `/myapp/prod/version/count` → Commit count
+
+#### Standard Configuration
+The recommended configuration that uses CloudFormation outputs with optional Parameter Store:
+
+```typescript
+const outputs = VersioningOutputs.standard({
+  parameterName: '/myapp/{stage}/version',
+});
+```
+
+### Output Formats
+
+Version information can be output in two formats:
+
+**Plain Format:** Simple string values in CloudFormation
+```yaml
+Outputs:
+  AppVersion:
+    Value: "1.2.3+45-3a4b5c6d"
+    Description: "Application version"
+  AppCommitHash:
+    Value: "3a4b5c6def1234567890"
+    Description: "Git commit hash"
+```
+
+**Structured Format:** JSON object with comprehensive metadata in SSM
+```json
+{
+  "version": "1.2.3",
+  "commitHash": "3a4b5c6def1234567890",
+  "commitCount": 1234,
+  "commitsSinceTag": 45,
+  "branch": "main",
+  "tag": "v1.2.3",
+  "deployedAt": "2024-01-15T10:30:00Z",
+  "deployedBy": "github-actions",
+  "buildNumber": "456",
+  "environment": "production"
+}
+```
+
+### Stage-Specific Overrides
+
+Configure different versioning strategies for different stages:
+
+```typescript
+new GithubCDKPipeline(app, {
+  versioning: {
+    enabled: true,
+    strategy: VersioningStrategy.gitTag(),
+    outputs: VersioningOutputs.standard(),
+    stageOverrides: {
+      dev: {
+        strategy: VersioningStrategy.commitCount(),
+        outputs: VersioningOutputs.minimal()
+      },
+      prod: {
+        validation: {
+          requireTag: true,
+          tagPattern: /^v\d+\.\d+\.\d+$/
+        }
+      }
+    }
+  }
+});
+```
+
+### Template Variables
+
+All strategies support these template variables:
+- `{git-tag}` - Git tag (with optional prefix stripping)
+- `{package-version}` - Version from package.json
+- `{commit-count}` - Number of commits
+- `{commit-hash}` - Full commit hash
+- `{commit-hash:8}` - Short commit hash (8 characters)
+- `{branch}` - Git branch name
+- `{build-number}` - CI/CD build number
+
+### Benefits of Versioning
+
+1. **Deployment Traceability**: Always know exactly which code version is deployed
+2. **Automated Rollback**: Use version information for automated rollback decisions
+3. **Audit Trail**: Comprehensive deployment history with metadata
+4. **Multi-Stage Support**: Different versioning strategies per environment
+5. **Zero Configuration**: Works out-of-the-box with sensible defaults
+6. **CI/CD Integration**: Automatically detects version info from CI/CD environments
 
 ### Feature Branch Deployments
 
