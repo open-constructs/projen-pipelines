@@ -2116,6 +2116,103 @@ public readonly schedule: string;
 
 ## Structs <a name="Structs" id="Structs"></a>
 
+### AmplifyDeployStepConfig <a name="AmplifyDeployStepConfig" id="projen-pipelines.AmplifyDeployStepConfig"></a>
+
+Configuration for an AWS Amplify deployment step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.AmplifyDeployStepConfig.Initializer"></a>
+
+```typescript
+import { AmplifyDeployStepConfig } from 'projen-pipelines'
+
+const amplifyDeployStepConfig: AmplifyDeployStepConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AmplifyDeployStepConfig.property.artifactFile">artifactFile</a></code> | <code>string</code> | The artifact file to deploy (zip file containing the build). |
+| <code><a href="#projen-pipelines.AmplifyDeployStepConfig.property.appId">appId</a></code> | <code>string</code> | The Amplify app ID (static value). |
+| <code><a href="#projen-pipelines.AmplifyDeployStepConfig.property.appIdCommand">appIdCommand</a></code> | <code>string</code> | Command to retrieve the Amplify app ID dynamically. |
+| <code><a href="#projen-pipelines.AmplifyDeployStepConfig.property.branchName">branchName</a></code> | <code>string</code> | The branch name to deploy to (defaults to 'main'). |
+| <code><a href="#projen-pipelines.AmplifyDeployStepConfig.property.environment">environment</a></code> | <code>string</code> | Environment name. |
+| <code><a href="#projen-pipelines.AmplifyDeployStepConfig.property.region">region</a></code> | <code>string</code> | The AWS region (defaults to 'eu-central-1'). |
+
+---
+
+##### `artifactFile`<sup>Required</sup> <a name="artifactFile" id="projen-pipelines.AmplifyDeployStepConfig.property.artifactFile"></a>
+
+```typescript
+public readonly artifactFile: string;
+```
+
+- *Type:* string
+
+The artifact file to deploy (zip file containing the build).
+
+---
+
+##### `appId`<sup>Optional</sup> <a name="appId" id="projen-pipelines.AmplifyDeployStepConfig.property.appId"></a>
+
+```typescript
+public readonly appId: string;
+```
+
+- *Type:* string
+
+The Amplify app ID (static value).
+
+---
+
+##### `appIdCommand`<sup>Optional</sup> <a name="appIdCommand" id="projen-pipelines.AmplifyDeployStepConfig.property.appIdCommand"></a>
+
+```typescript
+public readonly appIdCommand: string;
+```
+
+- *Type:* string
+
+Command to retrieve the Amplify app ID dynamically.
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.AmplifyDeployStepConfig.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+
+The branch name to deploy to (defaults to 'main').
+
+---
+
+##### `environment`<sup>Optional</sup> <a name="environment" id="projen-pipelines.AmplifyDeployStepConfig.property.environment"></a>
+
+```typescript
+public readonly environment: string;
+```
+
+- *Type:* string
+
+Environment name.
+
+---
+
+##### `region`<sup>Optional</sup> <a name="region" id="projen-pipelines.AmplifyDeployStepConfig.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+The AWS region (defaults to 'eu-central-1').
+
+---
+
 ### ApproverMapping <a name="ApproverMapping" id="projen-pipelines.ApproverMapping"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.ApproverMapping.Initializer"></a>
@@ -5854,6 +5951,93 @@ public readonly packageJson: PackageJsonConfig;
 ---
 
 ## Classes <a name="Classes" id="Classes"></a>
+
+### AmplifyDeployStep <a name="AmplifyDeployStep" id="projen-pipelines.AmplifyDeployStep"></a>
+
+A step that deploys a web application to AWS Amplify.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.AmplifyDeployStep.Initializer"></a>
+
+```typescript
+import { AmplifyDeployStep } from 'projen-pipelines'
+
+new AmplifyDeployStep(project: Project, config: AmplifyDeployStepConfig)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AmplifyDeployStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.AmplifyDeployStep.Initializer.parameter.config">config</a></code> | <code><a href="#projen-pipelines.AmplifyDeployStepConfig">AmplifyDeployStepConfig</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.AmplifyDeployStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.AmplifyDeployStep.Initializer.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.AmplifyDeployStepConfig">AmplifyDeployStepConfig</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.AmplifyDeployStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.AmplifyDeployStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.AmplifyDeployStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.AmplifyDeployStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.AmplifyDeployStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.AmplifyDeployStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.AmplifyDeployStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.AmplifyDeployStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
 
 ### AwsAssumeRoleStep <a name="AwsAssumeRoleStep" id="projen-pipelines.AwsAssumeRoleStep"></a>
 
