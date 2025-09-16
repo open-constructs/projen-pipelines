@@ -36,6 +36,7 @@ Steps are the fundamental building blocks. Key step types include:
 - `ProjenScriptStep` (run projen scripts)
 - `StepSequence` (combine multiple steps)
 - `AwsAssumeRoleStep` (assume AWS IAM roles)
+- `AmplifyDeployStep` (deploy to AWS Amplify Hosting)
 - Various artifact management steps
 
 ## CDK Pipeline Integration
@@ -207,6 +208,74 @@ When `featureStages` is configured, the library creates automated workflows for 
   }
 }
 ```
+
+## AWS Amplify Deployment
+
+The library provides the `AmplifyDeployStep` for deploying static websites and single-page applications to AWS Amplify Hosting.
+
+### Configuration
+
+```typescript
+import { AmplifyDeployStep } from 'projen-pipelines';
+
+// Static app ID configuration
+const deployStep = new AmplifyDeployStep(project, {
+  appId: 'd123gtgt770s1x',
+  artifactFile: 'dist.zip',
+  branchName: 'main',      // optional, defaults to 'main'
+  region: 'us-east-1',      // optional, defaults to 'eu-central-1'
+});
+
+// Dynamic app ID extraction from CDK outputs
+const deployStep = new AmplifyDeployStep(project, {
+  appIdCommand: 'jq -r \'.MyStack.AmplifyAppId\' cdk-outputs.json',
+  artifactFile: 'build.zip',
+  environment: 'production', // optional, for environment tagging
+});
+```
+
+### Interface
+
+```typescript
+export interface AmplifyDeployStepConfig {
+  /** The Amplify app ID (static value) */
+  readonly appId?: string;
+  /** Command to retrieve the Amplify app ID dynamically */
+  readonly appIdCommand?: string;
+  /** The artifact file to deploy (zip file containing the build) */
+  readonly artifactFile: string;
+  /** The branch name to deploy to (defaults to 'main') */
+  readonly branchName?: string;
+  /** The AWS region (defaults to 'eu-central-1') */
+  readonly region?: string;
+  /** Environment name for context */
+  readonly environment?: string;
+}
+```
+
+### Platform Support
+
+| Platform | Support | Implementation Details |
+|----------|---------|------------------------|
+| GitHub Actions | ✅ Full | Multi-step workflow with environment variables |
+| GitLab CI | ✅ Full | Integrated job configuration |
+| Bash | ✅ Full | Uses deployment commands |
+
+### Deployment Process
+
+1. **Pending Job Cancellation**: Checks for and cancels any pending Amplify deployments
+2. **Deployment Creation**: Creates a new deployment via AWS Amplify API
+3. **Artifact Upload**: Uploads the zip file to Amplify's S3 bucket
+4. **Deployment Start**: Initiates the deployment process
+5. **Status Monitoring**: Polls deployment status until completion
+6. **Validation**: Ensures deployment succeeded or fails the pipeline
+
+### Usage Notes
+
+- Either `appId` or `appIdCommand` must be provided (but not both)
+- The artifact file must be a zip file containing the static website assets
+- The deployment monitors status with 10-second polling intervals
+- Failed deployments will cause the pipeline to fail
 
 ## Best Practices
 

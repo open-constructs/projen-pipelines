@@ -38,6 +38,7 @@ We aim to evolve into a universal CI/CD pipeline generator capable of supporting
   * Traditional web applications
   * Terraform / OpenTOFU projects
   * Winglang applications
+  * Static websites and single-page applications
 1. Multi-Cloud Deployment: While we started with AWS, we aim to support deployments to other major cloud providers like Azure, Google Cloud Platform, and others.
 1. On-Premises and Hybrid Scenarios: We recognize the importance of on-premises and hybrid cloud setups and plan to cater to these deployment models.
 1. Framework Agnostic: Our goal is to make Projen Pipelines adaptable to work with various development frameworks and tools, not just those related to AWS or cloud deployments.
@@ -496,6 +497,72 @@ When feature stages are configured, two GitHub workflows are created:
 4. Remove the label or close the PR to destroy the feature environment
 
 The feature deployment uses the `--force` flag when destroying to ensure cleanup without manual confirmation.
+
+### AWS Amplify Deployment
+
+Projen Pipelines includes support for deploying static websites and single-page applications to AWS Amplify Hosting. This feature provides automated deployment of build artifacts to Amplify, with built-in support for multiple environments and branch-based deployments.
+
+#### Configuration
+
+To add Amplify deployment to your pipeline, use the `AmplifyDeployStep`:
+
+```typescript
+import { AmplifyDeployStep } from 'projen-pipelines';
+
+// Using a static Amplify app ID
+const deployStep = new AmplifyDeployStep(project, {
+  appId: 'd123gtgt770s1x',
+  artifactFile: 'dist.zip',
+  branchName: 'main',  // optional, defaults to 'main'
+  region: 'us-east-1', // optional, defaults to 'eu-central-1'
+});
+
+// Using dynamic app ID extraction from CDK outputs
+const deployStep = new AmplifyDeployStep(project, {
+  appIdCommand: 'jq -r \'.MyStack.AmplifyAppId\' cdk-outputs.json',
+  artifactFile: 'build.zip',
+  environment: 'production', // optional, for environment-specific deployments
+});
+```
+
+#### How It Works
+
+The Amplify deployment step:
+1. Checks for any pending Amplify deployments and cancels them if needed
+2. Creates a new deployment with the Amplify service
+3. Uploads your build artifact (zip file) to Amplify
+4. Starts the deployment and monitors its progress
+5. Validates the deployment succeeded
+
+#### Build Artifact Preparation
+
+Before using the Amplify deployment step, ensure your build process creates a zip file containing your static website assets:
+
+```bash
+# Example: Creating a deployment artifact
+npm run build
+cd dist && zip -r ../dist.zip . && cd ..
+```
+
+#### Multi-Stage Deployments
+
+For multi-stage deployments with different Amplify apps per environment:
+
+```typescript
+// In your CDK stack, output the Amplify app ID
+new CfnOutput(this, 'AmplifyAppId', {
+  key: 'AmplifyAppId',
+  value: amplifyApp.appId,
+});
+
+// In your pipeline configuration
+const deployStep = new AmplifyDeployStep(project, {
+  appIdCommand: `jq -r '.${stackName}.AmplifyAppId' cdk-outputs-${stage}.json`,
+  artifactFile: 'website.zip',
+  environment: stage,
+  branchName: stage === 'prod' ? 'main' : stage,
+});
+```
 
 ## Current Status
 
