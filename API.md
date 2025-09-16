@@ -2944,6 +2944,8 @@ public readonly exportName: string;
 
 ### CodeArtifactLoginStepOptions <a name="CodeArtifactLoginStepOptions" id="projen-pipelines.CodeArtifactLoginStepOptions"></a>
 
+Options for the CodeArtifactLoginStep.
+
 #### Initializer <a name="Initializer" id="projen-pipelines.CodeArtifactLoginStepOptions.Initializer"></a>
 
 ```typescript
@@ -2960,6 +2962,7 @@ const codeArtifactLoginStepOptions: CodeArtifactLoginStepOptions = { ... }
 | <code><a href="#projen-pipelines.CodeArtifactLoginStepOptions.property.ownerAccount">ownerAccount</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeArtifactLoginStepOptions.property.region">region</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.CodeArtifactLoginStepOptions.property.role">role</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.CodeArtifactLoginStepOptions.property.envVariableName">envVariableName</a></code> | <code>string</code> | The environment variable name to set. |
 
 ---
 
@@ -3000,6 +3003,19 @@ public readonly role: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `envVariableName`<sup>Optional</sup> <a name="envVariableName" id="projen-pipelines.CodeArtifactLoginStepOptions.property.envVariableName"></a>
+
+```typescript
+public readonly envVariableName: string;
+```
+
+- *Type:* string
+- *Default:* 'CODEARTIFACT_AUTH_TOKEN'
+
+The environment variable name to set.
 
 ---
 
@@ -5402,6 +5418,37 @@ public readonly watchable: boolean;
 
 ---
 
+### NpmSecretStepOptions <a name="NpmSecretStepOptions" id="projen-pipelines.NpmSecretStepOptions"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.NpmSecretStepOptions.Initializer"></a>
+
+```typescript
+import { NpmSecretStepOptions } from 'projen-pipelines'
+
+const npmSecretStepOptions: NpmSecretStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.NpmSecretStepOptions.property.secretName">secretName</a></code> | <code>string</code> | Name of the secret to set for the environment variable NPM_TOKEN. |
+
+---
+
+##### `secretName`<sup>Optional</sup> <a name="secretName" id="projen-pipelines.NpmSecretStepOptions.property.secretName"></a>
+
+```typescript
+public readonly secretName: string;
+```
+
+- *Type:* string
+- *Default:* 'NPM_TOKEN'
+
+Name of the secret to set for the environment variable NPM_TOKEN.
+
+---
+
 ### PackageJsonConfig <a name="PackageJsonConfig" id="projen-pipelines.PackageJsonConfig"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.PackageJsonConfig.Initializer"></a>
@@ -6046,6 +6093,11 @@ public readonly TYPE: string;
 
 ### CodeArtifactLoginStep <a name="CodeArtifactLoginStep" id="projen-pipelines.CodeArtifactLoginStep"></a>
 
+Step to login to CodeArtifact.
+
+The environment variable name can be configured to avoid conflicts with other environment variables.
+The default is CODEARTIFACT_AUTH_TOKEN.
+
 #### Initializers <a name="Initializers" id="projen-pipelines.CodeArtifactLoginStep.Initializer"></a>
 
 ```typescript
@@ -6416,6 +6468,10 @@ public prependSteps(steps: ...PipelineStep[]): void
 
 ### GithubPackagesLoginStep <a name="GithubPackagesLoginStep" id="projen-pipelines.GithubPackagesLoginStep"></a>
 
+Step to set the GITHUB_TOKEN environment variable from a secret.
+
+Only supported for GitHub as it is GitHub specific.
+
 #### Initializers <a name="Initializers" id="projen-pipelines.GithubPackagesLoginStep.Initializer"></a>
 
 ```typescript
@@ -6487,6 +6543,96 @@ Generates a configuration for a GitHub Actions step.
 Should be implemented by subclasses.
 
 ##### `toGitlab` <a name="toGitlab" id="projen-pipelines.GithubPackagesLoginStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### NpmSecretStep <a name="NpmSecretStep" id="projen-pipelines.NpmSecretStep"></a>
+
+Step to set the NPM_TOKEN environment variable from a secret.
+
+Currently only supported and needed for GitHub.
+Gitlab sets the NPM_TOKEN environment variable automatically from the project's settings.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.NpmSecretStep.Initializer"></a>
+
+```typescript
+import { NpmSecretStep } from 'projen-pipelines'
+
+new NpmSecretStep(project: Project, options: NpmSecretStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.NpmSecretStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.NpmSecretStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.NpmSecretStepOptions">NpmSecretStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.NpmSecretStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.NpmSecretStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.NpmSecretStepOptions">NpmSecretStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.NpmSecretStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.NpmSecretStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.NpmSecretStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.NpmSecretStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.NpmSecretStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.NpmSecretStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.NpmSecretStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.NpmSecretStep.toGitlab"></a>
 
 ```typescript
 public toGitlab(): GitlabStepConfig
