@@ -20,7 +20,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -50,7 +50,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -93,7 +93,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -198,7 +198,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -672,7 +672,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22.0.0
       - name: Checkout
@@ -702,7 +702,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22.0.0
       - name: Checkout
@@ -746,7 +746,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -776,7 +776,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -820,7 +820,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -850,7 +850,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -885,7 +885,7 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -932,7 +932,7 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1045,7 +1045,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1075,7 +1075,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1109,7 +1109,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1148,7 +1148,7 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1254,7 +1254,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1284,7 +1284,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1321,7 +1321,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1358,7 +1358,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1409,7 +1409,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1460,7 +1460,7 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1514,7 +1514,7 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1855,7 +1855,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1885,7 +1885,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1920,7 +1920,7 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -1967,7 +1967,7 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2033,7 +2033,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2065,7 +2065,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2117,7 +2117,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2160,7 +2160,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2190,7 +2190,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2224,7 +2224,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2531,7 +2531,7 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2563,7 +2563,7 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2599,7 +2599,7 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2645,7 +2645,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2675,7 +2675,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2709,7 +2709,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
@@ -2747,7 +2747,7 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
