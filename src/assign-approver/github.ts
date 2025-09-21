@@ -52,7 +52,7 @@ export class GitHubAssignApprover extends AssignApprover {
       steps: [
         {
           name: 'Assign approver based on author',
-          uses: 'actions/github-script@v7',
+          uses: 'actions/github-script@v8',
           with: {
             script: approverMappingScript,
           },

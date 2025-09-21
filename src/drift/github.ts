@@ -64,11 +64,11 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
         steps: [
           {
             name: 'Checkout',
-            uses: 'actions/checkout@v4',
+            uses: 'actions/checkout@v5',
           },
           {
             name: 'Setup Node.js',
-            uses: 'actions/setup-node@v4',
+            uses: 'actions/setup-node@v5',
             with: {
               'node-version': '20',
             },
@@ -89,7 +89,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           ...(this.createIssues ? [{
             name: 'Create Issue on Drift',
             if: 'steps.drift.outcome == \'failure\' && github.event_name == \'schedule\'',
-            uses: 'actions/github-script@v7',
+            uses: 'actions/github-script@v8',
             with: {
               script: this.generateIssueCreationScript(stage),
             },
@@ -110,7 +110,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
         steps: [
           {
             name: 'Download all artifacts',
-            uses: 'actions/download-artifact@v4',
+            uses: 'actions/download-artifact@v5',
             with: {
               path: 'drift-results',
             },

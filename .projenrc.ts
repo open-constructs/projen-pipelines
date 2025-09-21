@@ -26,7 +26,7 @@ const project = new cdk.JsiiProject({
     'standard-version',
   ],
   peerDeps: [
-    'projen@>=0.91.20 <1.0.0',
+    'projen@>=0.96.3 <1.0.0',
     'constructs@^10.4.2',
   ],
   autoApproveUpgrades: true,
@@ -80,7 +80,7 @@ integWf?.addJobs({
     steps: [
       {
         name: 'Checkout',
-        uses: 'actions/checkout@v4',
+        uses: 'actions/checkout@v5',
         with:
         {
           ref: '${{github.event.pull_request.head.ref}}',
@@ -91,7 +91,7 @@ integWf?.addJobs({
       { name: 'build', run: 'npx projen compile' },
       {
         name: 'Upload artifact',
-        uses: 'actions/upload-artifact@v4.3.6',
+        uses: 'actions/upload-artifact@v4.6.2',
         with: { name: 'integ-artifact', path: 'lib/\n.jsii', overwrite: true },
       },
     ],
@@ -101,8 +101,8 @@ integWf?.addJobs({
     needs: ['build'],
     permissions: {},
     steps: [
-      { name: 'Checkout', uses: 'actions/checkout@v4' },
-      { name: 'Download artifact', uses: 'actions/download-artifact@v4', with: { name: 'integ-artifact' } },
+      { name: 'Checkout', uses: 'actions/checkout@v5' },
+      { name: 'Download artifact', uses: 'actions/download-artifact@v5', with: { name: 'integ-artifact' } },
       { name: 'Run yalc', run: 'npx yalc publish' },
       { name: 'Add yalc', run: 'cd integ/existing && npx yalc add projen-pipelines' },
       { name: 'Run Test', run: 'cd integ/existing && npx yarn install' },
@@ -113,8 +113,8 @@ integWf?.addJobs({
     needs: ['build'],
     permissions: {},
     steps: [
-      { name: 'Checkout', uses: 'actions/checkout@v4' },
-      { name: 'Download artifact', uses: 'actions/download-artifact@v4', with: { name: 'integ-artifact' } },
+      { name: 'Checkout', uses: 'actions/checkout@v5' },
+      { name: 'Download artifact', uses: 'actions/download-artifact@v5', with: { name: 'integ-artifact' } },
       { name: 'Run yalc', run: 'npx yalc publish' },
       { name: 'Add yalc', run: 'cd integ/existing && npx yalc add projen-pipelines' },
       { name: 'Run Test', run: 'cd integ/existing && npx npm install' },

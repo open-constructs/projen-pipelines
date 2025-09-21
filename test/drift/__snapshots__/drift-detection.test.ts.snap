@@ -294,7 +294,7 @@ exports[`DriftDetectionStep should generate correct GitHub job configuration 1`]
   "steps": [
     {
       "name": "AWS Credentials",
-      "uses": "aws-actions/configure-aws-credentials@v4",
+      "uses": "aws-actions/configure-aws-credentials@v5",
       "with": {
         "aws-region": "us-east-1",
         "role-session-name": "GitHubAction",
@@ -356,15 +356,15 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Install dependencies
         run: npm ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/ProdRole
           role-session-name: GitHubAction
@@ -389,15 +389,15 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'staging' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Install dependencies
         run: npm ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/StagingRole
           role-session-name: GitHubAction
@@ -418,7 +418,7 @@ jobs:
       contents: read
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: drift-results
       - name: Generate summary
@@ -502,9 +502,9 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Install dependencies
@@ -523,7 +523,7 @@ jobs:
       contents: read
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: drift-results
       - name: Generate summary
@@ -605,9 +605,9 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Install dependencies
@@ -626,7 +626,7 @@ jobs:
       contents: read
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: drift-results
       - name: Generate summary
@@ -708,9 +708,9 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Install dependencies
@@ -729,7 +729,7 @@ jobs:
       contents: read
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: drift-results
       - name: Generate summary

@@ -25,7 +25,7 @@ export class DownloadArtifactStep extends PipelineStep {
     return {
       steps: [{
         name: 'Download Artifact',
-        uses: 'actions/download-artifact@v4',
+        uses: 'actions/download-artifact@v5',
         with: {
           name: this.config.name,
           path: this.config.path,
@@ -64,7 +64,7 @@ export class UploadArtifactStep extends PipelineStep {
     return {
       steps: [{
         name: 'Upload Artifact',
-        uses: 'actions/upload-artifact@v4.3.6',
+        uses: 'actions/upload-artifact@v4.6.2',
         with: {
           name: this.config.name,
           path: this.config.path,
