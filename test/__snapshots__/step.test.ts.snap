@@ -80,7 +80,7 @@ exports[`StepSequence works correctly 2`] = `
   "steps": [
     {
       "name": "AWS Credentials",
-      "uses": "aws-actions/configure-aws-credentials@v4",
+      "uses": "aws-actions/configure-aws-credentials@v5",
       "with": {
         "aws-region": "us-east-1",
         "role-session-name": "CodeArtifact",
@@ -98,7 +98,7 @@ exports[`StepSequence works correctly 2`] = `
     },
     {
       "name": "AWS Credentials",
-      "uses": "aws-actions/configure-aws-credentials@v4",
+      "uses": "aws-actions/configure-aws-credentials@v5",
       "with": {
         "aws-region": "us-east-1",
         "role-session-name": "GitHubAction",

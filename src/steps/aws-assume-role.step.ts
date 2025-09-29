@@ -42,7 +42,7 @@ export class AwsAssumeRoleStep extends PipelineStep {
     return {
       steps: [{
         name: 'AWS Credentials',
-        uses: 'aws-actions/configure-aws-credentials@v4',
+        uses: 'aws-actions/configure-aws-credentials@v5',
         with: {
           'role-to-assume': this.config.roleArn,
           'role-session-name': this.config.sessionName ?? 'GitHubAction',

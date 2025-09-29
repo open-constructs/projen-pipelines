@@ -172,7 +172,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       steps: [
         {
           name: 'Checkout',
-          uses: 'actions/checkout@v4',
+          uses: 'actions/checkout@v5',
         },
         ...steps.flatMap(s => s.steps),
       ],
@@ -228,7 +228,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       steps: [
         {
           name: 'Checkout',
-          uses: 'actions/checkout@v4',
+          uses: 'actions/checkout@v5',
         },
         ...steps.flatMap(s => s.steps),
       ],
@@ -269,7 +269,10 @@ export class GithubCDKPipeline extends CDKPipeline {
       steps: [
         {
           name: 'Checkout',
-          uses: 'actions/checkout@v4',
+          uses: 'actions/checkout@v5',
+          with: {
+            'fetch-depth': 0,
+          },
         },
         ...githubSteps.flatMap(s => s.steps),
       ],
@@ -320,7 +323,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       steps: [
         {
           name: 'Checkout',
-          uses: 'actions/checkout@v4',
+          uses: 'actions/checkout@v5',
           with: {
             'fetch-depth': 0,
           },
@@ -386,7 +389,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         steps: [
           {
             name: 'Checkout',
-            uses: 'actions/checkout@v4',
+            uses: 'actions/checkout@v5',
           },
           ...steps.flatMap(s => s.steps),
         ],
@@ -439,7 +442,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       steps: [
         {
           name: 'Checkout',
-          uses: 'actions/checkout@v4',
+          uses: 'actions/checkout@v5',
         },
         ...steps.flatMap(s => s.steps),
       ],
@@ -494,7 +497,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         steps: [
           {
             name: 'Checkout',
-            uses: 'actions/checkout@v4',
+            uses: 'actions/checkout@v5',
           },
           ...steps.flatMap(s => s.steps),
         ],

@@ -20,21 +20,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -48,29 +50,29 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen publish:assets:my-dev
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodPublishRole
           role-session-name: GitHubAction
@@ -91,26 +93,26 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:my-dev
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-my-dev
           path: cdk-outputs-my-dev.json
@@ -196,23 +198,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - run: npx projen install:ci
       - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
       - run: mv ./node_modules/@assembly/testapp cdk.out
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -670,21 +672,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22.0.0
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -698,22 +702,22 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22.0.0
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -742,21 +746,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -770,22 +776,22 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -814,21 +820,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -842,22 +850,22 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -877,26 +885,26 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-2
       - run: npx projen deploy:independent2
       - run: echo Post Deploy
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-independent2
           path: cdk-outputs-independent2.json
@@ -924,28 +932,28 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole
           role-session-name: GitHubAction
           aws-region: eu-west-2
       - run: npx projen diff:independent1
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole
           role-session-name: GitHubAction
@@ -953,7 +961,7 @@ jobs:
       - run: npx projen deploy:independent1
       - run: echo Post Deploy
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-independent1
           path: cdk-outputs-independent1.json
@@ -1037,21 +1045,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1065,22 +1075,22 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -1099,26 +1109,26 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole1
           role-session-name: GitHubAction
           aws-region: eu-west-2
       - run: npx projen deploy:stage1
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-stage1
           path: cdk-outputs-stage1.json
@@ -1138,19 +1148,19 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole2
           role-session-name: GitHubAction
@@ -1158,7 +1168,7 @@ jobs:
       - run: npx projen deploy:stage2
       - run: echo Post Deploy
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-stage2
           path: cdk-outputs-stage2.json
@@ -1244,21 +1254,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1272,22 +1284,22 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -1309,26 +1321,26 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:my-dev
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-my-dev
           path: cdk-outputs-my-dev.json
@@ -1346,26 +1358,26 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: independentRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:independent
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-independent
           path: cdk-outputs-independent.json
@@ -1397,23 +1409,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - run: npx projen install:ci
       - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
       - run: mv ./node_modules/@assembly/testapp cdk.out
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -1448,28 +1460,28 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: featureRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen deploy:feature
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-feature
           path: cdk-outputs-feature.json
@@ -1502,21 +1514,21 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: featureRole
           role-session-name: GitHubAction
@@ -1843,21 +1855,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1871,22 +1885,22 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -1906,26 +1920,26 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:independent2
       - run: echo Post Deploy
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-independent2
           path: cdk-outputs-independent2.json
@@ -1953,28 +1967,28 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen diff:independent1
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole
           role-session-name: GitHubAction
@@ -1982,7 +1996,7 @@ jobs:
       - run: npx projen deploy:independent1
       - run: echo Post Deploy
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-independent1
           path: cdk-outputs-independent1.json
@@ -2019,22 +2033,24 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2049,23 +2065,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -2101,23 +2117,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: npx projen install:ci
       - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
       - run: mv ./node_modules/@assembly/testapp cdk.out
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -2144,21 +2160,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2172,22 +2190,22 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -2206,26 +2224,26 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:dev
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -2513,22 +2531,24 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: echo Login
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2543,23 +2563,23 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: echo Login
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -2579,26 +2599,26 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: echo Login
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -2625,21 +2645,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2653,22 +2675,22 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
@@ -2687,26 +2709,26 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:dev
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -2725,26 +2747,26 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cloud-assembly
           path: cdk.out/
       - run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
