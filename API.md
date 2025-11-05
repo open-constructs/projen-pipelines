@@ -804,6 +804,224 @@ public readonly stackPrefix: string;
 ---
 
 
+### ContainerBuildPipeline <a name="ContainerBuildPipeline" id="projen-pipelines.ContainerBuildPipeline"></a>
+
+Abstract base class for container build pipelines.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.ContainerBuildPipeline.Initializer"></a>
+
+```typescript
+import { ContainerBuildPipeline } from 'projen-pipelines'
+
+new ContainerBuildPipeline(project: Project, options: ContainerBuildPipelineOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.ContainerBuildPipelineOptions">ContainerBuildPipelineOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.ContainerBuildPipeline.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.ContainerBuildPipeline.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.ContainerBuildPipelineOptions">ContainerBuildPipelineOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.engineType">engineType</a></code> | Get the pipeline engine type. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.ContainerBuildPipeline.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.ContainerBuildPipeline.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.ContainerBuildPipeline.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.ContainerBuildPipeline.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+##### `engineType` <a name="engineType" id="projen-pipelines.ContainerBuildPipeline.engineType"></a>
+
+```typescript
+public engineType(): PipelineEngine
+```
+
+Get the pipeline engine type.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.ContainerBuildPipeline.isConstruct"></a>
+
+```typescript
+import { ContainerBuildPipeline } from 'projen-pipelines'
+
+ContainerBuildPipeline.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.ContainerBuildPipeline.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.ContainerBuildPipeline.isComponent"></a>
+
+```typescript
+import { ContainerBuildPipeline } from 'projen-pipelines'
+
+ContainerBuildPipeline.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.ContainerBuildPipeline.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.property.buildConfig">buildConfig</a></code> | <code><a href="#projen-pipelines.BuildConfig">BuildConfig</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.property.stages">stages</a></code> | <code><a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.property.taggingConfig">taggingConfig</a></code> | <code><a href="#projen-pipelines.TaggingConfig">TaggingConfig</a></code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.ContainerBuildPipeline.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.ContainerBuildPipeline.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `branchName`<sup>Required</sup> <a name="branchName" id="projen-pipelines.ContainerBuildPipeline.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+
+---
+
+##### `buildConfig`<sup>Required</sup> <a name="buildConfig" id="projen-pipelines.ContainerBuildPipeline.property.buildConfig"></a>
+
+```typescript
+public readonly buildConfig: BuildConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.BuildConfig">BuildConfig</a>
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.ContainerBuildPipeline.property.stages"></a>
+
+```typescript
+public readonly stages: ContainerBuildStage[];
+```
+
+- *Type:* <a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]
+
+---
+
+##### `taggingConfig`<sup>Required</sup> <a name="taggingConfig" id="projen-pipelines.ContainerBuildPipeline.property.taggingConfig"></a>
+
+```typescript
+public readonly taggingConfig: TaggingConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.TaggingConfig">TaggingConfig</a>
+
+---
+
+
 ### DriftDetectionWorkflow <a name="DriftDetectionWorkflow" id="projen-pipelines.DriftDetectionWorkflow"></a>
 
 #### Initializers <a name="Initializers" id="projen-pipelines.DriftDetectionWorkflow.Initializer"></a>
@@ -1450,6 +1668,224 @@ Indicates if versioned artifacts are needed based on manual approval requirement
 ---
 
 
+### GithubContainerBuildPipeline <a name="GithubContainerBuildPipeline" id="projen-pipelines.GithubContainerBuildPipeline"></a>
+
+GitHub implementation of container build pipeline.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GithubContainerBuildPipeline.Initializer"></a>
+
+```typescript
+import { GithubContainerBuildPipeline } from 'projen-pipelines'
+
+new GithubContainerBuildPipeline(project: GitHubProject, options: GithubContainerBuildPipelineOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.Initializer.parameter.project">project</a></code> | <code>projen.github.GitHubProject</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions">GithubContainerBuildPipelineOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubContainerBuildPipeline.Initializer.parameter.project"></a>
+
+- *Type:* projen.github.GitHubProject
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GithubContainerBuildPipeline.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GithubContainerBuildPipelineOptions">GithubContainerBuildPipelineOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.engineType">engineType</a></code> | Get the pipeline engine type. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GithubContainerBuildPipeline.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GithubContainerBuildPipeline.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GithubContainerBuildPipeline.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GithubContainerBuildPipeline.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+##### `engineType` <a name="engineType" id="projen-pipelines.GithubContainerBuildPipeline.engineType"></a>
+
+```typescript
+public engineType(): PipelineEngine
+```
+
+Get the pipeline engine type.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GithubContainerBuildPipeline.isConstruct"></a>
+
+```typescript
+import { GithubContainerBuildPipeline } from 'projen-pipelines'
+
+GithubContainerBuildPipeline.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubContainerBuildPipeline.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GithubContainerBuildPipeline.isComponent"></a>
+
+```typescript
+import { GithubContainerBuildPipeline } from 'projen-pipelines'
+
+GithubContainerBuildPipeline.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubContainerBuildPipeline.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.property.buildConfig">buildConfig</a></code> | <code><a href="#projen-pipelines.BuildConfig">BuildConfig</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.property.stages">stages</a></code> | <code><a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.property.taggingConfig">taggingConfig</a></code> | <code><a href="#projen-pipelines.TaggingConfig">TaggingConfig</a></code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GithubContainerBuildPipeline.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubContainerBuildPipeline.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `branchName`<sup>Required</sup> <a name="branchName" id="projen-pipelines.GithubContainerBuildPipeline.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+
+---
+
+##### `buildConfig`<sup>Required</sup> <a name="buildConfig" id="projen-pipelines.GithubContainerBuildPipeline.property.buildConfig"></a>
+
+```typescript
+public readonly buildConfig: BuildConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.BuildConfig">BuildConfig</a>
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.GithubContainerBuildPipeline.property.stages"></a>
+
+```typescript
+public readonly stages: ContainerBuildStage[];
+```
+
+- *Type:* <a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]
+
+---
+
+##### `taggingConfig`<sup>Required</sup> <a name="taggingConfig" id="projen-pipelines.GithubContainerBuildPipeline.property.taggingConfig"></a>
+
+```typescript
+public readonly taggingConfig: TaggingConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.TaggingConfig">TaggingConfig</a>
+
+---
+
+
 ### GitHubDriftDetectionWorkflow <a name="GitHubDriftDetectionWorkflow" id="projen-pipelines.GitHubDriftDetectionWorkflow"></a>
 
 #### Initializers <a name="Initializers" id="projen-pipelines.GitHubDriftDetectionWorkflow.Initializer"></a>
@@ -1929,6 +2365,224 @@ Currently set to false
 ---
 
 
+### GitlabContainerBuildPipeline <a name="GitlabContainerBuildPipeline" id="projen-pipelines.GitlabContainerBuildPipeline"></a>
+
+GitLab implementation of container build pipeline.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GitlabContainerBuildPipeline.Initializer"></a>
+
+```typescript
+import { GitlabContainerBuildPipeline } from 'projen-pipelines'
+
+new GitlabContainerBuildPipeline(project: Project, options: GitlabContainerBuildPipelineOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions">GitlabContainerBuildPipelineOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitlabContainerBuildPipeline.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GitlabContainerBuildPipeline.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GitlabContainerBuildPipelineOptions">GitlabContainerBuildPipelineOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.engineType">engineType</a></code> | Get the pipeline engine type. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GitlabContainerBuildPipeline.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitlabContainerBuildPipeline.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GitlabContainerBuildPipeline.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GitlabContainerBuildPipeline.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+##### `engineType` <a name="engineType" id="projen-pipelines.GitlabContainerBuildPipeline.engineType"></a>
+
+```typescript
+public engineType(): PipelineEngine
+```
+
+Get the pipeline engine type.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GitlabContainerBuildPipeline.isConstruct"></a>
+
+```typescript
+import { GitlabContainerBuildPipeline } from 'projen-pipelines'
+
+GitlabContainerBuildPipeline.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitlabContainerBuildPipeline.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GitlabContainerBuildPipeline.isComponent"></a>
+
+```typescript
+import { GitlabContainerBuildPipeline } from 'projen-pipelines'
+
+GitlabContainerBuildPipeline.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitlabContainerBuildPipeline.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.property.branchName">branchName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.property.buildConfig">buildConfig</a></code> | <code><a href="#projen-pipelines.BuildConfig">BuildConfig</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.property.stages">stages</a></code> | <code><a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.property.taggingConfig">taggingConfig</a></code> | <code><a href="#projen-pipelines.TaggingConfig">TaggingConfig</a></code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GitlabContainerBuildPipeline.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitlabContainerBuildPipeline.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `branchName`<sup>Required</sup> <a name="branchName" id="projen-pipelines.GitlabContainerBuildPipeline.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+
+---
+
+##### `buildConfig`<sup>Required</sup> <a name="buildConfig" id="projen-pipelines.GitlabContainerBuildPipeline.property.buildConfig"></a>
+
+```typescript
+public readonly buildConfig: BuildConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.BuildConfig">BuildConfig</a>
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.GitlabContainerBuildPipeline.property.stages"></a>
+
+```typescript
+public readonly stages: ContainerBuildStage[];
+```
+
+- *Type:* <a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]
+
+---
+
+##### `taggingConfig`<sup>Required</sup> <a name="taggingConfig" id="projen-pipelines.GitlabContainerBuildPipeline.property.taggingConfig"></a>
+
+```typescript
+public readonly taggingConfig: TaggingConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.TaggingConfig">TaggingConfig</a>
+
+---
+
+
 ### GitLabDriftDetectionWorkflow <a name="GitLabDriftDetectionWorkflow" id="projen-pipelines.GitLabDriftDetectionWorkflow"></a>
 
 #### Initializers <a name="Initializers" id="projen-pipelines.GitLabDriftDetectionWorkflow.Initializer"></a>
@@ -2353,6 +3007,105 @@ An identifier for the assumed role session.
 
 ---
 
+### AwsInspectorSbomStepOptions <a name="AwsInspectorSbomStepOptions" id="projen-pipelines.AwsInspectorSbomStepOptions"></a>
+
+Options for AWS Inspector SBOM generation step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.AwsInspectorSbomStepOptions.Initializer"></a>
+
+```typescript
+import { AwsInspectorSbomStepOptions } from 'projen-pipelines'
+
+const awsInspectorSbomStepOptions: AwsInspectorSbomStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStepOptions.property.image">image</a></code> | <code>string</code> | Image to generate SBOM for. |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStepOptions.property.region">region</a></code> | <code>string</code> | AWS region. |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStepOptions.property.format">format</a></code> | <code>string</code> | SBOM format. |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStepOptions.property.outputFile">outputFile</a></code> | <code>string</code> | Output file for SBOM. |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStepOptions.property.repositoryName">repositoryName</a></code> | <code>string</code> | ECR repository name (if using ECR). |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStepOptions.property.roleArn">roleArn</a></code> | <code>string</code> | IAM role to assume for AWS Inspector. |
+
+---
+
+##### `image`<sup>Required</sup> <a name="image" id="projen-pipelines.AwsInspectorSbomStepOptions.property.image"></a>
+
+```typescript
+public readonly image: string;
+```
+
+- *Type:* string
+
+Image to generate SBOM for.
+
+---
+
+##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.AwsInspectorSbomStepOptions.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+AWS region.
+
+---
+
+##### `format`<sup>Optional</sup> <a name="format" id="projen-pipelines.AwsInspectorSbomStepOptions.property.format"></a>
+
+```typescript
+public readonly format: string;
+```
+
+- *Type:* string
+- *Default:* 'cyclonedx'
+
+SBOM format.
+
+---
+
+##### `outputFile`<sup>Optional</sup> <a name="outputFile" id="projen-pipelines.AwsInspectorSbomStepOptions.property.outputFile"></a>
+
+```typescript
+public readonly outputFile: string;
+```
+
+- *Type:* string
+- *Default:* 'sbom.json'
+
+Output file for SBOM.
+
+---
+
+##### `repositoryName`<sup>Optional</sup> <a name="repositoryName" id="projen-pipelines.AwsInspectorSbomStepOptions.property.repositoryName"></a>
+
+```typescript
+public readonly repositoryName: string;
+```
+
+- *Type:* string
+
+ECR repository name (if using ECR).
+
+---
+
+##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.AwsInspectorSbomStepOptions.property.roleArn"></a>
+
+```typescript
+public readonly roleArn: string;
+```
+
+- *Type:* string
+
+IAM role to assume for AWS Inspector.
+
+---
+
 ### BashCDKPipelineOptions <a name="BashCDKPipelineOptions" id="projen-pipelines.BashCDKPipelineOptions"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.BashCDKPipelineOptions.Initializer"></a>
@@ -2678,6 +3431,107 @@ public readonly commands: string[];
 - *Type:* string[]
 
 Shell commands to execute.
+
+---
+
+### BuildConfig <a name="BuildConfig" id="projen-pipelines.BuildConfig"></a>
+
+Configuration for Docker build.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.BuildConfig.Initializer"></a>
+
+```typescript
+import { BuildConfig } from 'projen-pipelines'
+
+const buildConfig: BuildConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BuildConfig.property.buildArgs">buildArgs</a></code> | <code>{[ key: string ]: string}</code> | Build arguments. |
+| <code><a href="#projen-pipelines.BuildConfig.property.cache">cache</a></code> | <code>boolean</code> | Enable build cache. |
+| <code><a href="#projen-pipelines.BuildConfig.property.context">context</a></code> | <code>string</code> | Build context path. |
+| <code><a href="#projen-pipelines.BuildConfig.property.dockerfile">dockerfile</a></code> | <code>string</code> | Path to Dockerfile. |
+| <code><a href="#projen-pipelines.BuildConfig.property.platforms">platforms</a></code> | <code>string[]</code> | Platforms to build for. |
+| <code><a href="#projen-pipelines.BuildConfig.property.target">target</a></code> | <code>string</code> | Target stage for multi-stage builds. |
+
+---
+
+##### `buildArgs`<sup>Optional</sup> <a name="buildArgs" id="projen-pipelines.BuildConfig.property.buildArgs"></a>
+
+```typescript
+public readonly buildArgs: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Build arguments.
+
+---
+
+##### `cache`<sup>Optional</sup> <a name="cache" id="projen-pipelines.BuildConfig.property.cache"></a>
+
+```typescript
+public readonly cache: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Enable build cache.
+
+---
+
+##### `context`<sup>Optional</sup> <a name="context" id="projen-pipelines.BuildConfig.property.context"></a>
+
+```typescript
+public readonly context: string;
+```
+
+- *Type:* string
+- *Default:* '.'
+
+Build context path.
+
+---
+
+##### `dockerfile`<sup>Optional</sup> <a name="dockerfile" id="projen-pipelines.BuildConfig.property.dockerfile"></a>
+
+```typescript
+public readonly dockerfile: string;
+```
+
+- *Type:* string
+- *Default:* './Dockerfile'
+
+Path to Dockerfile.
+
+---
+
+##### `platforms`<sup>Optional</sup> <a name="platforms" id="projen-pipelines.BuildConfig.property.platforms"></a>
+
+```typescript
+public readonly platforms: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['linux/amd64']
+
+Platforms to build for.
+
+---
+
+##### `target`<sup>Optional</sup> <a name="target" id="projen-pipelines.BuildConfig.property.target"></a>
+
+```typescript
+public readonly target: string;
+```
+
+- *Type:* string
+
+Target stage for multi-stage builds.
 
 ---
 
@@ -3328,6 +4182,255 @@ public readonly repository: string;
 
 ---
 
+### ContainerBuildPipelineOptions <a name="ContainerBuildPipelineOptions" id="projen-pipelines.ContainerBuildPipelineOptions"></a>
+
+Options for container build pipeline.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.ContainerBuildPipelineOptions.Initializer"></a>
+
+```typescript
+import { ContainerBuildPipelineOptions } from 'projen-pipelines'
+
+const containerBuildPipelineOptions: ContainerBuildPipelineOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ContainerBuildPipelineOptions.property.buildConfig">buildConfig</a></code> | <code><a href="#projen-pipelines.BuildConfig">BuildConfig</a></code> | Build configuration. |
+| <code><a href="#projen-pipelines.ContainerBuildPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]</code> | Stages to build and push to. |
+| <code><a href="#projen-pipelines.ContainerBuildPipelineOptions.property.tagging">tagging</a></code> | <code><a href="#projen-pipelines.TaggingConfig">TaggingConfig</a></code> | Tagging configuration. |
+| <code><a href="#projen-pipelines.ContainerBuildPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | Branch name to trigger pipeline. |
+| <code><a href="#projen-pipelines.ContainerBuildPipelineOptions.property.enableFeatureBranches">enableFeatureBranches</a></code> | <code>boolean</code> | Enable feature branch builds. |
+| <code><a href="#projen-pipelines.ContainerBuildPipelineOptions.property.featureBranchRegistry">featureBranchRegistry</a></code> | <code><a href="#projen-pipelines.RegistryConfig">RegistryConfig</a></code> | Feature branch registry configuration. |
+| <code><a href="#projen-pipelines.ContainerBuildPipelineOptions.property.postBuildSteps">postBuildSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Post-build steps that run after all stages. |
+| <code><a href="#projen-pipelines.ContainerBuildPipelineOptions.property.preBuildSteps">preBuildSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Pre-build steps that run before any stage. |
+
+---
+
+##### `buildConfig`<sup>Required</sup> <a name="buildConfig" id="projen-pipelines.ContainerBuildPipelineOptions.property.buildConfig"></a>
+
+```typescript
+public readonly buildConfig: BuildConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.BuildConfig">BuildConfig</a>
+
+Build configuration.
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.ContainerBuildPipelineOptions.property.stages"></a>
+
+```typescript
+public readonly stages: ContainerBuildStage[];
+```
+
+- *Type:* <a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]
+
+Stages to build and push to.
+
+---
+
+##### `tagging`<sup>Required</sup> <a name="tagging" id="projen-pipelines.ContainerBuildPipelineOptions.property.tagging"></a>
+
+```typescript
+public readonly tagging: TaggingConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.TaggingConfig">TaggingConfig</a>
+
+Tagging configuration.
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.ContainerBuildPipelineOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+Branch name to trigger pipeline.
+
+---
+
+##### `enableFeatureBranches`<sup>Optional</sup> <a name="enableFeatureBranches" id="projen-pipelines.ContainerBuildPipelineOptions.property.enableFeatureBranches"></a>
+
+```typescript
+public readonly enableFeatureBranches: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable feature branch builds.
+
+---
+
+##### `featureBranchRegistry`<sup>Optional</sup> <a name="featureBranchRegistry" id="projen-pipelines.ContainerBuildPipelineOptions.property.featureBranchRegistry"></a>
+
+```typescript
+public readonly featureBranchRegistry: RegistryConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.RegistryConfig">RegistryConfig</a>
+
+Feature branch registry configuration.
+
+---
+
+##### `postBuildSteps`<sup>Optional</sup> <a name="postBuildSteps" id="projen-pipelines.ContainerBuildPipelineOptions.property.postBuildSteps"></a>
+
+```typescript
+public readonly postBuildSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Post-build steps that run after all stages.
+
+---
+
+##### `preBuildSteps`<sup>Optional</sup> <a name="preBuildSteps" id="projen-pipelines.ContainerBuildPipelineOptions.property.preBuildSteps"></a>
+
+```typescript
+public readonly preBuildSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Pre-build steps that run before any stage.
+
+---
+
+### ContainerBuildStage <a name="ContainerBuildStage" id="projen-pipelines.ContainerBuildStage"></a>
+
+Options for a container build pipeline stage.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.ContainerBuildStage.Initializer"></a>
+
+```typescript
+import { ContainerBuildStage } from 'projen-pipelines'
+
+const containerBuildStage: ContainerBuildStage = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ContainerBuildStage.property.name">name</a></code> | <code>string</code> | Stage name (e.g., 'dev', 'staging', 'prod'). |
+| <code><a href="#projen-pipelines.ContainerBuildStage.property.registries">registries</a></code> | <code><a href="#projen-pipelines.RegistryConfig">RegistryConfig</a>[]</code> | Registries to push to for this stage. |
+| <code><a href="#projen-pipelines.ContainerBuildStage.property.env">env</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
+| <code><a href="#projen-pipelines.ContainerBuildStage.property.manualApproval">manualApproval</a></code> | <code>boolean</code> | Whether this stage requires manual approval. |
+| <code><a href="#projen-pipelines.ContainerBuildStage.property.postBuildSteps">postBuildSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to run after building but before scanning. |
+| <code><a href="#projen-pipelines.ContainerBuildStage.property.postPushSteps">postPushSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to run after pushing. |
+| <code><a href="#projen-pipelines.ContainerBuildStage.property.preBuildSteps">preBuildSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to run before building. |
+| <code><a href="#projen-pipelines.ContainerBuildStage.property.scan">scan</a></code> | <code><a href="#projen-pipelines.ScanConfig">ScanConfig</a></code> | Scanning configuration for this stage. |
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.ContainerBuildStage.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+Stage name (e.g., 'dev', 'staging', 'prod').
+
+---
+
+##### `registries`<sup>Required</sup> <a name="registries" id="projen-pipelines.ContainerBuildStage.property.registries"></a>
+
+```typescript
+public readonly registries: RegistryConfig[];
+```
+
+- *Type:* <a href="#projen-pipelines.RegistryConfig">RegistryConfig</a>[]
+
+Registries to push to for this stage.
+
+---
+
+##### `env`<sup>Optional</sup> <a name="env" id="projen-pipelines.ContainerBuildStage.property.env"></a>
+
+```typescript
+public readonly env: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Environment variables for this stage.
+
+---
+
+##### `manualApproval`<sup>Optional</sup> <a name="manualApproval" id="projen-pipelines.ContainerBuildStage.property.manualApproval"></a>
+
+```typescript
+public readonly manualApproval: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Whether this stage requires manual approval.
+
+---
+
+##### `postBuildSteps`<sup>Optional</sup> <a name="postBuildSteps" id="projen-pipelines.ContainerBuildStage.property.postBuildSteps"></a>
+
+```typescript
+public readonly postBuildSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Additional steps to run after building but before scanning.
+
+---
+
+##### `postPushSteps`<sup>Optional</sup> <a name="postPushSteps" id="projen-pipelines.ContainerBuildStage.property.postPushSteps"></a>
+
+```typescript
+public readonly postPushSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Additional steps to run after pushing.
+
+---
+
+##### `preBuildSteps`<sup>Optional</sup> <a name="preBuildSteps" id="projen-pipelines.ContainerBuildStage.property.preBuildSteps"></a>
+
+```typescript
+public readonly preBuildSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Additional steps to run before building.
+
+---
+
+##### `scan`<sup>Optional</sup> <a name="scan" id="projen-pipelines.ContainerBuildStage.property.scan"></a>
+
+```typescript
+public readonly scan: ScanConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.ScanConfig">ScanConfig</a>
+
+Scanning configuration for this stage.
+
+---
+
 ### CustomVersioningConfig <a name="CustomVersioningConfig" id="projen-pipelines.CustomVersioningConfig"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.CustomVersioningConfig.Initializer"></a>
@@ -3532,6 +4635,256 @@ public readonly manualApproval: boolean;
 ```
 
 - *Type:* boolean
+
+---
+
+### DockerBuildStepOptions <a name="DockerBuildStepOptions" id="projen-pipelines.DockerBuildStepOptions"></a>
+
+Options for Docker build step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DockerBuildStepOptions.Initializer"></a>
+
+```typescript
+import { DockerBuildStepOptions } from 'projen-pipelines'
+
+const dockerBuildStepOptions: DockerBuildStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DockerBuildStepOptions.property.tags">tags</a></code> | <code>string[]</code> | Image name and tag Example: 'myapp:latest' or 'registry.example.com/myapp:v1.0.0'. |
+| <code><a href="#projen-pipelines.DockerBuildStepOptions.property.additionalOptions">additionalOptions</a></code> | <code>string[]</code> | Additional build options. |
+| <code><a href="#projen-pipelines.DockerBuildStepOptions.property.buildArgs">buildArgs</a></code> | <code>{[ key: string ]: string}</code> | Build arguments. |
+| <code><a href="#projen-pipelines.DockerBuildStepOptions.property.cache">cache</a></code> | <code>boolean</code> | Enable BuildKit cache. |
+| <code><a href="#projen-pipelines.DockerBuildStepOptions.property.context">context</a></code> | <code>string</code> | Build context path. |
+| <code><a href="#projen-pipelines.DockerBuildStepOptions.property.dockerfile">dockerfile</a></code> | <code>string</code> | Path to the Dockerfile. |
+| <code><a href="#projen-pipelines.DockerBuildStepOptions.property.platforms">platforms</a></code> | <code>string[]</code> | Platform(s) to build for. |
+| <code><a href="#projen-pipelines.DockerBuildStepOptions.property.target">target</a></code> | <code>string</code> | Target stage for multi-stage builds. |
+
+---
+
+##### `tags`<sup>Required</sup> <a name="tags" id="projen-pipelines.DockerBuildStepOptions.property.tags"></a>
+
+```typescript
+public readonly tags: string[];
+```
+
+- *Type:* string[]
+
+Image name and tag Example: 'myapp:latest' or 'registry.example.com/myapp:v1.0.0'.
+
+---
+
+##### `additionalOptions`<sup>Optional</sup> <a name="additionalOptions" id="projen-pipelines.DockerBuildStepOptions.property.additionalOptions"></a>
+
+```typescript
+public readonly additionalOptions: string[];
+```
+
+- *Type:* string[]
+
+Additional build options.
+
+---
+
+##### `buildArgs`<sup>Optional</sup> <a name="buildArgs" id="projen-pipelines.DockerBuildStepOptions.property.buildArgs"></a>
+
+```typescript
+public readonly buildArgs: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+- *Default:* {}
+
+Build arguments.
+
+---
+
+##### `cache`<sup>Optional</sup> <a name="cache" id="projen-pipelines.DockerBuildStepOptions.property.cache"></a>
+
+```typescript
+public readonly cache: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Enable BuildKit cache.
+
+---
+
+##### `context`<sup>Optional</sup> <a name="context" id="projen-pipelines.DockerBuildStepOptions.property.context"></a>
+
+```typescript
+public readonly context: string;
+```
+
+- *Type:* string
+- *Default:* '.'
+
+Build context path.
+
+---
+
+##### `dockerfile`<sup>Optional</sup> <a name="dockerfile" id="projen-pipelines.DockerBuildStepOptions.property.dockerfile"></a>
+
+```typescript
+public readonly dockerfile: string;
+```
+
+- *Type:* string
+- *Default:* './Dockerfile'
+
+Path to the Dockerfile.
+
+---
+
+##### `platforms`<sup>Optional</sup> <a name="platforms" id="projen-pipelines.DockerBuildStepOptions.property.platforms"></a>
+
+```typescript
+public readonly platforms: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['linux/amd64']
+
+Platform(s) to build for.
+
+---
+
+##### `target`<sup>Optional</sup> <a name="target" id="projen-pipelines.DockerBuildStepOptions.property.target"></a>
+
+```typescript
+public readonly target: string;
+```
+
+- *Type:* string
+
+Target stage for multi-stage builds.
+
+---
+
+### DockerHubLoginStepOptions <a name="DockerHubLoginStepOptions" id="projen-pipelines.DockerHubLoginStepOptions"></a>
+
+Options for Docker Hub login step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DockerHubLoginStepOptions.Initializer"></a>
+
+```typescript
+import { DockerHubLoginStepOptions } from 'projen-pipelines'
+
+const dockerHubLoginStepOptions: DockerHubLoginStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DockerHubLoginStepOptions.property.password">password</a></code> | <code>string</code> | Password/token for Docker Hub authentication For GitHub: Use ${{ secrets.DOCKERHUB_TOKEN }} For GitLab: Use $DOCKERHUB_TOKEN (from CI/CD variables). |
+| <code><a href="#projen-pipelines.DockerHubLoginStepOptions.property.username">username</a></code> | <code>string</code> | Username for Docker Hub authentication For GitHub: Use ${{ secrets.DOCKERHUB_USERNAME }} For GitLab: Use $DOCKERHUB_USERNAME (from CI/CD variables). |
+
+---
+
+##### `password`<sup>Required</sup> <a name="password" id="projen-pipelines.DockerHubLoginStepOptions.property.password"></a>
+
+```typescript
+public readonly password: string;
+```
+
+- *Type:* string
+
+Password/token for Docker Hub authentication For GitHub: Use ${{ secrets.DOCKERHUB_TOKEN }} For GitLab: Use $DOCKERHUB_TOKEN (from CI/CD variables).
+
+---
+
+##### `username`<sup>Required</sup> <a name="username" id="projen-pipelines.DockerHubLoginStepOptions.property.username"></a>
+
+```typescript
+public readonly username: string;
+```
+
+- *Type:* string
+
+Username for Docker Hub authentication For GitHub: Use ${{ secrets.DOCKERHUB_USERNAME }} For GitLab: Use $DOCKERHUB_USERNAME (from CI/CD variables).
+
+---
+
+### DockerPushStepOptions <a name="DockerPushStepOptions" id="projen-pipelines.DockerPushStepOptions"></a>
+
+Options for Docker push step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DockerPushStepOptions.Initializer"></a>
+
+```typescript
+import { DockerPushStepOptions } from 'projen-pipelines'
+
+const dockerPushStepOptions: DockerPushStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DockerPushStepOptions.property.tags">tags</a></code> | <code>string[]</code> | Image tags to push. |
+
+---
+
+##### `tags`<sup>Required</sup> <a name="tags" id="projen-pipelines.DockerPushStepOptions.property.tags"></a>
+
+```typescript
+public readonly tags: string[];
+```
+
+- *Type:* string[]
+
+Image tags to push.
+
+---
+
+### DockerTagStepOptions <a name="DockerTagStepOptions" id="projen-pipelines.DockerTagStepOptions"></a>
+
+Options for Docker tag step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DockerTagStepOptions.Initializer"></a>
+
+```typescript
+import { DockerTagStepOptions } from 'projen-pipelines'
+
+const dockerTagStepOptions: DockerTagStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DockerTagStepOptions.property.sourceImage">sourceImage</a></code> | <code>string</code> | Source image name and tag. |
+| <code><a href="#projen-pipelines.DockerTagStepOptions.property.targetTags">targetTags</a></code> | <code>string[]</code> | Target tags to apply. |
+
+---
+
+##### `sourceImage`<sup>Required</sup> <a name="sourceImage" id="projen-pipelines.DockerTagStepOptions.property.sourceImage"></a>
+
+```typescript
+public readonly sourceImage: string;
+```
+
+- *Type:* string
+
+Source image name and tag.
+
+---
+
+##### `targetTags`<sup>Required</sup> <a name="targetTags" id="projen-pipelines.DockerTagStepOptions.property.targetTags"></a>
+
+```typescript
+public readonly targetTags: string[];
+```
+
+- *Type:* string[]
+
+Target tags to apply.
 
 ---
 
@@ -3891,6 +5244,64 @@ public readonly message: string;
 - *Type:* string
 
 Optional message to display.
+
+---
+
+### EcrLoginStepOptions <a name="EcrLoginStepOptions" id="projen-pipelines.EcrLoginStepOptions"></a>
+
+Options for ECR login step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.EcrLoginStepOptions.Initializer"></a>
+
+```typescript
+import { EcrLoginStepOptions } from 'projen-pipelines'
+
+const ecrLoginStepOptions: EcrLoginStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.EcrLoginStepOptions.property.region">region</a></code> | <code>string</code> | AWS region for the ECR registry. |
+| <code><a href="#projen-pipelines.EcrLoginStepOptions.property.accountId">accountId</a></code> | <code>string</code> | AWS account ID (optional, will use caller account if not specified). |
+| <code><a href="#projen-pipelines.EcrLoginStepOptions.property.roleArn">roleArn</a></code> | <code>string</code> | IAM role to assume for ECR access (optional). |
+
+---
+
+##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.EcrLoginStepOptions.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+AWS region for the ECR registry.
+
+---
+
+##### `accountId`<sup>Optional</sup> <a name="accountId" id="projen-pipelines.EcrLoginStepOptions.property.accountId"></a>
+
+```typescript
+public readonly accountId: string;
+```
+
+- *Type:* string
+
+AWS account ID (optional, will use caller account if not specified).
+
+---
+
+##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.EcrLoginStepOptions.property.roleArn"></a>
+
+```typescript
+public readonly roleArn: string;
+```
+
+- *Type:* string
+
+IAM role to assume for ECR access (optional).
 
 ---
 
@@ -4274,6 +5685,159 @@ public readonly useGithubPackagesForAssembly: boolean;
 use GitHub Packages to store vesioned artifacts of cloud assembly;
 
 also needed for manual approvals
+
+---
+
+### GithubContainerBuildPipelineOptions <a name="GithubContainerBuildPipelineOptions" id="projen-pipelines.GithubContainerBuildPipelineOptions"></a>
+
+Options for GitHub container build pipeline.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GithubContainerBuildPipelineOptions.Initializer"></a>
+
+```typescript
+import { GithubContainerBuildPipelineOptions } from 'projen-pipelines'
+
+const githubContainerBuildPipelineOptions: GithubContainerBuildPipelineOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.buildConfig">buildConfig</a></code> | <code><a href="#projen-pipelines.BuildConfig">BuildConfig</a></code> | Build configuration. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]</code> | Stages to build and push to. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.tagging">tagging</a></code> | <code><a href="#projen-pipelines.TaggingConfig">TaggingConfig</a></code> | Tagging configuration. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | Branch name to trigger pipeline. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.enableFeatureBranches">enableFeatureBranches</a></code> | <code>boolean</code> | Enable feature branch builds. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.featureBranchRegistry">featureBranchRegistry</a></code> | <code><a href="#projen-pipelines.RegistryConfig">RegistryConfig</a></code> | Feature branch registry configuration. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.postBuildSteps">postBuildSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Post-build steps that run after all stages. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.preBuildSteps">preBuildSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Pre-build steps that run before any stage. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.nodeVersion">nodeVersion</a></code> | <code>string</code> | Node.js version for the workflow. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | Runner tags to use for builds. |
+
+---
+
+##### `buildConfig`<sup>Required</sup> <a name="buildConfig" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.buildConfig"></a>
+
+```typescript
+public readonly buildConfig: BuildConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.BuildConfig">BuildConfig</a>
+
+Build configuration.
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.stages"></a>
+
+```typescript
+public readonly stages: ContainerBuildStage[];
+```
+
+- *Type:* <a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]
+
+Stages to build and push to.
+
+---
+
+##### `tagging`<sup>Required</sup> <a name="tagging" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.tagging"></a>
+
+```typescript
+public readonly tagging: TaggingConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.TaggingConfig">TaggingConfig</a>
+
+Tagging configuration.
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+Branch name to trigger pipeline.
+
+---
+
+##### `enableFeatureBranches`<sup>Optional</sup> <a name="enableFeatureBranches" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.enableFeatureBranches"></a>
+
+```typescript
+public readonly enableFeatureBranches: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable feature branch builds.
+
+---
+
+##### `featureBranchRegistry`<sup>Optional</sup> <a name="featureBranchRegistry" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.featureBranchRegistry"></a>
+
+```typescript
+public readonly featureBranchRegistry: RegistryConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.RegistryConfig">RegistryConfig</a>
+
+Feature branch registry configuration.
+
+---
+
+##### `postBuildSteps`<sup>Optional</sup> <a name="postBuildSteps" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.postBuildSteps"></a>
+
+```typescript
+public readonly postBuildSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Post-build steps that run after all stages.
+
+---
+
+##### `preBuildSteps`<sup>Optional</sup> <a name="preBuildSteps" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.preBuildSteps"></a>
+
+```typescript
+public readonly preBuildSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Pre-build steps that run before any stage.
+
+---
+
+##### `nodeVersion`<sup>Optional</sup> <a name="nodeVersion" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.nodeVersion"></a>
+
+```typescript
+public readonly nodeVersion: string;
+```
+
+- *Type:* string
+- *Default:* '20'
+
+Node.js version for the workflow.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GithubContainerBuildPipelineOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['ubuntu-latest']
+
+Runner tags to use for builds.
 
 ---
 
@@ -4884,6 +6448,172 @@ Runner tags configuration for the pipeline.
 
 ---
 
+### GitlabContainerBuildPipelineOptions <a name="GitlabContainerBuildPipelineOptions" id="projen-pipelines.GitlabContainerBuildPipelineOptions"></a>
+
+Options for GitLab container build pipeline.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitlabContainerBuildPipelineOptions.Initializer"></a>
+
+```typescript
+import { GitlabContainerBuildPipelineOptions } from 'projen-pipelines'
+
+const gitlabContainerBuildPipelineOptions: GitlabContainerBuildPipelineOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.buildConfig">buildConfig</a></code> | <code><a href="#projen-pipelines.BuildConfig">BuildConfig</a></code> | Build configuration. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]</code> | Stages to build and push to. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.tagging">tagging</a></code> | <code><a href="#projen-pipelines.TaggingConfig">TaggingConfig</a></code> | Tagging configuration. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | Branch name to trigger pipeline. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.enableFeatureBranches">enableFeatureBranches</a></code> | <code>boolean</code> | Enable feature branch builds. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.featureBranchRegistry">featureBranchRegistry</a></code> | <code><a href="#projen-pipelines.RegistryConfig">RegistryConfig</a></code> | Feature branch registry configuration. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.postBuildSteps">postBuildSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Post-build steps that run after all stages. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.preBuildSteps">preBuildSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Pre-build steps that run before any stage. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.image">image</a></code> | <code>string</code> | Docker image to use for the pipeline. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | Runner tags for builds. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipelineOptions.property.services">services</a></code> | <code>string[]</code> | Services to use (e.g., docker:dind). |
+
+---
+
+##### `buildConfig`<sup>Required</sup> <a name="buildConfig" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.buildConfig"></a>
+
+```typescript
+public readonly buildConfig: BuildConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.BuildConfig">BuildConfig</a>
+
+Build configuration.
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.stages"></a>
+
+```typescript
+public readonly stages: ContainerBuildStage[];
+```
+
+- *Type:* <a href="#projen-pipelines.ContainerBuildStage">ContainerBuildStage</a>[]
+
+Stages to build and push to.
+
+---
+
+##### `tagging`<sup>Required</sup> <a name="tagging" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.tagging"></a>
+
+```typescript
+public readonly tagging: TaggingConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.TaggingConfig">TaggingConfig</a>
+
+Tagging configuration.
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+Branch name to trigger pipeline.
+
+---
+
+##### `enableFeatureBranches`<sup>Optional</sup> <a name="enableFeatureBranches" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.enableFeatureBranches"></a>
+
+```typescript
+public readonly enableFeatureBranches: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable feature branch builds.
+
+---
+
+##### `featureBranchRegistry`<sup>Optional</sup> <a name="featureBranchRegistry" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.featureBranchRegistry"></a>
+
+```typescript
+public readonly featureBranchRegistry: RegistryConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.RegistryConfig">RegistryConfig</a>
+
+Feature branch registry configuration.
+
+---
+
+##### `postBuildSteps`<sup>Optional</sup> <a name="postBuildSteps" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.postBuildSteps"></a>
+
+```typescript
+public readonly postBuildSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Post-build steps that run after all stages.
+
+---
+
+##### `preBuildSteps`<sup>Optional</sup> <a name="preBuildSteps" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.preBuildSteps"></a>
+
+```typescript
+public readonly preBuildSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Pre-build steps that run before any stage.
+
+---
+
+##### `image`<sup>Optional</sup> <a name="image" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.image"></a>
+
+```typescript
+public readonly image: string;
+```
+
+- *Type:* string
+- *Default:* 'docker:24-dind'
+
+Docker image to use for the pipeline.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+
+Runner tags for builds.
+
+---
+
+##### `services`<sup>Optional</sup> <a name="services" id="projen-pipelines.GitlabContainerBuildPipelineOptions.property.services"></a>
+
+```typescript
+public readonly services: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['docker:24-dind']
+
+Services to use (e.g., docker:dind).
+
+---
+
 ### GitLabDriftDetectionWorkflowOptions <a name="GitLabDriftDetectionWorkflowOptions" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.Initializer"></a>
@@ -5192,6 +6922,64 @@ public readonly stripPrefix: string;
 - *Type:* string
 
 Strip prefix from tag.
+
+---
+
+### HarborLoginStepOptions <a name="HarborLoginStepOptions" id="projen-pipelines.HarborLoginStepOptions"></a>
+
+Options for Harbor registry login step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.HarborLoginStepOptions.Initializer"></a>
+
+```typescript
+import { HarborLoginStepOptions } from 'projen-pipelines'
+
+const harborLoginStepOptions: HarborLoginStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.HarborLoginStepOptions.property.password">password</a></code> | <code>string</code> | Password/token for Harbor authentication For GitHub: Use ${{ secrets.HARBOR_PASSWORD }} For GitLab: Use $HARBOR_PASSWORD (from CI/CD variables). |
+| <code><a href="#projen-pipelines.HarborLoginStepOptions.property.registryUrl">registryUrl</a></code> | <code>string</code> | Harbor registry URL (e.g., 'harbor.example.com'). |
+| <code><a href="#projen-pipelines.HarborLoginStepOptions.property.username">username</a></code> | <code>string</code> | Username for Harbor authentication For GitHub: Use ${{ secrets.HARBOR_USERNAME }} For GitLab: Use $HARBOR_USERNAME (from CI/CD variables). |
+
+---
+
+##### `password`<sup>Required</sup> <a name="password" id="projen-pipelines.HarborLoginStepOptions.property.password"></a>
+
+```typescript
+public readonly password: string;
+```
+
+- *Type:* string
+
+Password/token for Harbor authentication For GitHub: Use ${{ secrets.HARBOR_PASSWORD }} For GitLab: Use $HARBOR_PASSWORD (from CI/CD variables).
+
+---
+
+##### `registryUrl`<sup>Required</sup> <a name="registryUrl" id="projen-pipelines.HarborLoginStepOptions.property.registryUrl"></a>
+
+```typescript
+public readonly registryUrl: string;
+```
+
+- *Type:* string
+
+Harbor registry URL (e.g., 'harbor.example.com').
+
+---
+
+##### `username`<sup>Required</sup> <a name="username" id="projen-pipelines.HarborLoginStepOptions.property.username"></a>
+
+```typescript
+public readonly username: string;
+```
+
+- *Type:* string
+
+Username for Harbor authentication For GitHub: Use ${{ secrets.HARBOR_USERNAME }} For GitLab: Use $HARBOR_USERNAME (from CI/CD variables).
 
 ---
 
@@ -5685,6 +7473,231 @@ public readonly splitParameters: boolean;
 
 ---
 
+### RegistryConfig <a name="RegistryConfig" id="projen-pipelines.RegistryConfig"></a>
+
+Configuration for container registry.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.RegistryConfig.Initializer"></a>
+
+```typescript
+import { RegistryConfig } from 'projen-pipelines'
+
+const registryConfig: RegistryConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.RegistryConfig.property.type">type</a></code> | <code>string</code> | Type of registry. |
+| <code><a href="#projen-pipelines.RegistryConfig.property.accountId">accountId</a></code> | <code>string</code> | AWS account ID (for ECR). |
+| <code><a href="#projen-pipelines.RegistryConfig.property.passwordSecret">passwordSecret</a></code> | <code>string</code> | Password secret/variable name For GitHub: secrets.DOCKER_PASSWORD For GitLab: $DOCKER_PASSWORD. |
+| <code><a href="#projen-pipelines.RegistryConfig.property.region">region</a></code> | <code>string</code> | AWS region (for ECR). |
+| <code><a href="#projen-pipelines.RegistryConfig.property.roleArn">roleArn</a></code> | <code>string</code> | IAM role ARN to assume (for ECR). |
+| <code><a href="#projen-pipelines.RegistryConfig.property.url">url</a></code> | <code>string</code> | Registry URL (for Harbor and custom registries). |
+| <code><a href="#projen-pipelines.RegistryConfig.property.usernameSecret">usernameSecret</a></code> | <code>string</code> | Username secret/variable name For GitHub: secrets.DOCKER_USERNAME For GitLab: $DOCKER_USERNAME. |
+
+---
+
+##### `type`<sup>Required</sup> <a name="type" id="projen-pipelines.RegistryConfig.property.type"></a>
+
+```typescript
+public readonly type: string;
+```
+
+- *Type:* string
+
+Type of registry.
+
+---
+
+##### `accountId`<sup>Optional</sup> <a name="accountId" id="projen-pipelines.RegistryConfig.property.accountId"></a>
+
+```typescript
+public readonly accountId: string;
+```
+
+- *Type:* string
+
+AWS account ID (for ECR).
+
+---
+
+##### `passwordSecret`<sup>Optional</sup> <a name="passwordSecret" id="projen-pipelines.RegistryConfig.property.passwordSecret"></a>
+
+```typescript
+public readonly passwordSecret: string;
+```
+
+- *Type:* string
+
+Password secret/variable name For GitHub: secrets.DOCKER_PASSWORD For GitLab: $DOCKER_PASSWORD.
+
+---
+
+##### `region`<sup>Optional</sup> <a name="region" id="projen-pipelines.RegistryConfig.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+AWS region (for ECR).
+
+---
+
+##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.RegistryConfig.property.roleArn"></a>
+
+```typescript
+public readonly roleArn: string;
+```
+
+- *Type:* string
+
+IAM role ARN to assume (for ECR).
+
+---
+
+##### `url`<sup>Optional</sup> <a name="url" id="projen-pipelines.RegistryConfig.property.url"></a>
+
+```typescript
+public readonly url: string;
+```
+
+- *Type:* string
+
+Registry URL (for Harbor and custom registries).
+
+---
+
+##### `usernameSecret`<sup>Optional</sup> <a name="usernameSecret" id="projen-pipelines.RegistryConfig.property.usernameSecret"></a>
+
+```typescript
+public readonly usernameSecret: string;
+```
+
+- *Type:* string
+
+Username secret/variable name For GitHub: secrets.DOCKER_USERNAME For GitLab: $DOCKER_USERNAME.
+
+---
+
+### ScanConfig <a name="ScanConfig" id="projen-pipelines.ScanConfig"></a>
+
+Configuration for image scanning.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.ScanConfig.Initializer"></a>
+
+```typescript
+import { ScanConfig } from 'projen-pipelines'
+
+const scanConfig: ScanConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ScanConfig.property.awsInspectorRegion">awsInspectorRegion</a></code> | <code>string</code> | AWS region for Inspector. |
+| <code><a href="#projen-pipelines.ScanConfig.property.awsInspectorRoleArn">awsInspectorRoleArn</a></code> | <code>string</code> | IAM role for Inspector. |
+| <code><a href="#projen-pipelines.ScanConfig.property.awsInspectorSbom">awsInspectorSbom</a></code> | <code>boolean</code> | Enable AWS Inspector SBOM generation. |
+| <code><a href="#projen-pipelines.ScanConfig.property.failOnVulnerabilities">failOnVulnerabilities</a></code> | <code>boolean</code> | Fail build on vulnerabilities. |
+| <code><a href="#projen-pipelines.ScanConfig.property.sbomFormat">sbomFormat</a></code> | <code>string</code> | SBOM format. |
+| <code><a href="#projen-pipelines.ScanConfig.property.trivy">trivy</a></code> | <code>boolean</code> | Enable Trivy scanning. |
+| <code><a href="#projen-pipelines.ScanConfig.property.trivySeverity">trivySeverity</a></code> | <code>string[]</code> | Trivy severity levels to report. |
+
+---
+
+##### `awsInspectorRegion`<sup>Optional</sup> <a name="awsInspectorRegion" id="projen-pipelines.ScanConfig.property.awsInspectorRegion"></a>
+
+```typescript
+public readonly awsInspectorRegion: string;
+```
+
+- *Type:* string
+
+AWS region for Inspector.
+
+---
+
+##### `awsInspectorRoleArn`<sup>Optional</sup> <a name="awsInspectorRoleArn" id="projen-pipelines.ScanConfig.property.awsInspectorRoleArn"></a>
+
+```typescript
+public readonly awsInspectorRoleArn: string;
+```
+
+- *Type:* string
+
+IAM role for Inspector.
+
+---
+
+##### `awsInspectorSbom`<sup>Optional</sup> <a name="awsInspectorSbom" id="projen-pipelines.ScanConfig.property.awsInspectorSbom"></a>
+
+```typescript
+public readonly awsInspectorSbom: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable AWS Inspector SBOM generation.
+
+---
+
+##### `failOnVulnerabilities`<sup>Optional</sup> <a name="failOnVulnerabilities" id="projen-pipelines.ScanConfig.property.failOnVulnerabilities"></a>
+
+```typescript
+public readonly failOnVulnerabilities: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Fail build on vulnerabilities.
+
+---
+
+##### `sbomFormat`<sup>Optional</sup> <a name="sbomFormat" id="projen-pipelines.ScanConfig.property.sbomFormat"></a>
+
+```typescript
+public readonly sbomFormat: string;
+```
+
+- *Type:* string
+- *Default:* 'cyclonedx'
+
+SBOM format.
+
+---
+
+##### `trivy`<sup>Optional</sup> <a name="trivy" id="projen-pipelines.ScanConfig.property.trivy"></a>
+
+```typescript
+public readonly trivy: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable Trivy scanning.
+
+---
+
+##### `trivySeverity`<sup>Optional</sup> <a name="trivySeverity" id="projen-pipelines.ScanConfig.property.trivySeverity"></a>
+
+```typescript
+public readonly trivySeverity: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['CRITICAL', 'HIGH']
+
+Trivy severity levels to report.
+
+---
+
 ### StageOptions <a name="StageOptions" id="projen-pipelines.StageOptions"></a>
 
 Options for a CDK stage like the target environment.
@@ -5790,6 +7803,223 @@ public readonly parameterName: string;
 ```
 
 - *Type:* string
+
+---
+
+### TaggingConfig <a name="TaggingConfig" id="projen-pipelines.TaggingConfig"></a>
+
+Configuration for image tagging strategy.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.TaggingConfig.Initializer"></a>
+
+```typescript
+import { TaggingConfig } from 'projen-pipelines'
+
+const taggingConfig: TaggingConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.TaggingConfig.property.imageName">imageName</a></code> | <code>string</code> | Base image name (e.g., 'myapp' or 'myregistry.com/myapp'). |
+| <code><a href="#projen-pipelines.TaggingConfig.property.customTags">customTags</a></code> | <code>string[]</code> | Custom tags to add. |
+| <code><a href="#projen-pipelines.TaggingConfig.property.includeLatest">includeLatest</a></code> | <code>boolean</code> | Always include 'latest' tag. |
+| <code><a href="#projen-pipelines.TaggingConfig.property.tagWithBranch">tagWithBranch</a></code> | <code>boolean</code> | Tag with git branch name. |
+| <code><a href="#projen-pipelines.TaggingConfig.property.tagWithCommitSha">tagWithCommitSha</a></code> | <code>boolean</code> | Tag with git commit SHA. |
+| <code><a href="#projen-pipelines.TaggingConfig.property.tagWithSemver">tagWithSemver</a></code> | <code>boolean</code> | Tag with semantic version (from git tags). |
+
+---
+
+##### `imageName`<sup>Required</sup> <a name="imageName" id="projen-pipelines.TaggingConfig.property.imageName"></a>
+
+```typescript
+public readonly imageName: string;
+```
+
+- *Type:* string
+
+Base image name (e.g., 'myapp' or 'myregistry.com/myapp').
+
+---
+
+##### `customTags`<sup>Optional</sup> <a name="customTags" id="projen-pipelines.TaggingConfig.property.customTags"></a>
+
+```typescript
+public readonly customTags: string[];
+```
+
+- *Type:* string[]
+- *Default:* []
+
+Custom tags to add.
+
+---
+
+##### `includeLatest`<sup>Optional</sup> <a name="includeLatest" id="projen-pipelines.TaggingConfig.property.includeLatest"></a>
+
+```typescript
+public readonly includeLatest: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Always include 'latest' tag.
+
+---
+
+##### `tagWithBranch`<sup>Optional</sup> <a name="tagWithBranch" id="projen-pipelines.TaggingConfig.property.tagWithBranch"></a>
+
+```typescript
+public readonly tagWithBranch: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Tag with git branch name.
+
+---
+
+##### `tagWithCommitSha`<sup>Optional</sup> <a name="tagWithCommitSha" id="projen-pipelines.TaggingConfig.property.tagWithCommitSha"></a>
+
+```typescript
+public readonly tagWithCommitSha: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Tag with git commit SHA.
+
+---
+
+##### `tagWithSemver`<sup>Optional</sup> <a name="tagWithSemver" id="projen-pipelines.TaggingConfig.property.tagWithSemver"></a>
+
+```typescript
+public readonly tagWithSemver: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Tag with semantic version (from git tags).
+
+---
+
+### TrivyScanStepOptions <a name="TrivyScanStepOptions" id="projen-pipelines.TrivyScanStepOptions"></a>
+
+Options for Trivy scan step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.TrivyScanStepOptions.Initializer"></a>
+
+```typescript
+import { TrivyScanStepOptions } from 'projen-pipelines'
+
+const trivyScanStepOptions: TrivyScanStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.TrivyScanStepOptions.property.image">image</a></code> | <code>string</code> | Image to scan. |
+| <code><a href="#projen-pipelines.TrivyScanStepOptions.property.exitCode">exitCode</a></code> | <code>number</code> | Exit code when vulnerabilities are found. |
+| <code><a href="#projen-pipelines.TrivyScanStepOptions.property.format">format</a></code> | <code>string</code> | Output format. |
+| <code><a href="#projen-pipelines.TrivyScanStepOptions.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | Ignore unfixed vulnerabilities. |
+| <code><a href="#projen-pipelines.TrivyScanStepOptions.property.outputFile">outputFile</a></code> | <code>string</code> | Output file path (optional). |
+| <code><a href="#projen-pipelines.TrivyScanStepOptions.property.scanType">scanType</a></code> | <code>string</code> | Scan type. |
+| <code><a href="#projen-pipelines.TrivyScanStepOptions.property.severity">severity</a></code> | <code>string[]</code> | Severity levels to report. |
+
+---
+
+##### `image`<sup>Required</sup> <a name="image" id="projen-pipelines.TrivyScanStepOptions.property.image"></a>
+
+```typescript
+public readonly image: string;
+```
+
+- *Type:* string
+
+Image to scan.
+
+---
+
+##### `exitCode`<sup>Optional</sup> <a name="exitCode" id="projen-pipelines.TrivyScanStepOptions.property.exitCode"></a>
+
+```typescript
+public readonly exitCode: number;
+```
+
+- *Type:* number
+- *Default:* 1
+
+Exit code when vulnerabilities are found.
+
+---
+
+##### `format`<sup>Optional</sup> <a name="format" id="projen-pipelines.TrivyScanStepOptions.property.format"></a>
+
+```typescript
+public readonly format: string;
+```
+
+- *Type:* string
+- *Default:* 'table'
+
+Output format.
+
+---
+
+##### `ignoreUnfixed`<sup>Optional</sup> <a name="ignoreUnfixed" id="projen-pipelines.TrivyScanStepOptions.property.ignoreUnfixed"></a>
+
+```typescript
+public readonly ignoreUnfixed: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Ignore unfixed vulnerabilities.
+
+---
+
+##### `outputFile`<sup>Optional</sup> <a name="outputFile" id="projen-pipelines.TrivyScanStepOptions.property.outputFile"></a>
+
+```typescript
+public readonly outputFile: string;
+```
+
+- *Type:* string
+
+Output file path (optional).
+
+---
+
+##### `scanType`<sup>Optional</sup> <a name="scanType" id="projen-pipelines.TrivyScanStepOptions.property.scanType"></a>
+
+```typescript
+public readonly scanType: string;
+```
+
+- *Type:* string
+- *Default:* 'image'
+
+Scan type.
+
+---
+
+##### `severity`<sup>Optional</sup> <a name="severity" id="projen-pipelines.TrivyScanStepOptions.property.severity"></a>
+
+```typescript
+public readonly severity: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['CRITICAL', 'HIGH']
+
+Severity levels to report.
 
 ---
 
@@ -6173,6 +8403,111 @@ Should be implemented by subclasses.
 
 
 
+### AwsInspectorSbomStep <a name="AwsInspectorSbomStep" id="projen-pipelines.AwsInspectorSbomStep"></a>
+
+Step to generate SBOM using AWS Inspector.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.AwsInspectorSbomStep.Initializer"></a>
+
+```typescript
+import { AwsInspectorSbomStep } from 'projen-pipelines'
+
+new AwsInspectorSbomStep(project: Project, options: AwsInspectorSbomStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.AwsInspectorSbomStepOptions">AwsInspectorSbomStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.AwsInspectorSbomStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.AwsInspectorSbomStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.AwsInspectorSbomStepOptions">AwsInspectorSbomStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.AwsInspectorSbomStep.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.AwsInspectorSbomStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.AwsInspectorSbomStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the sequence of steps into a CodeCatalyst Actions step configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.AwsInspectorSbomStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.AwsInspectorSbomStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.AwsInspectorSbomStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.AwsInspectorSbomStep.addSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.AwsInspectorSbomStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.AwsInspectorSbomStep.prependSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+
+
+
 ### CloudFormationOutput <a name="CloudFormationOutput" id="projen-pipelines.CloudFormationOutput"></a>
 
 CloudFormation output configuration.
@@ -6464,6 +8799,354 @@ public readonly strategy: VersioningStrategy;
 ---
 
 
+### DockerBuildStep <a name="DockerBuildStep" id="projen-pipelines.DockerBuildStep"></a>
+
+Step to build a Docker image.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DockerBuildStep.Initializer"></a>
+
+```typescript
+import { DockerBuildStep } from 'projen-pipelines'
+
+new DockerBuildStep(project: Project, options: DockerBuildStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DockerBuildStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.DockerBuildStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.DockerBuildStepOptions">DockerBuildStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DockerBuildStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.DockerBuildStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.DockerBuildStepOptions">DockerBuildStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DockerBuildStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.DockerBuildStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.DockerBuildStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.DockerBuildStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.DockerBuildStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DockerBuildStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DockerBuildStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DockerBuildStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### DockerHubLoginStep <a name="DockerHubLoginStep" id="projen-pipelines.DockerHubLoginStep"></a>
+
+Step to login to Docker Hub registry.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DockerHubLoginStep.Initializer"></a>
+
+```typescript
+import { DockerHubLoginStep } from 'projen-pipelines'
+
+new DockerHubLoginStep(project: Project, options: DockerHubLoginStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DockerHubLoginStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.DockerHubLoginStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.DockerHubLoginStepOptions">DockerHubLoginStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DockerHubLoginStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.DockerHubLoginStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.DockerHubLoginStepOptions">DockerHubLoginStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DockerHubLoginStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.DockerHubLoginStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.DockerHubLoginStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.DockerHubLoginStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.DockerHubLoginStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DockerHubLoginStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DockerHubLoginStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DockerHubLoginStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### DockerPushStep <a name="DockerPushStep" id="projen-pipelines.DockerPushStep"></a>
+
+Step to push Docker image(s) to registry.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DockerPushStep.Initializer"></a>
+
+```typescript
+import { DockerPushStep } from 'projen-pipelines'
+
+new DockerPushStep(project: Project, options: DockerPushStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DockerPushStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.DockerPushStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.DockerPushStepOptions">DockerPushStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DockerPushStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.DockerPushStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.DockerPushStepOptions">DockerPushStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DockerPushStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.DockerPushStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.DockerPushStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.DockerPushStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.DockerPushStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DockerPushStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DockerPushStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DockerPushStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### DockerTagStep <a name="DockerTagStep" id="projen-pipelines.DockerTagStep"></a>
+
+Step to tag a Docker image with additional tags.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DockerTagStep.Initializer"></a>
+
+```typescript
+import { DockerTagStep } from 'projen-pipelines'
+
+new DockerTagStep(project: Project, options: DockerTagStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DockerTagStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.DockerTagStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.DockerTagStepOptions">DockerTagStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DockerTagStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.DockerTagStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.DockerTagStepOptions">DockerTagStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DockerTagStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.DockerTagStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.DockerTagStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.DockerTagStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.DockerTagStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DockerTagStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DockerTagStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DockerTagStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
 ### DownloadArtifactStep <a name="DownloadArtifactStep" id="projen-pipelines.DownloadArtifactStep"></a>
 
 #### Initializers <a name="Initializers" id="projen-pipelines.DownloadArtifactStep.Initializer"></a>
@@ -6650,6 +9333,111 @@ public prependSteps(steps: ...PipelineStep[]): void
 
 
 
+### EcrLoginStep <a name="EcrLoginStep" id="projen-pipelines.EcrLoginStep"></a>
+
+Step to login to AWS Elastic Container Registry (ECR).
+
+#### Initializers <a name="Initializers" id="projen-pipelines.EcrLoginStep.Initializer"></a>
+
+```typescript
+import { EcrLoginStep } from 'projen-pipelines'
+
+new EcrLoginStep(project: Project, options: EcrLoginStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.EcrLoginStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.EcrLoginStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.EcrLoginStepOptions">EcrLoginStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.EcrLoginStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.EcrLoginStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.EcrLoginStepOptions">EcrLoginStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.EcrLoginStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.EcrLoginStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
+| <code><a href="#projen-pipelines.EcrLoginStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.EcrLoginStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.EcrLoginStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.EcrLoginStep.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.EcrLoginStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.EcrLoginStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Converts the sequence of steps into a CodeCatalyst Actions step configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.EcrLoginStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.EcrLoginStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.EcrLoginStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.EcrLoginStep.addSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.EcrLoginStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.EcrLoginStep.prependSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+
+
+
 ### GithubPackagesLoginStep <a name="GithubPackagesLoginStep" id="projen-pipelines.GithubPackagesLoginStep"></a>
 
 Step to set the GITHUB_TOKEN environment variable from a secret.
@@ -6727,6 +9515,93 @@ Generates a configuration for a GitHub Actions step.
 Should be implemented by subclasses.
 
 ##### `toGitlab` <a name="toGitlab" id="projen-pipelines.GithubPackagesLoginStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### HarborLoginStep <a name="HarborLoginStep" id="projen-pipelines.HarborLoginStep"></a>
+
+Step to login to Harbor registry.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.HarborLoginStep.Initializer"></a>
+
+```typescript
+import { HarborLoginStep } from 'projen-pipelines'
+
+new HarborLoginStep(project: Project, options: HarborLoginStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.HarborLoginStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.HarborLoginStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.HarborLoginStepOptions">HarborLoginStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.HarborLoginStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.HarborLoginStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.HarborLoginStepOptions">HarborLoginStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.HarborLoginStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.HarborLoginStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.HarborLoginStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.HarborLoginStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.HarborLoginStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.HarborLoginStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.HarborLoginStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.HarborLoginStep.toGitlab"></a>
 
 ```typescript
 public toGitlab(): GitlabStepConfig
@@ -7409,6 +10284,93 @@ public prependSteps(steps: ...PipelineStep[]): void
 - *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
 ---
+
+
+
+
+### TrivyScanStep <a name="TrivyScanStep" id="projen-pipelines.TrivyScanStep"></a>
+
+Step to scan Docker image with Trivy.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.TrivyScanStep.Initializer"></a>
+
+```typescript
+import { TrivyScanStep } from 'projen-pipelines'
+
+new TrivyScanStep(project: Project, options: TrivyScanStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.TrivyScanStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.TrivyScanStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.TrivyScanStepOptions">TrivyScanStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.TrivyScanStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.TrivyScanStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.TrivyScanStepOptions">TrivyScanStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.TrivyScanStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.TrivyScanStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.TrivyScanStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.TrivyScanStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.TrivyScanStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.TrivyScanStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.TrivyScanStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.TrivyScanStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
 
 
 
