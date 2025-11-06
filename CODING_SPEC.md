@@ -480,37 +480,6 @@ constructor(project: Project, commands: string[], env: { [key: string]: string }
 }
 ```
 
-### Enums vs. String Unions
-
-**Use enums for closed sets:**
-```typescript
-// ✅ CORRECT: Enum for CI/CD engines
-export enum PipelineEngine {
-  GITHUB,
-  GITLAB,
-  CODE_CATALYST,
-  BASH,
-}
-
-// ✅ CORRECT: String literal union for open sets
-export type DiffType = 'NONE' | 'FAST' | 'FULL';
-```
-
-### Generic Interfaces
-
-**Avoid `any`, use generics when needed:**
-```typescript
-// ✅ CORRECT: Generic interface
-export interface StepConfig<T = unknown> {
-  readonly data: T;
-}
-
-// ❌ WRONG: Using any
-export interface StepConfig {
-  readonly data: any;
-}
-```
-
 ## File Organization
 
 ### Directory Structure
@@ -992,7 +961,6 @@ export class MyFeature extends Component {
 1. **Run linter**: `npx projen eslint`
 2. **Run tests**: `npx projen test`
 3. **Build project**: `npx projen build`
-4. **Update snapshots if needed**: `npx projen test -- -u`
 
 ### Commit Message Format
 
