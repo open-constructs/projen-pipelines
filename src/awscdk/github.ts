@@ -5,7 +5,6 @@ import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, Independ
 import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep } from '../steps';
-import { ResourceCountStep } from './resource-count-step';
 import { DownloadArtifactStep, UploadArtifactStep } from '../steps/artifact-steps';
 import { GithubPackagesLoginStep } from '../steps/registries';
 
@@ -250,13 +249,9 @@ export class GithubCDKPipeline extends CDKPipeline {
     steps.push(this.provideSynthStep());
 
     // Add resource counting step if enabled
-    if (this.baseOptions.enableResourceCounting !== false) {
-      steps.push(new ResourceCountStep(this.project, {
-        cloudAssemblyDir: this.app.cdkConfig.cdkout,
-        warningThreshold: this.baseOptions.resourceCountWarningThreshold ?? 450,
-        outputFile: 'resource-count-results.json',
-        githubSummary: true,
-      }));
+    const resourceCountStep = this.provideResourceCountStep(true);
+    if (resourceCountStep) {
+      steps.push(resourceCountStep);
 
       // Upload resource count results as artifact
       steps.push(new UploadArtifactStep(this.project, {
@@ -543,12 +538,11 @@ export class GithubCDKPipeline extends CDKPipeline {
     const steps: PipelineStep[] = [];
     steps.push(this.provideInstallStep());
     steps.push(this.provideSynthStep());
-    steps.push(new ResourceCountStep(this.project, {
-      cloudAssemblyDir: this.app.cdkConfig.cdkout,
-      warningThreshold: this.baseOptions.resourceCountWarningThreshold ?? 450,
-      outputFile: 'resource-count-results.json',
-      githubSummary: true,
-    }));
+
+    const resourceCountStep = this.provideResourceCountStep(true);
+    if (resourceCountStep) {
+      steps.push(resourceCountStep);
+    }
 
     const githubSteps = steps.map(s => s.toGithub());
 

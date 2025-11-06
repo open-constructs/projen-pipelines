@@ -4,6 +4,7 @@ import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence } from '../steps';
 import { VersioningConfig, VersioningSetup } from '../versioning';
+import { ResourceCountStep } from './resource-count-step';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -292,6 +293,19 @@ export abstract class CDKPipeline extends Component {
       seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.postSynthCommands));
     }
     return seq;
+  }
+
+  protected provideResourceCountStep(githubSummary: boolean = false): PipelineStep | undefined {
+    if (this.baseOptions.enableResourceCounting === false) {
+      return undefined;
+    }
+
+    return new ResourceCountStep(this.project, {
+      cloudAssemblyDir: this.app.cdkConfig.cdkout,
+      warningThreshold: this.baseOptions.resourceCountWarningThreshold ?? 450,
+      outputFile: 'resource-count-results.json',
+      githubSummary,
+    });
   }
 
   protected provideAssetUploadStep(stageName?: string): PipelineStep {
