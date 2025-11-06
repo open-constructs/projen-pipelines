@@ -18,6 +18,7 @@ jobs:
       contents: read
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v5
         with:
@@ -28,6 +29,12 @@ jobs:
           fetch-depth: 0
       - run: npx projen install:ci
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -555,6 +562,7 @@ jobs:
       contents: read
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v5
         with:
@@ -565,6 +573,12 @@ jobs:
           fetch-depth: 0
       - run: npx projen install:ci
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -694,6 +708,7 @@ jobs:
       contents: read
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v5
         with:
@@ -704,6 +719,12 @@ jobs:
           fetch-depth: 0
       - run: npx projen install:ci
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:

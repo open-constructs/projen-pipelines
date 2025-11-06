@@ -180,6 +180,23 @@ export interface CDKPipelineOptions {
    * Versioning configuration
    */
   readonly versioning?: VersioningConfig;
+
+  /**
+   * Resource count warning threshold.
+   * When a stack exceeds this number of resources, a warning will be displayed.
+   * CloudFormation has a hard limit of 500 resources per stack.
+   *
+   * @default 450
+   */
+  readonly resourceCountWarningThreshold?: number;
+
+  /**
+   * Whether to enable resource counting in the synth step.
+   * When enabled, counts CloudFormation resources in each stack and warns if approaching the limit.
+   *
+   * @default true
+   */
+  readonly enableResourceCounting?: boolean;
 }
 
 /**
