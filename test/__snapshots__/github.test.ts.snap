@@ -111,6 +111,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:my-dev
+      - name: Add CDK outputs to summary - my-dev
+        run: |-
+          if [ -f "cdk-outputs-my-dev.json" ]; then
+            echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-my-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-my-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-my-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -213,6 +239,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -903,6 +955,32 @@ jobs:
           aws-region: eu-central-2
       - run: npx projen deploy:independent2
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - independent2
+        run: |-
+          if [ -f "cdk-outputs-independent2.json" ]; then
+            echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent2.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent2.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent2.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -960,6 +1038,32 @@ jobs:
           aws-region: eu-west-2
       - run: npx projen deploy:independent1
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - independent1
+        run: |-
+          if [ -f "cdk-outputs-independent1.json" ]; then
+            echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent1.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent1.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent1.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1127,6 +1231,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-west-2
       - run: npx projen deploy:stage1
+      - name: Add CDK outputs to summary - stage1
+        run: |-
+          if [ -f "cdk-outputs-stage1.json" ]; then
+            echo "## CDK Stack Outputs - stage1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-stage1.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-stage1.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - stage1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-stage1.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1167,6 +1297,32 @@ jobs:
           aws-region: us-central-2
       - run: npx projen deploy:stage2
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - stage2
+        run: |-
+          if [ -f "cdk-outputs-stage2.json" ]; then
+            echo "## CDK Stack Outputs - stage2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-stage2.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-stage2.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - stage2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-stage2.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1339,6 +1495,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:my-dev
+      - name: Add CDK outputs to summary - my-dev
+        run: |-
+          if [ -f "cdk-outputs-my-dev.json" ]; then
+            echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-my-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-my-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-my-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1376,6 +1558,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:independent
+      - name: Add CDK outputs to summary - independent
+        run: |-
+          if [ -f "cdk-outputs-independent.json" ]; then
+            echo "## CDK Stack Outputs - independent" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1424,6 +1632,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1480,6 +1714,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen deploy:feature
+      - name: Add CDK outputs to summary - feature
+        run: |-
+          if [ -f "cdk-outputs-feature.json" ]; then
+            echo "## CDK Stack Outputs - feature" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-feature.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-feature.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - feature" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-feature.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1938,6 +2198,32 @@ jobs:
           aws-region: eu-central-1
       - run: npx projen deploy:independent2
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - independent2
+        run: |-
+          if [ -f "cdk-outputs-independent2.json" ]; then
+            echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent2.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent2.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent2.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1995,6 +2281,32 @@ jobs:
           aws-region: eu-central-1
       - run: npx projen deploy:independent1
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - independent1
+        run: |-
+          if [ -f "cdk-outputs-independent1.json" ]; then
+            echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent1.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent1.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent1.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -2132,6 +2444,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -2242,6 +2580,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:dev
+      - name: Add CDK outputs to summary - dev
+        run: |-
+          if [ -f "cdk-outputs-dev.json" ]; then
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -2617,6 +2981,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -2727,6 +3117,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:dev
+      - name: Add CDK outputs to summary - dev
+        run: |-
+          if [ -f "cdk-outputs-dev.json" ]; then
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -2765,6 +3181,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
