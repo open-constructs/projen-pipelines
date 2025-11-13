@@ -5685,6 +5685,40 @@ public readonly splitParameters: boolean;
 
 ---
 
+### PnpmSetupStepOptions <a name="PnpmSetupStepOptions" id="projen-pipelines.PnpmSetupStepOptions"></a>
+
+Options for the PnpmSetupStep.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.PnpmSetupStepOptions.Initializer"></a>
+
+```typescript
+import { PnpmSetupStepOptions } from 'projen-pipelines'
+
+const pnpmSetupStepOptions: PnpmSetupStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.PnpmSetupStepOptions.property.version">version</a></code> | <code>string</code> | The version of pnpm to install. |
+
+---
+
+##### `version`<sup>Optional</sup> <a name="version" id="projen-pipelines.PnpmSetupStepOptions.property.version"></a>
+
+```typescript
+public readonly version: string;
+```
+
+- *Type:* string
+
+The version of pnpm to install.
+
+If not provided, defaults to '9'.
+
+---
+
 ### StageOptions <a name="StageOptions" id="projen-pipelines.StageOptions"></a>
 
 Options for a CDK stage like the target environment.
@@ -7124,6 +7158,97 @@ Generates a configuration for a GitHub Actions step.
 Should be implemented by subclasses.
 
 ##### `toGitlab` <a name="toGitlab" id="projen-pipelines.PipelineStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### PnpmSetupStep <a name="PnpmSetupStep" id="projen-pipelines.PnpmSetupStep"></a>
+
+Step to setup pnpm using the pnpm/action-setup GitHub Action.
+
+This step is automatically injected when a project uses pnpm as its package manager.
+It ensures pnpm is available in the GitHub Actions workflow environment before
+running any install commands.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.PnpmSetupStep.Initializer"></a>
+
+```typescript
+import { PnpmSetupStep } from 'projen-pipelines'
+
+new PnpmSetupStep(project: Project, options?: PnpmSetupStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.PnpmSetupStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.PnpmSetupStepOptions">PnpmSetupStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.PnpmSetupStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.PnpmSetupStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.PnpmSetupStepOptions">PnpmSetupStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.PnpmSetupStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.PnpmSetupStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.PnpmSetupStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.PnpmSetupStep.toGitlab"></a>
 
 ```typescript
 public toGitlab(): GitlabStepConfig
