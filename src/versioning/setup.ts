@@ -1,5 +1,5 @@
 import { Project } from 'projen';
-import { VersioningConfig } from './types';
+import { VersioningConfig } from 'cdk-devops';
 
 /**
  * Sets up versioning tasks and integration for a project
@@ -78,7 +78,7 @@ const fs = require('fs');
 const cp = require('child_process');
 
 // Import versioning modules
-const { VersionComputer, VersioningStrategy } = require('projen-pipelines');
+const { VersionComputer, VersioningStrategy } = require('cdk-devops');
 
 try {
   // Gather git information

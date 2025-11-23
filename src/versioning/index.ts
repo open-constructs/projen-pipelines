@@ -1,40 +1,26 @@
-// Types
-export * from './types';
-
-// Version Information
-export { VersionInfo, VersionInfoBuilder } from './version-info';
-
-// Strategies
+// Re-export versioning from cdk-devops
 export {
-  VersioningStrategy,
-} from './strategy';
-
-// Outputs
-export {
-  OutputConfigBase,
-  CloudFormationOutput,
-  ParameterStoreOutput,
-  OutputFormat,
-  VersioningOutputs,
-} from './outputs';
-
-// Computation
-export {
+  // Types
+  VersioningConfig,
+  VersioningOutputsConfig,
+  IVersioningStrategy,
+  IVersionInfo,
+  GitTagConfig,
+  PackageJsonConfig,
+  CommitCountConfig,
+  BuildNumberConfig,
+  CloudFormationOutputConfig,
+  ParameterStoreOutputConfig,
   GitInfo,
   ComputationContext,
-  VersionComputationStrategy,
-  CompositeComputation,
+
+  // Classes
+  VersioningStrategy,
+  VersionInfo,
+  VersionInfoBuilder,
   VersionComputer,
-} from './computation';
+  VersionOutputs,
+} from 'cdk-devops';
 
-// Configuration
-export {
-  CustomVersioningConfig,
-  VersioningConfigurations,
-  VersioningConfigUtils,
-} from './config';
-
-// Setup
-export {
-  VersioningSetup,
-} from './setup';
+// Setup (projen-specific, kept locally)
+export { VersioningSetup } from './setup';
