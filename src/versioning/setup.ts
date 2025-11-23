@@ -72,7 +72,7 @@ export class VersioningSetup {
    */
   private generateVersionComputeScript(): string {
     const strategyJson = JSON.stringify(this.config.strategy);
-    // Use the static computeVersion function from cdk-devops
-    return `node -e "require('cdk-devops').computeVersion(${strategyJson}).catch(e => { console.error(e); process.exit(1); })"`;
+    // Use the compute-version CLI from cdk-devops
+    return `npx compute-version '${strategyJson}'`;
   }
 }
