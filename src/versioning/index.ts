@@ -3,6 +3,7 @@ export {
   // Types
   VersioningConfig,
   VersioningOutputsConfig,
+  VersioningOutputConfig, // Alias
   IVersioningStrategy,
   IVersionInfo,
   GitTagConfig,
@@ -11,6 +12,7 @@ export {
   BuildNumberConfig,
   CloudFormationOutputConfig,
   ParameterStoreOutputConfig,
+  ParameterStoreConfig, // Alias
   GitInfo,
   ComputationContext,
 
@@ -20,6 +22,12 @@ export {
   VersionInfoBuilder,
   VersionComputer,
   VersionOutputs,
+  VersioningOutputsFactory,
+  // Alias for backward compatibility
+  VersioningOutputsFactory as VersioningOutputs,
+
+  // Functions
+  computeVersion,
 } from 'cdk-devops';
 
 // Setup (projen-specific, kept locally)
