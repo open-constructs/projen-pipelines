@@ -1,8 +1,8 @@
 {
-  "name": "projen-pipelines",
+  "name": "joshbegin/projen-pipelines",
   "repository": {
     "type": "git",
-    "url": "https://github.com/open-constructs/projen-pipelines.git"
+    "url": "https://github.com/joshbegin/projen-pipelines.git"
   },
   "bin": {
     "detect-drift": "lib/drift/detect-drift.js",
