@@ -34,7 +34,7 @@ jobs:
           name: cloud-assembly
           path: cdk.out/
   assetUpload:
-    name: Publish assets to AWS
+    name: "Publish assets to AWS "
     needs: synth
     runs-on: ubuntu-latest
     permissions:
@@ -571,7 +571,7 @@ jobs:
           name: cloud-assembly
           path: cdk.out/
   assetUpload:
-    name: Publish assets to AWS
+    name: "Publish assets to AWS "
     needs: synth
     runs-on: ubuntu-latest
     permissions:
@@ -710,7 +710,7 @@ jobs:
           name: cloud-assembly
           path: cdk.out/
   assetUpload:
-    name: Publish assets to AWS
+    name: "Publish assets to AWS "
     needs: synth
     runs-on: ubuntu-latest
     permissions:
@@ -740,8 +740,6 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen publish:assets
-      - run: npx projen bump
-      - run: npx projen release:push-assembly
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload

@@ -15,6 +15,10 @@ export interface DriftDetectionStageOptions {
    * Role to assume for drift detection
    */
   readonly roleArn?: string;
+  /**
+   * Jump role to assume before the main role
+   */
+  readonly jumpRoleArn?: string;
 
   /**
    * Stack names to check in this stage
@@ -81,5 +85,4 @@ export abstract class DriftDetectionWorkflow extends Component {
     this.schedule = options.schedule ?? '0 0 * * *';
     this.stages = options.stages;
   }
-
 }

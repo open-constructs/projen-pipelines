@@ -1,5 +1,10 @@
 import { Project } from 'projen';
-import { StepSequence, PipelineStep, AwsAssumeRoleStep, SimpleCommandStep } from '../steps';
+import {
+  StepSequence,
+  PipelineStep,
+  AwsAssumeRoleStep,
+  SimpleCommandStep,
+} from '../steps';
 import { DriftDetectionStageOptions } from './base';
 
 export interface DriftDetectionStepProps extends DriftDetectionStageOptions {
@@ -12,10 +17,7 @@ export interface DriftDetectionStepProps extends DriftDetectionStageOptions {
 
 export class DriftDetectionStep extends StepSequence {
   private static generateCommand(props: DriftDetectionStepProps): string {
-    const args: string[] = [
-      'detect-drift',
-      '--region', props.region,
-    ];
+    const args: string[] = ['detect-drift', '--region', props.region];
 
     if (props.stackNames && props.stackNames.length > 0) {
       args.push('--stacks', props.stackNames.join(','));
@@ -37,21 +39,26 @@ export class DriftDetectionStep extends StepSequence {
 
     // Add AWS assume role step if roleArn is provided
     if (props.roleArn) {
-      steps.push(new AwsAssumeRoleStep(project, {
-        roleArn: props.roleArn,
-        region: props.region,
-      }));
+      steps.push(
+        new AwsAssumeRoleStep(project, {
+          roleArn: props.roleArn,
+          region: props.region,
+          jumpRoleArn: props.jumpRoleArn,
+        }),
+      );
     }
 
     // Add command step to run drift detection
     const command = DriftDetectionStep.generateCommand(props);
-    steps.push(new SimpleCommandStep(project, [command], {
-      AWS_DEFAULT_REGION: props.region,
-      DRIFT_DETECTION_OUTPUT: `drift-results-${props.name}.json`,
-      AWS_REGION: props.region,
-      STAGE_NAME: props.name,
-      ...props.environment,
-    }));
+    steps.push(
+      new SimpleCommandStep(project, [command], {
+        AWS_DEFAULT_REGION: props.region,
+        DRIFT_DETECTION_OUTPUT: `drift-results-${props.name}.json`,
+        AWS_REGION: props.region,
+        STAGE_NAME: props.name,
+        ...props.environment,
+      }),
+    );
 
     super(project, steps);
   }

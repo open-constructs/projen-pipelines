@@ -2,7 +2,13 @@ import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
-import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence } from '../steps';
+import {
+  AwsAssumeRoleStep,
+  PipelineStep,
+  ProjenScriptStep,
+  SimpleCommandStep,
+  StepSequence,
+} from '../steps';
 import { VersioningConfig, VersioningSetup } from '../versioning';
 
 /**
@@ -86,7 +92,6 @@ export interface StageOptions {
  * Configuration interface for IAM roles used in the CDK pipeline.
  */
 export interface IamRoleConfig {
-
   /** Default IAM role ARN used if no specific role is provided. */
   readonly default?: string;
   /** IAM role ARN for the synthesis step. */
@@ -99,6 +104,11 @@ export interface IamRoleConfig {
   readonly diff?: { [stage: string]: string };
   /** IAM role ARNs for different deployment stages. */
   readonly deployment?: { [stage: string]: string };
+  /**
+   * IAM role ARNs for using a "jump" role to assume the deploy role in a different AWS account using Role Chaining.
+   * https://github.com/aws-actions/configure-aws-credentials?tab=readme-ov-file#assumerole-with-role-previously-assumed-by-action-in-same-workflow
+   * */
+  readonly jump?: { [stage: string]: string };
 }
 
 /**
@@ -108,7 +118,6 @@ export interface IamRoleConfig {
  * AWS stack, along with the environments configuration to be used.
  */
 export interface CDKPipelineOptions {
-
   /**
    * the name of the branch to deploy from
    * @default main
@@ -190,7 +199,10 @@ export abstract class CDKPipeline extends Component {
   public readonly stackPrefix: string;
   public readonly branchName: string;
 
-  constructor(protected app: awscdk.AwsCdkTypeScriptApp, protected baseOptions: CDKPipelineOptions) {
+  constructor(
+    protected app: awscdk.AwsCdkTypeScriptApp,
+    protected baseOptions: CDKPipelineOptions,
+  ) {
     super(app);
 
     // Add development dependencies
@@ -207,8 +219,12 @@ export abstract class CDKPipeline extends Component {
     this.branchName = baseOptions.branchName ?? 'main'; // TODO use defaultReleaseBranch of NodeProject
 
     // Removes the compiled cloud assembly before each synth
-    this.project.tasks.tryFind('synth')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
-    this.project.tasks.tryFind('synth:silent')?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
+    this.project.tasks
+      .tryFind('synth')
+      ?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
+    this.project.tasks
+      .tryFind('synth:silent')
+      ?.prependExec(`rm -rf ${this.app.cdkConfig.cdkout}`);
 
     // Remove tasks that might conflict with the pipeline process
     this.project.removeTask('deploy');
@@ -231,7 +247,7 @@ export abstract class CDKPipeline extends Component {
     for (const stage of baseOptions.stages) {
       this.createPipelineStage(stage);
     }
-    for (const stage of (baseOptions.independentStages ?? [])) {
+    for (const stage of baseOptions.independentStages ?? []) {
       this.createIndependentStage(stage);
     }
 
@@ -240,17 +256,23 @@ export abstract class CDKPipeline extends Component {
 
     // Creates a specialized CDK App class
     this.createApplicationEntrypoint();
-
   }
 
   public abstract engineType(): PipelineEngine;
 
   protected provideInstallStep(): PipelineStep {
-    const seq = new StepSequence(this.project, this.baseOptions.preInstallSteps ?? []);
+    const seq = new StepSequence(
+      this.project,
+      this.baseOptions.preInstallSteps ?? [],
+    );
     if (this.baseOptions.preInstallCommands) {
-      seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.preInstallCommands));
+      seq.addSteps(
+        new SimpleCommandStep(this.project, this.baseOptions.preInstallCommands),
+      );
     }
-    seq.addSteps(new ProjenScriptStep(this.project, this.app.package.installCiTask.name));
+    seq.addSteps(
+      new ProjenScriptStep(this.project, this.app.package.installCiTask.name),
+    );
     return seq;
   }
 
@@ -258,21 +280,28 @@ export abstract class CDKPipeline extends Component {
     const seq = new StepSequence(this.project, []);
 
     if (this.baseOptions.iamRoleArns?.synth) {
-      seq.addSteps(new AwsAssumeRoleStep(this.project, {
-        roleArn: this.baseOptions.iamRoleArns.synth,
-      }));
+      seq.addSteps(
+        new AwsAssumeRoleStep(this.project, {
+          roleArn: this.baseOptions.iamRoleArns.synth,
+          jumpRoleArn: this.baseOptions.iamRoleArns.jump?.synth,
+        }),
+      );
     }
 
-    seq.addSteps(...this.baseOptions.preSynthSteps ?? []);
+    seq.addSteps(...(this.baseOptions.preSynthSteps ?? []));
     if (this.baseOptions.preSynthCommands) {
-      seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.preSynthCommands));
+      seq.addSteps(
+        new SimpleCommandStep(this.project, this.baseOptions.preSynthCommands),
+      );
     }
 
     seq.addSteps(new ProjenScriptStep(this.project, 'build'));
 
-    seq.addSteps(...this.baseOptions.postSynthSteps ?? []);
+    seq.addSteps(...(this.baseOptions.postSynthSteps ?? []));
     if (this.baseOptions.postSynthCommands) {
-      seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.postSynthCommands));
+      seq.addSteps(
+        new SimpleCommandStep(this.project, this.baseOptions.postSynthCommands),
+      );
     }
     return seq;
   }
@@ -280,27 +309,49 @@ export abstract class CDKPipeline extends Component {
   protected provideAssetUploadStep(stageName?: string): PipelineStep {
     const seq = new StepSequence(this.project, []);
 
-    const globalPublishRole = this.baseOptions.iamRoleArns.assetPublishing ?? this.baseOptions.iamRoleArns.default!;
+    const globalPublishRole =
+      this.baseOptions.iamRoleArns.assetPublishing ??
+      this.baseOptions.iamRoleArns.default!;
     if (stageName) {
-      seq.addSteps(new AwsAssumeRoleStep(this.project, {
-        roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage ?
-          (this.baseOptions.iamRoleArns.assetPublishingPerStage[stageName] ?? globalPublishRole) :
-          globalPublishRole,
-      }));
-      seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stageName}`));
+      seq.addSteps(
+        new AwsAssumeRoleStep(this.project, {
+          roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage
+            ? this.baseOptions.iamRoleArns.assetPublishingPerStage[stageName] ??
+              globalPublishRole
+            : globalPublishRole,
+          jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stageName],
+        }),
+      );
+      seq.addSteps(
+        new ProjenScriptStep(this.project, `publish:assets:${stageName}`),
+      );
     } else {
       if (this.baseOptions.iamRoleArns.assetPublishingPerStage) {
-        const stages = [...this.baseOptions.stages, ...this.baseOptions.independentStages ?? []];
+        const stages = [
+          ...this.baseOptions.stages,
+          ...(this.baseOptions.independentStages ?? []),
+        ];
         for (const stage of stages) {
-          seq.addSteps(new AwsAssumeRoleStep(this.project, {
-            roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage[stage.name] ?? globalPublishRole,
-          }));
-          seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stage.name}`));
+          seq.addSteps(
+            new AwsAssumeRoleStep(this.project, {
+              roleArn:
+                this.baseOptions.iamRoleArns.assetPublishingPerStage[
+                  stage.name
+                ] ?? globalPublishRole,
+              jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
+            }),
+          );
+          seq.addSteps(
+            new ProjenScriptStep(this.project, `publish:assets:${stage.name}`),
+          );
         }
       } else {
-        seq.addSteps(new AwsAssumeRoleStep(this.project, {
-          roleArn: globalPublishRole,
-        }));
+        seq.addSteps(
+          new AwsAssumeRoleStep(this.project, {
+            roleArn: globalPublishRole,
+            jumpRoleArn: this.baseOptions.iamRoleArns.jump?.assetPublishing,
+          }),
+        );
         seq.addSteps(new ProjenScriptStep(this.project, 'publish:assets'));
       }
     }
@@ -310,7 +361,9 @@ export abstract class CDKPipeline extends Component {
 
   protected provideAssemblyUploadStep(): PipelineStep {
     if (!this.baseOptions.pkgNamespace) {
-      throw new Error('pkgNamespace is required when using versioned artifacts (e.g. manual approvals)');
+      throw new Error(
+        'pkgNamespace is required when using versioned artifacts (e.g. manual approvals)',
+      );
     }
     return new StepSequence(this.project, [
       new ProjenScriptStep(this.project, 'bump'),
@@ -321,29 +374,45 @@ export abstract class CDKPipeline extends Component {
   protected provideDeployStep(stage: NamedStageOptions): PipelineStep {
     return new StepSequence(this.project, [
       new AwsAssumeRoleStep(this.project, {
-        roleArn: this.baseOptions.iamRoleArns?.deployment?.[stage.name] ?? this.baseOptions.iamRoleArns?.default!,
-        region: stage.env.region,
-      }),
-      new ProjenScriptStep(this.project, `deploy:${stage.name}`),
-      ...stage.postDeploySteps ?? [],
-    ]);
-  }
-
-  protected provideDiffStep(stage: NamedStageOptions, fast?: boolean): PipelineStep {
-    return new StepSequence(this.project, [
-      new AwsAssumeRoleStep(this.project, {
-        roleArn: this.baseOptions.iamRoleArns?.diff?.[stage.name] ??
+        roleArn:
           this.baseOptions.iamRoleArns?.deployment?.[stage.name] ??
           this.baseOptions.iamRoleArns?.default!,
         region: stage.env.region,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
       }),
-      new ProjenScriptStep(this.project, fast ? `fastdiff:${stage.name}` : `diff:${stage.name}`),
-      ...stage.postDiffSteps ?? [],
+      new ProjenScriptStep(this.project, `deploy:${stage.name}`),
+      ...(stage.postDeploySteps ?? []),
     ]);
   }
 
-  protected renderInstallPackageCommands(packageName: string, runPreInstallCommands: boolean = false): string[] {
-    const commands = runPreInstallCommands ? this.baseOptions.preInstallCommands ?? [] : [];
+  protected provideDiffStep(
+    stage: NamedStageOptions,
+    fast?: boolean,
+  ): PipelineStep {
+    return new StepSequence(this.project, [
+      new AwsAssumeRoleStep(this.project, {
+        roleArn:
+          this.baseOptions.iamRoleArns?.diff?.[stage.name] ??
+          this.baseOptions.iamRoleArns?.deployment?.[stage.name] ??
+          this.baseOptions.iamRoleArns?.default!,
+        region: stage.env.region,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
+      }),
+      new ProjenScriptStep(
+        this.project,
+        fast ? `fastdiff:${stage.name}` : `diff:${stage.name}`,
+      ),
+      ...(stage.postDiffSteps ?? []),
+    ]);
+  }
+
+  protected renderInstallPackageCommands(
+    packageName: string,
+    runPreInstallCommands: boolean = false,
+  ): string[] {
+    const commands = runPreInstallCommands
+      ? this.baseOptions.preInstallCommands ?? []
+      : [];
 
     switch (this.app.package.packageManager) {
       case NodePackageManager.YARN:
@@ -356,19 +425,27 @@ export abstract class CDKPipeline extends Component {
         commands.push(`npm install ${packageName}`);
         break;
       default:
-        throw new Error('No install scripts for packageManager: ' + this.app.package.packageManager);
+        throw new Error(
+          'No install scripts for packageManager: ' +
+            this.app.package.packageManager,
+        );
     }
     return commands;
   }
 
   protected createSafeStageName(name: string): string {
     // Remove non-alphanumeric characters and split into words
-    const words = name.replace(/[^a-zA-Z0-9]+/g, ' ').trim().split(/\s+/);
+    const words = name
+      .replace(/[^a-zA-Z0-9]+/g, ' ')
+      .trim()
+      .split(/\s+/);
 
     // Capitalize the first letter of each word and join them
-    return words.map((word) => {
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    }).join('');
+    return words
+      .map((word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      })
+      .join('');
   }
 
   /**
@@ -382,7 +459,6 @@ export abstract class CDKPipeline extends Component {
     if (this.stackPrefix === '') {
       sep = '';
     }
-
 
     if (this.baseOptions.personalStage) {
       propsCode += `  /** This function will be used to generate a personal stack. */
@@ -421,7 +497,7 @@ export abstract class CDKPipeline extends Component {
 `;
     }
 
-    for (const stage of (this.baseOptions.independentStages ?? [])) {
+    for (const stage of this.baseOptions.independentStages ?? []) {
       const nameUpperFirst = this.createSafeStageName(stage.name);
 
       propsCode += `  /** This function will be used to generate a ${stage.name} stack. */
@@ -452,7 +528,11 @@ export abstract class CDKPipeline extends Component {
 
     const versioningConfigDeclaration = this.baseOptions.versioning?.enabled
       ? `
-const versioningConfig = ${JSON.stringify(this.baseOptions.versioning, null, 2)};
+const versioningConfig = ${JSON.stringify(
+  this.baseOptions.versioning,
+  null,
+  2,
+)};
 `
       : '';
 
@@ -498,13 +578,15 @@ ${appCode}
 `);
   }
 
-
   /**
    * This method sets up tasks to publish CDK assets to all accounts and handle versioning, including bumping the version
    * based on the latest git tag and pushing the CDK assembly to the package repository.
    */
   protected createReleaseTasks() {
-    const stages = [...this.baseOptions.stages, ...this.baseOptions.independentStages ?? []];
+    const stages = [
+      ...this.baseOptions.stages,
+      ...(this.baseOptions.independentStages ?? []),
+    ];
     let sep = '-';
     if (this.stackPrefix === '') {
       sep = '';
@@ -512,13 +594,15 @@ ${appCode}
     // Task to publish the CDK assets to all accounts
     for (const stage of stages) {
       this.project.addTask(`publish:assets:${stage.name}`, {
-        steps: [{
-          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}${sep}${stage.name}.assets.json publish`,
-        }],
+        steps: [
+          {
+            exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}${sep}${stage.name}.assets.json publish`,
+          },
+        ],
       });
     }
     this.project.addTask('publish:assets', {
-      steps: stages.map(stage => ({
+      steps: stages.map((stage) => ({
         spawn: `publish:assets:${stage.name}`,
       })),
     });
@@ -551,7 +635,6 @@ ${appCode}
         ],
       });
     }
-
   }
 
   /**
@@ -657,15 +740,21 @@ ${appCode}
     if (this.stackPrefix === '') {
       sep = '';
     }
-    return this.baseOptions.deploySubStacks ? `${this.stackPrefix}${sep}${stage} ${this.stackPrefix}${sep}${stage}/*` : `${this.stackPrefix}${sep}${stage}`;
+    return this.baseOptions.deploySubStacks
+      ? `${this.stackPrefix}${sep}${stage} ${this.stackPrefix}${sep}${stage}/*`
+      : `${this.stackPrefix}${sep}${stage}`;
   }
 
   /**
    * Create version:fetch:<stage> task to fetch version data from deployed stack
    */
   protected createVersionFetchTask(stage: NamedStageOptions): void {
-    const stackName = `${this.stackPrefix}${this.stackPrefix ? '-' : ''}${stage.name}`;
-    const stageConfig = this.baseOptions.versioning?.stageOverrides?.[stage.name] || this.baseOptions.versioning;
+    const stackName = `${this.stackPrefix}${this.stackPrefix ? '-' : ''}${
+      stage.name
+    }`;
+    const stageConfig =
+      this.baseOptions.versioning?.stageOverrides?.[stage.name] ||
+      this.baseOptions.versioning;
 
     if (!stageConfig?.outputs) return;
 
@@ -681,7 +770,10 @@ ${appCode}
 
     // Fetch from SSM Parameter Store
     if (stageConfig.outputs.parameterStore?.enabled) {
-      const parameterName = (stageConfig.outputs.parameterStore.parameterName || '/{stackName}/version')
+      const parameterName = (
+        stageConfig.outputs.parameterStore.parameterName ||
+        '/{stackName}/version'
+      )
         .replace('{stackName}', stackName)
         .replace('{stageName}', stage.name);
 
@@ -715,7 +807,11 @@ ${appCode}
     this.node.children.forEach((child) => {
       if (child instanceof Stack) {
         const stageName = child.stackName.split('-').pop() || 'default';
-        addVersioningToStack(child, stageName, ${config.stageOverrides ? 'versioningConfig.stageOverrides' : 'undefined'});
+        addVersioningToStack(child, stageName, ${
+          config.stageOverrides
+            ? 'versioningConfig.stageOverrides'
+            : 'undefined'
+        });
       }
     });`;
   }
