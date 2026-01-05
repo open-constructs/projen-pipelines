@@ -196,14 +196,12 @@ export class GithubCDKPipeline extends CDKPipeline {
       this.provideInstallStep(),
       this.provideSynthStep(),
       new AwsAssumeRoleStep(this.project, {
-        roleArn:
-          this.baseOptions.iamRoleArns?.deployment?.feature ??
-          this.baseOptions.iamRoleArns?.default!,
+        roleArn: this.baseOptions.iamRoleArns?.deployment?.feature ?? this.baseOptions.iamRoleArns?.default!,
         region: this.baseOptions.featureStages!.env.region,
         jumpRoleArn: this.baseOptions.iamRoleArns.jump?.feature,
       }),
       new ProjenScriptStep(this.project, 'destroy:feature'),
-    ].map((s) => s.toGithub());
+    ].map(s => s.toGithub());
 
     workflow.addJob('destroy-feature', {
       name: 'Destroy CDK feature stage',

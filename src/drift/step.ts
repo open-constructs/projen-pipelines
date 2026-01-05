@@ -37,13 +37,11 @@ export class DriftDetectionStep extends StepSequence {
 
     // Add AWS assume role step if roleArn is provided
     if (props.roleArn) {
-      steps.push(
-        new AwsAssumeRoleStep(project, {
-          roleArn: props.roleArn,
-          region: props.region,
-          jumpRoleArn: props.jumpRoleArn,
-        }),
-      );
+      steps.push(new AwsAssumeRoleStep(project, {
+        roleArn: props.roleArn,
+        region: props.region,
+        jumpRoleArn: props.jumpRoleArn,
+      }));
     }
 
     // Add command step to run drift detection
