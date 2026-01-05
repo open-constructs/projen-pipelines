@@ -45,14 +45,14 @@ export class AwsAssumeRoleStep extends PipelineStep {
   public toGithub(): GithubStepConfig {
     let steps: JobStep[] = [
       {
-        name: "AWS Credentials",
-        uses: "aws-actions/configure-aws-credentials@v5",
+        name: 'AWS Credentials',
+        uses: 'aws-actions/configure-aws-credentials@v5',
         with: {
-          "role-to-assume": this.config.roleArn,
-          "role-session-name": this.config.sessionName ?? "GitHubAction",
+          'role-to-assume': this.config.roleArn,
+          'role-session-name': this.config.sessionName ?? 'GitHubAction',
           ...(this.config.region
-            ? { "aws-region": this.config.region }
-            : { "aws-region": "us-east-1" }),
+            ? { 'aws-region': this.config.region }
+            : { 'aws-region': 'us-east-1' }),
         },
       },
     ];
