@@ -1289,15 +1289,21 @@ Generate versioning utility functions for CDK application.
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.GithubCDKPipeline.createAssetUpload"></a>
 
 ```typescript
-public createAssetUpload(): void
+public createAssetUpload(stageName?: string): void
 ```
 
 Creates a job to upload assets to AWS as part of the pipeline.
 
+###### `stageName`<sup>Optional</sup> <a name="stageName" id="projen-pipelines.GithubCDKPipeline.createAssetUpload.parameter.stageName"></a>
+
+- *Type:* string
+
+---
+
 ##### `createDeployment` <a name="createDeployment" id="projen-pipelines.GithubCDKPipeline.createDeployment"></a>
 
 ```typescript
-public createDeployment(stage: DeploymentStage): void
+public createDeployment(stage: DeploymentStage, useGithubEnvironmentsForAssetUpload?: boolean): void
 ```
 
 Creates a job to deploy the CDK application to AWS.
@@ -1307,6 +1313,12 @@ Creates a job to deploy the CDK application to AWS.
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>
 
 The deployment stage to create.
+
+---
+
+###### `useGithubEnvironmentsForAssetUpload`<sup>Optional</sup> <a name="useGithubEnvironmentsForAssetUpload" id="projen-pipelines.GithubCDKPipeline.createDeployment.parameter.useGithubEnvironmentsForAssetUpload"></a>
+
+- *Type:* boolean
 
 ---
 
@@ -4040,6 +4052,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironments">useGithubEnvironments</a></code> | <code>boolean</code> | whether to use GitHub environments for deployment stages. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironmentsForAssetUpload">useGithubEnvironmentsForAssetUpload</a></code> | <code>boolean</code> | whether to use GitHub environments for asset upload step Create separate, parallel jobs for asset upload since GitHub Environments require unique environment names per job. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubPackagesForAssembly">useGithubPackagesForAssembly</a></code> | <code>boolean</code> | use GitHub Packages to store vesioned artifacts of cloud assembly; |
 
 ---
@@ -4260,6 +4273,19 @@ public readonly useGithubEnvironments: boolean;
 whether to use GitHub environments for deployment stages.
 
 INFO: When using environments consider protection rules instead of using the manual option of projen-pipelines for stages
+
+---
+
+##### `useGithubEnvironmentsForAssetUpload`<sup>Optional</sup> <a name="useGithubEnvironmentsForAssetUpload" id="projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironmentsForAssetUpload"></a>
+
+```typescript
+public readonly useGithubEnvironmentsForAssetUpload: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+whether to use GitHub environments for asset upload step Create separate, parallel jobs for asset upload since GitHub Environments require unique environment names per job.
 
 ---
 
