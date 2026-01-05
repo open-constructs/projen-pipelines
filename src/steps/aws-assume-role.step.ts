@@ -1,5 +1,5 @@
 import { Project } from 'projen';
-import { JobPermission } from 'projen/lib/github/workflows-model';
+import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import { BashStepConfig, CodeCatalystStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
 
 
@@ -13,6 +13,10 @@ export interface AwsAssumeRoleStepConfig {
   readonly sessionName?: string;
   /** The AWS region that should be set */
   readonly region?: string;
+  /**
+   * The ARN of the jump role to use for role chaining
+   */
+  readonly jumpRoleArn?: string;
 }
 
 /**
@@ -39,16 +43,52 @@ export class AwsAssumeRoleStep extends PipelineStep {
   }
 
   public toGithub(): GithubStepConfig {
-    return {
-      steps: [{
-        name: 'AWS Credentials',
-        uses: 'aws-actions/configure-aws-credentials@v5',
-        with: {
-          'role-to-assume': this.config.roleArn,
-          'role-session-name': this.config.sessionName ?? 'GitHubAction',
-          ...this.config.region ? { 'aws-region': this.config.region } : { 'aws-region': 'us-east-1' },
+    let steps: JobStep[];
+    // Default behavior without jump role
+    if (!this.config.jumpRoleArn) {
+      steps = [
+        {
+          name: 'AWS Credentials',
+          uses: 'aws-actions/configure-aws-credentials@v5',
+          with: {
+            'role-to-assume': this.config.roleArn,
+            'role-session-name': this.config.sessionName ?? 'GitHubAction',
+            ...(this.config.region
+              ? { 'aws-region': this.config.region }
+              : { 'aws-region': 'us-east-1' }),
+          },
         },
-      }],
+      ];
+    } else {
+      steps = [
+        {
+          name: 'Assume Jump Role',
+          uses: 'aws-actions/configure-aws-credentials@v5',
+          with: {
+            'role-to-assume': this.config.jumpRoleArn,
+            'role-session-name': this.config.sessionName ?? 'GitHubAction',
+            ...(this.config.region
+              ? { 'aws-region': this.config.region }
+              : { 'aws-region': 'us-east-1' }),
+          },
+        },
+        {
+          name: 'AWS Credentials',
+          uses: 'aws-actions/configure-aws-credentials@v5',
+          with: {
+            'role-to-assume': this.config.roleArn,
+            'role-session-name': this.config.sessionName ?? 'GitHubAction',
+            ...(this.config.region
+              ? { 'aws-region': this.config.region }
+              : { 'aws-region': 'us-east-1' }),
+            'role-chaining': true,
+            'role-skip-session-tagging': true,
+          },
+        },
+      ];
+    }
+    return {
+      steps,
       needs: [],
       env: {},
       permissions: {
