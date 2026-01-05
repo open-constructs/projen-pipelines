@@ -43,24 +43,24 @@ export class AwsAssumeRoleStep extends PipelineStep {
   }
 
   public toGithub(): GithubStepConfig {
-    let steps: JobStep[];
-    // Default behavior without jump role
-    if (!this.config.jumpRoleArn) {
-      steps = [
-        {
-          name: 'AWS Credentials',
-          uses: 'aws-actions/configure-aws-credentials@v5',
-          with: {
-            'role-to-assume': this.config.roleArn,
-            'role-session-name': this.config.sessionName ?? 'GitHubAction',
-            ...(this.config.region
-              ? { 'aws-region': this.config.region }
-              : { 'aws-region': 'us-east-1' }),
-          },
+    let steps: JobStep[] = [
+      {
+        name: "AWS Credentials",
+        uses: "aws-actions/configure-aws-credentials@v5",
+        with: {
+          "role-to-assume": this.config.roleArn,
+          "role-session-name": this.config.sessionName ?? "GitHubAction",
+          ...(this.config.region
+            ? { "aws-region": this.config.region }
+            : { "aws-region": "us-east-1" }),
         },
-      ];
-    } else {
-      steps = [
+      },
+    ];
+    if (this.config.jumpRoleArn) {
+      // Add role chaining options to the first step (which will become the second step after unshift)
+      steps[0]?.with && (steps[0].with['role-chaining'] = true);
+      steps[0]?.with && (steps[0].with['role-skip-session-tagging'] = true);
+      steps.unshift(
         {
           name: 'Assume Jump Role',
           uses: 'aws-actions/configure-aws-credentials@v5',
@@ -70,22 +70,9 @@ export class AwsAssumeRoleStep extends PipelineStep {
             ...(this.config.region
               ? { 'aws-region': this.config.region }
               : { 'aws-region': 'us-east-1' }),
+            'role-skip-session-tagging': true
           },
-        },
-        {
-          name: 'AWS Credentials',
-          uses: 'aws-actions/configure-aws-credentials@v5',
-          with: {
-            'role-to-assume': this.config.roleArn,
-            'role-session-name': this.config.sessionName ?? 'GitHubAction',
-            ...(this.config.region
-              ? { 'aws-region': this.config.region }
-              : { 'aws-region': 'us-east-1' }),
-            'role-chaining': true,
-            'role-skip-session-tagging': true,
-          },
-        },
-      ];
+        })
     }
     return {
       steps,
