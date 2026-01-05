@@ -288,10 +288,9 @@ export abstract class CDKPipeline extends Component {
     const globalPublishRole = this.baseOptions.iamRoleArns.assetPublishing ?? this.baseOptions.iamRoleArns.default!;
     if (stageName) {
       seq.addSteps(new AwsAssumeRoleStep(this.project, {
-        roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage
-          ? this.baseOptions.iamRoleArns.assetPublishingPerStage[stageName] ??
-            globalPublishRole
-          : globalPublishRole,
+        roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage ? 
+          (this.baseOptions.iamRoleArns.assetPublishingPerStage[stageName] ?? globalPublishRole) :
+          globalPublishRole,
         jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stageName],
       }));
       seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stageName}`));
@@ -300,10 +299,7 @@ export abstract class CDKPipeline extends Component {
         const stages = [...this.baseOptions.stages, ...this.baseOptions.independentStages ?? []];
         for (const stage of stages) {
           seq.addSteps(new AwsAssumeRoleStep(this.project, {
-            roleArn:
-              this.baseOptions.iamRoleArns.assetPublishingPerStage[
-                stage.name
-              ] ?? globalPublishRole,
+            roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage[stage.name] ?? globalPublishRole,
             jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
           }));
           seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stage.name}`));
@@ -352,7 +348,7 @@ export abstract class CDKPipeline extends Component {
         jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
       }),
       new ProjenScriptStep(this.project, fast ? `fastdiff:${stage.name}` : `diff:${stage.name}`),
-      ...(stage.postDiffSteps ?? [])
+      ...stage.postDiffSteps ?? []
     ]);
   }
 
