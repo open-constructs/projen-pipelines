@@ -262,12 +262,10 @@ export abstract class CDKPipeline extends Component {
     const seq = new StepSequence(this.project, []);
 
     if (this.baseOptions.iamRoleArns?.synth) {
-      seq.addSteps(
-        new AwsAssumeRoleStep(this.project, {
-          roleArn: this.baseOptions.iamRoleArns.synth,
-          jumpRoleArn: this.baseOptions.iamRoleArns.jump?.synth,
-        }),
-      );
+      seq.addSteps(new AwsAssumeRoleStep(this.project, {
+        roleArn: this.baseOptions.iamRoleArns.synth,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.synth,
+      }));
     }
 
     seq.addSteps(...this.baseOptions.preSynthSteps ?? []);
@@ -289,38 +287,32 @@ export abstract class CDKPipeline extends Component {
 
     const globalPublishRole = this.baseOptions.iamRoleArns.assetPublishing ?? this.baseOptions.iamRoleArns.default!;
     if (stageName) {
-      seq.addSteps(
-        new AwsAssumeRoleStep(this.project, {
-          roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage
-            ? this.baseOptions.iamRoleArns.assetPublishingPerStage[stageName] ??
-              globalPublishRole
-            : globalPublishRole,
-          jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stageName],
-        }),
-      );
+      seq.addSteps(new AwsAssumeRoleStep(this.project, {
+        roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage
+          ? this.baseOptions.iamRoleArns.assetPublishingPerStage[stageName] ??
+            globalPublishRole
+          : globalPublishRole,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stageName],
+      }));
       seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stageName}`));
     } else {
       if (this.baseOptions.iamRoleArns.assetPublishingPerStage) {
         const stages = [...this.baseOptions.stages, ...this.baseOptions.independentStages ?? []];
         for (const stage of stages) {
-          seq.addSteps(
-            new AwsAssumeRoleStep(this.project, {
-              roleArn:
-                this.baseOptions.iamRoleArns.assetPublishingPerStage[
-                  stage.name
-                ] ?? globalPublishRole,
-              jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
-            }),
-          );
+          seq.addSteps(new AwsAssumeRoleStep(this.project, {
+            roleArn:
+              this.baseOptions.iamRoleArns.assetPublishingPerStage[
+                stage.name
+              ] ?? globalPublishRole,
+            jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
+          }));
           seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stage.name}`));
         }
       } else {
-        seq.addSteps(
-          new AwsAssumeRoleStep(this.project, {
-            roleArn: globalPublishRole,
-            jumpRoleArn: this.baseOptions.iamRoleArns.jump?.assetPublishing,
-          }),
-        );
+        seq.addSteps(new AwsAssumeRoleStep(this.project, {
+          roleArn: globalPublishRole,
+          jumpRoleArn: this.baseOptions.iamRoleArns.jump?.assetPublishing,
+        }));
         seq.addSteps(new ProjenScriptStep(this.project, 'publish:assets'));
       }
     }
@@ -341,32 +333,26 @@ export abstract class CDKPipeline extends Component {
   protected provideDeployStep(stage: NamedStageOptions): PipelineStep {
     return new StepSequence(this.project, [
       new AwsAssumeRoleStep(this.project, {
-        roleArn:
-          this.baseOptions.iamRoleArns?.deployment?.[stage.name] ??
-          this.baseOptions.iamRoleArns?.default!,
+        roleArn: this.baseOptions.iamRoleArns?.deployment?.[stage.name] ?? this.baseOptions.iamRoleArns?.default!,
         region: stage.env.region,
         jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
       }),
       new ProjenScriptStep(this.project, `deploy:${stage.name}`),
-      ...(stage.postDeploySteps ?? []),
+      ...stage.postDeploySteps ?? [],
     ]);
   }
 
   protected provideDiffStep(stage: NamedStageOptions, fast?: boolean): PipelineStep {
     return new StepSequence(this.project, [
       new AwsAssumeRoleStep(this.project, {
-        roleArn:
-          this.baseOptions.iamRoleArns?.diff?.[stage.name] ??
+        roleArn: this.baseOptions.iamRoleArns?.diff?.[stage.name] ??
           this.baseOptions.iamRoleArns?.deployment?.[stage.name] ??
           this.baseOptions.iamRoleArns?.default!,
         region: stage.env.region,
         jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
       }),
-      new ProjenScriptStep(
-        this.project,
-        fast ? `fastdiff:${stage.name}` : `diff:${stage.name}`,
-      ),
-      ...(stage.postDiffSteps ?? []),
+      new ProjenScriptStep(this.project, fast ? `fastdiff:${stage.name}` : `diff:${stage.name}`),
+      ...(stage.postDiffSteps ?? [])
     ]);
   }
 
