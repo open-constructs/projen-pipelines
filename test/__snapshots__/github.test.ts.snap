@@ -2037,6 +2037,7 @@ jobs:
           role-to-assume: synthJumpRole
           role-session-name: GitHubAction
           aws-region: us-east-1
+          role-skip-session-tagging: true
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
@@ -2081,6 +2082,7 @@ jobs:
           role-to-assume: publishJumpRole
           role-session-name: GitHubAction
           aws-region: us-east-1
+          role-skip-session-tagging: true
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
@@ -2120,6 +2122,7 @@ jobs:
           role-to-assume: devJumpRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
+          role-skip-session-tagging: true
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
@@ -2166,6 +2169,7 @@ jobs:
           role-to-assume: prodJumpRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
+          role-skip-session-tagging: true
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
