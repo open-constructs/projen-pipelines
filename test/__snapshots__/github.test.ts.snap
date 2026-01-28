@@ -471,6 +471,7 @@ exports[`Github snapshot 5`] = `
       "description": "Runs eslint against the codebase",
       "env": {
         "ESLINT_USE_FLAT_CONFIG": "false",
+        "NODE_NO_WARNINGS": "1",
       },
       "name": "eslint",
       "steps": [
@@ -632,7 +633,7 @@ exports[`Github snapshot 5`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
@@ -1673,6 +1674,7 @@ exports[`Github snapshot with feature stages 3`] = `
       "description": "Runs eslint against the codebase",
       "env": {
         "ESLINT_USE_FLAT_CONFIG": "false",
+        "NODE_NO_WARNINGS": "1",
       },
       "name": "eslint",
       "steps": [
@@ -1807,7 +1809,7 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
@@ -2671,6 +2673,7 @@ exports[`Github snapshot with jump roles 4`] = `
       "description": "Runs eslint against the codebase",
       "env": {
         "ESLINT_USE_FLAT_CONFIG": "false",
+        "NODE_NO_WARNINGS": "1",
       },
       "name": "eslint",
       "steps": [
@@ -2816,7 +2819,7 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
@@ -3324,6 +3327,7 @@ exports[`Github snapshot with multi stack 2`] = `
       "description": "Runs eslint against the codebase",
       "env": {
         "ESLINT_USE_FLAT_CONFIG": "false",
+        "NODE_NO_WARNINGS": "1",
       },
       "name": "eslint",
       "steps": [
@@ -3450,7 +3454,7 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
@@ -4219,6 +4223,7 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "description": "Runs eslint against the codebase",
       "env": {
         "ESLINT_USE_FLAT_CONFIG": "false",
+        "NODE_NO_WARNINGS": "1",
       },
       "name": "eslint",
       "steps": [
@@ -4364,7 +4369,7 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
