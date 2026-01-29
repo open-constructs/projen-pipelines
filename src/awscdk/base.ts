@@ -87,7 +87,6 @@ export interface StageOptions {
  * Configuration interface for IAM roles used in the CDK pipeline.
  */
 export interface IamRoleConfig {
-
   /** Default IAM role ARN used if no specific role is provided. */
   readonly default?: string;
   /** IAM role ARN for the synthesis step. */
@@ -100,6 +99,11 @@ export interface IamRoleConfig {
   readonly diff?: { [stage: string]: string };
   /** IAM role ARNs for different deployment stages. */
   readonly deployment?: { [stage: string]: string };
+  /**
+   * IAM role ARNs for using a "jump" role to assume the deploy role in a different AWS account using Role Chaining.
+   * https://github.com/aws-actions/configure-aws-credentials?tab=readme-ov-file#assumerole-with-role-previously-assumed-by-action-in-same-workflow
+   * */
+  readonly jump?: { [stage: string]: string };
 }
 
 /**
@@ -278,6 +282,7 @@ export abstract class CDKPipeline extends Component {
     if (this.baseOptions.iamRoleArns?.synth) {
       seq.addSteps(new AwsAssumeRoleStep(this.project, {
         roleArn: this.baseOptions.iamRoleArns.synth,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.synth,
       }));
     }
 
@@ -317,6 +322,7 @@ export abstract class CDKPipeline extends Component {
         roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage ?
           (this.baseOptions.iamRoleArns.assetPublishingPerStage[stageName] ?? globalPublishRole) :
           globalPublishRole,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stageName],
       }));
       seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stageName}`));
     } else {
@@ -325,12 +331,14 @@ export abstract class CDKPipeline extends Component {
         for (const stage of stages) {
           seq.addSteps(new AwsAssumeRoleStep(this.project, {
             roleArn: this.baseOptions.iamRoleArns.assetPublishingPerStage[stage.name] ?? globalPublishRole,
+            jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
           }));
           seq.addSteps(new ProjenScriptStep(this.project, `publish:assets:${stage.name}`));
         }
       } else {
         seq.addSteps(new AwsAssumeRoleStep(this.project, {
           roleArn: globalPublishRole,
+          jumpRoleArn: this.baseOptions.iamRoleArns.jump?.assetPublishing,
         }));
         seq.addSteps(new ProjenScriptStep(this.project, 'publish:assets'));
       }
@@ -354,6 +362,7 @@ export abstract class CDKPipeline extends Component {
       new AwsAssumeRoleStep(this.project, {
         roleArn: this.baseOptions.iamRoleArns?.deployment?.[stage.name] ?? this.baseOptions.iamRoleArns?.default!,
         region: stage.env.region,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
       }),
       new ProjenScriptStep(this.project, `deploy:${stage.name}`),
       ...stage.postDeploySteps ?? [],
@@ -367,6 +376,7 @@ export abstract class CDKPipeline extends Component {
           this.baseOptions.iamRoleArns?.deployment?.[stage.name] ??
           this.baseOptions.iamRoleArns?.default!,
         region: stage.env.region,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
       }),
       new ProjenScriptStep(this.project, fast ? `fastdiff:${stage.name}` : `diff:${stage.name}`),
       ...stage.postDiffSteps ?? [],
