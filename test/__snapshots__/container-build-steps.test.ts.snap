@@ -1,0 +1,512 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Container Build Steps AwsInspectorSbomStep generates correct configurations 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {
+    "idToken": "write",
+  },
+  "steps": [
+    {
+      "name": "Generate SBOM with AWS Inspector",
+      "run": "# Install Inspector SBOM generator
+          curl -Lo inspector-sbomgen https://inspector-sbomgen-releases-us-east-1.s3.us-east-1.amazonaws.com/latest/linux/amd64/inspector-sbomgen
+          chmod +x inspector-sbomgen
+
+          # Generate SBOM
+          ./inspector-sbomgen cyclonedx -i myapp:latest -o sbom.json
+
+          echo "SBOM generated at sbom.json"",
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps AwsInspectorSbomStep generates correct configurations 2`] = `
+{
+  "commands": [
+    "curl -Lo inspector-sbomgen https://inspector-sbomgen-releases-us-east-1.s3.us-east-1.amazonaws.com/latest/linux/amd64/inspector-sbomgen",
+    "chmod +x inspector-sbomgen",
+    "./inspector-sbomgen cyclonedx -i myapp:latest -o sbom.json",
+    "echo "SBOM generated at sbom.json"",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps AwsInspectorSbomStep generates correct configurations 3`] = `
+{
+  "commands": [
+    "curl -Lo inspector-sbomgen https://inspector-sbomgen-releases-us-east-1.s3.us-east-1.amazonaws.com/latest/linux/amd64/inspector-sbomgen",
+    "chmod +x inspector-sbomgen",
+    "./inspector-sbomgen cyclonedx -i myapp:latest -o sbom.json",
+    "echo "SBOM generated at sbom.json"",
+  ],
+}
+`;
+
+exports[`Container Build Steps AwsInspectorSbomStep with role ARN 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {
+    "idToken": "write",
+  },
+  "steps": [
+    {
+      "name": "AWS Credentials",
+      "uses": "aws-actions/configure-aws-credentials@v5",
+      "with": {
+        "aws-region": "us-east-1",
+        "role-session-name": "GitHubAction",
+        "role-to-assume": "arn:aws:iam::123456789012:role/InspectorRole",
+      },
+    },
+    {
+      "name": "Generate SBOM with AWS Inspector",
+      "run": "# Install Inspector SBOM generator
+          curl -Lo inspector-sbomgen https://inspector-sbomgen-releases-us-east-1.s3.us-east-1.amazonaws.com/latest/linux/amd64/inspector-sbomgen
+          chmod +x inspector-sbomgen
+
+          # Generate SBOM
+          ./inspector-sbomgen spdx -i myapp:latest -o sbom.json
+
+          echo "SBOM generated at sbom.json"",
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps AwsInspectorSbomStep with role ARN 2`] = `
+{
+  "commands": [
+    "export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "arn:aws:iam::123456789012:role/InspectorRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))",
+    "curl -Lo inspector-sbomgen https://inspector-sbomgen-releases-us-east-1.s3.us-east-1.amazonaws.com/latest/linux/amd64/inspector-sbomgen",
+    "chmod +x inspector-sbomgen",
+    "./inspector-sbomgen spdx -i myapp:latest -o sbom.json",
+    "echo "SBOM generated at sbom.json"",
+  ],
+  "env": {
+    "AWS_REGION": "us-east-1",
+  },
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps DockerBuildStep generates correct configurations 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {},
+  "steps": [
+    {
+      "name": "Set up Docker Buildx",
+      "uses": "docker/setup-buildx-action@v3",
+    },
+    {
+      "name": "Build Docker image",
+      "uses": "docker/build-push-action@v5",
+      "with": {
+        "build-args": "NODE_VERSION=20
+BUILD_ENV=production",
+        "cache-from": "type=gha",
+        "cache-to": "type=gha,mode=max",
+        "context": ".",
+        "file": "./Dockerfile",
+        "load": true,
+        "platforms": "linux/amd64",
+        "push": false,
+        "tags": "myapp:latest,myapp:v1.0.0",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps DockerBuildStep generates correct configurations 2`] = `
+{
+  "commands": [
+    "docker buildx create --use --driver docker-container || true",
+    "docker buildx build -t myapp:latest -t myapp:v1.0.0 -f ./Dockerfile --build-arg NODE_VERSION=20 --build-arg BUILD_ENV=production --platform linux/amd64  .",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps DockerBuildStep generates correct configurations 3`] = `
+{
+  "commands": [
+    "docker buildx build -t myapp:latest -t myapp:v1.0.0 -f ./Dockerfile --build-arg NODE_VERSION=20 --build-arg BUILD_ENV=production --platform linux/amd64  .",
+  ],
+}
+`;
+
+exports[`Container Build Steps DockerBuildStep with multi-stage and platforms 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {},
+  "steps": [
+    {
+      "name": "Set up Docker Buildx",
+      "uses": "docker/setup-buildx-action@v3",
+    },
+    {
+      "name": "Build Docker image",
+      "uses": "docker/build-push-action@v5",
+      "with": {
+        "cache-from": "type=gha",
+        "cache-to": "type=gha,mode=max",
+        "context": ".",
+        "file": "./Dockerfile",
+        "load": true,
+        "platforms": "linux/amd64,linux/arm64",
+        "push": false,
+        "tags": "myapp:latest",
+        "target": "production",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps DockerBuildStep with multi-stage and platforms 2`] = `
+{
+  "commands": [
+    "docker buildx create --use --driver docker-container || true",
+    "docker buildx build -t myapp:latest -f ./Dockerfile --target production --platform linux/amd64,linux/arm64  .",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps DockerHubLoginStep generates correct configurations 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {},
+  "steps": [
+    {
+      "name": "Login to Docker Hub",
+      "uses": "docker/login-action@v3",
+      "with": {
+        "password": "\${{ secrets.DOCKERHUB_TOKEN }}",
+        "username": "\${{ secrets.DOCKERHUB_USERNAME }}",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps DockerHubLoginStep generates correct configurations 2`] = `
+{
+  "commands": [
+    "echo "\${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "\${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps DockerHubLoginStep generates correct configurations 3`] = `
+{
+  "commands": [
+    "echo "\${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "\${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin",
+  ],
+}
+`;
+
+exports[`Container Build Steps DockerPushStep generates correct configurations 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {},
+  "steps": [
+    {
+      "name": "Push image myapp:latest",
+      "run": "docker push myapp:latest",
+    },
+    {
+      "name": "Push image myapp:v1.0.0",
+      "run": "docker push myapp:v1.0.0",
+    },
+    {
+      "name": "Push image registry.example.com/myapp:latest",
+      "run": "docker push registry.example.com/myapp:latest",
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps DockerPushStep generates correct configurations 2`] = `
+{
+  "commands": [
+    "docker push myapp:latest",
+    "docker push myapp:v1.0.0",
+    "docker push registry.example.com/myapp:latest",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps DockerPushStep generates correct configurations 3`] = `
+{
+  "commands": [
+    "docker push myapp:latest",
+    "docker push myapp:v1.0.0",
+    "docker push registry.example.com/myapp:latest",
+  ],
+}
+`;
+
+exports[`Container Build Steps DockerTagStep generates correct configurations 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {},
+  "steps": [
+    {
+      "name": "Tag image as myapp:latest",
+      "run": "docker tag myapp:build myapp:latest",
+    },
+    {
+      "name": "Tag image as myapp:v1.0.0",
+      "run": "docker tag myapp:build myapp:v1.0.0",
+    },
+    {
+      "name": "Tag image as registry.example.com/myapp:latest",
+      "run": "docker tag myapp:build registry.example.com/myapp:latest",
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps DockerTagStep generates correct configurations 2`] = `
+{
+  "commands": [
+    "docker tag myapp:build myapp:latest",
+    "docker tag myapp:build myapp:v1.0.0",
+    "docker tag myapp:build registry.example.com/myapp:latest",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps DockerTagStep generates correct configurations 3`] = `
+{
+  "commands": [
+    "docker tag myapp:build myapp:latest",
+    "docker tag myapp:build myapp:v1.0.0",
+    "docker tag myapp:build registry.example.com/myapp:latest",
+  ],
+}
+`;
+
+exports[`Container Build Steps EcrLoginStep generates correct configurations 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {
+    "idToken": "write",
+  },
+  "steps": [
+    {
+      "name": "Login to Amazon ECR",
+      "uses": "aws-actions/amazon-ecr-login@v2",
+      "with": {
+        "registries": "123456789012",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps EcrLoginStep generates correct configurations 2`] = `
+{
+  "commands": [
+    "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps EcrLoginStep generates correct configurations 3`] = `
+{
+  "commands": [
+    "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com",
+  ],
+}
+`;
+
+exports[`Container Build Steps EcrLoginStep with role ARN 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {
+    "idToken": "write",
+  },
+  "steps": [
+    {
+      "name": "AWS Credentials",
+      "uses": "aws-actions/configure-aws-credentials@v5",
+      "with": {
+        "aws-region": "us-east-1",
+        "role-session-name": "GitHubAction",
+        "role-to-assume": "arn:aws:iam::123456789012:role/ECRAccessRole",
+      },
+    },
+    {
+      "name": "Login to Amazon ECR",
+      "uses": "aws-actions/amazon-ecr-login@v2",
+      "with": {
+        "registries": "123456789012",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps EcrLoginStep with role ARN 2`] = `
+{
+  "commands": [
+    "export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "arn:aws:iam::123456789012:role/ECRAccessRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))",
+    "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com",
+  ],
+  "env": {
+    "AWS_REGION": "us-east-1",
+  },
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps HarborLoginStep generates correct configurations 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {},
+  "steps": [
+    {
+      "name": "Login to Harbor",
+      "uses": "docker/login-action@v3",
+      "with": {
+        "password": "\${{ secrets.HARBOR_PASSWORD }}",
+        "registry": "harbor.example.com",
+        "username": "\${{ secrets.HARBOR_USERNAME }}",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps HarborLoginStep generates correct configurations 2`] = `
+{
+  "commands": [
+    "echo "\${{ secrets.HARBOR_PASSWORD }}" | docker login -u "\${{ secrets.HARBOR_USERNAME }}" --password-stdin harbor.example.com",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps HarborLoginStep generates correct configurations 3`] = `
+{
+  "commands": [
+    "echo "\${{ secrets.HARBOR_PASSWORD }}" | docker login -u "\${{ secrets.HARBOR_USERNAME }}" --password-stdin harbor.example.com",
+  ],
+}
+`;
+
+exports[`Container Build Steps TrivyScanStep generates correct configurations 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {},
+  "steps": [
+    {
+      "name": "Run Trivy vulnerability scanner",
+      "uses": "aquasecurity/trivy-action@master",
+      "with": {
+        "exit-code": "1",
+        "format": "sarif",
+        "image-ref": "myapp:latest",
+        "output": "trivy-results.sarif",
+        "severity": "CRITICAL,HIGH",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps TrivyScanStep generates correct configurations 2`] = `
+{
+  "commands": [
+    "wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | apt-key add -",
+    "echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | tee -a /etc/apt/sources.list.d/trivy.list",
+    "apt-get update && apt-get install -y trivy",
+    "trivy image --severity CRITICAL,HIGH --exit-code 1 --format sarif -o trivy-results.sarif myapp:latest",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`Container Build Steps TrivyScanStep generates correct configurations 3`] = `
+{
+  "commands": [
+    "trivy image --severity CRITICAL,HIGH --exit-code 1 --format sarif -o trivy-results.sarif myapp:latest",
+  ],
+}
+`;
+
+exports[`Container Build Steps TrivyScanStep with ignore unfixed 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {},
+  "steps": [
+    {
+      "name": "Run Trivy vulnerability scanner",
+      "uses": "aquasecurity/trivy-action@master",
+      "with": {
+        "exit-code": "0",
+        "format": "table",
+        "ignore-unfixed": "true",
+        "image-ref": "myapp:latest",
+        "severity": "CRITICAL,HIGH",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Container Build Steps TrivyScanStep with ignore unfixed 2`] = `
+{
+  "commands": [
+    "wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | apt-key add -",
+    "echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | tee -a /etc/apt/sources.list.d/trivy.list",
+    "apt-get update && apt-get install -y trivy",
+    "trivy image --severity CRITICAL,HIGH --exit-code 0 --format table --ignore-unfixed myapp:latest",
+  ],
+  "env": {},
+  "extensions": [],
+  "needs": [],
+}
+`;
