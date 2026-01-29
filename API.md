@@ -1635,6 +1635,203 @@ public readonly schedule: string;
 ---
 
 
+### GithubPagesWorkflow <a name="GithubPagesWorkflow" id="projen-pipelines.GithubPagesWorkflow"></a>
+
+Creates a GitHub workflow that builds documentation and deploys it to GitHub Pages.
+
+This workflow:
+1. Checks out the repository
+2. Sets up Node.js
+3. Installs dependencies (optional)
+4. Builds documentation
+5. Deploys to GitHub Pages using the official GitHub Actions
+
+*Example*
+
+```typescript
+const project = new Project({ name: 'my-project' });
+new GithubPagesWorkflow(project, {
+  buildCommand: 'npm run build:docs',
+  docsFolder: 'dist/docs',
+  customDomain: 'docs.example.com',
+});
+```
+
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GithubPagesWorkflow.Initializer"></a>
+
+```typescript
+import { GithubPagesWorkflow } from 'projen-pipelines'
+
+new GithubPagesWorkflow(project: Project, options: GithubPagesWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GithubPagesWorkflowOptions">GithubPagesWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubPagesWorkflow.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GithubPagesWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GithubPagesWorkflowOptions">GithubPagesWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GithubPagesWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GithubPagesWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GithubPagesWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GithubPagesWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GithubPagesWorkflow.isConstruct"></a>
+
+```typescript
+import { GithubPagesWorkflow } from 'projen-pipelines'
+
+GithubPagesWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubPagesWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GithubPagesWorkflow.isComponent"></a>
+
+```typescript
+import { GithubPagesWorkflow } from 'projen-pipelines'
+
+GithubPagesWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubPagesWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubPagesWorkflow.property.workflow">workflow</a></code> | <code>projen.github.GithubWorkflow</code> | The GitHub workflow instance. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GithubPagesWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubPagesWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `workflow`<sup>Required</sup> <a name="workflow" id="projen-pipelines.GithubPagesWorkflow.property.workflow"></a>
+
+```typescript
+public readonly workflow: GithubWorkflow;
+```
+
+- *Type:* projen.github.GithubWorkflow
+
+The GitHub workflow instance.
+
+---
+
+
 ### GitlabCDKPipeline <a name="GitlabCDKPipeline" id="projen-pipelines.GitlabCDKPipeline"></a>
 
 The GitlabCDKPipeline class extends CDKPipeline to provide a way to configure and execute AWS CDK deployment pipelines within GitLab CI/CD environments.
@@ -4393,6 +4590,273 @@ Whether or not to grant the step write permissions to the registry.
 
 ---
 
+### GithubPagesDeployStepConfig <a name="GithubPagesDeployStepConfig" id="projen-pipelines.GithubPagesDeployStepConfig"></a>
+
+Configuration for a GitHub Pages deployment step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GithubPagesDeployStepConfig.Initializer"></a>
+
+```typescript
+import { GithubPagesDeployStepConfig } from 'projen-pipelines'
+
+const githubPagesDeployStepConfig: GithubPagesDeployStepConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.buildCommand">buildCommand</a></code> | <code>string</code> | The command to run to build the documentation. |
+| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.artifactName">artifactName</a></code> | <code>string</code> | The name of the GitHub Pages artifact. |
+| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.customDomain">customDomain</a></code> | <code>string</code> | Custom domain for GitHub Pages. |
+| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.docsFolder">docsFolder</a></code> | <code>string</code> | The folder containing the built documentation to deploy. |
+| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.sourceBranch">sourceBranch</a></code> | <code>string</code> | The branch to deploy from (used for GitHub Pages source configuration). |
+
+---
+
+##### `buildCommand`<sup>Required</sup> <a name="buildCommand" id="projen-pipelines.GithubPagesDeployStepConfig.property.buildCommand"></a>
+
+```typescript
+public readonly buildCommand: string;
+```
+
+- *Type:* string
+
+The command to run to build the documentation.
+
+---
+
+*Example*
+
+```typescript
+'pnpm build:docs'
+```
+
+
+##### `artifactName`<sup>Optional</sup> <a name="artifactName" id="projen-pipelines.GithubPagesDeployStepConfig.property.artifactName"></a>
+
+```typescript
+public readonly artifactName: string;
+```
+
+- *Type:* string
+- *Default:* 'github-pages'
+
+The name of the GitHub Pages artifact.
+
+---
+
+##### `customDomain`<sup>Optional</sup> <a name="customDomain" id="projen-pipelines.GithubPagesDeployStepConfig.property.customDomain"></a>
+
+```typescript
+public readonly customDomain: string;
+```
+
+- *Type:* string
+- *Default:* undefined
+
+Custom domain for GitHub Pages.
+
+---
+
+##### `docsFolder`<sup>Optional</sup> <a name="docsFolder" id="projen-pipelines.GithubPagesDeployStepConfig.property.docsFolder"></a>
+
+```typescript
+public readonly docsFolder: string;
+```
+
+- *Type:* string
+- *Default:* 'docs'
+
+The folder containing the built documentation to deploy.
+
+---
+
+*Example*
+
+```typescript
+'dist/docs'
+```
+
+
+##### `sourceBranch`<sup>Optional</sup> <a name="sourceBranch" id="projen-pipelines.GithubPagesDeployStepConfig.property.sourceBranch"></a>
+
+```typescript
+public readonly sourceBranch: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+The branch to deploy from (used for GitHub Pages source configuration).
+
+---
+
+### GithubPagesWorkflowOptions <a name="GithubPagesWorkflowOptions" id="projen-pipelines.GithubPagesWorkflowOptions"></a>
+
+Configuration options for the GitHub Pages workflow.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GithubPagesWorkflowOptions.Initializer"></a>
+
+```typescript
+import { GithubPagesWorkflowOptions } from 'projen-pipelines'
+
+const githubPagesWorkflowOptions: GithubPagesWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.buildCommand">buildCommand</a></code> | <code>string</code> | The build command to run to generate documentation. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.artifactName">artifactName</a></code> | <code>string</code> | The name of the GitHub Pages artifact. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.branchName">branchName</a></code> | <code>string</code> | The branch that triggers the workflow. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.customDomain">customDomain</a></code> | <code>string</code> | Custom domain for GitHub Pages. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.docsFolder">docsFolder</a></code> | <code>string</code> | The folder containing the built documentation to deploy. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.installCommand">installCommand</a></code> | <code>string</code> | Custom install command (overrides the default npm/yarn/pnpm install). |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.nodeVersion">nodeVersion</a></code> | <code>string</code> | Node.js version to use. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.runInstall">runInstall</a></code> | <code>boolean</code> | Whether to run npm install before building docs. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | Runner tags to use for the job. |
+| <code><a href="#projen-pipelines.GithubPagesWorkflowOptions.property.workflowName">workflowName</a></code> | <code>string</code> | The name of the workflow file (without .yml extension). |
+
+---
+
+##### `buildCommand`<sup>Required</sup> <a name="buildCommand" id="projen-pipelines.GithubPagesWorkflowOptions.property.buildCommand"></a>
+
+```typescript
+public readonly buildCommand: string;
+```
+
+- *Type:* string
+
+The build command to run to generate documentation.
+
+---
+
+*Example*
+
+```typescript
+'npm run build:docs'
+```
+
+
+##### `artifactName`<sup>Optional</sup> <a name="artifactName" id="projen-pipelines.GithubPagesWorkflowOptions.property.artifactName"></a>
+
+```typescript
+public readonly artifactName: string;
+```
+
+- *Type:* string
+- *Default:* 'github-pages'
+
+The name of the GitHub Pages artifact.
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.GithubPagesWorkflowOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+The branch that triggers the workflow.
+
+---
+
+##### `customDomain`<sup>Optional</sup> <a name="customDomain" id="projen-pipelines.GithubPagesWorkflowOptions.property.customDomain"></a>
+
+```typescript
+public readonly customDomain: string;
+```
+
+- *Type:* string
+- *Default:* undefined
+
+Custom domain for GitHub Pages.
+
+---
+
+##### `docsFolder`<sup>Optional</sup> <a name="docsFolder" id="projen-pipelines.GithubPagesWorkflowOptions.property.docsFolder"></a>
+
+```typescript
+public readonly docsFolder: string;
+```
+
+- *Type:* string
+- *Default:* 'docs'
+
+The folder containing the built documentation to deploy.
+
+---
+
+##### `installCommand`<sup>Optional</sup> <a name="installCommand" id="projen-pipelines.GithubPagesWorkflowOptions.property.installCommand"></a>
+
+```typescript
+public readonly installCommand: string;
+```
+
+- *Type:* string
+- *Default:* undefined - uses project's install command
+
+Custom install command (overrides the default npm/yarn/pnpm install).
+
+---
+
+##### `nodeVersion`<sup>Optional</sup> <a name="nodeVersion" id="projen-pipelines.GithubPagesWorkflowOptions.property.nodeVersion"></a>
+
+```typescript
+public readonly nodeVersion: string;
+```
+
+- *Type:* string
+- *Default:* '20'
+
+Node.js version to use.
+
+---
+
+##### `runInstall`<sup>Optional</sup> <a name="runInstall" id="projen-pipelines.GithubPagesWorkflowOptions.property.runInstall"></a>
+
+```typescript
+public readonly runInstall: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to run npm install before building docs.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GithubPagesWorkflowOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['ubuntu-latest']
+
+Runner tags to use for the job.
+
+---
+
+##### `workflowName`<sup>Optional</sup> <a name="workflowName" id="projen-pipelines.GithubPagesWorkflowOptions.property.workflowName"></a>
+
+```typescript
+public readonly workflowName: string;
+```
+
+- *Type:* string
+- *Default:* 'github-pages'
+
+The name of the workflow file (without .yml extension).
+
+---
+
 ### GithubStepConfig <a name="GithubStepConfig" id="projen-pipelines.GithubStepConfig"></a>
 
 Configuration interface for a GitHub Actions step.
@@ -6727,6 +7191,108 @@ Generates a configuration for a GitHub Actions step.
 Should be implemented by subclasses.
 
 ##### `toGitlab` <a name="toGitlab" id="projen-pipelines.GithubPackagesLoginStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### GithubPagesDeployStep <a name="GithubPagesDeployStep" id="projen-pipelines.GithubPagesDeployStep"></a>
+
+A step that builds documentation and deploys it to GitHub Pages using GitHub Actions deployment mode.
+
+This step uses the official GitHub Actions for Pages deployment:
+- actions/upload-pages-artifact@v3
+- actions/deploy-pages@v4
+
+*Example*
+
+```typescript
+new GithubPagesDeployStep(project, {
+  buildCommand: 'npm run build:docs',
+  docsFolder: 'dist/docs',
+  customDomain: 'docs.example.com',
+});
+```
+
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GithubPagesDeployStep.Initializer"></a>
+
+```typescript
+import { GithubPagesDeployStep } from 'projen-pipelines'
+
+new GithubPagesDeployStep(project: Project, config: GithubPagesDeployStepConfig)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubPagesDeployStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.GithubPagesDeployStep.Initializer.parameter.config">config</a></code> | <code><a href="#projen-pipelines.GithubPagesDeployStepConfig">GithubPagesDeployStepConfig</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubPagesDeployStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GithubPagesDeployStep.Initializer.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.GithubPagesDeployStepConfig">GithubPagesDeployStepConfig</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubPagesDeployStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.GithubPagesDeployStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
+| <code><a href="#projen-pipelines.GithubPagesDeployStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.GithubPagesDeployStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.GithubPagesDeployStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.GithubPagesDeployStep.toCodeCatalyst"></a>
+
+```typescript
+public toCodeCatalyst(): CodeCatalystStepConfig
+```
+
+Generates a configuration for a CodeCatalyst Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.GithubPagesDeployStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.GithubPagesDeployStep.toGitlab"></a>
 
 ```typescript
 public toGitlab(): GitlabStepConfig
