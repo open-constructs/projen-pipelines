@@ -5,6 +5,7 @@
     "url": "https://github.com/open-constructs/projen-pipelines.git"
   },
   "bin": {
+    "count-resources": "lib/awscdk/count-resources.js",
     "detect-drift": "lib/drift/detect-drift.js",
     "pipelines-release": "lib/release.js"
   },

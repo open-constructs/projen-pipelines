@@ -8,6 +8,7 @@ stages:
   - publish_assets
   - dev
   - prod
+  - resource-count-mr
 .artifacts_cdk:
   artifacts:
     when: on_success
@@ -42,7 +43,9 @@ synth:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-  variables: {}
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 publish_assets:
   extends:
     - .aws_base
@@ -130,6 +133,98 @@ deploy-prod:
     - npx projen deploy:prod
   variables:
     AWS_REGION: eu-central-1
+resource-count-mr:
+  extends:
+    - .aws_base
+  stage: resource-count-mr
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  needs: []
+  script:
+    - npx projen install:ci
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+    - |
+      
+      # Post comment to GitLab MR
+      if [ -f resource-count-results.json ]; then
+        echo "Posting resource count to merge request..."
+
+        # Parse results
+        STACKS_COUNT=$(jq '.stacks | length' resource-count-results.json)
+        TOTAL_RESOURCES=$(jq '.totalResources' resource-count-results.json)
+        MAX_RESOURCES=$(jq '.maxResourcesInStack' resource-count-results.json)
+        STACKS_WITH_WARNINGS=$(jq '[.stacks[] | select(.resourceCount >= 450)] | length' resource-count-results.json)
+
+        # Build comment body
+        COMMENT_BODY="## 📊 CloudFormation Resource Count\\n\\n"
+        COMMENT_BODY+="### Summary\\n"
+        COMMENT_BODY+="- **Total stacks:** $STACKS_COUNT\\n"
+        COMMENT_BODY+="- **Total resources:** $TOTAL_RESOURCES\\n"
+        COMMENT_BODY+="- **Max resources in single stack:** $MAX_RESOURCES\\n"
+        COMMENT_BODY+="- **Warning threshold:** 450 resources\\n"
+        COMMENT_BODY+="- **CloudFormation limit:** 500 resources per stack\\n\\n"
+
+        # Add warnings if present
+        if [ "$STACKS_WITH_WARNINGS" -gt 0 ]; then
+          COMMENT_BODY+="### ⚠️ Stacks Approaching Limit\\n\\n"
+          COMMENT_BODY+="$STACKS_WITH_WARNINGS stack(s) have crossed the warning threshold:\\n\\n"
+
+          jq -r '.stacks[] | select(.resourceCount >= 450) | "- **\\(.stackName)**: \\(.resourceCount) resources (\\((.resourceCount * 100 / 500) | floor)% of limit)"' resource-count-results.json | while read line; do
+            COMMENT_BODY+="$line\\n"
+          done
+
+          COMMENT_BODY+="\\n**Recommendations:**\\n"
+          COMMENT_BODY+="- Consider breaking large stacks into smaller, focused stacks\\n"
+          COMMENT_BODY+="- Use nested stacks for reusable components\\n"
+          COMMENT_BODY+="- Review resource usage and remove unnecessary resources\\n\\n"
+        fi
+
+        # Add stack details table
+        COMMENT_BODY+="### Stack Details\\n\\n"
+        COMMENT_BODY+="| Stack | Resources | % of Limit | Status |\\n"
+        COMMENT_BODY+="| ----- | --------- | ---------- | ------ |\\n"
+
+        jq -r '.stacks | sort_by(-.resourceCount)[] | "| \\(.stackName) | \\(.resourceCount) | \\((.resourceCount * 100 / 500) | floor)% | \\(if .resourceCount >= 450 then "⚠️ Warning" else "✅ OK" end) |"' resource-count-results.json | while read line; do
+          COMMENT_BODY+="$line\\n"
+        done
+
+        # Post comment to MR using GitLab API
+        if [ -n "\${CI_MERGE_REQUEST_IID}" ]; then
+          # Check for existing comment
+          EXISTING_COMMENT_ID=$(curl --silent --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+            "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" \\
+            | jq -r '.[] | select(.body | contains("📊 CloudFormation Resource Count")) | .id' | head -1)
+
+          # Prepare JSON payload
+          JSON_PAYLOAD=$(jq -n --arg body "$COMMENT_BODY" '{body: $body}')
+
+          if [ -n "\${EXISTING_COMMENT_ID}" ]; then
+            # Update existing comment
+            curl --silent --request PUT \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes/\${EXISTING_COMMENT_ID}"
+            echo "Updated existing MR comment"
+          else
+            # Create new comment
+            curl --silent --request POST \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes"
+            echo "Created new MR comment"
+          fi
+        else
+          echo "Not running in merge request context, skipping comment"
+        fi
+      else
+        echo "Resource count results not found"
+      fi
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 "
 `;
 
@@ -249,6 +344,7 @@ stages:
   - publish_assets
   - independent1
   - independent2
+  - resource-count-mr
 .artifacts_cdk:
   artifacts:
     when: on_success
@@ -283,7 +379,9 @@ synth:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-  variables: {}
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 publish_assets:
   extends:
     - .aws_base
@@ -334,6 +432,98 @@ deploy-independent2:
   variables:
     AWS_REGION: eu-central-1
     FOO: bar
+resource-count-mr:
+  extends:
+    - .aws_base
+  stage: resource-count-mr
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  needs: []
+  script:
+    - npx projen install:ci
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+    - |
+      
+      # Post comment to GitLab MR
+      if [ -f resource-count-results.json ]; then
+        echo "Posting resource count to merge request..."
+
+        # Parse results
+        STACKS_COUNT=$(jq '.stacks | length' resource-count-results.json)
+        TOTAL_RESOURCES=$(jq '.totalResources' resource-count-results.json)
+        MAX_RESOURCES=$(jq '.maxResourcesInStack' resource-count-results.json)
+        STACKS_WITH_WARNINGS=$(jq '[.stacks[] | select(.resourceCount >= 450)] | length' resource-count-results.json)
+
+        # Build comment body
+        COMMENT_BODY="## 📊 CloudFormation Resource Count\\n\\n"
+        COMMENT_BODY+="### Summary\\n"
+        COMMENT_BODY+="- **Total stacks:** $STACKS_COUNT\\n"
+        COMMENT_BODY+="- **Total resources:** $TOTAL_RESOURCES\\n"
+        COMMENT_BODY+="- **Max resources in single stack:** $MAX_RESOURCES\\n"
+        COMMENT_BODY+="- **Warning threshold:** 450 resources\\n"
+        COMMENT_BODY+="- **CloudFormation limit:** 500 resources per stack\\n\\n"
+
+        # Add warnings if present
+        if [ "$STACKS_WITH_WARNINGS" -gt 0 ]; then
+          COMMENT_BODY+="### ⚠️ Stacks Approaching Limit\\n\\n"
+          COMMENT_BODY+="$STACKS_WITH_WARNINGS stack(s) have crossed the warning threshold:\\n\\n"
+
+          jq -r '.stacks[] | select(.resourceCount >= 450) | "- **\\(.stackName)**: \\(.resourceCount) resources (\\((.resourceCount * 100 / 500) | floor)% of limit)"' resource-count-results.json | while read line; do
+            COMMENT_BODY+="$line\\n"
+          done
+
+          COMMENT_BODY+="\\n**Recommendations:**\\n"
+          COMMENT_BODY+="- Consider breaking large stacks into smaller, focused stacks\\n"
+          COMMENT_BODY+="- Use nested stacks for reusable components\\n"
+          COMMENT_BODY+="- Review resource usage and remove unnecessary resources\\n\\n"
+        fi
+
+        # Add stack details table
+        COMMENT_BODY+="### Stack Details\\n\\n"
+        COMMENT_BODY+="| Stack | Resources | % of Limit | Status |\\n"
+        COMMENT_BODY+="| ----- | --------- | ---------- | ------ |\\n"
+
+        jq -r '.stacks | sort_by(-.resourceCount)[] | "| \\(.stackName) | \\(.resourceCount) | \\((.resourceCount * 100 / 500) | floor)% | \\(if .resourceCount >= 450 then "⚠️ Warning" else "✅ OK" end) |"' resource-count-results.json | while read line; do
+          COMMENT_BODY+="$line\\n"
+        done
+
+        # Post comment to MR using GitLab API
+        if [ -n "\${CI_MERGE_REQUEST_IID}" ]; then
+          # Check for existing comment
+          EXISTING_COMMENT_ID=$(curl --silent --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+            "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" \\
+            | jq -r '.[] | select(.body | contains("📊 CloudFormation Resource Count")) | .id' | head -1)
+
+          # Prepare JSON payload
+          JSON_PAYLOAD=$(jq -n --arg body "$COMMENT_BODY" '{body: $body}')
+
+          if [ -n "\${EXISTING_COMMENT_ID}" ]; then
+            # Update existing comment
+            curl --silent --request PUT \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes/\${EXISTING_COMMENT_ID}"
+            echo "Updated existing MR comment"
+          else
+            # Create new comment
+            curl --silent --request POST \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes"
+            echo "Created new MR comment"
+          fi
+        else
+          echo "Not running in merge request context, skipping comment"
+        fi
+      else
+        echo "Resource count results not found"
+      fi
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 "
 `;
 
@@ -346,6 +536,7 @@ stages:
   - synth
   - publish_assets
   - prod
+  - resource-count-mr
 .artifacts_cdk:
   artifacts:
     when: on_success
@@ -381,8 +572,10 @@ synth:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
   variables:
     FOO: bar
+    CLOUD_ASSEMBLY_DIR: cdk.out
 publish_assets:
   extends:
     - .aws_base
@@ -437,6 +630,100 @@ deploy-prod:
   variables:
     FOO: bar
     AWS_REGION: eu-central-1
+resource-count-mr:
+  extends:
+    - .aws_base
+  stage: resource-count-mr
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  needs: []
+  script:
+    - echo Login
+    - npx projen install:ci
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+    - |
+      
+      # Post comment to GitLab MR
+      if [ -f resource-count-results.json ]; then
+        echo "Posting resource count to merge request..."
+
+        # Parse results
+        STACKS_COUNT=$(jq '.stacks | length' resource-count-results.json)
+        TOTAL_RESOURCES=$(jq '.totalResources' resource-count-results.json)
+        MAX_RESOURCES=$(jq '.maxResourcesInStack' resource-count-results.json)
+        STACKS_WITH_WARNINGS=$(jq '[.stacks[] | select(.resourceCount >= 450)] | length' resource-count-results.json)
+
+        # Build comment body
+        COMMENT_BODY="## 📊 CloudFormation Resource Count\\n\\n"
+        COMMENT_BODY+="### Summary\\n"
+        COMMENT_BODY+="- **Total stacks:** $STACKS_COUNT\\n"
+        COMMENT_BODY+="- **Total resources:** $TOTAL_RESOURCES\\n"
+        COMMENT_BODY+="- **Max resources in single stack:** $MAX_RESOURCES\\n"
+        COMMENT_BODY+="- **Warning threshold:** 450 resources\\n"
+        COMMENT_BODY+="- **CloudFormation limit:** 500 resources per stack\\n\\n"
+
+        # Add warnings if present
+        if [ "$STACKS_WITH_WARNINGS" -gt 0 ]; then
+          COMMENT_BODY+="### ⚠️ Stacks Approaching Limit\\n\\n"
+          COMMENT_BODY+="$STACKS_WITH_WARNINGS stack(s) have crossed the warning threshold:\\n\\n"
+
+          jq -r '.stacks[] | select(.resourceCount >= 450) | "- **\\(.stackName)**: \\(.resourceCount) resources (\\((.resourceCount * 100 / 500) | floor)% of limit)"' resource-count-results.json | while read line; do
+            COMMENT_BODY+="$line\\n"
+          done
+
+          COMMENT_BODY+="\\n**Recommendations:**\\n"
+          COMMENT_BODY+="- Consider breaking large stacks into smaller, focused stacks\\n"
+          COMMENT_BODY+="- Use nested stacks for reusable components\\n"
+          COMMENT_BODY+="- Review resource usage and remove unnecessary resources\\n\\n"
+        fi
+
+        # Add stack details table
+        COMMENT_BODY+="### Stack Details\\n\\n"
+        COMMENT_BODY+="| Stack | Resources | % of Limit | Status |\\n"
+        COMMENT_BODY+="| ----- | --------- | ---------- | ------ |\\n"
+
+        jq -r '.stacks | sort_by(-.resourceCount)[] | "| \\(.stackName) | \\(.resourceCount) | \\((.resourceCount * 100 / 500) | floor)% | \\(if .resourceCount >= 450 then "⚠️ Warning" else "✅ OK" end) |"' resource-count-results.json | while read line; do
+          COMMENT_BODY+="$line\\n"
+        done
+
+        # Post comment to MR using GitLab API
+        if [ -n "\${CI_MERGE_REQUEST_IID}" ]; then
+          # Check for existing comment
+          EXISTING_COMMENT_ID=$(curl --silent --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+            "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" \\
+            | jq -r '.[] | select(.body | contains("📊 CloudFormation Resource Count")) | .id' | head -1)
+
+          # Prepare JSON payload
+          JSON_PAYLOAD=$(jq -n --arg body "$COMMENT_BODY" '{body: $body}')
+
+          if [ -n "\${EXISTING_COMMENT_ID}" ]; then
+            # Update existing comment
+            curl --silent --request PUT \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes/\${EXISTING_COMMENT_ID}"
+            echo "Updated existing MR comment"
+          else
+            # Create new comment
+            curl --silent --request POST \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes"
+            echo "Created new MR comment"
+          fi
+        else
+          echo "Not running in merge request context, skipping comment"
+        fi
+      else
+        echo "Resource count results not found"
+      fi
+  variables:
+    FOO: bar
+    CLOUD_ASSEMBLY_DIR: cdk.out
 "
 `;
 
@@ -448,6 +735,7 @@ stages:
   - publish_assets
   - dev
   - prod
+  - resource-count-mr
 .artifacts_cdk:
   artifacts:
     when: on_success
@@ -484,7 +772,9 @@ synth:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-  variables: {}
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 publish_assets:
   extends:
     - .aws_base
@@ -580,6 +870,100 @@ deploy-prod:
     - npx projen deploy:prod
   variables:
     AWS_REGION: eu-central-1
+resource-count-mr:
+  extends:
+    - .aws_base
+  stage: resource-count-mr
+  tags:
+    - defaultTag
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  needs: []
+  script:
+    - npx projen install:ci
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+    - |
+      
+      # Post comment to GitLab MR
+      if [ -f resource-count-results.json ]; then
+        echo "Posting resource count to merge request..."
+
+        # Parse results
+        STACKS_COUNT=$(jq '.stacks | length' resource-count-results.json)
+        TOTAL_RESOURCES=$(jq '.totalResources' resource-count-results.json)
+        MAX_RESOURCES=$(jq '.maxResourcesInStack' resource-count-results.json)
+        STACKS_WITH_WARNINGS=$(jq '[.stacks[] | select(.resourceCount >= 450)] | length' resource-count-results.json)
+
+        # Build comment body
+        COMMENT_BODY="## 📊 CloudFormation Resource Count\\n\\n"
+        COMMENT_BODY+="### Summary\\n"
+        COMMENT_BODY+="- **Total stacks:** $STACKS_COUNT\\n"
+        COMMENT_BODY+="- **Total resources:** $TOTAL_RESOURCES\\n"
+        COMMENT_BODY+="- **Max resources in single stack:** $MAX_RESOURCES\\n"
+        COMMENT_BODY+="- **Warning threshold:** 450 resources\\n"
+        COMMENT_BODY+="- **CloudFormation limit:** 500 resources per stack\\n\\n"
+
+        # Add warnings if present
+        if [ "$STACKS_WITH_WARNINGS" -gt 0 ]; then
+          COMMENT_BODY+="### ⚠️ Stacks Approaching Limit\\n\\n"
+          COMMENT_BODY+="$STACKS_WITH_WARNINGS stack(s) have crossed the warning threshold:\\n\\n"
+
+          jq -r '.stacks[] | select(.resourceCount >= 450) | "- **\\(.stackName)**: \\(.resourceCount) resources (\\((.resourceCount * 100 / 500) | floor)% of limit)"' resource-count-results.json | while read line; do
+            COMMENT_BODY+="$line\\n"
+          done
+
+          COMMENT_BODY+="\\n**Recommendations:**\\n"
+          COMMENT_BODY+="- Consider breaking large stacks into smaller, focused stacks\\n"
+          COMMENT_BODY+="- Use nested stacks for reusable components\\n"
+          COMMENT_BODY+="- Review resource usage and remove unnecessary resources\\n\\n"
+        fi
+
+        # Add stack details table
+        COMMENT_BODY+="### Stack Details\\n\\n"
+        COMMENT_BODY+="| Stack | Resources | % of Limit | Status |\\n"
+        COMMENT_BODY+="| ----- | --------- | ---------- | ------ |\\n"
+
+        jq -r '.stacks | sort_by(-.resourceCount)[] | "| \\(.stackName) | \\(.resourceCount) | \\((.resourceCount * 100 / 500) | floor)% | \\(if .resourceCount >= 450 then "⚠️ Warning" else "✅ OK" end) |"' resource-count-results.json | while read line; do
+          COMMENT_BODY+="$line\\n"
+        done
+
+        # Post comment to MR using GitLab API
+        if [ -n "\${CI_MERGE_REQUEST_IID}" ]; then
+          # Check for existing comment
+          EXISTING_COMMENT_ID=$(curl --silent --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+            "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" \\
+            | jq -r '.[] | select(.body | contains("📊 CloudFormation Resource Count")) | .id' | head -1)
+
+          # Prepare JSON payload
+          JSON_PAYLOAD=$(jq -n --arg body "$COMMENT_BODY" '{body: $body}')
+
+          if [ -n "\${EXISTING_COMMENT_ID}" ]; then
+            # Update existing comment
+            curl --silent --request PUT \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes/\${EXISTING_COMMENT_ID}"
+            echo "Updated existing MR comment"
+          else
+            # Create new comment
+            curl --silent --request POST \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes"
+            echo "Created new MR comment"
+          fi
+        else
+          echo "Not running in merge request context, skipping comment"
+        fi
+      else
+        echo "Resource count results not found"
+      fi
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 "
 `;
 
@@ -591,6 +975,7 @@ stages:
   - publish_assets
   - dev
   - prod
+  - resource-count-mr
 .artifacts_cdk:
   artifacts:
     when: on_success
@@ -627,7 +1012,9 @@ synth:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-  variables: {}
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 publish_assets:
   extends:
     - .aws_base
@@ -723,6 +1110,100 @@ deploy-prod:
     - npx projen deploy:prod
   variables:
     AWS_REGION: eu-central-1
+resource-count-mr:
+  extends:
+    - .aws_base
+  stage: resource-count-mr
+  tags:
+    - synthTag
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  needs: []
+  script:
+    - npx projen install:ci
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+    - |
+      
+      # Post comment to GitLab MR
+      if [ -f resource-count-results.json ]; then
+        echo "Posting resource count to merge request..."
+
+        # Parse results
+        STACKS_COUNT=$(jq '.stacks | length' resource-count-results.json)
+        TOTAL_RESOURCES=$(jq '.totalResources' resource-count-results.json)
+        MAX_RESOURCES=$(jq '.maxResourcesInStack' resource-count-results.json)
+        STACKS_WITH_WARNINGS=$(jq '[.stacks[] | select(.resourceCount >= 450)] | length' resource-count-results.json)
+
+        # Build comment body
+        COMMENT_BODY="## 📊 CloudFormation Resource Count\\n\\n"
+        COMMENT_BODY+="### Summary\\n"
+        COMMENT_BODY+="- **Total stacks:** $STACKS_COUNT\\n"
+        COMMENT_BODY+="- **Total resources:** $TOTAL_RESOURCES\\n"
+        COMMENT_BODY+="- **Max resources in single stack:** $MAX_RESOURCES\\n"
+        COMMENT_BODY+="- **Warning threshold:** 450 resources\\n"
+        COMMENT_BODY+="- **CloudFormation limit:** 500 resources per stack\\n\\n"
+
+        # Add warnings if present
+        if [ "$STACKS_WITH_WARNINGS" -gt 0 ]; then
+          COMMENT_BODY+="### ⚠️ Stacks Approaching Limit\\n\\n"
+          COMMENT_BODY+="$STACKS_WITH_WARNINGS stack(s) have crossed the warning threshold:\\n\\n"
+
+          jq -r '.stacks[] | select(.resourceCount >= 450) | "- **\\(.stackName)**: \\(.resourceCount) resources (\\((.resourceCount * 100 / 500) | floor)% of limit)"' resource-count-results.json | while read line; do
+            COMMENT_BODY+="$line\\n"
+          done
+
+          COMMENT_BODY+="\\n**Recommendations:**\\n"
+          COMMENT_BODY+="- Consider breaking large stacks into smaller, focused stacks\\n"
+          COMMENT_BODY+="- Use nested stacks for reusable components\\n"
+          COMMENT_BODY+="- Review resource usage and remove unnecessary resources\\n\\n"
+        fi
+
+        # Add stack details table
+        COMMENT_BODY+="### Stack Details\\n\\n"
+        COMMENT_BODY+="| Stack | Resources | % of Limit | Status |\\n"
+        COMMENT_BODY+="| ----- | --------- | ---------- | ------ |\\n"
+
+        jq -r '.stacks | sort_by(-.resourceCount)[] | "| \\(.stackName) | \\(.resourceCount) | \\((.resourceCount * 100 / 500) | floor)% | \\(if .resourceCount >= 450 then "⚠️ Warning" else "✅ OK" end) |"' resource-count-results.json | while read line; do
+          COMMENT_BODY+="$line\\n"
+        done
+
+        # Post comment to MR using GitLab API
+        if [ -n "\${CI_MERGE_REQUEST_IID}" ]; then
+          # Check for existing comment
+          EXISTING_COMMENT_ID=$(curl --silent --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+            "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" \\
+            | jq -r '.[] | select(.body | contains("📊 CloudFormation Resource Count")) | .id' | head -1)
+
+          # Prepare JSON payload
+          JSON_PAYLOAD=$(jq -n --arg body "$COMMENT_BODY" '{body: $body}')
+
+          if [ -n "\${EXISTING_COMMENT_ID}" ]; then
+            # Update existing comment
+            curl --silent --request PUT \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes/\${EXISTING_COMMENT_ID}"
+            echo "Updated existing MR comment"
+          else
+            # Create new comment
+            curl --silent --request POST \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes"
+            echo "Created new MR comment"
+          fi
+        else
+          echo "Not running in merge request context, skipping comment"
+        fi
+      else
+        echo "Resource count results not found"
+      fi
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 "
 `;
 
@@ -734,6 +1215,7 @@ stages:
   - publish_assets
   - dev
   - prod
+  - resource-count-mr
 .artifacts_cdk:
   artifacts:
     when: on_success
@@ -768,7 +1250,9 @@ synth:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-  variables: {}
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 publish_assets:
   extends:
     - .aws_base
@@ -853,6 +1337,98 @@ deploy-prod:
     - npx projen deploy:prod
   variables:
     AWS_REGION: eu-central-1
+resource-count-mr:
+  extends:
+    - .aws_base
+  stage: resource-count-mr
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  needs: []
+  script:
+    - npx projen install:ci
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json
+    - |
+      
+      # Post comment to GitLab MR
+      if [ -f resource-count-results.json ]; then
+        echo "Posting resource count to merge request..."
+
+        # Parse results
+        STACKS_COUNT=$(jq '.stacks | length' resource-count-results.json)
+        TOTAL_RESOURCES=$(jq '.totalResources' resource-count-results.json)
+        MAX_RESOURCES=$(jq '.maxResourcesInStack' resource-count-results.json)
+        STACKS_WITH_WARNINGS=$(jq '[.stacks[] | select(.resourceCount >= 450)] | length' resource-count-results.json)
+
+        # Build comment body
+        COMMENT_BODY="## 📊 CloudFormation Resource Count\\n\\n"
+        COMMENT_BODY+="### Summary\\n"
+        COMMENT_BODY+="- **Total stacks:** $STACKS_COUNT\\n"
+        COMMENT_BODY+="- **Total resources:** $TOTAL_RESOURCES\\n"
+        COMMENT_BODY+="- **Max resources in single stack:** $MAX_RESOURCES\\n"
+        COMMENT_BODY+="- **Warning threshold:** 450 resources\\n"
+        COMMENT_BODY+="- **CloudFormation limit:** 500 resources per stack\\n\\n"
+
+        # Add warnings if present
+        if [ "$STACKS_WITH_WARNINGS" -gt 0 ]; then
+          COMMENT_BODY+="### ⚠️ Stacks Approaching Limit\\n\\n"
+          COMMENT_BODY+="$STACKS_WITH_WARNINGS stack(s) have crossed the warning threshold:\\n\\n"
+
+          jq -r '.stacks[] | select(.resourceCount >= 450) | "- **\\(.stackName)**: \\(.resourceCount) resources (\\((.resourceCount * 100 / 500) | floor)% of limit)"' resource-count-results.json | while read line; do
+            COMMENT_BODY+="$line\\n"
+          done
+
+          COMMENT_BODY+="\\n**Recommendations:**\\n"
+          COMMENT_BODY+="- Consider breaking large stacks into smaller, focused stacks\\n"
+          COMMENT_BODY+="- Use nested stacks for reusable components\\n"
+          COMMENT_BODY+="- Review resource usage and remove unnecessary resources\\n\\n"
+        fi
+
+        # Add stack details table
+        COMMENT_BODY+="### Stack Details\\n\\n"
+        COMMENT_BODY+="| Stack | Resources | % of Limit | Status |\\n"
+        COMMENT_BODY+="| ----- | --------- | ---------- | ------ |\\n"
+
+        jq -r '.stacks | sort_by(-.resourceCount)[] | "| \\(.stackName) | \\(.resourceCount) | \\((.resourceCount * 100 / 500) | floor)% | \\(if .resourceCount >= 450 then "⚠️ Warning" else "✅ OK" end) |"' resource-count-results.json | while read line; do
+          COMMENT_BODY+="$line\\n"
+        done
+
+        # Post comment to MR using GitLab API
+        if [ -n "\${CI_MERGE_REQUEST_IID}" ]; then
+          # Check for existing comment
+          EXISTING_COMMENT_ID=$(curl --silent --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+            "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" \\
+            | jq -r '.[] | select(.body | contains("📊 CloudFormation Resource Count")) | .id' | head -1)
+
+          # Prepare JSON payload
+          JSON_PAYLOAD=$(jq -n --arg body "$COMMENT_BODY" '{body: $body}')
+
+          if [ -n "\${EXISTING_COMMENT_ID}" ]; then
+            # Update existing comment
+            curl --silent --request PUT \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes/\${EXISTING_COMMENT_ID}"
+            echo "Updated existing MR comment"
+          else
+            # Create new comment
+            curl --silent --request POST \\
+              --header "PRIVATE-TOKEN: \${CI_JOB_TOKEN}" \\
+              --header "Content-Type: application/json" \\
+              --data "$JSON_PAYLOAD" \\
+              "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes"
+            echo "Created new MR comment"
+          fi
+        else
+          echo "Not running in merge request context, skipping comment"
+        fi
+      else
+        echo "Resource count results not found"
+      fi
+  variables:
+    CLOUD_ASSEMBLY_DIR: cdk.out
 "
 `;
 
