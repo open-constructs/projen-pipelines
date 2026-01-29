@@ -2312,6 +2312,7 @@ const awsAssumeRoleStepConfig: AwsAssumeRoleStepConfig = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.roleArn">roleArn</a></code> | <code>string</code> | The ARN of the role to assume. |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | The ARN of the jump role to use for role chaining. |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.region">region</a></code> | <code>string</code> | The AWS region that should be set. |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.sessionName">sessionName</a></code> | <code>string</code> | An identifier for the assumed role session. |
 
@@ -2326,6 +2327,18 @@ public readonly roleArn: string;
 - *Type:* string
 
 The ARN of the role to assume.
+
+---
+
+##### `jumpRoleArn`<sup>Optional</sup> <a name="jumpRoleArn" id="projen-pipelines.AwsAssumeRoleStepConfig.property.jumpRoleArn"></a>
+
+```typescript
+public readonly jumpRoleArn: string;
+```
+
+- *Type:* string
+
+The ARN of the jump role to use for role chaining.
 
 ---
 
@@ -3592,6 +3605,7 @@ const driftDetectionStageOptions: DriftDetectionStageOptions = { ... }
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.region">region</a></code> | <code>string</code> | AWS region for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
+| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role to assume before the main role. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
 
@@ -3646,6 +3660,18 @@ Whether to fail if drift is detected.
 
 ---
 
+##### `jumpRoleArn`<sup>Optional</sup> <a name="jumpRoleArn" id="projen-pipelines.DriftDetectionStageOptions.property.jumpRoleArn"></a>
+
+```typescript
+public readonly jumpRoleArn: string;
+```
+
+- *Type:* string
+
+Jump role to assume before the main role.
+
+---
+
 ##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.DriftDetectionStageOptions.property.roleArn"></a>
 
 ```typescript
@@ -3688,6 +3714,7 @@ const driftDetectionStepProps: DriftDetectionStepProps = { ... }
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.region">region</a></code> | <code>string</code> | AWS region for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role to assume before the main role. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.timeout">timeout</a></code> | <code>number</code> | Timeout in minutes for drift detection. |
@@ -3740,6 +3767,18 @@ public readonly failOnDrift: boolean;
 - *Default:* true
 
 Whether to fail if drift is detected.
+
+---
+
+##### `jumpRoleArn`<sup>Optional</sup> <a name="jumpRoleArn" id="projen-pipelines.DriftDetectionStepProps.property.jumpRoleArn"></a>
+
+```typescript
+public readonly jumpRoleArn: string;
+```
+
+- *Type:* string
+
+Jump role to assume before the main role.
 
 ---
 
@@ -5255,6 +5294,7 @@ const iamRoleConfig: IamRoleConfig = { ... }
 | <code><a href="#projen-pipelines.IamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if no specific role is provided. |
 | <code><a href="#projen-pipelines.IamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different deployment stages. |
 | <code><a href="#projen-pipelines.IamRoleConfig.property.diff">diff</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different diff stages. |
+| <code><a href="#projen-pipelines.IamRoleConfig.property.jump">jump</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for using a "jump" role to assume the deploy role in a different AWS account using Role Chaining. |
 | <code><a href="#projen-pipelines.IamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis step. |
 
 ---
@@ -5316,6 +5356,20 @@ public readonly diff: {[ key: string ]: string};
 - *Type:* {[ key: string ]: string}
 
 IAM role ARNs for different diff stages.
+
+---
+
+##### `jump`<sup>Optional</sup> <a name="jump" id="projen-pipelines.IamRoleConfig.property.jump"></a>
+
+```typescript
+public readonly jump: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+IAM role ARNs for using a "jump" role to assume the deploy role in a different AWS account using Role Chaining.
+
+https://github.com/aws-actions/configure-aws-credentials?tab=readme-ov-file#assumerole-with-role-previously-assumed-by-action-in-same-workflow
 
 ---
 

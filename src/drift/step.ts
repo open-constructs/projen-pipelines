@@ -40,6 +40,7 @@ export class DriftDetectionStep extends StepSequence {
       steps.push(new AwsAssumeRoleStep(project, {
         roleArn: props.roleArn,
         region: props.region,
+        jumpRoleArn: props.jumpRoleArn,
       }));
     }
 
