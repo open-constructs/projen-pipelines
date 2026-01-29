@@ -2073,6 +2073,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v5
         with:
@@ -2098,6 +2099,12 @@ jobs:
           role-chaining: true
           role-skip-session-tagging: true
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
