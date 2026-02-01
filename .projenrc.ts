@@ -40,7 +40,7 @@ const project = new cdk.JsiiProject({
       },
     },
   },
-  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'revert', 'Revert', 'docs']),
+  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'revert', 'Revert', 'docs', 'chore']),
   keywords: [
     'aws',
     'cdk',
