@@ -66,7 +66,7 @@ export class GithubCDKPipeline extends CDKPipeline {
    * @param app - The CDK app associated with this pipeline.
    * @param options - Configuration options for the pipeline.
    */
-  constructor(app: awscdk.AwsCdkTypeScriptApp, private options: GithubCDKPipelineOptions ) {
+  constructor(app: awscdk.AwsCdkTypeScriptApp, private options: GithubCDKPipelineOptions) {
     super(app, {
       ...options,
       ...options.useGithubPackagesForAssembly && {
@@ -87,13 +87,11 @@ export class GithubCDKPipeline extends CDKPipeline {
     });
 
     // Determine if versioned artifacts are necessary.
-    this.needsVersionedArtifacts = options.stages.find((s) => s.manualApproval === true) !== undefined;
+    this.needsVersionedArtifacts = options.stages.find(s => s.manualApproval === true) !== undefined;
     if (this.needsVersionedArtifacts && !options.pkgNamespace) {
       throw new Error('pkgNamespace is required when using versioned artifacts (e.g. manual approvals)');
     }
-    this.useGithubPackages =
-      this.needsVersionedArtifacts &&
-      (options.useGithubPackagesForAssembly ?? false);
+    this.useGithubPackages = this.needsVersionedArtifacts && (options.useGithubPackagesForAssembly ?? false);
     this.minNodeVersion = app.minNodeVersion;
 
     if (this.useGithubPackages) {
@@ -164,12 +162,12 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     workflow.addJob('synth-and-deploy', {
       name: 'Synth and deploy CDK application to feature stage',
-      if: 'contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')',
+      if: "contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')",
       needs: [],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       permissions: mergeJobPermissions({
-          contents: JobPermission.READ,
-          idToken: JobPermission.WRITE,
+        contents: JobPermission.READ,
+        idToken: JobPermission.WRITE,
       }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       concurrency: {
         'group': 'deploy-feature-${{ github.event.pull_request.number }}',
@@ -221,10 +219,12 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     workflow.addJob('destroy-feature', {
       name: 'Destroy CDK feature stage',
-      if: 'github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')',
+      if: "github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')",
       needs: [],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
-      permissions: mergeJobPermissions({ contents: JobPermission.READ, idToken: JobPermission.WRITE 
+      permissions: mergeJobPermissions({ 
+        contents: JobPermission.READ, 
+        idToken: JobPermission.WRITE 
       }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       concurrency: {
         'group': 'destroy-feature-${{ github.event.pull_request.number }}',
@@ -272,15 +272,10 @@ export class GithubCDKPipeline extends CDKPipeline {
         CI: 'true',
         ...githubSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
-      needs: [...githubSteps.flatMap((s) => s.needs)],
-      permissions: mergeJobPermissions(
-        {
+      needs: [...githubSteps.flatMap(s => s.needs)],
+      permissions: mergeJobPermissions({
           contents: JobPermission.READ,
-        },
-        ...(githubSteps
-          .flatMap((s) => s.permissions)
-          .filter((p) => p != undefined) as JobPermissions[]),
-      ),
+      }, ...(githubSteps.flatMap((s) => s.permissions).filter((p) => p != undefined) as JobPermissions[])),
       tools: {
         node: {
           version: this.minNodeVersion ?? '20',
@@ -294,7 +289,7 @@ export class GithubCDKPipeline extends CDKPipeline {
             'fetch-depth': 0,
           },
         },
-        ...githubSteps.flatMap((s) => s.steps),
+        ...githubSteps.flatMap(s => s.steps),
       ],
     });
   }
