@@ -66,18 +66,15 @@ export class GithubCDKPipeline extends CDKPipeline {
    * @param app - The CDK app associated with this pipeline.
    * @param options - Configuration options for the pipeline.
    */
-  constructor(
-    app: awscdk.AwsCdkTypeScriptApp,
-    private options: GithubCDKPipelineOptions,
-  ) {
+  constructor(app: awscdk.AwsCdkTypeScriptApp, private options: GithubCDKPipelineOptions ) {
     super(app, {
       ...options,
-      ...(options.useGithubPackagesForAssembly && {
+      ...options.useGithubPackagesForAssembly && {
         preInstallSteps: [
           new GithubPackagesLoginStep(app, { write: false }),
-          ...(options.preInstallSteps ?? []),
+          ...options.preInstallSteps ?? [],
         ],
-      }),
+      },
     });
 
     // Initialize the deployment workflow on GitHub.
@@ -90,8 +87,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     });
 
     // Determine if versioned artifacts are necessary.
-    this.needsVersionedArtifacts =
-      options.stages.find((s) => s.manualApproval === true) !== undefined;
+    this.needsVersionedArtifacts = options.stages.find((s) => s.manualApproval === true) !== undefined;
     if (this.needsVersionedArtifacts && !options.pkgNamespace) {
       throw new Error('pkgNamespace is required when using versioned artifacts (e.g. manual approvals)');
     }
@@ -101,14 +97,8 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.minNodeVersion = app.minNodeVersion;
 
     if (this.useGithubPackages) {
-      app.npmrc.addRegistry(
-        'https://npm.pkg.github.com',
-        this.baseOptions.pkgNamespace,
-      );
-      app.npmrc.addConfig(
-        '//npm.pkg.github.com/:_authToken',
-        '${GITHUB_TOKEN}',
-      );
+      app.npmrc.addRegistry('https://npm.pkg.github.com', this.baseOptions.pkgNamespace);
+      app.npmrc.addConfig('//npm.pkg.github.com/:_authToken', '${GITHUB_TOKEN}');
       app.npmrc.addConfig('//npm.pkg.github.com/:always-auth', 'true');
     }
 
@@ -124,12 +114,9 @@ export class GithubCDKPipeline extends CDKPipeline {
     }
 
     for (const stage of options.stages) {
-      this.createDeployment(
-        stage,
-        options.useGithubEnvironmentsForAssetUpload ?? false,
-      );
+      this.createDeployment(stage, options.useGithubEnvironmentsForAssetUpload ?? false);
     }
-    for (const stage of options.independentStages ?? []) {
+    for (const stage of (options.independentStages ?? [])) {
       this.createIndependentDeployment(stage);
     }
 
@@ -168,32 +155,24 @@ export class GithubCDKPipeline extends CDKPipeline {
     const steps = [
       this.provideInstallStep(),
       this.provideSynthStep(),
-      this.provideDeployStep({
-        name: 'feature',
-        env: this.baseOptions.featureStages!.env,
-      }),
+      this.provideDeployStep({ name: 'feature', env: this.baseOptions.featureStages!.env }),
       new UploadArtifactStep(this.project, {
         name: 'cdk-outputs-feature',
         path: 'cdk-outputs-feature.json',
       }),
-    ].map((s) => s.toGithub());
+    ].map(s => s.toGithub());
 
     workflow.addJob('synth-and-deploy', {
       name: 'Synth and deploy CDK application to feature stage',
       if: 'contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')',
       needs: [],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
-      permissions: mergeJobPermissions(
-        {
+      permissions: mergeJobPermissions({
           contents: JobPermission.READ,
           idToken: JobPermission.WRITE,
-        },
-        ...(steps
-          .flatMap((s) => s.permissions)
-          .filter((p) => p != undefined) as JobPermissions[]),
-      ),
+      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       concurrency: {
-        group: 'deploy-feature-${{ github.event.pull_request.number }}',
+        'group': 'deploy-feature-${{ github.event.pull_request.number }}',
         'cancel-in-progress': false,
       },
       env: {
@@ -211,7 +190,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           name: 'Checkout',
           uses: 'actions/checkout@v5',
         },
-        ...steps.flatMap((s) => s.steps),
+        ...steps.flatMap(s => s.steps),
       ],
     });
   }
@@ -233,31 +212,22 @@ export class GithubCDKPipeline extends CDKPipeline {
       this.provideInstallStep(),
       this.provideSynthStep(),
       new AwsAssumeRoleStep(this.project, {
-        roleArn:
-          this.baseOptions.iamRoleArns?.deployment?.feature ??
-          this.baseOptions.iamRoleArns?.default!,
+        roleArn: this.baseOptions.iamRoleArns?.deployment?.feature ?? this.baseOptions.iamRoleArns?.default!,
         region: this.baseOptions.featureStages!.env.region,
         jumpRoleArn: this.baseOptions.iamRoleArns.jump?.feature,
       }),
       new ProjenScriptStep(this.project, 'destroy:feature'),
-    ].map((s) => s.toGithub());
+    ].map(s => s.toGithub());
 
     workflow.addJob('destroy-feature', {
       name: 'Destroy CDK feature stage',
       if: 'github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')',
       needs: [],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
-      permissions: mergeJobPermissions(
-        {
-          contents: JobPermission.READ,
-          idToken: JobPermission.WRITE,
-        },
-        ...(steps
-          .flatMap((s) => s.permissions)
-          .filter((p) => p != undefined) as JobPermissions[]),
-      ),
+      permissions: mergeJobPermissions({ contents: JobPermission.READ, idToken: JobPermission.WRITE 
+      }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       concurrency: {
-        group: 'destroy-feature-${{ github.event.pull_request.number }}',
+        'group': 'destroy-feature-${{ github.event.pull_request.number }}',
         'cancel-in-progress': false,
       },
       env: {
@@ -275,7 +245,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           name: 'Checkout',
           uses: 'actions/checkout@v5',
         },
-        ...steps.flatMap((s) => s.steps),
+        ...steps.flatMap(s => s.steps),
       ],
     });
   }
@@ -288,14 +258,12 @@ export class GithubCDKPipeline extends CDKPipeline {
     steps.push(this.provideInstallStep());
     steps.push(this.provideSynthStep());
 
-    steps.push(
-      new UploadArtifactStep(this.project, {
-        name: 'cloud-assembly',
-        path: `${this.app.cdkConfig.cdkout}/`,
-      }),
-    );
+    steps.push(new UploadArtifactStep(this.project, {
+      name: 'cloud-assembly',
+      path: `${this.app.cdkConfig.cdkout}/`,
+    }));
 
-    const githubSteps = steps.map((s) => s.toGithub());
+    const githubSteps = steps.map(s => s.toGithub());
 
     this.deploymentWorkflow.addJob('synth', {
       name: 'Synth CDK application',
