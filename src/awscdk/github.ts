@@ -1,14 +1,14 @@
-import { awscdk } from "projen";
-import { GithubWorkflow } from "projen/lib/github";
-import { JobPermission, JobPermissions } from "projen/lib/github/workflows-model";
-import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage, NamedStageOptions } from "./base";
-import { PipelineEngine } from "../engine";
-import { mergeJobPermissions } from "../engines";
-import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep } from "../steps";
-import { DownloadArtifactStep, UploadArtifactStep } from "../steps/artifact-steps";
-import { GithubPackagesLoginStep } from "../steps/registries";
+import { awscdk } from 'projen';
+import { GithubWorkflow } from 'projen/lib/github';
+import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model';
+import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage, NamedStageOptions } from './base';
+import { PipelineEngine } from '../engine';
+import { mergeJobPermissions } from '../engines';
+import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep } from '../steps';
+import { DownloadArtifactStep, UploadArtifactStep } from '../steps/artifact-steps';
+import { GithubPackagesLoginStep } from '../steps/registries';
 
-const DEFAULT_RUNNER_TAGS = ["ubuntu-latest"];
+const DEFAULT_RUNNER_TAGS = ['ubuntu-latest'];
 
 
 /**
@@ -81,7 +81,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     });
 
     // Initialize the deployment workflow on GitHub.
-    this.deploymentWorkflow = this.app.github!.addWorkflow("deploy");
+    this.deploymentWorkflow = this.app.github!.addWorkflow('deploy');
     this.deploymentWorkflow.on({
       push: {
         branches: [this.branchName],
@@ -93,7 +93,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.needsVersionedArtifacts =
       options.stages.find((s) => s.manualApproval === true) !== undefined;
     if (this.needsVersionedArtifacts && !options.pkgNamespace) {
-      throw new Error("pkgNamespace is required when using versioned artifacts (e.g. manual approvals)");
+      throw new Error('pkgNamespace is required when using versioned artifacts (e.g. manual approvals)');
     }
     this.useGithubPackages =
       this.needsVersionedArtifacts &&
@@ -102,14 +102,14 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     if (this.useGithubPackages) {
       app.npmrc.addRegistry(
-        "https://npm.pkg.github.com",
+        'https://npm.pkg.github.com',
         this.baseOptions.pkgNamespace,
       );
       app.npmrc.addConfig(
-        "//npm.pkg.github.com/:_authToken",
-        "${GITHUB_TOKEN}",
+        '//npm.pkg.github.com/:_authToken',
+        '${GITHUB_TOKEN}',
       );
-      app.npmrc.addConfig("//npm.pkg.github.com/:always-auth", "true");
+      app.npmrc.addConfig('//npm.pkg.github.com/:always-auth', 'true');
     }
 
     // Create jobs for synthesizing, asset uploading, and deployment.
@@ -156,11 +156,11 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a workflow for deploying feature branches when PRs are labeled with 'feature-deployment'.
    */
   private createFeatureDeployWorkflow(): void {
-    const workflow = this.app.github!.addWorkflow("deploy-feature");
+    const workflow = this.app.github!.addWorkflow('deploy-feature');
 
     workflow.on({
       pullRequestTarget: {
-        types: ["synchronize", "labeled", "opened", "reopened"],
+        types: ['synchronize', 'labeled', 'opened', 'reopened'],
       },
       workflowDispatch: {},
     });
@@ -169,18 +169,18 @@ export class GithubCDKPipeline extends CDKPipeline {
       this.provideInstallStep(),
       this.provideSynthStep(),
       this.provideDeployStep({
-        name: "feature",
+        name: 'feature',
         env: this.baseOptions.featureStages!.env,
       }),
       new UploadArtifactStep(this.project, {
-        name: "cdk-outputs-feature",
-        path: "cdk-outputs-feature.json",
+        name: 'cdk-outputs-feature',
+        path: 'cdk-outputs-feature.json',
       }),
     ].map((s) => s.toGithub());
 
-    workflow.addJob("synth-and-deploy", {
-      name: "Synth and deploy CDK application to feature stage",
-      if: "contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')",
+    workflow.addJob('synth-and-deploy', {
+      name: 'Synth and deploy CDK application to feature stage',
+      if: 'contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')',
       needs: [],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       permissions: mergeJobPermissions(
@@ -193,23 +193,23 @@ export class GithubCDKPipeline extends CDKPipeline {
           .filter((p) => p != undefined) as JobPermissions[]),
       ),
       concurrency: {
-        group: "deploy-feature-${{ github.event.pull_request.number }}",
-        "cancel-in-progress": false,
+        group: 'deploy-feature-${{ github.event.pull_request.number }}',
+        'cancel-in-progress': false,
       },
       env: {
-        CI: "true",
-        BRANCH: "${{ github.head_ref }}",
+        CI: 'true',
+        BRANCH: '${{ github.head_ref }}',
         ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       tools: {
         node: {
-          version: this.minNodeVersion ?? "20",
+          version: this.minNodeVersion ?? '20',
         },
       },
       steps: [
         {
-          name: "Checkout",
-          uses: "actions/checkout@v5",
+          name: 'Checkout',
+          uses: 'actions/checkout@v5',
         },
         ...steps.flatMap((s) => s.steps),
       ],
@@ -220,11 +220,11 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a workflow for destroying feature branches when PRs are closed or unlabeled.
    */
   private createFeatureDestroyWorkflow(): void {
-    const workflow = this.app.github!.addWorkflow("destroy-feature");
+    const workflow = this.app.github!.addWorkflow('destroy-feature');
 
     workflow.on({
       pullRequestTarget: {
-        types: ["closed", "unlabeled"],
+        types: ['closed', 'unlabeled'],
       },
       workflowDispatch: {},
     });
@@ -239,12 +239,12 @@ export class GithubCDKPipeline extends CDKPipeline {
         region: this.baseOptions.featureStages!.env.region,
         jumpRoleArn: this.baseOptions.iamRoleArns.jump?.feature,
       }),
-      new ProjenScriptStep(this.project, "destroy:feature"),
+      new ProjenScriptStep(this.project, 'destroy:feature'),
     ].map((s) => s.toGithub());
 
-    workflow.addJob("destroy-feature", {
-      name: "Destroy CDK feature stage",
-      if: "github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')",
+    workflow.addJob('destroy-feature', {
+      name: 'Destroy CDK feature stage',
+      if: 'github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')',
       needs: [],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       permissions: mergeJobPermissions(
@@ -257,23 +257,23 @@ export class GithubCDKPipeline extends CDKPipeline {
           .filter((p) => p != undefined) as JobPermissions[]),
       ),
       concurrency: {
-        group: "destroy-feature-${{ github.event.pull_request.number }}",
-        "cancel-in-progress": false,
+        group: 'destroy-feature-${{ github.event.pull_request.number }}',
+        'cancel-in-progress': false,
       },
       env: {
-        CI: "true",
-        BRANCH: "${{ github.head_ref }}",
+        CI: 'true',
+        BRANCH: '${{ github.head_ref }}',
         ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       tools: {
         node: {
-          version: this.minNodeVersion ?? "20",
+          version: this.minNodeVersion ?? '20',
         },
       },
       steps: [
         {
-          name: "Checkout",
-          uses: "actions/checkout@v5",
+          name: 'Checkout',
+          uses: 'actions/checkout@v5',
         },
         ...steps.flatMap((s) => s.steps),
       ],
@@ -290,18 +290,18 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     steps.push(
       new UploadArtifactStep(this.project, {
-        name: "cloud-assembly",
+        name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
     );
 
     const githubSteps = steps.map((s) => s.toGithub());
 
-    this.deploymentWorkflow.addJob("synth", {
-      name: "Synth CDK application",
+    this.deploymentWorkflow.addJob('synth', {
+      name: 'Synth CDK application',
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       env: {
-        CI: "true",
+        CI: 'true',
         ...githubSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       needs: [...githubSteps.flatMap((s) => s.needs)],
@@ -315,15 +315,15 @@ export class GithubCDKPipeline extends CDKPipeline {
       ),
       tools: {
         node: {
-          version: this.minNodeVersion ?? "20",
+          version: this.minNodeVersion ?? '20',
         },
       },
       steps: [
         {
-          name: "Checkout",
-          uses: "actions/checkout@v5",
+          name: 'Checkout',
+          uses: 'actions/checkout@v5',
           with: {
-            "fetch-depth": 0,
+            'fetch-depth': 0,
           },
         },
         ...githubSteps.flatMap((s) => s.steps),
@@ -337,10 +337,10 @@ export class GithubCDKPipeline extends CDKPipeline {
   public createAssetUpload(stageName?: string): void {
     const steps = [
       new SimpleCommandStep(this.project, [
-        'git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"',
+        'git config --global user.name 'github-actions' && git config --global user.email 'github-actions@github.com'',
       ]),
       new DownloadArtifactStep(this.project, {
-        name: "cloud-assembly",
+        name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
       this.provideInstallStep(),
@@ -354,19 +354,19 @@ export class GithubCDKPipeline extends CDKPipeline {
     const ghSteps = steps.map((s) => s.toGithub());
 
     this.deploymentWorkflow.addJob(
-      `assetUpload${stageName ? `-${stageName}` : ""}`,
+      `assetUpload${stageName ? `-${stageName}` : ''}`,
       {
         name: `Publish assets to AWS${
-          stageName ? ` for stage ${stageName}` : ""
+          stageName ? ` for stage ${stageName}` : ''
         }`,
-        needs: ["synth", ...ghSteps.flatMap((s) => s.needs)],
+        needs: ['synth', ...ghSteps.flatMap((s) => s.needs)],
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         ...(this.options.useGithubEnvironmentsForAssetUpload &&
           stageName && {
             environment: stageName,
           }),
         env: {
-          CI: "true",
+          CI: 'true',
           ...ghSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
         permissions: mergeJobPermissions(
@@ -385,15 +385,15 @@ export class GithubCDKPipeline extends CDKPipeline {
         ),
         tools: {
           node: {
-            version: this.minNodeVersion ?? "20",
+            version: this.minNodeVersion ?? '20',
           },
         },
         steps: [
           {
-            name: "Checkout",
-            uses: "actions/checkout@v5",
+            name: 'Checkout',
+            uses: 'actions/checkout@v5',
             with: {
-              "fetch-depth": 0,
+              'fetch-depth': 0,
             },
           },
           ...ghSteps.flatMap((s) => s.steps),
@@ -437,13 +437,13 @@ export class GithubCDKPipeline extends CDKPipeline {
         workflowDispatch: {
           inputs: {
             version: {
-              description: "Package version",
+              description: 'Package version',
               required: true,
             },
           },
         },
       });
-      stageWorkflow.addJob("deploy", {
+      stageWorkflow.addJob('deploy', {
         name: `Release stage ${stage.name} to AWS`,
         needs: steps.flatMap((s) => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
@@ -452,10 +452,10 @@ export class GithubCDKPipeline extends CDKPipeline {
         }),
         concurrency: {
           group: `deploy-${stage.name}`,
-          "cancel-in-progress": false,
+          'cancel-in-progress': false,
         },
         env: {
-          CI: "true",
+          CI: 'true',
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
         permissions: mergeJobPermissions(
@@ -468,13 +468,13 @@ export class GithubCDKPipeline extends CDKPipeline {
         ),
         tools: {
           node: {
-            version: this.minNodeVersion ?? "20",
+            version: this.minNodeVersion ?? '20',
           },
         },
         steps: [
           {
-            name: "Checkout",
-            uses: "actions/checkout@v5",
+            name: 'Checkout',
+            uses: 'actions/checkout@v5',
           },
           ...steps.flatMap((s) => s.steps),
         ],
@@ -502,7 +502,7 @@ export class GithubCDKPipeline extends CDKPipeline {
   ) {
     const steps = [
       new DownloadArtifactStep(this.project, {
-        name: "cloud-assembly",
+        name: 'cloud-assembly',
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
       this.provideInstallStep(),
@@ -521,18 +521,18 @@ export class GithubCDKPipeline extends CDKPipeline {
       }),
       concurrency: {
         group: `deploy-${stage.name}`,
-        "cancel-in-progress": false,
+        'cancel-in-progress': false,
       },
       needs: [
         `assetUpload${
-          useGithubEnvironmentsForAssetUpload ? `-${stage.name}` : ""
+          useGithubEnvironmentsForAssetUpload ? `-${stage.name}` : ''
         }`,
         ...steps.flatMap((s) => s.needs),
         ...jobDependencies,
       ],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       env: {
-        CI: "true",
+        CI: 'true',
         ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
       permissions: mergeJobPermissions(
@@ -545,13 +545,13 @@ export class GithubCDKPipeline extends CDKPipeline {
       ),
       tools: {
         node: {
-          version: this.minNodeVersion ?? "20",
+          version: this.minNodeVersion ?? '20',
         },
       },
       steps: [
         {
-          name: "Checkout",
-          uses: "actions/checkout@v5",
+          name: 'Checkout',
+          uses: 'actions/checkout@v5',
         },
         ...steps.flatMap((s) => s.steps),
       ],
@@ -587,16 +587,16 @@ export class GithubCDKPipeline extends CDKPipeline {
       stageWorkflow.on({
         workflowDispatch: {},
       });
-      stageWorkflow.addJob("deploy", {
+      stageWorkflow.addJob('deploy', {
         name: `Release stage ${stage.name} to AWS`,
         needs: steps.flatMap((s) => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         concurrency: {
           group: `deploy-${stage.name}`,
-          "cancel-in-progress": false,
+          'cancel-in-progress': false,
         },
         env: {
-          CI: "true",
+          CI: 'true',
           ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
         permissions: mergeJobPermissions(
@@ -609,13 +609,13 @@ export class GithubCDKPipeline extends CDKPipeline {
         ),
         tools: {
           node: {
-            version: this.minNodeVersion ?? "20",
+            version: this.minNodeVersion ?? '20',
           },
         },
         steps: [
           {
-            name: "Checkout",
-            uses: "actions/checkout@v5",
+            name: 'Checkout',
+            uses: 'actions/checkout@v5',
           },
           ...steps.flatMap((s) => s.steps),
         ],
