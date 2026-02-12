@@ -237,6 +237,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           this.baseOptions.iamRoleArns?.deployment?.feature ??
           this.baseOptions.iamRoleArns?.default!,
         region: this.baseOptions.featureStages!.env.region,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.feature,
       }),
       new ProjenScriptStep(this.project, 'destroy:feature'),
     ].map((s) => s.toGithub());

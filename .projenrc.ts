@@ -15,7 +15,7 @@ const project = new cdk.JsiiProject({
   repositoryUrl: 'https://github.com/open-constructs/projen-pipelines.git',
   licensed: true,
   license: 'Apache-2.0',
-  jsiiVersion: '~5.8',
+  jsiiVersion: '~5.9',
   devDeps: [
     'constructs',
     'fs-extra',
@@ -26,7 +26,7 @@ const project = new cdk.JsiiProject({
     'standard-version',
   ],
   peerDeps: [
-    'projen@>=0.96.3 <1.0.0',
+    'projen@>=0.99.9 <1.0.0',
     'constructs@^10.4.2',
   ],
   autoApproveUpgrades: true,
@@ -40,7 +40,7 @@ const project = new cdk.JsiiProject({
       },
     },
   },
-  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'revert', 'Revert', 'docs']),
+  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'revert', 'Revert', 'docs', 'chore']),
   keywords: [
     'aws',
     'cdk',
@@ -51,6 +51,7 @@ const project = new cdk.JsiiProject({
     'detect-drift': 'lib/drift/detect-drift.js',
   },
   releaseToNpm: true,
+  npmTrustedPublishing: true,
   gitpod: true,
   tsconfig: {
     compilerOptions: {
