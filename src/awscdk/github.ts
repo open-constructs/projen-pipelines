@@ -39,6 +39,10 @@ export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
    * whether to use GitHub environments for asset upload step
    * Create separate, parallel jobs for asset upload since GitHub Environments
    * require unique environment names per job
+   * 
+   * WARNING: this parameter requires rebuilding the container assets for each stage and they will not 
+   * be the "same binary", so there is a (small) chance that it could produce different binaries per stage
+   * 
    * @default false
    */
   readonly useGithubEnvironmentsForAssetUpload?: boolean;
