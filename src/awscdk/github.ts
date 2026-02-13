@@ -419,7 +419,12 @@ export class GithubCDKPipeline extends CDKPipeline {
     }
   }
 
-  private createDeployJob(workflow: GithubWorkflow, jobDependencies: string[], stage: NamedStageOptions, useGithubEnvironmentsForAssetUpload?: boolean) {
+  private createDeployJob(
+    workflow: GithubWorkflow, 
+    jobDependencies: string[], 
+    stage: NamedStageOptions, 
+    useGithubEnvironmentsForAssetUpload?: boolean
+  ) {
     const steps = [
       new DownloadArtifactStep(this.project, {
         name: 'cloud-assembly',
