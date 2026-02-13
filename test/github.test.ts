@@ -14,7 +14,7 @@ test('Github snapshot', () => {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
       assetPublishingPerStage: {
-        'prod': 'prodPublishRole',
+        prod: 'prodPublishRole',
       },
       deployment: {
         'my-dev': 'devRole',
@@ -71,7 +71,7 @@ test('Github snapshot with environment', () => {
         account: '123456789012',
         region: 'eu-central-1',
       },
-    },{
+    }, {
       name: 'prod',
       manualApproval: true,
       env: {
@@ -106,7 +106,7 @@ test('Github snapshot with multi stack', () => {
       assetPublishing: 'publishRole',
       deployment: {
         dev: 'devRole',
-        'prod': 'prodRole',
+        prod: 'prodRole',
       },
     },
     deploySubStacks: true,
@@ -390,6 +390,8 @@ test('Github snapshot with empty prefix for stages', () => {
   expect(appTsSnapshot.includes('this, \'stage2\'')).toBeTruthy();
   expect(appTsSnapshot.includes('stackName: \'stage1\', stageName: \'stage1\'')).toBeTruthy();
   expect(appTsSnapshot.includes('stackName: \'stage2\', stageName: \'stage2\'')).toBeTruthy();
+
+
 });
 
 test('Github snapshot with empty prefix for independent stages', () => {
@@ -497,7 +499,7 @@ test('Github snapshot with versioning enabled', () => {
       assetPublishing: 'publishRole',
       deployment: {
         dev: 'devRole',
-        'prod': 'prodRole',
+        prod: 'prodRole',
       },
     },
     versioning: {
@@ -558,9 +560,7 @@ test('Github snapshot with separate asset upload jobs', () => {
     },
     versioning: {
       enabled: true,
-      outputs: VersioningOutputs.standard({
-        parameterName: '/{stackName}/version',
-      }),
+      outputs: VersioningOutputs.standard({ parameterName: '/{stackName}/version' }),
       strategy: VersioningStrategy.commitCount(),
     },
     stages: [{
@@ -604,11 +604,11 @@ test('Github snapshot with jump roles', () => {
       assetPublishing: 'publishRole',
       deployment: {
         dev: 'devRole',
-        'prod': 'prodRole',
+        prod: 'prodRole',
       },
       jump: {
         dev: 'devJumpRole',
-        'prod': 'prodJumpRole',
+        prod: 'prodJumpRole',
         assetPublishing: 'publishJumpRole',
         synth: 'synthJumpRole',
       },
@@ -620,19 +620,21 @@ test('Github snapshot with jump roles', () => {
       }),
       strategy: VersioningStrategy.commitCount(),
     },
-    stages: [{
-      name: 'dev',
-      env: {
-        account: '123456789012',
-        region: 'eu-central-1',
+    stages: [
+      {
+        name: 'dev',
+        env: {
+          account: '123456789012',
+          region: 'eu-central-1',
+        },
+      }, {
+        name: 'prod',
+        env: {
+          account: '123456789012',
+          region: 'eu-central-1',
+        },
       },
-    }, {
-      name: 'prod',
-      env: {
-        account: '123456789012',
-        region: 'eu-central-1',
-      },
-    }],
+    ],
   });
 
   const snapshot = synthSnapshot(p);
