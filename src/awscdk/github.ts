@@ -345,9 +345,8 @@ export class GithubCDKPipeline extends CDKPipeline {
         },
         ...ghSteps.flatMap(s => s.steps),
       ],
-    },
-  );
-}
+    });
+  }
 
   /**
    * Creates a job to deploy the CDK application to AWS.
@@ -428,7 +427,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         name: `cdk-outputs-${stage.name}`,
         path: `cdk-outputs-${stage.name}.json`,
       }),
-    ].map((s) => s.toGithub());
+    ].map(s => s.toGithub());
 
     // Add deployment to CI/CD workflow
     workflow.addJob(`deploy-${stage.name}`, {
@@ -446,7 +445,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         CI: 'true',
         ...steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
-      permissions: mergeJobPermissions({ 
+      permissions: mergeJobPermissions({
         contents: JobPermission.READ,
       }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       tools: {
@@ -475,21 +474,17 @@ export class GithubCDKPipeline extends CDKPipeline {
       const steps = [
         this.provideInstallStep(),
         this.provideSynthStep(),
-        ...(stage.diffType !== CdkDiffType.NONE
-          ? [this.provideDiffStep(stage, stage.diffType === CdkDiffType.FAST)]
-          : []),
+        ...((stage.diffType !== CdkDiffType.NONE) ? [this.provideDiffStep(stage, stage.diffType === CdkDiffType.FAST)] : []),
         this.provideDeployStep(stage),
 
         new UploadArtifactStep(this.project, {
           name: `cdk-outputs-${stage.name}`,
           path: `cdk-outputs-${stage.name}.json`,
         }),
-      ].map((s) => s.toGithub());
+      ].map(s => s.toGithub());
 
       // Create new workflow for deployment
-      const stageWorkflow = this.app.github!.addWorkflow(
-        `deploy-${stage.name}`,
-      );
+      const stageWorkflow = this.app.github!.addWorkflow(`deploy-${stage.name}`);
       stageWorkflow.on({
         workflowDispatch: {},
       });
@@ -498,7 +493,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         needs: steps.flatMap((s) => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         concurrency: {
-          group: `deploy-${stage.name}`,
+          'group': `deploy-${stage.name}`,
           'cancel-in-progress': false,
         },
         env: {
@@ -507,8 +502,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         },
         permissions: mergeJobPermissions({
           contents: JobPermission.READ,
-        }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[]),
-        ),
+        }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
         tools: {
           node: {
             version: this.minNodeVersion ?? '20',
@@ -522,6 +516,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           ...steps.flatMap(s => s.steps),
         ],
       });
+
     }
   }
 }
