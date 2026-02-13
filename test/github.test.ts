@@ -551,11 +551,11 @@ test('Github snapshot with separate asset upload jobs', () => {
       assetPublishing: 'publishRole',
       assetPublishingPerStage: {
         dev: 'devPublishRole',
-        'prod': 'prodPublishRole',
+        prod: 'prodPublishRole',
       },
       deployment: {
         dev: 'devRole',
-        'prod': 'prodRole',
+        prod: 'prodRole',
       },
     },
     versioning: {
