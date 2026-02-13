@@ -504,6 +504,62 @@ test('Github snapshot with versioning enabled', () => {
     },
     versioning: {
       enabled: true,
+      outputs: VersioningOutputs.standard({
+        parameterName: '/{stackName}/version',
+      }),
+      strategy: VersioningStrategy.commitCount(),
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }, {
+      name: 'prod',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
+  expect(snapshot['src/app.ts']).toMatchSnapshot();
+  expect(snapshot['package.json']).toMatchSnapshot();
+  expect(snapshot['.projen/tasks.json']).toMatchSnapshot();
+
+  // Verify versioning code is generated in app.ts
+  expect(snapshot['src/app.ts']).toContain('loadVersionInfo');
+  expect(snapshot['src/app.ts']).toContain('addVersioningToStack');
+  expect(snapshot['src/app.ts']).toContain('CfnOutput');
+  expect(snapshot['src/app.ts']).toContain('StringParameter');
+});
+
+test('Github snapshot with separate asset upload jobs', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    useGithubEnvironmentsForAssetUpload: true,
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      assetPublishingPerStage: {
+        dev: 'devPublishRole',
+        prod: 'prodPublishRole',
+      },
+      deployment: {
+        dev: 'devRole',
+        prod: 'prodRole',
+      },
+    },
+    versioning: {
+      enabled: true,
       outputs: VersioningOutputs.standard({ parameterName: '/{stackName}/version' }),
       strategy: VersioningStrategy.commitCount(),
     },
