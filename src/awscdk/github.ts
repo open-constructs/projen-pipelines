@@ -490,7 +490,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
       stageWorkflow.addJob('deploy', {
         name: `Release stage ${stage.name} to AWS`,
-        needs: steps.flatMap((s) => s.needs),
+        needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         concurrency: {
           'group': `deploy-${stage.name}`,
