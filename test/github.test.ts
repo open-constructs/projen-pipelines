@@ -14,31 +14,28 @@ test('Github snapshot', () => {
       synth: 'synthRole',
       assetPublishing: 'publishRole',
       assetPublishingPerStage: {
-        prod: 'prodPublishRole',
+        'prod': 'prodPublishRole',
       },
       deployment: {
         'my-dev': 'devRole',
-        prod: 'prodRole',
+        'prod': 'prodRole',
       },
     },
     pkgNamespace: '@assembly',
-    stages: [
-      {
-        name: 'my-dev',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    stages: [{
+      name: 'my-dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-      {
-        name: 'prod',
-        manualApproval: true,
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    }, {
+      name: 'prod',
+      manualApproval: true,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+    }],
   });
 
   const snapshot = synthSnapshot(p);
@@ -62,38 +59,33 @@ test('Github snapshot with environment', () => {
       assetPublishing: 'publishRole',
       deployment: {
         'my-dev': 'devRole',
-        prod: 'prodRole',
-        independent: 'independentRole',
+        'prod': 'prodRole',
+        'independent': 'independentRole',
       },
     },
     useGithubEnvironments: true,
     pkgNamespace: '@assembly',
-    stages: [
-      {
-        name: 'my-dev',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    stages: [{
+      name: 'my-dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-      {
-        name: 'prod',
-        manualApproval: true,
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    },{
+      name: 'prod',
+      manualApproval: true,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
-    independentStages: [
-      {
-        name: 'independent',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    }],
+    independentStages: [{
+      name: 'independent',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+    }],
   });
 
   const snapshot = synthSnapshot(p);
@@ -114,19 +106,17 @@ test('Github snapshot with multi stack', () => {
       assetPublishing: 'publishRole',
       deployment: {
         dev: 'devRole',
-        prod: 'prodRole',
+        'prod': 'prodRole',
       },
     },
     deploySubStacks: true,
-    stages: [
-      {
-        name: 'dev',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+    }],
   });
 
   const snapshot = synthSnapshot(p);
@@ -189,16 +179,14 @@ test('Github snapshot with manual approval and GH packages', () => {
     },
     useGithubPackagesForAssembly: true,
     pkgNamespace: '@assembly',
-    stages: [
-      {
-        name: 'prod',
-        manualApproval: true,
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    stages: [{
+      name: 'prod',
+      manualApproval: true,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+    }],
   });
 
   const snapshot = synthSnapshot(p);
@@ -222,15 +210,13 @@ test('Github snapshot with feature stages', () => {
         feature: 'featureRole',
       },
     },
-    stages: [
-      {
-        name: 'dev',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+    }],
     featureStages: {
       env: {
         account: '123456789012',
@@ -259,11 +245,9 @@ test('Github snapshot with preInstallStep', () => {
           FOO: 'bar',
         },
         needs: [],
-        steps: [
-          {
-            run: 'echo Login',
-          },
-        ],
+        steps: [{
+          run: 'echo Login',
+        }],
       };
     }
   }
@@ -274,15 +258,13 @@ test('Github snapshot with preInstallStep', () => {
       assetPublishing: 'publishRole',
     },
     preInstallSteps: [new TestStep(p)],
-    stages: [
-      {
-        name: 'prod',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    stages: [{
+      name: 'prod',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+    }],
   });
 
   const snapshot = synthSnapshot(p);
@@ -304,11 +286,9 @@ test('Github snapshot with independent stage', () => {
           FOO: 'bar',
         },
         needs: [],
-        steps: [
-          {
-            run: 'echo Post Deploy',
-          },
-        ],
+        steps: [{
+          run: 'echo Post Deploy',
+        }],
       };
     }
   }
@@ -322,32 +302,27 @@ test('Github snapshot with independent stage', () => {
       },
     },
     stages: [],
-    independentStages: [
-      {
-        name: 'independent1',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
-        postDeploySteps: [new TestStep(p)],
+    independentStages: [{
+      name: 'independent1',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-      {
-        name: 'independent2',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
-        postDeploySteps: [new TestStep(p)],
-        deployOnPush: true,
+      postDeploySteps: [new TestStep(p)],
+    }, {
+      name: 'independent2',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+      postDeploySteps: [new TestStep(p)],
+      deployOnPush: true,
+    }],
   });
 
   const snapshot = synthSnapshot(p);
   expect(snapshot['.github/workflows/deploy.yml']).toMatchSnapshot();
-  expect(
-    snapshot['.github/workflows/deploy-independent1.yml'],
-  ).toMatchSnapshot();
+  expect(snapshot['.github/workflows/deploy-independent1.yml']).toMatchSnapshot();
 });
 
 test('Github snapshot with empty prefix for stages', () => {
@@ -364,11 +339,9 @@ test('Github snapshot with empty prefix for stages', () => {
           TEST: 'me',
         },
         needs: [],
-        steps: [
-          {
-            run: 'echo Post Deploy',
-          },
-        ],
+        steps: [{
+          run: 'echo Post Deploy',
+        }],
       };
     }
   }
@@ -383,32 +356,27 @@ test('Github snapshot with empty prefix for stages', () => {
         stage2: 'deployRole2',
       },
     },
-    stages: [
-      {
-        name: 'stage1',
-        env: {
-          account: '123456789012',
-          region: 'eu-west-2',
-        },
-        postDeploySteps: [],
+    stages: [{
+      name: 'stage1',
+      env: {
+        account: '123456789012',
+        region: 'eu-west-2',
       },
-      {
-        name: 'stage2',
-        env: {
-          account: '123456789012',
-          region: 'us-central-2',
-        },
-        postDeploySteps: [new TestStep(p)],
+      postDeploySteps: [],
+    }, {
+      name: 'stage2',
+      env: {
+        account: '123456789012',
+        region: 'us-central-2',
       },
-    ],
+      postDeploySteps: [new TestStep(p)],
+    }],
   });
 
   const snapshot = synthSnapshot(p);
   const deploySnapshot = snapshot['.github/workflows/deploy.yml'];
-  const deployStage1Snapshot =
-    snapshot['.github/workflows/deploy-independent1.yml'];
-  const deployStage2Snapshot =
-    snapshot['.github/workflows/deploy-independent2.yml'];
+  const deployStage1Snapshot = snapshot['.github/workflows/deploy-independent1.yml'];
+  const deployStage2Snapshot = snapshot['.github/workflows/deploy-independent2.yml'];
   const appTsSnapshot = snapshot['src/app.ts'];
 
   expect(deploySnapshot).toMatchSnapshot();
@@ -418,14 +386,10 @@ test('Github snapshot with empty prefix for stages', () => {
   // Check that the app.ts file contains the correct stack names and stage names
   // The stack name and stack identifier should match the stage name
   expect(appTsSnapshot).toMatchSnapshot();
-  expect(appTsSnapshot.includes('this, 'stage1'')).toBeTruthy();
-  expect(appTsSnapshot.includes('this, 'stage2'')).toBeTruthy();
-  expect(
-    appTsSnapshot.includes('stackName: 'stage1', stageName: 'stage1''),
-  ).toBeTruthy();
-  expect(
-    appTsSnapshot.includes('stackName: 'stage2', stageName: 'stage2''),
-  ).toBeTruthy();
+  expect(appTsSnapshot.includes('this, \'stage1\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('this, \'stage2\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('stackName: \'stage1\', stageName: \'stage1\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('stackName: \'stage2\', stageName: \'stage2\'')).toBeTruthy();
 });
 
 test('Github snapshot with empty prefix for independent stages', () => {
@@ -442,11 +406,9 @@ test('Github snapshot with empty prefix for independent stages', () => {
           TEST: 'me',
         },
         needs: [],
-        steps: [
-          {
-            run: 'echo Post Deploy',
-          },
-        ],
+        steps: [{
+          run: 'echo Post Deploy',
+        }],
       };
     }
   }
@@ -461,33 +423,28 @@ test('Github snapshot with empty prefix for independent stages', () => {
       },
     },
     stages: [],
-    independentStages: [
-      {
-        name: 'independent1',
-        env: {
-          account: '123456789012',
-          region: 'eu-west-2',
-        },
-        postDeploySteps: [new TestStep(p)],
+    independentStages: [{
+      name: 'independent1',
+      env: {
+        account: '123456789012',
+        region: 'eu-west-2',
       },
-      {
-        name: 'independent2',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-2',
-        },
-        postDeploySteps: [new TestStep(p)],
-        deployOnPush: true,
+      postDeploySteps: [new TestStep(p)],
+    }, {
+      name: 'independent2',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-2',
       },
-    ],
+      postDeploySteps: [new TestStep(p)],
+      deployOnPush: true,
+    }],
   });
 
   const snapshot = synthSnapshot(p);
   const deploySnapshot = snapshot['.github/workflows/deploy.yml'];
-  const deployIndependent1Snapshot =
-    snapshot['.github/workflows/deploy-independent1.yml'];
-  const deployIndependent2Snapshot =
-    snapshot['.github/workflows/deploy-independent2.yml'];
+  const deployIndependent1Snapshot = snapshot['.github/workflows/deploy-independent1.yml'];
+  const deployIndependent2Snapshot = snapshot['.github/workflows/deploy-independent2.yml'];
   const appTsSnapshot = snapshot['src/app.ts'];
 
   expect(deploySnapshot).toMatchSnapshot();
@@ -497,18 +454,10 @@ test('Github snapshot with empty prefix for independent stages', () => {
   // Check that the app.ts file contains the correct stack names and stage names
   // The stack name and stack identifier should match the stage name
   expect(appTsSnapshot).toMatchSnapshot();
-  expect(appTsSnapshot.includes('this, 'independent1'')).toBeTruthy();
-  expect(appTsSnapshot.includes('this, 'independent2'')).toBeTruthy();
-  expect(
-    appTsSnapshot.includes(
-      'stackName: 'independent1', stageName: 'independent1'',
-    ),
-  ).toBeTruthy();
-  expect(
-    appTsSnapshot.includes(
-      'stackName: 'independent2', stageName: 'independent2'',
-    ),
-  ).toBeTruthy();
+  expect(appTsSnapshot.includes('this, \'independent1\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('this, \'independent2\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('stackName: \'independent1\', stageName: \'independent1\'')).toBeTruthy();
+  expect(appTsSnapshot.includes('stackName: \'independent2\', stageName: \'independent2\'')).toBeTruthy();
 });
 
 test('Github snapshot with manual approval and no pkgNamespace', () => {
@@ -518,28 +467,21 @@ test('Github snapshot with manual approval and no pkgNamespace', () => {
     name: 'testapp',
   });
 
-  expect(
-    () =>
-      new GithubCDKPipeline(p, {
-        iamRoleArns: {
-          synth: 'synthRole',
-          assetPublishing: 'publishRole',
-        },
-        pkgNamespace: undefined,
-        stages: [
-          {
-            name: 'prod',
-            manualApproval: true,
-            env: {
-              account: '123456789012',
-              region: 'eu-central-1',
-            },
-          },
-        ],
-      }),
-  ).toThrow(
-    'pkgNamespace is required when using versioned artifacts (e.g. manual approvals)',
-  );
+  expect(() => new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+    },
+    pkgNamespace: undefined,
+    stages: [{
+      name: 'prod',
+      manualApproval: true,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  })).toThrow('pkgNamespace is required when using versioned artifacts (e.g. manual approvals)');
 });
 
 test('Github snapshot with versioning enabled', () => {
@@ -555,7 +497,7 @@ test('Github snapshot with versioning enabled', () => {
       assetPublishing: 'publishRole',
       deployment: {
         dev: 'devRole',
-        prod: 'prodRole',
+        'prod': 'prodRole',
       },
     },
     versioning: {
@@ -565,22 +507,19 @@ test('Github snapshot with versioning enabled', () => {
       }),
       strategy: VersioningStrategy.commitCount(),
     },
-    stages: [
-      {
-        name: 'dev',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-      {
-        name: 'prod',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    }, {
+      name: 'prod',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+    }],
   });
 
   const snapshot = synthSnapshot(p);
@@ -610,11 +549,11 @@ test('Github snapshot with separate asset upload jobs', () => {
       assetPublishing: 'publishRole',
       assetPublishingPerStage: {
         dev: 'devPublishRole',
-        prod: 'prodPublishRole',
+        'prod': 'prodPublishRole',
       },
       deployment: {
         dev: 'devRole',
-        prod: 'prodRole',
+        'prod': 'prodRole',
       },
     },
     versioning: {
@@ -624,22 +563,19 @@ test('Github snapshot with separate asset upload jobs', () => {
       }),
       strategy: VersioningStrategy.commitCount(),
     },
-    stages: [
-      {
-        name: 'dev',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-      {
-        name: 'prod',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    }, {
+      name: 'prod',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+    }],
   });
 
   const snapshot = synthSnapshot(p);
@@ -668,11 +604,11 @@ test('Github snapshot with jump roles', () => {
       assetPublishing: 'publishRole',
       deployment: {
         dev: 'devRole',
-        prod: 'prodRole',
+        'prod': 'prodRole',
       },
       jump: {
         dev: 'devJumpRole',
-        prod: 'prodJumpRole',
+        'prod': 'prodJumpRole',
         assetPublishing: 'publishJumpRole',
         synth: 'synthJumpRole',
       },
@@ -684,22 +620,19 @@ test('Github snapshot with jump roles', () => {
       }),
       strategy: VersioningStrategy.commitCount(),
     },
-    stages: [
-      {
-        name: 'dev',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-      {
-        name: 'prod',
-        env: {
-          account: '123456789012',
-          region: 'eu-central-1',
-        },
+    }, {
+      name: 'prod',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
       },
-    ],
+    }],
   });
 
   const snapshot = synthSnapshot(p);
