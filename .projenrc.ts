@@ -28,6 +28,7 @@ const project = new cdk.JsiiProject({
   peerDeps: [
     'projen@>=0.99.9 <1.0.0',
     'constructs@^10.4.2',
+    'cdk-devops',
   ],
   autoApproveUpgrades: true,
   autoApproveOptions: { allowedUsernames: ['hoegertn', 'Lock128', 'open-constructs-projen[bot]'], secret: 'GITHUB_TOKEN' },
