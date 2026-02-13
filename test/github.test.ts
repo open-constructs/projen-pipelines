@@ -627,7 +627,8 @@ test('Github snapshot with jump roles', () => {
           account: '123456789012',
           region: 'eu-central-1',
         },
-      }, {
+      },
+      {
         name: 'prod',
         env: {
           account: '123456789012',
