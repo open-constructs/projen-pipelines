@@ -126,6 +126,11 @@ export class GithubCDKPipeline extends CDKPipeline {
     if (options.featureStages) {
       this.createFeatureWorkflows();
     }
+
+    // Create PR workflow for resource counting if enabled
+    if (this.baseOptions.enableResourceCounting !== false) {
+      this.createResourceCountPRWorkflow();
+    }
   }
 
   /** the type of engine this implementation of CDKPipeline is for */
@@ -261,6 +266,18 @@ export class GithubCDKPipeline extends CDKPipeline {
     const steps: PipelineStep[] = [];
     steps.push(this.provideInstallStep());
     steps.push(this.provideSynthStep());
+
+    // Add resource counting step if enabled
+    const resourceCountStep = this.provideResourceCountStep(true);
+    if (resourceCountStep) {
+      steps.push(resourceCountStep);
+
+      // Upload resource count results as artifact
+      steps.push(new UploadArtifactStep(this.project, {
+        name: 'resource-count-results',
+        path: 'resource-count-results.json',
+      }));
+    }
 
     steps.push(new UploadArtifactStep(this.project, {
       name: 'cloud-assembly',
@@ -527,5 +544,148 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
 
     }
+  }
+
+  /**
+   * Creates a workflow for commenting resource counts on pull requests.
+   */
+  private createResourceCountPRWorkflow(): void {
+    const workflow = this.app.github!.addWorkflow('resource-count-pr');
+
+    workflow.on({
+      pullRequest: {
+        types: ['opened', 'synchronize', 'reopened'],
+      },
+    });
+
+    const steps: PipelineStep[] = [];
+    steps.push(this.provideInstallStep());
+    steps.push(this.provideSynthStep());
+
+    const resourceCountStep = this.provideResourceCountStep(true);
+    if (resourceCountStep) {
+      steps.push(resourceCountStep);
+    }
+
+    const githubSteps = steps.map(s => s.toGithub());
+
+    workflow.addJob('resource-count', {
+      name: 'Count CloudFormation Resources',
+      runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      permissions: mergeJobPermissions({
+        contents: JobPermission.READ,
+        pullRequests: JobPermission.WRITE,
+      }, ...(githubSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+      env: {
+        CI: 'true',
+        ...githubSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+      },
+      tools: {
+        node: {
+          version: this.minNodeVersion ?? '20',
+        },
+      },
+      steps: [
+        {
+          name: 'Checkout',
+          uses: 'actions/checkout@v5',
+        },
+        ...githubSteps.flatMap(s => s.steps),
+        {
+          name: 'Comment on PR',
+          uses: 'actions/github-script@v8',
+          with: {
+            script: this.generatePRCommentScript(),
+          },
+        },
+      ],
+    });
+  }
+
+  /**
+   * Generates the script for commenting resource counts on PRs.
+   */
+  private generatePRCommentScript(): string {
+    const warningThreshold = this.baseOptions.resourceCountWarningThreshold ?? 450;
+    return `
+const fs = require('fs');
+const resultsFile = 'resource-count-results.json';
+
+if (!fs.existsSync(resultsFile)) {
+  console.log('No results file found');
+  return;
+}
+
+const results = JSON.parse(fs.readFileSync(resultsFile, 'utf8'));
+const stacks = results.stacks || [];
+const stacksWithWarnings = stacks.filter(s => s.resourceCount >= ${warningThreshold});
+
+// Create comment body
+let body = '## 📊 CloudFormation Resource Count\\n\\n';
+body += '### Summary\\n';
+body += \`- **Total stacks:** \${stacks.length}\\n\`;
+body += \`- **Total resources:** \${results.totalResources}\\n\`;
+body += \`- **Max resources in single stack:** \${results.maxResourcesInStack}\\n\`;
+body += \`- **Warning threshold:** ${warningThreshold} resources\\n\`;
+body += \`- **CloudFormation limit:** 500 resources per stack\\n\\n\`;
+
+if (stacksWithWarnings.length > 0) {
+  body += '### ⚠️ Stacks Approaching Limit\\n\\n';
+  body += \`\${stacksWithWarnings.length} stack(s) have crossed the warning threshold:\\n\\n\`;
+
+  for (const stack of stacksWithWarnings) {
+    const percentage = Math.round((stack.resourceCount / 500) * 100);
+    body += \`- **\${stack.stackName}**: \${stack.resourceCount} resources (\${percentage}% of limit)\\n\`;
+  }
+
+  body += '\\n**Recommendations:**\\n';
+  body += '- Consider breaking large stacks into smaller, focused stacks\\n';
+  body += '- Use nested stacks for reusable components\\n';
+  body += '- Review resource usage and remove unnecessary resources\\n\\n';
+}
+
+body += '### Stack Details\\n\\n';
+body += '| Stack | Resources | % of Limit | Status |\\n';
+body += '|-------|-----------|------------|--------|\\n';
+
+const sortedStacks = stacks.sort((a, b) => b.resourceCount - a.resourceCount);
+for (const stack of sortedStacks) {
+  const percentage = Math.round((stack.resourceCount / 500) * 100);
+  const status = stack.resourceCount >= ${warningThreshold} ? '⚠️ Warning' : '✅ OK';
+  body += \`| \${stack.stackName} | \${stack.resourceCount} | \${percentage}% | \${status} |\\n\`;
+}
+
+// Find existing comment
+const comments = await github.rest.issues.listComments({
+  owner: context.repo.owner,
+  repo: context.repo.repo,
+  issue_number: context.issue.number,
+});
+
+const botComment = comments.data.find(comment =>
+  comment.user.type === 'Bot' &&
+  comment.body.includes('📊 CloudFormation Resource Count')
+);
+
+if (botComment) {
+  // Update existing comment
+  await github.rest.issues.updateComment({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    comment_id: botComment.id,
+    body: body,
+  });
+  console.log('Updated existing PR comment');
+} else {
+  // Create new comment
+  await github.rest.issues.createComment({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    issue_number: context.issue.number,
+    body: body,
+  });
+  console.log('Created new PR comment');
+}
+`;
   }
 }

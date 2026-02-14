@@ -4,6 +4,7 @@ import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence } from '../steps';
 import { VersioningConfig, VersioningSetup } from '../versioning';
+import { ResourceCountStep } from './resource-count-step';
 
 /**
  * The Environment interface is designed to hold AWS related information
@@ -184,6 +185,23 @@ export interface CDKPipelineOptions {
    * Versioning configuration
    */
   readonly versioning?: VersioningConfig;
+
+  /**
+   * Resource count warning threshold.
+   * When a stack exceeds this number of resources, a warning will be displayed.
+   * CloudFormation has a hard limit of 500 resources per stack.
+   *
+   * @default 450
+   */
+  readonly resourceCountWarningThreshold?: number;
+
+  /**
+   * Whether to enable resource counting in the synth step.
+   * When enabled, counts CloudFormation resources in each stack and warns if approaching the limit.
+   *
+   * @default true
+   */
+  readonly enableResourceCounting?: boolean;
 }
 
 /**
@@ -280,6 +298,19 @@ export abstract class CDKPipeline extends Component {
       seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.postSynthCommands));
     }
     return seq;
+  }
+
+  protected provideResourceCountStep(githubSummary: boolean = false): PipelineStep | undefined {
+    if (this.baseOptions.enableResourceCounting === false) {
+      return undefined;
+    }
+
+    return new ResourceCountStep(this.project, {
+      cloudAssemblyDir: this.app.cdkConfig.cdkout,
+      warningThreshold: this.baseOptions.resourceCountWarningThreshold ?? 450,
+      outputFile: 'resource-count-results.json',
+      githubSummary,
+    });
   }
 
   protected provideAssetUploadStep(stageName?: string): PipelineStep {

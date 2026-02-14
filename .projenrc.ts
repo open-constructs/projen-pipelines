@@ -49,6 +49,7 @@ const project = new cdk.JsiiProject({
   bin: {
     'pipelines-release': 'lib/release.js',
     'detect-drift': 'lib/drift/detect-drift.js',
+    'count-resources': 'lib/awscdk/count-resources.js',
   },
   releaseToNpm: true,
   npmTrustedPublishing: true,
