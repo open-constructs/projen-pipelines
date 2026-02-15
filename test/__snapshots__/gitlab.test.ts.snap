@@ -91,6 +91,21 @@ deploy-dev:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:dev
+    - if [ -f "cdk-outputs-dev.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_dev[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - dev"'
+    - '  if [ -s "cdk-outputs-dev.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-dev.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_dev\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-dev.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
 diff-prod:
@@ -128,6 +143,21 @@ deploy-prod:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:prod
+    - if [ -f "cdk-outputs-prod.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_prod[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - prod"'
+    - '  if [ -s "cdk-outputs-prod.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-prod.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_prod\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-prod.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
 "
@@ -312,6 +342,21 @@ deploy-independent1:
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "deployRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:independent1
     - echo Post Deploy
+    - if [ -f "cdk-outputs-independent1.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_independent1[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - independent1"'
+    - '  if [ -s "cdk-outputs-independent1.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-independent1.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_independent1\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-independent1.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
     FOO: bar
@@ -331,6 +376,21 @@ deploy-independent2:
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "deployRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:independent2
     - echo Post Deploy
+    - if [ -f "cdk-outputs-independent2.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_independent2[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - independent2"'
+    - '  if [ -s "cdk-outputs-independent2.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-independent2.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_independent2\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-independent2.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
     FOO: bar
@@ -434,6 +494,21 @@ deploy-prod:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "defaultRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:prod
+    - if [ -f "cdk-outputs-prod.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_prod[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - prod"'
+    - '  if [ -s "cdk-outputs-prod.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-prod.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_prod\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-prod.json"'
+    - fi
   variables:
     FOO: bar
     AWS_REGION: eu-central-1
@@ -537,6 +612,21 @@ deploy-dev:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:dev
+    - if [ -f "cdk-outputs-dev.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_dev[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - dev"'
+    - '  if [ -s "cdk-outputs-dev.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-dev.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_dev\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-dev.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
 diff-prod:
@@ -578,6 +668,21 @@ deploy-prod:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:prod
+    - if [ -f "cdk-outputs-prod.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_prod[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - prod"'
+    - '  if [ -s "cdk-outputs-prod.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-prod.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_prod\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-prod.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
 "
@@ -680,6 +785,21 @@ deploy-dev:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:dev
+    - if [ -f "cdk-outputs-dev.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_dev[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - dev"'
+    - '  if [ -s "cdk-outputs-dev.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-dev.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_dev\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-dev.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
 diff-prod:
@@ -721,6 +841,21 @@ deploy-prod:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:prod
+    - if [ -f "cdk-outputs-prod.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_prod[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - prod"'
+    - '  if [ -s "cdk-outputs-prod.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-prod.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_prod\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-prod.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
 "
@@ -815,6 +950,21 @@ deploy-dev:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:dev
+    - if [ -f "cdk-outputs-dev.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_dev[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - dev"'
+    - '  if [ -s "cdk-outputs-dev.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-dev.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_dev\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-dev.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
 diff-prod:
@@ -851,6 +1001,21 @@ deploy-prod:
     - npx projen install:ci
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "prodRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen deploy:prod
+    - if [ -f "cdk-outputs-prod.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_prod[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - prod"'
+    - '  if [ -s "cdk-outputs-prod.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-prod.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_prod\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-prod.json"'
+    - fi
   variables:
     AWS_REGION: eu-central-1
 "
