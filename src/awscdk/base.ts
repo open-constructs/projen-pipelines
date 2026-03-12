@@ -2,7 +2,7 @@ import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
-import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence } from '../steps';
+import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence, PnpmSetupStep } from '../steps';
 import { VersioningConfig, VersioningSetup } from '../versioning';
 
 /**
@@ -251,6 +251,14 @@ export abstract class CDKPipeline extends Component {
 
   protected provideInstallStep(): PipelineStep {
     const seq = new StepSequence(this.project, this.baseOptions.preInstallSteps ?? []);
+
+    // Detect and add pnpm setup if needed (GitHub only)
+    if (this.app.package.packageManager === NodePackageManager.PNPM && this.engineType() === PipelineEngine.GITHUB) {
+      seq.addSteps(new PnpmSetupStep(this.project, {
+        version: (this.app.package as any).pnpmVersion,
+      }));
+    }
+
     if (this.baseOptions.preInstallCommands) {
       seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.preInstallCommands));
     }
@@ -364,6 +372,9 @@ export abstract class CDKPipeline extends Component {
         break;
       case NodePackageManager.NPM:
         commands.push(`npm install ${packageName}`);
+        break;
+      case NodePackageManager.PNPM:
+        commands.push(`pnpm add ${packageName}`);
         break;
       default:
         throw new Error('No install scripts for packageManager: ' + this.app.package.packageManager);
