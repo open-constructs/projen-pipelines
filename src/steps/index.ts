@@ -4,3 +4,4 @@ export * from './aws-assume-role.step';
 export * from './registries';
 export * from './amplify-deploy.step';
 export * from './github-summary.step';
+export * from './package-manager-setup.step';

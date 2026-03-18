@@ -1,4 +1,5 @@
 import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk';
+import { NodePackageManager } from 'projen/lib/javascript';
 import { synthSnapshot } from 'projen/lib/util/synth';
 import { GithubCDKPipeline, GithubStepConfig, PipelineStep, VersioningOutputs, VersioningStrategy } from '../src';
 
@@ -649,4 +650,44 @@ test('Github snapshot with jump roles', () => {
   expect(snapshot['src/app.ts']).toContain('addVersioningToStack');
   expect(snapshot['src/app.ts']).toContain('CfnOutput');
   expect(snapshot['src/app.ts']).toContain('StringParameter');
+});
+
+test('Github snapshot with pnpm package manager', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+    packageManager: NodePackageManager.PNPM,
+    pnpmVersion: '9',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deployYml = snapshot['.github/workflows/deploy.yml'];
+
+  expect(deployYml).toMatchSnapshot();
+
+  // Verify pnpm setup step is present
+  expect(deployYml).toContain('pnpm/action-setup@v4');
+  expect(deployYml).toContain('Setup pnpm');
+
+  // Verify pnpm setup appears in all jobs (synth, assetUpload, deploy)
+  const pnpmSetupCount = (deployYml.match(/pnpm\/action-setup@v4/g) || []).length;
+  expect(pnpmSetupCount).toBe(3);
 });
