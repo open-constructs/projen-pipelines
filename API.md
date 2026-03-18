@@ -928,6 +928,7 @@ new ContainerBuildPipeline(project: Project, options: ContainerBuildPipelineOpti
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.ContainerBuildPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.ContainerBuildPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.ContainerBuildPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.ContainerBuildPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.ContainerBuildPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -942,6 +943,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.ContainerBuildPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.ContainerBuildPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.ContainerBuildPipeline.postSynthesize"></a>
 
@@ -1870,6 +1892,7 @@ new GithubContainerBuildPipeline(project: GitHubProject, options: GithubContaine
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GithubContainerBuildPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GithubContainerBuildPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GithubContainerBuildPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GithubContainerBuildPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GithubContainerBuildPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1884,6 +1907,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GithubContainerBuildPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GithubContainerBuildPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GithubContainerBuildPipeline.postSynthesize"></a>
 
@@ -2611,6 +2655,7 @@ new GitlabContainerBuildPipeline(project: Project, options: GitlabContainerBuild
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitlabContainerBuildPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -2625,6 +2670,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitlabContainerBuildPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitlabContainerBuildPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitlabContainerBuildPipeline.postSynthesize"></a>
 
