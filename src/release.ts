@@ -2,7 +2,8 @@
 
 import { copyFileSync, existsSync, readFileSync, writeFileSync, rmSync } from 'fs';
 import { join } from 'path';
-import * as stdVer from 'standard-version';
+// @ts-ignore
+import ctv from 'commit-and-tag-version';
 
 function createManifest(outDir: string, namespace: string) {
   const projectInfo = JSON.parse(readFileSync(join('package.json')).toString('utf-8'));
@@ -22,7 +23,7 @@ function createManifest(outDir: string, namespace: string) {
 }
 
 function bumpVersion() {
-  void stdVer({
+  void ctv({
     packageFiles: [],
     bumpFiles: [],
     skip: {
