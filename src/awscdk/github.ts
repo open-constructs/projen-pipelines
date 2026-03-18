@@ -34,6 +34,18 @@ export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
    * @default false
    */
   readonly useGithubEnvironments?: boolean;
+
+  /**
+   * whether to use GitHub environments for asset upload step
+   * Create separate, parallel jobs for asset upload since GitHub Environments
+   * require unique environment names per job
+   *
+   * WARNING: this parameter requires rebuilding the container assets for each stage and they will not
+   * be the "same binary", so there is a (small) chance that it could produce different binaries per stage
+   *
+   * @default false
+   */
+  readonly useGithubEnvironmentsForAssetUpload?: boolean;
 }
 
 
@@ -95,10 +107,16 @@ export class GithubCDKPipeline extends CDKPipeline {
     // Create jobs for synthesizing, asset uploading, and deployment.
     this.createSynth();
 
-    this.createAssetUpload();
+    if (options.useGithubEnvironmentsForAssetUpload) {
+      for (const stage of options.stages) {
+        this.createAssetUpload(stage.name);
+      }
+    } else {
+      this.createAssetUpload();
+    }
 
     for (const stage of options.stages) {
-      this.createDeployment(stage);
+      this.createDeployment(stage, options.useGithubEnvironmentsForAssetUpload ?? false);
     }
     for (const stage of (options.independentStages ?? [])) {
       this.createIndependentDeployment(stage);
@@ -300,8 +318,7 @@ export class GithubCDKPipeline extends CDKPipeline {
   /**
    * Creates a job to upload assets to AWS as part of the pipeline.
    */
-  public createAssetUpload(): void {
-
+  public createAssetUpload(stageName?: string): void {
     const steps = [
       new SimpleCommandStep(this.project, ['git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"']),
       new DownloadArtifactStep(this.project, {
@@ -309,7 +326,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
       this.provideInstallStep(),
-      this.provideAssetUploadStep(),
+      this.provideAssetUploadStep(stageName),
     ];
 
     if (this.needsVersionedArtifacts) {
@@ -318,10 +335,11 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     const ghSteps = steps.map(s => s.toGithub());
 
-    this.deploymentWorkflow.addJob('assetUpload', {
-      name: 'Publish assets to AWS',
+    this.deploymentWorkflow.addJob(`assetUpload${stageName ? `-${stageName}` : ''}`, {
+      name: `Publish assets to AWS${stageName ? ` for stage ${stageName}` : ''}`,
       needs: ['synth', ...ghSteps.flatMap(s => s.needs)],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      ...(this.options.useGithubEnvironmentsForAssetUpload && stageName && { environment: stageName }),
       env: {
         CI: 'true',
         ...ghSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
@@ -355,8 +373,7 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a job to deploy the CDK application to AWS.
    * @param stage - The deployment stage to create.
    */
-  public createDeployment(stage: DeploymentStage): void {
-
+  public createDeployment(stage: DeploymentStage, useGithubEnvironmentsForAssetUpload?: boolean): void {
     if (stage.manualApproval === true) {
       const steps = [
         this.provideInstallStep(),
@@ -414,12 +431,17 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
 
     } else {
-      this.createDeployJob(this.deploymentWorkflow, [...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])], stage);
+      this.createDeployJob(this.deploymentWorkflow, [...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])], stage, useGithubEnvironmentsForAssetUpload);
       this.deploymentStages.push(stage.name);
     }
   }
 
-  private createDeployJob(workflow: GithubWorkflow, jobDependencies: string[], stage: NamedStageOptions) {
+  private createDeployJob(
+    workflow: GithubWorkflow,
+    jobDependencies: string[],
+    stage: NamedStageOptions,
+    useGithubEnvironmentsForAssetUpload?: boolean,
+  ) {
     const steps = [
       new DownloadArtifactStep(this.project, {
         name: 'cloud-assembly',
@@ -443,7 +465,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         'group': `deploy-${stage.name}`,
         'cancel-in-progress': false,
       },
-      needs: ['assetUpload', ...steps.flatMap(s => s.needs), ...jobDependencies],
+      needs: [`assetUpload${useGithubEnvironmentsForAssetUpload ? `-${stage.name}` : ''}`, ...steps.flatMap(s => s.needs), ...jobDependencies],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       env: {
         CI: 'true',

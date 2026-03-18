@@ -1,4 +1,4 @@
-import { ReleasableCommits, cdk, github, javascript } from 'projen';
+import { DependencyType, ReleasableCommits, cdk, github, javascript } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
 import { GitHubAssignApprover } from './src/assign-approver';
 
@@ -20,14 +20,16 @@ const project = new cdk.JsiiProject({
     'constructs',
     'fs-extra',
     '@types/fs-extra',
-    '@types/standard-version',
+  ],
+  deps: [
+    'commit-and-tag-version',
   ],
   bundledDeps: [
-    'standard-version',
+    'commit-and-tag-version',
   ],
   peerDeps: [
-    'projen@>=0.98.12 <1.0.0',
-    'constructs@^10.4.2',
+    'projen@>=0.99.21 <1.0.0',
+    'constructs@^10.5.1',
   ],
   autoApproveUpgrades: true,
   autoApproveOptions: { allowedUsernames: ['hoegertn', 'Lock128', 'open-constructs-projen[bot]'], secret: 'GITHUB_TOKEN' },
@@ -40,7 +42,7 @@ const project = new cdk.JsiiProject({
       },
     },
   },
-  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'revert', 'Revert', 'docs']),
+  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'revert', 'Revert', 'docs', 'chore']),
   keywords: [
     'aws',
     'cdk',
@@ -60,6 +62,8 @@ const project = new cdk.JsiiProject({
     },
   },
 });
+
+project.deps.removeDependency('commit-and-tag-version', DependencyType.BUILD);
 
 project.addTask('local-push', { exec: 'npx yalc push' }).prependSpawn(project.buildTask);
 
