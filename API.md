@@ -36,6 +36,7 @@ new AssignApprover(scope: Project, baseOptions: AssignApproverOptions)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.AssignApprover.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.AssignApprover.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.AssignApprover.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.AssignApprover.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.AssignApprover.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -49,6 +50,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.AssignApprover.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.AssignApprover.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.AssignApprover.postSynthesize"></a>
 
@@ -199,6 +221,7 @@ new BashCDKPipeline(app: AwsCdkTypeScriptApp, options: BashCDKPipelineOptions)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.BashCDKPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.BashCDKPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -216,6 +239,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.BashCDKPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.BashCDKPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.BashCDKPipeline.postSynthesize"></a>
 
@@ -424,6 +468,7 @@ new BashDriftDetectionWorkflow(project: Project, options: BashDriftDetectionWork
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -437,6 +482,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.BashDriftDetectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.BashDriftDetectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.BashDriftDetectionWorkflow.postSynthesize"></a>
 
@@ -613,6 +679,7 @@ new CDKPipeline(app: AwsCdkTypeScriptApp, baseOptions: CDKPipelineOptions)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.CDKPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.CDKPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.CDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.CDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.CDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -630,6 +697,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.CDKPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.CDKPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.CDKPipeline.postSynthesize"></a>
 
@@ -838,6 +926,7 @@ new DriftDetectionWorkflow(project: Project, options: DriftDetectionWorkflowOpti
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -851,6 +940,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.DriftDetectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.DriftDetectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.DriftDetectionWorkflow.postSynthesize"></a>
 
@@ -1023,6 +1133,7 @@ new GitHubAssignApprover(scope: GitHubProject, options: GitHubAssignApproverOpti
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GitHubAssignApprover.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GitHubAssignApprover.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitHubAssignApprover.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitHubAssignApprover.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1037,6 +1148,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitHubAssignApprover.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitHubAssignApprover.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitHubAssignApprover.postSynthesize"></a>
 
@@ -1201,6 +1333,7 @@ Configuration options for the pipeline.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1221,6 +1354,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GithubCDKPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GithubCDKPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GithubCDKPipeline.postSynthesize"></a>
 
@@ -1289,15 +1443,21 @@ Generate versioning utility functions for CDK application.
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.GithubCDKPipeline.createAssetUpload"></a>
 
 ```typescript
-public createAssetUpload(): void
+public createAssetUpload(stageName?: string): void
 ```
 
 Creates a job to upload assets to AWS as part of the pipeline.
 
+###### `stageName`<sup>Optional</sup> <a name="stageName" id="projen-pipelines.GithubCDKPipeline.createAssetUpload.parameter.stageName"></a>
+
+- *Type:* string
+
+---
+
 ##### `createDeployment` <a name="createDeployment" id="projen-pipelines.GithubCDKPipeline.createDeployment"></a>
 
 ```typescript
-public createDeployment(stage: DeploymentStage): void
+public createDeployment(stage: DeploymentStage, useGithubEnvironmentsForAssetUpload?: boolean): void
 ```
 
 Creates a job to deploy the CDK application to AWS.
@@ -1307,6 +1467,12 @@ Creates a job to deploy the CDK application to AWS.
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>
 
 The deployment stage to create.
+
+---
+
+###### `useGithubEnvironmentsForAssetUpload`<sup>Optional</sup> <a name="useGithubEnvironmentsForAssetUpload" id="projen-pipelines.GithubCDKPipeline.createDeployment.parameter.useGithubEnvironmentsForAssetUpload"></a>
+
+- *Type:* boolean
 
 ---
 
@@ -1484,6 +1650,7 @@ new GitHubDriftDetectionWorkflow(project: Project, options: GitHubDriftDetection
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1497,6 +1664,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitHubDriftDetectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitHubDriftDetectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitHubDriftDetectionWorkflow.postSynthesize"></a>
 
@@ -1678,6 +1866,7 @@ Configuration options for the pipeline.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1696,6 +1885,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitlabCDKPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitlabCDKPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitlabCDKPipeline.postSynthesize"></a>
 
@@ -1963,6 +2173,7 @@ new GitLabDriftDetectionWorkflow(project: Project, options: GitLabDriftDetection
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1976,6 +2187,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitLabDriftDetectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitLabDriftDetectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitLabDriftDetectionWorkflow.postSynthesize"></a>
 
@@ -4079,6 +4311,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironments">useGithubEnvironments</a></code> | <code>boolean</code> | whether to use GitHub environments for deployment stages. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironmentsForAssetUpload">useGithubEnvironmentsForAssetUpload</a></code> | <code>boolean</code> | whether to use GitHub environments for asset upload step Create separate, parallel jobs for asset upload since GitHub Environments require unique environment names per job. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubPackagesForAssembly">useGithubPackagesForAssembly</a></code> | <code>boolean</code> | use GitHub Packages to store vesioned artifacts of cloud assembly; |
 
 ---
@@ -4299,6 +4532,22 @@ public readonly useGithubEnvironments: boolean;
 whether to use GitHub environments for deployment stages.
 
 INFO: When using environments consider protection rules instead of using the manual option of projen-pipelines for stages
+
+---
+
+##### `useGithubEnvironmentsForAssetUpload`<sup>Optional</sup> <a name="useGithubEnvironmentsForAssetUpload" id="projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironmentsForAssetUpload"></a>
+
+```typescript
+public readonly useGithubEnvironmentsForAssetUpload: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+whether to use GitHub environments for asset upload step Create separate, parallel jobs for asset upload since GitHub Environments require unique environment names per job.
+
+WARNING: this parameter requires rebuilding the container assets for each stage and they will not
+be the "same binary", so there is a (small) chance that it could produce different binaries per stage
 
 ---
 
