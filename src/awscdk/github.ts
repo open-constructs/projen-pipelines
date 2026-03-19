@@ -6,6 +6,7 @@ import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep } from '../steps';
 import { DownloadArtifactStep, UploadArtifactStep } from '../steps/artifact-steps';
+import { CdkOutputsSummaryStep } from '../steps/github-summary.step';
 import { GithubPackagesLoginStep } from '../steps/registries';
 
 const DEFAULT_RUNNER_TAGS = ['ubuntu-latest'];
@@ -163,6 +164,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       this.provideInstallStep(),
       this.provideSynthStep(),
       this.provideDeployStep({ name: 'feature', env: this.baseOptions.featureStages!.env }),
+      new CdkOutputsSummaryStep(this.project, { stageName: 'feature' }),
       new UploadArtifactStep(this.project, {
         name: 'cdk-outputs-feature',
         path: 'cdk-outputs-feature.json',
@@ -380,6 +382,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         new SimpleCommandStep(this.project, this.renderInstallPackageCommands(`${this.baseOptions.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`)),
         new SimpleCommandStep(this.project, [`mv ./node_modules/${this.baseOptions.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`]),
         this.provideDeployStep(stage),
+        new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
         new UploadArtifactStep(this.project, {
           name: `cdk-outputs-${stage.name}`,
           path: `cdk-outputs-${stage.name}.json`,
@@ -449,6 +452,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       }),
       this.provideInstallStep(),
       this.provideDeployStep(stage),
+      new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
       new UploadArtifactStep(this.project, {
         name: `cdk-outputs-${stage.name}`,
         path: `cdk-outputs-${stage.name}.json`,
@@ -502,7 +506,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         this.provideSynthStep(),
         ...((stage.diffType !== CdkDiffType.NONE) ? [this.provideDiffStep(stage, stage.diffType === CdkDiffType.FAST)] : []),
         this.provideDeployStep(stage),
-
+        new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
         new UploadArtifactStep(this.project, {
           name: `cdk-outputs-${stage.name}`,
           path: `cdk-outputs-${stage.name}.json`,
