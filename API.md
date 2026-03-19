@@ -6152,14 +6152,6 @@ public readonly splitParameters: boolean;
 
 ---
 
-### ResourceCountStepProps <a name="ResourceCountStepProps" id="projen-pipelines.ResourceCountStepProps"></a>
-
-#### Initializer <a name="Initializer" id="projen-pipelines.ResourceCountStepProps.Initializer"></a>
-
-```typescript
-import { ResourceCountStepProps } from 'projen-pipelines'
-
-const resourceCountStepProps: ResourceCountStepProps = { ... }
 ### PnpmSetupStepOptions <a name="PnpmSetupStepOptions" id="projen-pipelines.PnpmSetupStepOptions"></a>
 
 Options for the PnpmSetupStep.
@@ -6170,6 +6162,38 @@ Options for the PnpmSetupStep.
 import { PnpmSetupStepOptions } from 'projen-pipelines'
 
 const pnpmSetupStepOptions: PnpmSetupStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.PnpmSetupStepOptions.property.version">version</a></code> | <code>string</code> | The version of pnpm to install. |
+
+---
+
+##### `version`<sup>Optional</sup> <a name="version" id="projen-pipelines.PnpmSetupStepOptions.property.version"></a>
+
+```typescript
+public readonly version: string;
+```
+
+- *Type:* string
+
+The version of pnpm to install.
+
+If not provided, defaults to '9'.
+
+---
+
+### ResourceCountStepProps <a name="ResourceCountStepProps" id="projen-pipelines.ResourceCountStepProps"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.ResourceCountStepProps.Initializer"></a>
+
+```typescript
+import { ResourceCountStepProps } from 'projen-pipelines'
+
+const resourceCountStepProps: ResourceCountStepProps = { ... }
 ```
 
 #### Properties <a name="Properties" id="Properties"></a>
@@ -6232,21 +6256,6 @@ public readonly warningThreshold: number;
 - *Default:* 450
 
 Warning threshold for resource count.
-| <code><a href="#projen-pipelines.PnpmSetupStepOptions.property.version">version</a></code> | <code>string</code> | The version of pnpm to install. |
-
----
-
-##### `version`<sup>Optional</sup> <a name="version" id="projen-pipelines.PnpmSetupStepOptions.property.version"></a>
-
-```typescript
-public readonly version: string;
-```
-
-- *Type:* string
-
-The version of pnpm to install.
-
-If not provided, defaults to '9'.
 
 ---
 
