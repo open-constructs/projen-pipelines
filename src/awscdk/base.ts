@@ -199,8 +199,7 @@ export abstract class CDKPipeline extends Component {
 
     // Add development dependencies
     this.app.addDevDeps(
-      '@types/standard-version',
-      'standard-version',
+      'commit-and-tag-version',
       'cdk-assets',
     );
     // this.app.addDeps(
