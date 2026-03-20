@@ -1,5 +1,5 @@
 import { Project } from 'projen';
-import { BashStepConfig, CodeCatalystStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
+import { BashStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
 
 /**
  * Configuration for an AWS Amplify deployment step
@@ -178,7 +178,4 @@ export class AmplifyDeployStep extends PipelineStep {
     return { commands };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    throw new Error('CodeCatalyst is not supported for Amplify deployment');
-  }
 }

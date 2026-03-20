@@ -131,17 +131,3 @@ exports[`StepSequence works correctly 3`] = `
   "needs": [],
 }
 `;
-
-exports[`StepSequence works correctly 4`] = `
-{
-  "commands": [
-    "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain domain --region eu-central-1 --domain-owner domainOwner --query authorizationToken --output text)",
-    "echo "Hello World"",
-    "echo 42",
-    "echo "Hello World"",
-    "echo 42",
-  ],
-  "env": {},
-  "needs": [],
-}
-`;
