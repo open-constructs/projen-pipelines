@@ -222,6 +222,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
           tags: this.options.runnerTags?.diff?.[stage.name] ?? this.options.runnerTags?.deployment?.[stage.name] ?? this.options.runnerTags?.default,
           only: {
             refs: [this.branchName],
+            ...this.baseOptions.paths && { changes: this.baseOptions.paths },
           },
           needs: [
             { job: 'synth', artifacts: true },
@@ -241,6 +242,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
         },
         only: {
           refs: [this.branchName],
+          ...this.baseOptions.paths && { changes: this.baseOptions.paths },
         },
         needs: [
           { job: 'synth', artifacts: true },
@@ -278,6 +280,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
         ...stage.deployOnPush && {
           only: {
             refs: [this.branchName],
+            ...this.baseOptions.paths && { changes: this.baseOptions.paths },
           },
         },
         ...!stage.deployOnPush && {

@@ -120,6 +120,19 @@ export interface CDKPipelineOptions {
   readonly branchName?: string;
 
   /**
+   * File path patterns that should trigger the pipeline when changed.
+   * This is useful for monorepos where you only want to run the pipeline
+   * when files in a specific subproject are modified.
+   *
+   * For GitHub, these are used as `on.push.paths` and `on.pull_request.paths` filters.
+   * For GitLab, these are used as `only.changes` filters.
+   *
+   * @example ['packages/my-app/**', 'shared-libs/**']
+   * @default - all paths trigger the pipeline
+   */
+  readonly paths?: string[];
+
+  /**
    * This field is used to define a prefix for the AWS Stack resources created
    * during the pipeline's operation.
    *

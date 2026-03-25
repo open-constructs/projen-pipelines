@@ -277,3 +277,48 @@ test('Gitlab snapshot with versioning enabled', () => {
   expect(snapshot['src/app.ts']).toContain('CfnOutput');
   expect(snapshot['src/app.ts']).toContain('StringParameter');
 });
+
+test('Gitlab snapshot with path filters', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.102.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GitlabCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+        prod: 'prodRole',
+      },
+    },
+    paths: ['packages/my-app/**', 'shared-libs/**'],
+    stages: [{
+      name: 'dev',
+      diffType: CdkDiffType.FAST,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }, {
+      name: 'prod',
+      manualApproval: true,
+      diffType: CdkDiffType.FULL,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const gitlabCi = snapshot['.gitlab-ci.yml'];
+
+  expect(gitlabCi).toMatchSnapshot();
+
+  // Verify path filters (changes) are present in job configurations
+  expect(gitlabCi).toContain('packages/my-app/**');
+  expect(gitlabCi).toContain('shared-libs/**');
+});
