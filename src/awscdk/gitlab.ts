@@ -97,7 +97,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
    */
   protected setupSnippets() {
     this.config.addJobs({
-      [`${this.namePrefix}.artifacts_cdk`]: {
+      [`.${this.namePrefix}artifacts_cdk`]: {
         artifacts: {
           when: gitlab.CacheWhen.ON_SUCCESS,
           expireIn: '30 days',
@@ -106,7 +106,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
           paths: ['cdk.out'],
         },
       },
-      [`${this.namePrefix}.artifacts_cdkdeploy`]: {
+      [`.${this.namePrefix}artifacts_cdkdeploy`]: {
         artifacts: {
           when: gitlab.CacheWhen.ON_SUCCESS,
           expireIn: '30 days',
@@ -115,7 +115,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
           paths: ['cdk-outputs-*.json'],
         },
       },
-      [`${this.namePrefix}.aws_base`]: {
+      [`.${this.namePrefix}aws_base`]: {
         image: { name: this.jobImage },
         idTokens: {
           AWS_TOKEN: {
@@ -151,7 +151,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
     this.config.addStages('synth');
     this.config.addJobs({
       [`${this.namePrefix}synth`]: {
-        extends: [`${this.namePrefix}.aws_base`, `${this.namePrefix}.artifacts_cdk`, ...gitlabSteps.flatMap(s => s.extensions)],
+        extends: [`.${this.namePrefix}aws_base`, `.${this.namePrefix}artifacts_cdk`, ...gitlabSteps.flatMap(s => s.extensions)],
         needs: gitlabSteps.flatMap(s => s.needs),
         stage: 'synth',
         tags: this.options.runnerTags?.synth ?? this.options.runnerTags?.default,
@@ -182,7 +182,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
     this.config.addStages('publish_assets');
     this.config.addJobs({
       [`${this.namePrefix}publish_assets`]: {
-        extends: [`${this.namePrefix}.aws_base`, ...gitlabSteps.flatMap(s => s.extensions)],
+        extends: [`.${this.namePrefix}aws_base`, ...gitlabSteps.flatMap(s => s.extensions)],
         stage: 'publish_assets',
         tags: this.options.runnerTags?.assetPublishing ?? this.options.runnerTags?.default,
         needs: [{ job: `${this.namePrefix}synth`, artifacts: true }, ...gitlabSteps.flatMap(s => s.needs)],
@@ -217,7 +217,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
     this.config.addJobs({
       ...(stage.diffType !== CdkDiffType.NONE) && {
         [`${this.namePrefix}diff-${stage.name}`]: {
-          extends: [`${this.namePrefix}.aws_base`, ...diffSteps.flatMap(s => s.extensions)],
+          extends: [`.${this.namePrefix}aws_base`, ...diffSteps.flatMap(s => s.extensions)],
           stage: stage.name,
           tags: this.options.runnerTags?.diff?.[stage.name] ?? this.options.runnerTags?.deployment?.[stage.name] ?? this.options.runnerTags?.default,
           only: {
@@ -233,7 +233,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
         },
       },
       [`${this.namePrefix}deploy-${stage.name}`]: {
-        extends: [`${this.namePrefix}.aws_base`, `${this.namePrefix}.artifacts_cdkdeploy`, ...deploySteps.flatMap(s => s.extensions)],
+        extends: [`.${this.namePrefix}aws_base`, `.${this.namePrefix}artifacts_cdkdeploy`, ...deploySteps.flatMap(s => s.extensions)],
         stage: stage.name,
         tags: this.options.runnerTags?.deployment?.[stage.name] ?? this.options.runnerTags?.default,
         ...stage.manualApproval && {
@@ -272,7 +272,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
     this.config.addStages(stage.name);
     this.config.addJobs({
       [`${this.namePrefix}deploy-${stage.name}`]: {
-        extends: [`${this.namePrefix}.aws_base`, `${this.namePrefix}.artifacts_cdkdeploy`, ...steps.flatMap(s => s.extensions)],
+        extends: [`.${this.namePrefix}aws_base`, `.${this.namePrefix}artifacts_cdkdeploy`, ...steps.flatMap(s => s.extensions)],
         stage: stage.name,
         tags: this.options.runnerTags?.deployment?.[stage.name] ?? this.options.runnerTags?.default,
         ...stage.deployOnPush && {

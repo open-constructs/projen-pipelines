@@ -32,7 +32,7 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
     this.config.addStages('drift-detection', 'summary');
 
     this.config.addJobs({
-      [`${this.namePrefix}.drift-detection`]: {
+      [`.${this.namePrefix}drift-detection`]: {
         stage: 'drift-detection',
         tags: this.runnerTags,
         image: { name: this.image },
@@ -67,7 +67,7 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
 
       this.config.addJobs({
         [jobName]: {
-          extends: [`${this.namePrefix}.drift-detection`],
+          extends: [`.${this.namePrefix}drift-detection`],
           variables: {
             ...stepConfig.env,
           },
