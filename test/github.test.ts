@@ -138,7 +138,7 @@ test('Github snapshot with custom github environment name', () => {
   expect(deployWorkflow).not.toContain('environment: my-dev');
   expect(releaseWorkflow).toContain('environment: production');
   // 'environment: prod' is a substring of 'environment: production', so check exact match via regex
-  expect(releaseWorkflow).not.toMatch(/environment: prod\b(?!uction)/)
+  expect(releaseWorkflow).not.toMatch(/environment: prod\b(?!uction)/);
 });
 
 test('Github snapshot with multi stack', () => {
