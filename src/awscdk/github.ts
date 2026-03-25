@@ -110,7 +110,7 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     if (options.useGithubEnvironmentsForAssetUpload) {
       for (const stage of options.stages) {
-        this.createAssetUpload(stage.name);
+        this.createAssetUpload(stage.name, stage.githubEnvironment);
       }
     } else {
       this.createAssetUpload();
@@ -303,7 +303,7 @@ export class GithubCDKPipeline extends CDKPipeline {
   /**
    * Creates a job to upload assets to AWS as part of the pipeline.
    */
-  public createAssetUpload(stageName?: string): void {
+  public createAssetUpload(stageName?: string, githubEnvironment?: string): void {
     const steps = [
       new SimpleCommandStep(this.project, ['git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"']),
       new DownloadArtifactStep(this.project, {
@@ -324,7 +324,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       name: `Publish assets to AWS${stageName ? ` for stage ${stageName}` : ''}`,
       needs: ['synth', ...ghSteps.flatMap(s => s.needs)],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
-      ...(this.options.useGithubEnvironmentsForAssetUpload && stageName && { environment: stageName }),
+      ...(this.options.useGithubEnvironmentsForAssetUpload && stageName && { environment: githubEnvironment ?? stageName }),
       env: {
         CI: 'true',
         ...ghSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
@@ -389,7 +389,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         ...this.options.useGithubEnvironments && {
-          environment: stage.name,
+          environment: stage.githubEnvironment ?? stage.name,
         },
         concurrency: {
           'group': `deploy-${stage.name}`,
@@ -446,7 +446,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     workflow.addJob(`deploy-${stage.name}`, {
       name: `Deploy stage ${stage.name} to AWS`,
       ...this.options.useGithubEnvironments && {
-        environment: stage.name,
+        environment: stage.githubEnvironment ?? stage.name,
       },
       concurrency: {
         'group': `deploy-${stage.name}`,
