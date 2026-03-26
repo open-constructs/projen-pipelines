@@ -8,8 +8,6 @@ export enum PipelineEngine {
   GITHUB,
   /** Create a .gitlab-ci.yaml file */
   GITLAB,
-  // /** Create AWS CodeCatalyst workflows */
-  CODE_CATALYST,
   /** Create bash scripts */
   BASH,
 }

@@ -107,15 +107,6 @@ describe('AmplifyDeployStep', () => {
     expect(bashConfig.commands.some(cmd => cmd.includes('aws amplify start-deployment'))).toBe(true);
   });
 
-  test('CodeCatalyst throws not supported error', () => {
-    const step = new AmplifyDeployStep(project, {
-      appId: 'test-app-id',
-      artifactFile: 'deploy.zip',
-    });
-
-    expect(() => step.toCodeCatalyst()).toThrow('CodeCatalyst is not supported for Amplify deployment');
-  });
-
   test('throws error when neither appId nor appIdCommand is provided', () => {
     expect(() => {
       new AmplifyDeployStep(project, {

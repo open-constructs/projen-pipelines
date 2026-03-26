@@ -2,7 +2,6 @@ import { Project } from 'projen';
 import { JobPermission, JobStep } from 'projen/lib/github/workflows-model';
 import {
   BashStepConfig,
-  CodeCatalystStepConfig,
   GithubStepConfig,
   GitlabStepConfig,
   PipelineStep,
@@ -104,12 +103,4 @@ export class AwsAssumeRoleStep extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    //FIXME use CC environments here
-    return {
-      commands: [],
-      env: {},
-      needs: [],
-    };
-  }
 }
