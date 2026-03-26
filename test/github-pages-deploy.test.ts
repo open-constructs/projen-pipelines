@@ -1,7 +1,7 @@
 import { Project } from 'projen';
 import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk';
 import { synthSnapshot } from 'projen/lib/util/synth';
-import { GithubCDKPipeline, GithubPagesDeployStep } from '../src';
+import { GithubCDKPipeline, PagesDeployStep } from '../src';
 
 describe('GithubPagesDeployStep', () => {
   let project: Project;
@@ -11,7 +11,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('generates correct configuration with defaults', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'npm run build:docs',
     });
 
@@ -21,7 +21,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('generates correct configuration with custom docs folder', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'pnpm build:docs',
       docsFolder: 'dist/docs',
     });
@@ -32,7 +32,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('generates correct configuration with custom domain', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'npm run generate:docs',
       docsFolder: 'public',
       customDomain: 'docs.example.com',
@@ -44,7 +44,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('generates correct configuration with all options', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'yarn build:documentation',
       docsFolder: 'build/docs',
       sourceBranch: 'develop',
@@ -58,7 +58,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('GitHub config includes upload-pages-artifact action', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'npm run build:docs',
       docsFolder: 'docs-output',
     });
@@ -75,7 +75,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('GitHub config includes deploy-pages action', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'npm run docs',
     });
 
@@ -87,7 +87,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('GitHub config includes required permissions', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'npm run build:docs',
     });
 
@@ -99,7 +99,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('GitHub config adds custom domain with CNAME', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'npm run docs',
       docsFolder: 'site',
       customDomain: 'docs.example.org',
@@ -112,7 +112,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('GitLab config uses public folder convention', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'npm run build',
       docsFolder: 'dist',
     });
@@ -123,7 +123,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('GitLab config adds custom domain', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'npm run docs',
       customDomain: 'pages.example.com',
     });
@@ -133,7 +133,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('Bash config shows documentation location', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'make docs',
       docsFolder: 'output',
     });
@@ -144,14 +144,6 @@ describe('GithubPagesDeployStep', () => {
     expect(bashConfig.commands).toContain('echo "Documentation built in output"');
   });
 
-  test('CodeCatalyst throws not supported error', () => {
-    const step = new GithubPagesDeployStep(project, {
-      buildCommand: 'npm run docs',
-    });
-
-    expect(() => step.toCodeCatalyst()).toThrow('CodeCatalyst is not supported for GitHub Pages deployment');
-  });
-
   test('can be added as post-deployment step to CDK Pipeline', () => {
     const app = new AwsCdkTypeScriptApp({
       cdkVersion: '2.150.0',
@@ -160,7 +152,7 @@ describe('GithubPagesDeployStep', () => {
     });
 
     // Create the GitHub Pages deployment step
-    const ghPagesDeploy = new GithubPagesDeployStep(app, {
+    const ghPagesDeploy = new PagesDeployStep(app, {
       buildCommand: 'npm run build:api-docs',
       docsFolder: 'api-docs',
       customDomain: 'api.example.com',
@@ -205,7 +197,7 @@ describe('GithubPagesDeployStep', () => {
     });
 
     // Create GitHub Pages deployment without custom domain
-    const ghPagesDeploy = new GithubPagesDeployStep(app, {
+    const ghPagesDeploy = new PagesDeployStep(app, {
       buildCommand: 'npx typedoc',
       docsFolder: 'docs',
     });
@@ -236,7 +228,7 @@ describe('GithubPagesDeployStep', () => {
   });
 
   test('uses custom artifact name when specified', () => {
-    const step = new GithubPagesDeployStep(project, {
+    const step = new PagesDeployStep(project, {
       buildCommand: 'npm run docs',
       artifactName: 'my-custom-docs',
     });

@@ -1,11 +1,11 @@
 import { Project } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
-import { BashStepConfig, CodeCatalystStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
+import { BashStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
 
 /**
- * Configuration for a GitHub Pages deployment step
+ * Configuration for a Pages deployment step
  */
-export interface GithubPagesDeployStepConfig {
+export interface PagesDeployStepConfig {
   /**
    * The command to run to build the documentation
    * @example 'npm run docs'
@@ -22,44 +22,40 @@ export interface GithubPagesDeployStepConfig {
   readonly docsFolder?: string;
 
   /**
-   * The branch to deploy from (used for GitHub Pages source configuration)
+   * The branch to deploy from (used for Pages source configuration)
    * @default 'main'
    */
   readonly sourceBranch?: string;
 
   /**
-   * Custom domain for GitHub Pages
+   * Custom domain for Pages
    * @default undefined
    */
   readonly customDomain?: string;
 
   /**
-   * The name of the GitHub Pages artifact
+   * The name of the Pages artifact
    * @default 'github-pages'
    */
   readonly artifactName?: string;
 }
 
 /**
- * A step that builds documentation and deploys it to GitHub Pages using GitHub Actions deployment mode
- *
- * This step uses the official GitHub Actions for Pages deployment:
- * - actions/upload-pages-artifact@v3
- * - actions/deploy-pages@v4
+ * A step that builds documentation and deploys it to Pages using GitHub Actions or GitLab CI deployment mode
  *
  * @example
- * new GithubPagesDeployStep(project, {
+ * new PagesDeployStep(project, {
  *   buildCommand: 'npm run build:docs',
  *   docsFolder: 'dist/docs',
  *   customDomain: 'docs.example.com',
  * });
  */
-export class GithubPagesDeployStep extends PipelineStep {
+export class PagesDeployStep extends PipelineStep {
 
   private readonly docsFolder: string;
   private readonly artifactName: string;
 
-  constructor(project: Project, private readonly config: GithubPagesDeployStepConfig) {
+  constructor(project: Project, private readonly config: PagesDeployStepConfig) {
     super(project);
     this.docsFolder = config.docsFolder ?? 'docs';
     this.artifactName = config.artifactName ?? 'github-pages';
@@ -151,9 +147,5 @@ export class GithubPagesDeployStep extends PipelineStep {
     commands.push('echo "Note: Bash deployment to GitHub Pages is not supported. Use GitHub Actions."');
 
     return { commands };
-  }
-
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    throw new Error('CodeCatalyst is not supported for GitHub Pages deployment');
   }
 }

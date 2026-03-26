@@ -4896,108 +4896,6 @@ Whether or not to grant the step write permissions to the registry.
 
 ---
 
-### GithubPagesDeployStepConfig <a name="GithubPagesDeployStepConfig" id="projen-pipelines.GithubPagesDeployStepConfig"></a>
-
-Configuration for a GitHub Pages deployment step.
-
-#### Initializer <a name="Initializer" id="projen-pipelines.GithubPagesDeployStepConfig.Initializer"></a>
-
-```typescript
-import { GithubPagesDeployStepConfig } from 'projen-pipelines'
-
-const githubPagesDeployStepConfig: GithubPagesDeployStepConfig = { ... }
-```
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.buildCommand">buildCommand</a></code> | <code>string</code> | The command to run to build the documentation. |
-| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.artifactName">artifactName</a></code> | <code>string</code> | The name of the GitHub Pages artifact. |
-| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.customDomain">customDomain</a></code> | <code>string</code> | Custom domain for GitHub Pages. |
-| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.docsFolder">docsFolder</a></code> | <code>string</code> | The folder containing the built documentation to deploy. |
-| <code><a href="#projen-pipelines.GithubPagesDeployStepConfig.property.sourceBranch">sourceBranch</a></code> | <code>string</code> | The branch to deploy from (used for GitHub Pages source configuration). |
-
----
-
-##### `buildCommand`<sup>Required</sup> <a name="buildCommand" id="projen-pipelines.GithubPagesDeployStepConfig.property.buildCommand"></a>
-
-```typescript
-public readonly buildCommand: string;
-```
-
-- *Type:* string
-
-The command to run to build the documentation.
-
----
-
-*Example*
-
-```typescript
-'pnpm build:docs'
-```
-
-
-##### `artifactName`<sup>Optional</sup> <a name="artifactName" id="projen-pipelines.GithubPagesDeployStepConfig.property.artifactName"></a>
-
-```typescript
-public readonly artifactName: string;
-```
-
-- *Type:* string
-- *Default:* 'github-pages'
-
-The name of the GitHub Pages artifact.
-
----
-
-##### `customDomain`<sup>Optional</sup> <a name="customDomain" id="projen-pipelines.GithubPagesDeployStepConfig.property.customDomain"></a>
-
-```typescript
-public readonly customDomain: string;
-```
-
-- *Type:* string
-- *Default:* undefined
-
-Custom domain for GitHub Pages.
-
----
-
-##### `docsFolder`<sup>Optional</sup> <a name="docsFolder" id="projen-pipelines.GithubPagesDeployStepConfig.property.docsFolder"></a>
-
-```typescript
-public readonly docsFolder: string;
-```
-
-- *Type:* string
-- *Default:* 'docs'
-
-The folder containing the built documentation to deploy.
-
----
-
-*Example*
-
-```typescript
-'dist/docs'
-```
-
-
-##### `sourceBranch`<sup>Optional</sup> <a name="sourceBranch" id="projen-pipelines.GithubPagesDeployStepConfig.property.sourceBranch"></a>
-
-```typescript
-public readonly sourceBranch: string;
-```
-
-- *Type:* string
-- *Default:* 'main'
-
-The branch to deploy from (used for GitHub Pages source configuration).
-
----
-
 ### GithubPagesWorkflowOptions <a name="GithubPagesWorkflowOptions" id="projen-pipelines.GithubPagesWorkflowOptions"></a>
 
 Configuration options for the GitHub Pages workflow.
@@ -6419,6 +6317,108 @@ Path to package.json.
 
 ---
 
+### PagesDeployStepConfig <a name="PagesDeployStepConfig" id="projen-pipelines.PagesDeployStepConfig"></a>
+
+Configuration for a Pages deployment step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.PagesDeployStepConfig.Initializer"></a>
+
+```typescript
+import { PagesDeployStepConfig } from 'projen-pipelines'
+
+const pagesDeployStepConfig: PagesDeployStepConfig = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.PagesDeployStepConfig.property.buildCommand">buildCommand</a></code> | <code>string</code> | The command to run to build the documentation. |
+| <code><a href="#projen-pipelines.PagesDeployStepConfig.property.artifactName">artifactName</a></code> | <code>string</code> | The name of the Pages artifact. |
+| <code><a href="#projen-pipelines.PagesDeployStepConfig.property.customDomain">customDomain</a></code> | <code>string</code> | Custom domain for Pages. |
+| <code><a href="#projen-pipelines.PagesDeployStepConfig.property.docsFolder">docsFolder</a></code> | <code>string</code> | The folder containing the built documentation to deploy. |
+| <code><a href="#projen-pipelines.PagesDeployStepConfig.property.sourceBranch">sourceBranch</a></code> | <code>string</code> | The branch to deploy from (used for Pages source configuration). |
+
+---
+
+##### `buildCommand`<sup>Required</sup> <a name="buildCommand" id="projen-pipelines.PagesDeployStepConfig.property.buildCommand"></a>
+
+```typescript
+public readonly buildCommand: string;
+```
+
+- *Type:* string
+
+The command to run to build the documentation.
+
+---
+
+*Example*
+
+```typescript
+'pnpm build:docs'
+```
+
+
+##### `artifactName`<sup>Optional</sup> <a name="artifactName" id="projen-pipelines.PagesDeployStepConfig.property.artifactName"></a>
+
+```typescript
+public readonly artifactName: string;
+```
+
+- *Type:* string
+- *Default:* 'github-pages'
+
+The name of the Pages artifact.
+
+---
+
+##### `customDomain`<sup>Optional</sup> <a name="customDomain" id="projen-pipelines.PagesDeployStepConfig.property.customDomain"></a>
+
+```typescript
+public readonly customDomain: string;
+```
+
+- *Type:* string
+- *Default:* undefined
+
+Custom domain for Pages.
+
+---
+
+##### `docsFolder`<sup>Optional</sup> <a name="docsFolder" id="projen-pipelines.PagesDeployStepConfig.property.docsFolder"></a>
+
+```typescript
+public readonly docsFolder: string;
+```
+
+- *Type:* string
+- *Default:* 'docs'
+
+The folder containing the built documentation to deploy.
+
+---
+
+*Example*
+
+```typescript
+'dist/docs'
+```
+
+
+##### `sourceBranch`<sup>Optional</sup> <a name="sourceBranch" id="projen-pipelines.PagesDeployStepConfig.property.sourceBranch"></a>
+
+```typescript
+public readonly sourceBranch: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+The branch to deploy from (used for Pages source configuration).
+
+---
+
 ### ParameterStoreConfig <a name="ParameterStoreConfig" id="projen-pipelines.ParameterStoreConfig"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.ParameterStoreConfig.Initializer"></a>
@@ -7610,108 +7610,6 @@ Should be implemented by subclasses.
 
 
 
-### GithubPagesDeployStep <a name="GithubPagesDeployStep" id="projen-pipelines.GithubPagesDeployStep"></a>
-
-A step that builds documentation and deploys it to GitHub Pages using GitHub Actions deployment mode.
-
-This step uses the official GitHub Actions for Pages deployment:
-- actions/upload-pages-artifact@v3
-- actions/deploy-pages@v4
-
-*Example*
-
-```typescript
-new GithubPagesDeployStep(project, {
-  buildCommand: 'npm run build:docs',
-  docsFolder: 'dist/docs',
-  customDomain: 'docs.example.com',
-});
-```
-
-
-#### Initializers <a name="Initializers" id="projen-pipelines.GithubPagesDeployStep.Initializer"></a>
-
-```typescript
-import { GithubPagesDeployStep } from 'projen-pipelines'
-
-new GithubPagesDeployStep(project: Project, config: GithubPagesDeployStepConfig)
-```
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.GithubPagesDeployStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
-| <code><a href="#projen-pipelines.GithubPagesDeployStep.Initializer.parameter.config">config</a></code> | <code><a href="#projen-pipelines.GithubPagesDeployStepConfig">GithubPagesDeployStepConfig</a></code> | *No description.* |
-
----
-
-##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubPagesDeployStep.Initializer.parameter.project"></a>
-
-- *Type:* projen.Project
-
-The projen project reference.
-
----
-
-##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.GithubPagesDeployStep.Initializer.parameter.config"></a>
-
-- *Type:* <a href="#projen-pipelines.GithubPagesDeployStepConfig">GithubPagesDeployStepConfig</a>
-
----
-
-#### Methods <a name="Methods" id="Methods"></a>
-
-| **Name** | **Description** |
-| --- | --- |
-| <code><a href="#projen-pipelines.GithubPagesDeployStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.GithubPagesDeployStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
-| <code><a href="#projen-pipelines.GithubPagesDeployStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
-| <code><a href="#projen-pipelines.GithubPagesDeployStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
-
----
-
-##### `toBash` <a name="toBash" id="projen-pipelines.GithubPagesDeployStep.toBash"></a>
-
-```typescript
-public toBash(): BashStepConfig
-```
-
-Generates a configuration for a bash script step.
-
-Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.GithubPagesDeployStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
-
-Should be implemented by subclasses.
-
-##### `toGithub` <a name="toGithub" id="projen-pipelines.GithubPagesDeployStep.toGithub"></a>
-
-```typescript
-public toGithub(): GithubStepConfig
-```
-
-Generates a configuration for a GitHub Actions step.
-
-Should be implemented by subclasses.
-
-##### `toGitlab` <a name="toGitlab" id="projen-pipelines.GithubPagesDeployStep.toGitlab"></a>
-
-```typescript
-public toGitlab(): GitlabStepConfig
-```
-
-Generates a configuration for a GitLab CI step.
-
-Should be implemented by subclasses.
-
-
-
-
 ### NpmSecretStep <a name="NpmSecretStep" id="projen-pipelines.NpmSecretStep"></a>
 
 Step to set the NPM_TOKEN environment variable from a secret.
@@ -7886,6 +7784,93 @@ public readonly STRUCTURED: string;
 - *Type:* string
 
 ---
+
+### PagesDeployStep <a name="PagesDeployStep" id="projen-pipelines.PagesDeployStep"></a>
+
+A step that builds documentation and deploys it to Pages using GitHub Actions or GitLab CI deployment mode.
+
+*Example*
+
+```typescript
+new PagesDeployStep(project, {
+  buildCommand: 'npm run build:docs',
+  docsFolder: 'dist/docs',
+  customDomain: 'docs.example.com',
+});
+```
+
+
+#### Initializers <a name="Initializers" id="projen-pipelines.PagesDeployStep.Initializer"></a>
+
+```typescript
+import { PagesDeployStep } from 'projen-pipelines'
+
+new PagesDeployStep(project: Project, config: PagesDeployStepConfig)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.PagesDeployStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.PagesDeployStep.Initializer.parameter.config">config</a></code> | <code><a href="#projen-pipelines.PagesDeployStepConfig">PagesDeployStepConfig</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.PagesDeployStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `config`<sup>Required</sup> <a name="config" id="projen-pipelines.PagesDeployStep.Initializer.parameter.config"></a>
+
+- *Type:* <a href="#projen-pipelines.PagesDeployStepConfig">PagesDeployStepConfig</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.PagesDeployStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.PagesDeployStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.PagesDeployStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.PagesDeployStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.PagesDeployStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.PagesDeployStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
 
 ### ParameterStoreOutput <a name="ParameterStoreOutput" id="projen-pipelines.ParameterStoreOutput"></a>
 

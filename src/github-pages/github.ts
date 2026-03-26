@@ -2,7 +2,7 @@ import { Component, Project } from 'projen';
 import { GithubWorkflow } from 'projen/lib/github';
 import { JobPermission } from 'projen/lib/github/workflows-model';
 import { mergeJobPermissions } from '../engines';
-import { GithubPagesDeployStep } from '../steps';
+import { PagesDeployStep } from '../steps';
 
 /**
  * Configuration options for the GitHub Pages workflow
@@ -101,7 +101,7 @@ export class GithubPagesWorkflow extends Component {
     const runInstall = options.runInstall ?? true;
 
     // Create the GitHub Pages deployment step
-    const deployStep = new GithubPagesDeployStep(project, {
+    const deployStep = new PagesDeployStep(project, {
       buildCommand: options.buildCommand,
       docsFolder: options.docsFolder,
       customDomain: options.customDomain,
