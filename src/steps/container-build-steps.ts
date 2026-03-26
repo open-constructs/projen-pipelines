@@ -1,7 +1,7 @@
 import { Project } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
 import { AwsAssumeRoleStep } from './aws-assume-role.step';
-import { BashStepConfig, CodeCatalystStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep, StepSequence } from './step';
+import { BashStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep, StepSequence } from './step';
 
 /**
  * Options for Docker Hub login step
@@ -65,15 +65,6 @@ export class DockerHubLoginStep extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    return {
-      commands: [
-        `echo "${this.options.password}" | docker login -u "${this.options.username}" --password-stdin`,
-      ],
-      needs: [],
-      env: {},
-    };
-  }
 }
 
 /**
@@ -144,15 +135,6 @@ export class HarborLoginStep extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    return {
-      commands: [
-        `echo "${this.options.password}" | docker login -u "${this.options.username}" --password-stdin ${this.options.registryUrl}`,
-      ],
-      needs: [],
-      env: {},
-    };
-  }
 }
 
 /**
@@ -246,16 +228,6 @@ class EcrLoginStepImpl extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    const accountPart = this.options.accountId ?? '$(aws sts get-caller-identity --query Account --output text)';
-    return {
-      commands: [
-        `aws ecr get-login-password --region ${this.options.region} | docker login --username AWS --password-stdin ${accountPart}.dkr.ecr.${this.options.region}.amazonaws.com`,
-      ],
-      needs: [],
-      env: {},
-    };
-  }
 }
 
 /**
@@ -384,15 +356,6 @@ export class DockerBuildStep extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    return {
-      commands: [
-        this.buildDockerCommand().replace('--cache-from type=gha --cache-to type=gha,mode=max', ''),
-      ],
-      needs: [],
-      env: {},
-    };
-  }
 }
 
 /**
@@ -445,13 +408,6 @@ export class DockerTagStep extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    return {
-      commands: this.options.targetTags.map(tag => `docker tag ${this.options.sourceImage} ${tag}`),
-      needs: [],
-      env: {},
-    };
-  }
 }
 
 /**
@@ -499,13 +455,6 @@ export class DockerPushStep extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    return {
-      commands: this.options.tags.map(tag => `docker push ${tag}`),
-      needs: [],
-      env: {},
-    };
-  }
 }
 
 /**
@@ -616,15 +565,6 @@ export class TrivyScanStep extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    return {
-      commands: [
-        this.buildTrivyCommand(),
-      ],
-      needs: [],
-      env: {},
-    };
-  }
 }
 
 /**
@@ -748,17 +688,5 @@ class AwsInspectorSbomStepImpl extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    const outputFile = this.options.outputFile ?? 'sbom.json';
-    return {
-      commands: [
-        `curl -Lo inspector-sbomgen https://inspector-sbomgen-releases-${this.options.region}.s3.${this.options.region}.amazonaws.com/latest/linux/amd64/inspector-sbomgen`,
-        'chmod +x inspector-sbomgen',
-        `./inspector-sbomgen ${this.options.format ?? 'cyclonedx'} -i ${this.options.image} -o ${outputFile}`,
-        `echo "SBOM generated at ${outputFile}"`,
-      ],
-      needs: [],
-      env: {},
-    };
-  }
+
 }

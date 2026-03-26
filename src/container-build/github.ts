@@ -1,5 +1,6 @@
 import { GitHubProject, GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model';
+import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
 import {
   AwsInspectorSbomStep,
@@ -13,7 +14,6 @@ import {
   TrivyScanStep,
 } from '../steps';
 import { ContainerBuildPipeline, ContainerBuildPipelineOptions, ContainerBuildStage, RegistryConfig } from './base';
-import { PipelineEngine } from '../engine';
 
 const DEFAULT_RUNNER_TAGS = ['ubuntu-latest'];
 
