@@ -1443,12 +1443,18 @@ Generate versioning utility functions for CDK application.
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.GithubCDKPipeline.createAssetUpload"></a>
 
 ```typescript
-public createAssetUpload(stageName?: string): void
+public createAssetUpload(stageName?: string, githubEnvironment?: string): void
 ```
 
 Creates a job to upload assets to AWS as part of the pipeline.
 
 ###### `stageName`<sup>Optional</sup> <a name="stageName" id="projen-pipelines.GithubCDKPipeline.createAssetUpload.parameter.stageName"></a>
+
+- *Type:* string
+
+---
+
+###### `githubEnvironment`<sup>Optional</sup> <a name="githubEnvironment" id="projen-pipelines.GithubCDKPipeline.createAssetUpload.parameter.githubEnvironment"></a>
 
 - *Type:* string
 
@@ -3677,6 +3683,7 @@ const deploymentStage: DeploymentStage = { ... }
 | <code><a href="#projen-pipelines.DeploymentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
 | <code><a href="#projen-pipelines.DeploymentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
@@ -3711,6 +3718,21 @@ public readonly diffType: CdkDiffType;
 ```
 
 - *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
+
+---
+
+##### `githubEnvironment`<sup>Optional</sup> <a name="githubEnvironment" id="projen-pipelines.DeploymentStage.property.githubEnvironment"></a>
+
+```typescript
+public readonly githubEnvironment: string;
+```
+
+- *Type:* string
+- *Default:* the stage name
+
+The name of the GitHub environment to use for this stage.
+
+If not specified, the stage name will be used as the GitHub environment name.
 
 ---
 
@@ -5627,6 +5649,7 @@ const independentStage: IndependentStage = { ... }
 | <code><a href="#projen-pipelines.IndependentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
@@ -5661,6 +5684,21 @@ public readonly diffType: CdkDiffType;
 ```
 
 - *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
+
+---
+
+##### `githubEnvironment`<sup>Optional</sup> <a name="githubEnvironment" id="projen-pipelines.IndependentStage.property.githubEnvironment"></a>
+
+```typescript
+public readonly githubEnvironment: string;
+```
+
+- *Type:* string
+- *Default:* the stage name
+
+The name of the GitHub environment to use for this stage.
+
+If not specified, the stage name will be used as the GitHub environment name.
 
 ---
 
@@ -5726,6 +5764,7 @@ const namedStageOptions: NamedStageOptions = { ... }
 | <code><a href="#projen-pipelines.NamedStageOptions.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.NamedStageOptions.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
@@ -5759,6 +5798,21 @@ public readonly diffType: CdkDiffType;
 ```
 
 - *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
+
+---
+
+##### `githubEnvironment`<sup>Optional</sup> <a name="githubEnvironment" id="projen-pipelines.NamedStageOptions.property.githubEnvironment"></a>
+
+```typescript
+public readonly githubEnvironment: string;
+```
+
+- *Type:* string
+- *Default:* the stage name
+
+The name of the GitHub environment to use for this stage.
+
+If not specified, the stage name will be used as the GitHub environment name.
 
 ---
 
