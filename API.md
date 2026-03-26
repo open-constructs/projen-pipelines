@@ -7895,7 +7895,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.ResourceCountStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
-| <code><a href="#projen-pipelines.ResourceCountStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.ResourceCountStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.ResourceCountStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
 | <code><a href="#projen-pipelines.ResourceCountStep.addSteps">addSteps</a></code> | *No description.* |
@@ -7910,14 +7909,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the sequence of steps into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.ResourceCountStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the sequence of steps into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.ResourceCountStep.toGithub"></a>
 
