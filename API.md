@@ -1683,12 +1683,18 @@ Generate versioning utility functions for CDK application.
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.GithubCDKPipeline.createAssetUpload"></a>
 
 ```typescript
-public createAssetUpload(stageName?: string): void
+public createAssetUpload(stageName?: string, githubEnvironment?: string): void
 ```
 
 Creates a job to upload assets to AWS as part of the pipeline.
 
 ###### `stageName`<sup>Optional</sup> <a name="stageName" id="projen-pipelines.GithubCDKPipeline.createAssetUpload.parameter.stageName"></a>
+
+- *Type:* string
+
+---
+
+###### `githubEnvironment`<sup>Optional</sup> <a name="githubEnvironment" id="projen-pipelines.GithubCDKPipeline.createAssetUpload.parameter.githubEnvironment"></a>
 
 - *Type:* string
 
@@ -3885,6 +3891,38 @@ public readonly prefix: string;
 
 ---
 
+### CdkOutputsSummaryStepOptions <a name="CdkOutputsSummaryStepOptions" id="projen-pipelines.CdkOutputsSummaryStepOptions"></a>
+
+Options for the CDK outputs summary step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.CdkOutputsSummaryStepOptions.Initializer"></a>
+
+```typescript
+import { CdkOutputsSummaryStepOptions } from 'projen-pipelines'
+
+const cdkOutputsSummaryStepOptions: CdkOutputsSummaryStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStepOptions.property.stageName">stageName</a></code> | <code>string</code> | The stage name used to identify the outputs file. |
+
+---
+
+##### `stageName`<sup>Required</sup> <a name="stageName" id="projen-pipelines.CdkOutputsSummaryStepOptions.property.stageName"></a>
+
+```typescript
+public readonly stageName: string;
+```
+
+- *Type:* string
+
+The stage name used to identify the outputs file.
+
+---
+
 ### CDKPipelineOptions <a name="CDKPipelineOptions" id="projen-pipelines.CDKPipelineOptions"></a>
 
 The CDKPipelineOptions interface is designed to provide configuration options for a CDK (Cloud Development Kit) pipeline.
@@ -4278,64 +4316,6 @@ public readonly envVariableName: string;
 - *Default:* 'CODEARTIFACT_AUTH_TOKEN'
 
 The environment variable name to set.
-
----
-
-### CodeCatalystStepConfig <a name="CodeCatalystStepConfig" id="projen-pipelines.CodeCatalystStepConfig"></a>
-
-Configuration interface for a CodeCatalyst Actions step.
-
-#### Initializer <a name="Initializer" id="projen-pipelines.CodeCatalystStepConfig.Initializer"></a>
-
-```typescript
-import { CodeCatalystStepConfig } from 'projen-pipelines'
-
-const codeCatalystStepConfig: CodeCatalystStepConfig = { ... }
-```
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.CodeCatalystStepConfig.property.commands">commands</a></code> | <code>string[]</code> | Commands wrapped as GitHub Action job steps. |
-| <code><a href="#projen-pipelines.CodeCatalystStepConfig.property.env">env</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables to set for this step. |
-| <code><a href="#projen-pipelines.CodeCatalystStepConfig.property.needs">needs</a></code> | <code>string[]</code> | Dependencies which need to be completed before this step. |
-
----
-
-##### `commands`<sup>Required</sup> <a name="commands" id="projen-pipelines.CodeCatalystStepConfig.property.commands"></a>
-
-```typescript
-public readonly commands: string[];
-```
-
-- *Type:* string[]
-
-Commands wrapped as GitHub Action job steps.
-
----
-
-##### `env`<sup>Required</sup> <a name="env" id="projen-pipelines.CodeCatalystStepConfig.property.env"></a>
-
-```typescript
-public readonly env: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-Additional environment variables to set for this step.
-
----
-
-##### `needs`<sup>Required</sup> <a name="needs" id="projen-pipelines.CodeCatalystStepConfig.property.needs"></a>
-
-```typescript
-public readonly needs: string[];
-```
-
-- *Type:* string[]
-
-Dependencies which need to be completed before this step.
 
 ---
 
@@ -9312,16 +9292,6 @@ Should be implemented by subclasses.
 ##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DockerHubLoginStep.toCodeCatalyst"></a>
 
 ```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
-
-Should be implemented by subclasses.
-
-##### `toGithub` <a name="toGithub" id="projen-pipelines.DockerHubLoginStep.toGithub"></a>
-
-```typescript
 public toGithub(): GithubStepConfig
 ```
 
@@ -9329,7 +9299,7 @@ Generates a configuration for a GitHub Actions step.
 
 Should be implemented by subclasses.
 
-##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DockerHubLoginStep.toGitlab"></a>
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DockerHubLoginStep.toGithub"></a>
 
 ```typescript
 public toGitlab(): GitlabStepConfig
@@ -9338,6 +9308,73 @@ public toGitlab(): GitlabStepConfig
 Generates a configuration for a GitLab CI step.
 
 Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DockerHubLoginStep.toGitlab"></a>
+
+```typescript
+import { CdkOutputsSummaryStep } from 'projen-pipelines'
+
+new CdkOutputsSummaryStep(project: Project, options: CdkOutputsSummaryStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.CdkOutputsSummaryStepOptions">CdkOutputsSummaryStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.CdkOutputsSummaryStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.CdkOutputsSummaryStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.CdkOutputsSummaryStepOptions">CdkOutputsSummaryStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.toGithub">toGithub</a></code> | Converts the step into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.toGitlab">toGitlab</a></code> | Converts the step into a GitLab CI step configuration. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.CdkOutputsSummaryStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.CdkOutputsSummaryStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the step into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.CdkOutputsSummaryStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the step into a GitLab CI step configuration.
+
+Creates a collapsible section in the job log to display CDK outputs.
 
 
 
@@ -9552,7 +9589,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.DownloadArtifactStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.DownloadArtifactStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.DownloadArtifactStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.DownloadArtifactStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -9567,14 +9603,6 @@ public toBash(): BashStepConfig
 Generates a configuration for a bash script step.
 
 Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DownloadArtifactStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.DownloadArtifactStep.toGithub"></a>
 
@@ -9635,7 +9663,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.DriftDetectionStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.DriftDetectionStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.DriftDetectionStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
 | <code><a href="#projen-pipelines.DriftDetectionStep.addSteps">addSteps</a></code> | *No description.* |
@@ -9650,14 +9677,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the sequence of steps into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DriftDetectionStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the sequence of steps into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.DriftDetectionStep.toGithub"></a>
 
@@ -9847,7 +9866,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GithubPackagesLoginStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.GithubPackagesLoginStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.GithubPackagesLoginStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.GithubPackagesLoginStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -9860,16 +9878,6 @@ public toBash(): BashStepConfig
 ```
 
 Generates a configuration for a bash script step.
-
-Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.GithubPackagesLoginStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
 
 Should be implemented by subclasses.
 
@@ -10024,7 +10032,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.NpmSecretStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.NpmSecretStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.NpmSecretStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.NpmSecretStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -10037,16 +10044,6 @@ public toBash(): BashStepConfig
 ```
 
 Generates a configuration for a bash script step.
-
-Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.NpmSecretStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
 
 Should be implemented by subclasses.
 
@@ -10331,7 +10328,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.PipelineStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.PipelineStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.PipelineStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.PipelineStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -10347,16 +10343,6 @@ Generates a configuration for a bash script step.
 
 Should be implemented by subclasses.
 
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.PipelineStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
-
-Should be implemented by subclasses.
-
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.PipelineStep.toGithub"></a>
 
 ```typescript
@@ -10368,6 +10354,86 @@ Generates a configuration for a GitHub Actions step.
 Should be implemented by subclasses.
 
 ##### `toGitlab` <a name="toGitlab" id="projen-pipelines.PipelineStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### PnpmSetupStep <a name="PnpmSetupStep" id="projen-pipelines.PnpmSetupStep"></a>
+
+Step to setup pnpm using the pnpm/action-setup GitHub Action.
+
+This step is automatically injected when a project uses pnpm as its package manager.
+It ensures pnpm is available in the GitHub Actions workflow environment before
+running any install commands.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.PnpmSetupStep.Initializer"></a>
+
+```typescript
+import { PnpmSetupStep } from 'projen-pipelines'
+
+new PnpmSetupStep(project: Project, options?: PnpmSetupStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.PnpmSetupStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.PnpmSetupStepOptions">PnpmSetupStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.PnpmSetupStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.PnpmSetupStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.PnpmSetupStepOptions">PnpmSetupStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.PnpmSetupStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.PnpmSetupStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.PnpmSetupStep.toGitlab"></a>
 
 ```typescript
 public toGitlab(): GitlabStepConfig
@@ -10423,7 +10489,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.ProjenScriptStep.toBash">toBash</a></code> | Converts the step into a Bash script configuration. |
-| <code><a href="#projen-pipelines.ProjenScriptStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.ProjenScriptStep.toGithub">toGithub</a></code> | Converts the step into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.ProjenScriptStep.toGitlab">toGitlab</a></code> | Converts the step into a GitLab CI configuration. |
 
@@ -10436,14 +10501,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the step into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.ProjenScriptStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.ProjenScriptStep.toGithub"></a>
 
@@ -10511,7 +10568,6 @@ Shell commands to execute.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.SimpleCommandStep.toBash">toBash</a></code> | Converts the step into a Bash script configuration. |
-| <code><a href="#projen-pipelines.SimpleCommandStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.SimpleCommandStep.toGithub">toGithub</a></code> | Converts the step into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.SimpleCommandStep.toGitlab">toGitlab</a></code> | Converts the step into a GitLab CI configuration. |
 
@@ -10524,14 +10580,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the step into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.SimpleCommandStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.SimpleCommandStep.toGithub"></a>
 
@@ -10590,7 +10638,6 @@ The sequence of pipeline steps.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.StepSequence.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
-| <code><a href="#projen-pipelines.StepSequence.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.StepSequence.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.StepSequence.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
 | <code><a href="#projen-pipelines.StepSequence.addSteps">addSteps</a></code> | *No description.* |
@@ -10605,14 +10652,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the sequence of steps into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.StepSequence.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the sequence of steps into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.StepSequence.toGithub"></a>
 
@@ -10780,7 +10819,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.UploadArtifactStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.UploadArtifactStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.UploadArtifactStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.UploadArtifactStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -10795,14 +10833,6 @@ public toBash(): BashStepConfig
 Generates a configuration for a bash script step.
 
 Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.UploadArtifactStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.UploadArtifactStep.toGithub"></a>
 
@@ -12139,7 +12169,6 @@ The component will render workflows for the given system
 | --- | --- |
 | <code><a href="#projen-pipelines.PipelineEngine.GITHUB">GITHUB</a></code> | Create GitHub actions. |
 | <code><a href="#projen-pipelines.PipelineEngine.GITLAB">GITLAB</a></code> | Create a .gitlab-ci.yaml file. |
-| <code><a href="#projen-pipelines.PipelineEngine.CODE_CATALYST">CODE_CATALYST</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.PipelineEngine.BASH">BASH</a></code> | Create bash scripts. |
 
 ---
@@ -12154,11 +12183,6 @@ Create GitHub actions.
 ##### `GITLAB` <a name="GITLAB" id="projen-pipelines.PipelineEngine.GITLAB"></a>
 
 Create a .gitlab-ci.yaml file.
-
----
-
-
-##### `CODE_CATALYST` <a name="CODE_CATALYST" id="projen-pipelines.PipelineEngine.CODE_CATALYST"></a>
 
 ---
 

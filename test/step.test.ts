@@ -46,7 +46,6 @@ test('StepSequence works correctly', () => {
   expect(sequence.toBash()).toMatchSnapshot();
   expect(sequence.toGithub()).toMatchSnapshot();
   expect(sequence.toGitlab()).toMatchSnapshot();
-  expect(sequence.toCodeCatalyst()).toMatchSnapshot();
 });
 
 test('StepSequence not sharing internal state', () => {
