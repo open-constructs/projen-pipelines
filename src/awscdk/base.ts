@@ -69,6 +69,15 @@ export interface IndependentStage extends NamedStageOptions {
  */
 export interface NamedStageOptions extends StageOptions {
   readonly name: string;
+
+  /**
+   * The name of the GitHub environment to use for this stage.
+   * If not specified, the stage name will be used as the GitHub environment name.
+   *
+   * @default - the stage name
+   */
+  readonly githubEnvironment?: string;
+
   readonly watchable?: boolean;
   readonly diffType?: CdkDiffType;
   readonly postDiffSteps?: PipelineStep[];

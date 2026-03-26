@@ -23,7 +23,7 @@ This document provides comprehensive guidance for AI tools and developers contri
 - **Package Type**: JSII library (supports multiple languages)
 - **Testing**: Jest with snapshot testing
 - **Linting**: ESLint with TypeScript and stylistic plugins
-- **Target Platforms**: GitHub Actions, GitLab CI, AWS CodeCatalyst, Bash
+- **Target Platforms**: GitHub Actions, GitLab CI, Bash
 
 ### Core Purpose
 
@@ -45,7 +45,6 @@ The codebase uses an abstraction layer to decouple pipeline definitions from CI/
 export abstract class PipelineStep {
   public toGithub(): GithubStepConfig { /* ... */ }
   public toGitlab(): GitlabStepConfig { /* ... */ }
-  public toCodeCatalyst(): CodeCatalystStepConfig { /* ... */ }
   public toBash(): BashStepConfig { /* ... */ }
 }
 ```
@@ -506,7 +505,6 @@ src/
 │   ├── github.ts               # GitHub implementation
 │   ├── gitlab.ts               # GitLab implementation
 │   ├── bash.ts                 # Bash script generation
-│   └── codecatalyst.ts         # CodeCatalyst (commented out)
 ├── versioning/                 # Versioning system
 │   ├── index.ts
 │   ├── types.ts                # Type definitions
@@ -774,14 +772,6 @@ export class MyCustomStep extends PipelineStep {
   public toGitlab(): GitlabStepConfig {
     return {
       extensions: [],
-      needs: [],
-      commands: [this.config.command],
-      env: this.config.env ?? {},
-    };
-  }
-
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    return {
       needs: [],
       commands: [this.config.command],
       env: this.config.env ?? {},
@@ -1077,7 +1067,7 @@ Example of a custom step for Slack notifications:
 ```typescript
 // src/steps/slack-notify.step.ts
 import { Project } from 'projen';
-import { BashStepConfig, CodeCatalystStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
+import { BashStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
 
 export interface SlackNotifyConfig {
   readonly webhookUrl: string;
@@ -1125,14 +1115,6 @@ export class SlackNotifyStep extends PipelineStep {
     };
   }
 
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    const curlCommand = `curl -X POST -H 'Content-type: application/json' --data '{"text":"${this.config.message}"}' ${this.config.webhookUrl}`;
-    return {
-      needs: [],
-      commands: [curlCommand],
-      env: {},
-    };
-  }
 }
 ```
 

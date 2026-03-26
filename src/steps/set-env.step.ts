@@ -1,5 +1,5 @@
 import { Project } from 'projen';
-import { BashStepConfig, CodeCatalystStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
+import { BashStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
 
 export interface SetEnvStepOptions {
   readonly name: string;
@@ -13,14 +13,6 @@ export class SetEnvStep extends PipelineStep {
 
   public toBash(): BashStepConfig {
     return {
-      commands: [`export ${this.options.name}=$(${this.options.command})`],
-    };
-  }
-
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    return {
-      env: {},
-      needs: [],
       commands: [`export ${this.options.name}=$(${this.options.command})`],
     };
   }
