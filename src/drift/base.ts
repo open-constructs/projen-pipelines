@@ -17,6 +17,11 @@ export interface DriftDetectionStageOptions {
   readonly roleArn?: string;
 
   /**
+   * Jump role to assume before the main role
+   */
+  readonly jumpRoleArn?: string;
+
+  /**
    * Stack names to check in this stage
    */
   readonly stackNames?: string[];

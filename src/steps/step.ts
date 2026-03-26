@@ -40,22 +40,6 @@ export interface GithubStepConfig {
 }
 
 /**
- * Configuration interface for a CodeCatalyst Actions step.
- */
-export interface CodeCatalystStepConfig {
-
-  /** Dependencies which need to be completed before this step. */
-  readonly needs: string[];
-
-  /** Commands wrapped as GitHub Action job steps. */
-  readonly commands: string[];
-
-  /** Additional environment variables to set for this step. */
-  readonly env: { [key: string]: string };
-
-}
-
-/**
  * Configuration interface for a bash script step.
  */
 export interface BashStepConfig {
@@ -88,13 +72,6 @@ export abstract class PipelineStep {
    * Generates a configuration for a GitHub Actions step. Should be implemented by subclasses.
    */
   public toGithub(): GithubStepConfig {
-    throw new Error('Method not implemented.');
-  }
-
-  /**
-   * Generates a configuration for a CodeCatalyst Actions step. Should be implemented by subclasses.
-   */
-  public toCodeCatalyst(): CodeCatalystStepConfig {
     throw new Error('Method not implemented.');
   }
 
@@ -160,16 +137,6 @@ export class SimpleCommandStep extends PipelineStep {
     };
   }
 
-  /**
-   * Converts the step into a CodeCatalyst Actions step configuration.
-   */
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    return {
-      needs: [], // No dependencies.
-      commands: this.commands.map(c => (c)), // Maps each command into a CodeCatalyst Action job step.
-      env: this.env, // No environment variables.
-    };
-  }
 }
 
 export class ProjenScriptStep extends SimpleCommandStep {
@@ -250,26 +217,6 @@ export class StepSequence extends PipelineStep {
       steps,
       env,
       permissions: mergeJobPermissions(...permissions),
-    };
-  }
-
-  /**
-   * Converts the sequence of steps into a CodeCatalyst Actions step configuration.
-   */
-  public toCodeCatalyst(): CodeCatalystStepConfig {
-    const needs: string[] = [];
-    const commands: string[] = [];
-    const env: { [key: string]: string } = {};
-    for (const step of this.steps) {
-      const stepConfig = step.toCodeCatalyst();
-      needs.push(...stepConfig.needs);
-      commands.push(...stepConfig.commands);
-      Object.assign(env, stepConfig.env);
-    }
-    return {
-      needs: Array.from(new Set(needs)),
-      commands,
-      env,
     };
   }
 

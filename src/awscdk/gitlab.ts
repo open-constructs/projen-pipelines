@@ -2,6 +2,7 @@ import { awscdk, gitlab } from 'projen';
 import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage } from './base';
 import { PipelineEngine } from '../engine';
 import { PipelineStep } from '../steps';
+import { CdkOutputsSummaryStep } from '../steps/github-summary.step';
 
 /**
  * Configuration for GitLab runner tags used within the CI/CD pipeline for various stages.
@@ -209,6 +210,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
     const deploySteps = [
       this.provideInstallStep(),
       this.provideDeployStep(stage),
+      new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
     ].map(s => s.toGitlab());
 
     this.config.addStages(stage.name);
@@ -264,6 +266,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
       this.provideSynthStep(),
       ...(stage.diffType !== CdkDiffType.NONE ? [this.provideDiffStep(stage, stage.diffType == CdkDiffType.FAST)] : []),
       this.provideDeployStep(stage),
+      new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
     ].map(s => s.toGitlab());
 
     this.config.addStages(stage.name);

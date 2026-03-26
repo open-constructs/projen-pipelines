@@ -6,6 +6,7 @@ import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep } from '../steps';
 import { DownloadArtifactStep, UploadArtifactStep } from '../steps/artifact-steps';
+import { CdkOutputsSummaryStep } from '../steps/github-summary.step';
 import { GithubPackagesLoginStep } from '../steps/registries';
 
 const DEFAULT_RUNNER_TAGS = ['ubuntu-latest'];
@@ -34,6 +35,18 @@ export interface GithubCDKPipelineOptions extends CDKPipelineOptions {
    * @default false
    */
   readonly useGithubEnvironments?: boolean;
+
+  /**
+   * whether to use GitHub environments for asset upload step
+   * Create separate, parallel jobs for asset upload since GitHub Environments
+   * require unique environment names per job
+   *
+   * WARNING: this parameter requires rebuilding the container assets for each stage and they will not
+   * be the "same binary", so there is a (small) chance that it could produce different binaries per stage
+   *
+   * @default false
+   */
+  readonly useGithubEnvironmentsForAssetUpload?: boolean;
 }
 
 
@@ -95,10 +108,16 @@ export class GithubCDKPipeline extends CDKPipeline {
     // Create jobs for synthesizing, asset uploading, and deployment.
     this.createSynth();
 
-    this.createAssetUpload();
+    if (options.useGithubEnvironmentsForAssetUpload) {
+      for (const stage of options.stages) {
+        this.createAssetUpload(stage.name, stage.githubEnvironment);
+      }
+    } else {
+      this.createAssetUpload();
+    }
 
     for (const stage of options.stages) {
-      this.createDeployment(stage);
+      this.createDeployment(stage, options.useGithubEnvironmentsForAssetUpload ?? false);
     }
     for (const stage of (options.independentStages ?? [])) {
       this.createIndependentDeployment(stage);
@@ -140,6 +159,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       this.provideInstallStep(),
       this.provideSynthStep(),
       this.provideDeployStep({ name: 'feature', env: this.baseOptions.featureStages!.env }),
+      new CdkOutputsSummaryStep(this.project, { stageName: 'feature' }),
       new UploadArtifactStep(this.project, {
         name: 'cdk-outputs-feature',
         path: 'cdk-outputs-feature.json',
@@ -198,6 +218,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       new AwsAssumeRoleStep(this.project, {
         roleArn: this.baseOptions.iamRoleArns?.deployment?.feature ?? this.baseOptions.iamRoleArns?.default!,
         region: this.baseOptions.featureStages!.env.region,
+        jumpRoleArn: this.baseOptions.iamRoleArns.jump?.feature,
       }),
       new ProjenScriptStep(this.project, 'destroy:feature'),
     ].map(s => s.toGithub());
@@ -282,8 +303,7 @@ export class GithubCDKPipeline extends CDKPipeline {
   /**
    * Creates a job to upload assets to AWS as part of the pipeline.
    */
-  public createAssetUpload(): void {
-
+  public createAssetUpload(stageName?: string, githubEnvironment?: string): void {
     const steps = [
       new SimpleCommandStep(this.project, ['git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"']),
       new DownloadArtifactStep(this.project, {
@@ -291,7 +311,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
       this.provideInstallStep(),
-      this.provideAssetUploadStep(),
+      this.provideAssetUploadStep(stageName),
     ];
 
     if (this.needsVersionedArtifacts) {
@@ -300,10 +320,11 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     const ghSteps = steps.map(s => s.toGithub());
 
-    this.deploymentWorkflow.addJob('assetUpload', {
-      name: 'Publish assets to AWS',
+    this.deploymentWorkflow.addJob(`assetUpload${stageName ? `-${stageName}` : ''}`, {
+      name: `Publish assets to AWS${stageName ? ` for stage ${stageName}` : ''}`,
       needs: ['synth', ...ghSteps.flatMap(s => s.needs)],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      ...(this.options.useGithubEnvironmentsForAssetUpload && stageName && { environment: githubEnvironment ?? stageName }),
       env: {
         CI: 'true',
         ...ghSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
@@ -337,14 +358,14 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a job to deploy the CDK application to AWS.
    * @param stage - The deployment stage to create.
    */
-  public createDeployment(stage: DeploymentStage): void {
-
+  public createDeployment(stage: DeploymentStage, useGithubEnvironmentsForAssetUpload?: boolean): void {
     if (stage.manualApproval === true) {
       const steps = [
         this.provideInstallStep(),
         new SimpleCommandStep(this.project, this.renderInstallPackageCommands(`${this.baseOptions.pkgNamespace}/${this.app.name}@\${{github.event.inputs.version}}`)),
         new SimpleCommandStep(this.project, [`mv ./node_modules/${this.baseOptions.pkgNamespace}/${this.app.name} ${this.app.cdkConfig.cdkout}`]),
         this.provideDeployStep(stage),
+        new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
         new UploadArtifactStep(this.project, {
           name: `cdk-outputs-${stage.name}`,
           path: `cdk-outputs-${stage.name}.json`,
@@ -368,7 +389,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         ...this.options.useGithubEnvironments && {
-          environment: stage.name,
+          environment: stage.githubEnvironment ?? stage.name,
         },
         concurrency: {
           'group': `deploy-${stage.name}`,
@@ -396,12 +417,17 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
 
     } else {
-      this.createDeployJob(this.deploymentWorkflow, [...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])], stage);
+      this.createDeployJob(this.deploymentWorkflow, [...(this.deploymentStages.length > 0 ? [`deploy-${this.deploymentStages.at(-1)!}`] : [])], stage, useGithubEnvironmentsForAssetUpload);
       this.deploymentStages.push(stage.name);
     }
   }
 
-  private createDeployJob(workflow: GithubWorkflow, jobDependencies: string[], stage: NamedStageOptions) {
+  private createDeployJob(
+    workflow: GithubWorkflow,
+    jobDependencies: string[],
+    stage: NamedStageOptions,
+    useGithubEnvironmentsForAssetUpload?: boolean,
+  ) {
     const steps = [
       new DownloadArtifactStep(this.project, {
         name: 'cloud-assembly',
@@ -409,6 +435,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       }),
       this.provideInstallStep(),
       this.provideDeployStep(stage),
+      new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
       new UploadArtifactStep(this.project, {
         name: `cdk-outputs-${stage.name}`,
         path: `cdk-outputs-${stage.name}.json`,
@@ -419,13 +446,13 @@ export class GithubCDKPipeline extends CDKPipeline {
     workflow.addJob(`deploy-${stage.name}`, {
       name: `Deploy stage ${stage.name} to AWS`,
       ...this.options.useGithubEnvironments && {
-        environment: stage.name,
+        environment: stage.githubEnvironment ?? stage.name,
       },
       concurrency: {
         'group': `deploy-${stage.name}`,
         'cancel-in-progress': false,
       },
-      needs: ['assetUpload', ...steps.flatMap(s => s.needs), ...jobDependencies],
+      needs: [`assetUpload${useGithubEnvironmentsForAssetUpload ? `-${stage.name}` : ''}`, ...steps.flatMap(s => s.needs), ...jobDependencies],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       env: {
         CI: 'true',
@@ -462,7 +489,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         this.provideSynthStep(),
         ...((stage.diffType !== CdkDiffType.NONE) ? [this.provideDiffStep(stage, stage.diffType === CdkDiffType.FAST)] : []),
         this.provideDeployStep(stage),
-
+        new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
         new UploadArtifactStep(this.project, {
           name: `cdk-outputs-${stage.name}`,
           path: `cdk-outputs-${stage.name}.json`,

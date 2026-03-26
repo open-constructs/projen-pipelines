@@ -1,4 +1,4 @@
-import { ReleasableCommits, cdk, github, javascript } from 'projen';
+import { DependencyType, ReleasableCommits, cdk, github, javascript } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
 import { GitHubAssignApprover } from './src/assign-approver';
 
@@ -15,19 +15,21 @@ const project = new cdk.JsiiProject({
   repositoryUrl: 'https://github.com/open-constructs/projen-pipelines.git',
   licensed: true,
   license: 'Apache-2.0',
-  jsiiVersion: '~5.8',
+  jsiiVersion: '~5.9',
   devDeps: [
     'constructs',
     'fs-extra',
     '@types/fs-extra',
-    '@types/standard-version',
+  ],
+  deps: [
+    'commit-and-tag-version',
   ],
   bundledDeps: [
-    'standard-version',
+    'commit-and-tag-version',
   ],
   peerDeps: [
-    'projen@>=0.96.3 <1.0.0',
-    'constructs@^10.4.2',
+    'projen@>=0.99.21 <1.0.0',
+    'constructs@^10.5.1',
     'cdk-devops',
   ],
   autoApproveUpgrades: true,
@@ -41,7 +43,7 @@ const project = new cdk.JsiiProject({
       },
     },
   },
-  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'revert', 'Revert', 'docs']),
+  releasableCommits: ReleasableCommits.ofType(['feat', 'fix', 'revert', 'Revert', 'docs', 'chore']),
   keywords: [
     'aws',
     'cdk',
@@ -52,6 +54,7 @@ const project = new cdk.JsiiProject({
     'detect-drift': 'lib/drift/detect-drift.js',
   },
   releaseToNpm: true,
+  npmTrustedPublishing: true,
   gitpod: true,
   tsconfig: {
     compilerOptions: {
@@ -59,6 +62,8 @@ const project = new cdk.JsiiProject({
     },
   },
 });
+
+project.deps.removeDependency('commit-and-tag-version', DependencyType.BUILD);
 
 project.addTask('local-push', { exec: 'npx yalc push' }).prependSpawn(project.buildTask);
 

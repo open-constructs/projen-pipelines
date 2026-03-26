@@ -36,6 +36,7 @@ new AssignApprover(scope: Project, baseOptions: AssignApproverOptions)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.AssignApprover.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.AssignApprover.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.AssignApprover.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.AssignApprover.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.AssignApprover.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -49,6 +50,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.AssignApprover.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.AssignApprover.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.AssignApprover.postSynthesize"></a>
 
@@ -199,6 +221,7 @@ new BashCDKPipeline(app: AwsCdkTypeScriptApp, options: BashCDKPipelineOptions)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.BashCDKPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.BashCDKPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.BashCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -216,6 +239,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.BashCDKPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.BashCDKPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.BashCDKPipeline.postSynthesize"></a>
 
@@ -424,6 +468,7 @@ new BashDriftDetectionWorkflow(project: Project, options: BashDriftDetectionWork
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -437,6 +482,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.BashDriftDetectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.BashDriftDetectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.BashDriftDetectionWorkflow.postSynthesize"></a>
 
@@ -613,6 +679,7 @@ new CDKPipeline(app: AwsCdkTypeScriptApp, baseOptions: CDKPipelineOptions)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.CDKPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.CDKPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.CDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.CDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.CDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -630,6 +697,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.CDKPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.CDKPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.CDKPipeline.postSynthesize"></a>
 
@@ -838,6 +926,7 @@ new DriftDetectionWorkflow(project: Project, options: DriftDetectionWorkflowOpti
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -851,6 +940,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.DriftDetectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.DriftDetectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.DriftDetectionWorkflow.postSynthesize"></a>
 
@@ -1023,6 +1133,7 @@ new GitHubAssignApprover(scope: GitHubProject, options: GitHubAssignApproverOpti
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GitHubAssignApprover.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitHubAssignApprover.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GitHubAssignApprover.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitHubAssignApprover.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitHubAssignApprover.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1037,6 +1148,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitHubAssignApprover.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitHubAssignApprover.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitHubAssignApprover.postSynthesize"></a>
 
@@ -1201,6 +1333,7 @@ Configuration options for the pipeline.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GithubCDKPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GithubCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1221,6 +1354,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GithubCDKPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GithubCDKPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GithubCDKPipeline.postSynthesize"></a>
 
@@ -1289,15 +1443,27 @@ Generate versioning utility functions for CDK application.
 ##### `createAssetUpload` <a name="createAssetUpload" id="projen-pipelines.GithubCDKPipeline.createAssetUpload"></a>
 
 ```typescript
-public createAssetUpload(): void
+public createAssetUpload(stageName?: string, githubEnvironment?: string): void
 ```
 
 Creates a job to upload assets to AWS as part of the pipeline.
 
+###### `stageName`<sup>Optional</sup> <a name="stageName" id="projen-pipelines.GithubCDKPipeline.createAssetUpload.parameter.stageName"></a>
+
+- *Type:* string
+
+---
+
+###### `githubEnvironment`<sup>Optional</sup> <a name="githubEnvironment" id="projen-pipelines.GithubCDKPipeline.createAssetUpload.parameter.githubEnvironment"></a>
+
+- *Type:* string
+
+---
+
 ##### `createDeployment` <a name="createDeployment" id="projen-pipelines.GithubCDKPipeline.createDeployment"></a>
 
 ```typescript
-public createDeployment(stage: DeploymentStage): void
+public createDeployment(stage: DeploymentStage, useGithubEnvironmentsForAssetUpload?: boolean): void
 ```
 
 Creates a job to deploy the CDK application to AWS.
@@ -1307,6 +1473,12 @@ Creates a job to deploy the CDK application to AWS.
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>
 
 The deployment stage to create.
+
+---
+
+###### `useGithubEnvironmentsForAssetUpload`<sup>Optional</sup> <a name="useGithubEnvironmentsForAssetUpload" id="projen-pipelines.GithubCDKPipeline.createDeployment.parameter.useGithubEnvironmentsForAssetUpload"></a>
+
+- *Type:* boolean
 
 ---
 
@@ -1484,6 +1656,7 @@ new GitHubDriftDetectionWorkflow(project: Project, options: GitHubDriftDetection
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1497,6 +1670,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitHubDriftDetectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitHubDriftDetectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitHubDriftDetectionWorkflow.postSynthesize"></a>
 
@@ -1678,6 +1872,7 @@ Configuration options for the pipeline.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitlabCDKPipeline.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitlabCDKPipeline.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1696,6 +1891,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitlabCDKPipeline.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitlabCDKPipeline.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitlabCDKPipeline.postSynthesize"></a>
 
@@ -1963,6 +2179,7 @@ new GitLabDriftDetectionWorkflow(project: Project, options: GitLabDriftDetection
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
@@ -1976,6 +2193,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitLabDriftDetectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitLabDriftDetectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitLabDriftDetectionWorkflow.postSynthesize"></a>
 
@@ -2312,6 +2550,7 @@ const awsAssumeRoleStepConfig: AwsAssumeRoleStepConfig = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.roleArn">roleArn</a></code> | <code>string</code> | The ARN of the role to assume. |
+| <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | The ARN of the jump role to use for role chaining. |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.region">region</a></code> | <code>string</code> | The AWS region that should be set. |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStepConfig.property.sessionName">sessionName</a></code> | <code>string</code> | An identifier for the assumed role session. |
 
@@ -2326,6 +2565,18 @@ public readonly roleArn: string;
 - *Type:* string
 
 The ARN of the role to assume.
+
+---
+
+##### `jumpRoleArn`<sup>Optional</sup> <a name="jumpRoleArn" id="projen-pipelines.AwsAssumeRoleStepConfig.property.jumpRoleArn"></a>
+
+```typescript
+public readonly jumpRoleArn: string;
+```
+
+- *Type:* string
+
+The ARN of the jump role to use for role chaining.
 
 ---
 
@@ -2717,6 +2968,38 @@ public readonly prefix: string;
 ```
 
 - *Type:* string
+
+---
+
+### CdkOutputsSummaryStepOptions <a name="CdkOutputsSummaryStepOptions" id="projen-pipelines.CdkOutputsSummaryStepOptions"></a>
+
+Options for the CDK outputs summary step.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.CdkOutputsSummaryStepOptions.Initializer"></a>
+
+```typescript
+import { CdkOutputsSummaryStepOptions } from 'projen-pipelines'
+
+const cdkOutputsSummaryStepOptions: CdkOutputsSummaryStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStepOptions.property.stageName">stageName</a></code> | <code>string</code> | The stage name used to identify the outputs file. |
+
+---
+
+##### `stageName`<sup>Required</sup> <a name="stageName" id="projen-pipelines.CdkOutputsSummaryStepOptions.property.stageName"></a>
+
+```typescript
+public readonly stageName: string;
+```
+
+- *Type:* string
+
+The stage name used to identify the outputs file.
 
 ---
 
@@ -3116,64 +3399,6 @@ The environment variable name to set.
 
 ---
 
-### CodeCatalystStepConfig <a name="CodeCatalystStepConfig" id="projen-pipelines.CodeCatalystStepConfig"></a>
-
-Configuration interface for a CodeCatalyst Actions step.
-
-#### Initializer <a name="Initializer" id="projen-pipelines.CodeCatalystStepConfig.Initializer"></a>
-
-```typescript
-import { CodeCatalystStepConfig } from 'projen-pipelines'
-
-const codeCatalystStepConfig: CodeCatalystStepConfig = { ... }
-```
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#projen-pipelines.CodeCatalystStepConfig.property.commands">commands</a></code> | <code>string[]</code> | Commands wrapped as GitHub Action job steps. |
-| <code><a href="#projen-pipelines.CodeCatalystStepConfig.property.env">env</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables to set for this step. |
-| <code><a href="#projen-pipelines.CodeCatalystStepConfig.property.needs">needs</a></code> | <code>string[]</code> | Dependencies which need to be completed before this step. |
-
----
-
-##### `commands`<sup>Required</sup> <a name="commands" id="projen-pipelines.CodeCatalystStepConfig.property.commands"></a>
-
-```typescript
-public readonly commands: string[];
-```
-
-- *Type:* string[]
-
-Commands wrapped as GitHub Action job steps.
-
----
-
-##### `env`<sup>Required</sup> <a name="env" id="projen-pipelines.CodeCatalystStepConfig.property.env"></a>
-
-```typescript
-public readonly env: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-Additional environment variables to set for this step.
-
----
-
-##### `needs`<sup>Required</sup> <a name="needs" id="projen-pipelines.CodeCatalystStepConfig.property.needs"></a>
-
-```typescript
-public readonly needs: string[];
-```
-
-- *Type:* string[]
-
-Dependencies which need to be completed before this step.
-
----
-
 ### CommitCountConfig <a name="CommitCountConfig" id="projen-pipelines.CommitCountConfig"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.CommitCountConfig.Initializer"></a>
@@ -3458,6 +3683,7 @@ const deploymentStage: DeploymentStage = { ... }
 | <code><a href="#projen-pipelines.DeploymentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
 | <code><a href="#projen-pipelines.DeploymentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
@@ -3492,6 +3718,21 @@ public readonly diffType: CdkDiffType;
 ```
 
 - *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
+
+---
+
+##### `githubEnvironment`<sup>Optional</sup> <a name="githubEnvironment" id="projen-pipelines.DeploymentStage.property.githubEnvironment"></a>
+
+```typescript
+public readonly githubEnvironment: string;
+```
+
+- *Type:* string
+- *Default:* the stage name
+
+The name of the GitHub environment to use for this stage.
+
+If not specified, the stage name will be used as the GitHub environment name.
 
 ---
 
@@ -3592,6 +3833,7 @@ const driftDetectionStageOptions: DriftDetectionStageOptions = { ... }
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.region">region</a></code> | <code>string</code> | AWS region for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
+| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role to assume before the main role. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
 
@@ -3646,6 +3888,18 @@ Whether to fail if drift is detected.
 
 ---
 
+##### `jumpRoleArn`<sup>Optional</sup> <a name="jumpRoleArn" id="projen-pipelines.DriftDetectionStageOptions.property.jumpRoleArn"></a>
+
+```typescript
+public readonly jumpRoleArn: string;
+```
+
+- *Type:* string
+
+Jump role to assume before the main role.
+
+---
+
 ##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.DriftDetectionStageOptions.property.roleArn"></a>
 
 ```typescript
@@ -3688,6 +3942,7 @@ const driftDetectionStepProps: DriftDetectionStepProps = { ... }
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.region">region</a></code> | <code>string</code> | AWS region for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role to assume before the main role. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.timeout">timeout</a></code> | <code>number</code> | Timeout in minutes for drift detection. |
@@ -3740,6 +3995,18 @@ public readonly failOnDrift: boolean;
 - *Default:* true
 
 Whether to fail if drift is detected.
+
+---
+
+##### `jumpRoleArn`<sup>Optional</sup> <a name="jumpRoleArn" id="projen-pipelines.DriftDetectionStepProps.property.jumpRoleArn"></a>
+
+```typescript
+public readonly jumpRoleArn: string;
+```
+
+- *Type:* string
+
+Jump role to assume before the main role.
 
 ---
 
@@ -4040,6 +4307,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironments">useGithubEnvironments</a></code> | <code>boolean</code> | whether to use GitHub environments for deployment stages. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironmentsForAssetUpload">useGithubEnvironmentsForAssetUpload</a></code> | <code>boolean</code> | whether to use GitHub environments for asset upload step Create separate, parallel jobs for asset upload since GitHub Environments require unique environment names per job. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubPackagesForAssembly">useGithubPackagesForAssembly</a></code> | <code>boolean</code> | use GitHub Packages to store vesioned artifacts of cloud assembly; |
 
 ---
@@ -4260,6 +4528,22 @@ public readonly useGithubEnvironments: boolean;
 whether to use GitHub environments for deployment stages.
 
 INFO: When using environments consider protection rules instead of using the manual option of projen-pipelines for stages
+
+---
+
+##### `useGithubEnvironmentsForAssetUpload`<sup>Optional</sup> <a name="useGithubEnvironmentsForAssetUpload" id="projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironmentsForAssetUpload"></a>
+
+```typescript
+public readonly useGithubEnvironmentsForAssetUpload: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+whether to use GitHub environments for asset upload step Create separate, parallel jobs for asset upload since GitHub Environments require unique environment names per job.
+
+WARNING: this parameter requires rebuilding the container assets for each stage and they will not
+be the "same binary", so there is a (small) chance that it could produce different binaries per stage
 
 ---
 
@@ -5255,6 +5539,7 @@ const iamRoleConfig: IamRoleConfig = { ... }
 | <code><a href="#projen-pipelines.IamRoleConfig.property.default">default</a></code> | <code>string</code> | Default IAM role ARN used if no specific role is provided. |
 | <code><a href="#projen-pipelines.IamRoleConfig.property.deployment">deployment</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different deployment stages. |
 | <code><a href="#projen-pipelines.IamRoleConfig.property.diff">diff</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for different diff stages. |
+| <code><a href="#projen-pipelines.IamRoleConfig.property.jump">jump</a></code> | <code>{[ key: string ]: string}</code> | IAM role ARNs for using a "jump" role to assume the deploy role in a different AWS account using Role Chaining. |
 | <code><a href="#projen-pipelines.IamRoleConfig.property.synth">synth</a></code> | <code>string</code> | IAM role ARN for the synthesis step. |
 
 ---
@@ -5319,6 +5604,20 @@ IAM role ARNs for different diff stages.
 
 ---
 
+##### `jump`<sup>Optional</sup> <a name="jump" id="projen-pipelines.IamRoleConfig.property.jump"></a>
+
+```typescript
+public readonly jump: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+IAM role ARNs for using a "jump" role to assume the deploy role in a different AWS account using Role Chaining.
+
+https://github.com/aws-actions/configure-aws-credentials?tab=readme-ov-file#assumerole-with-role-previously-assumed-by-action-in-same-workflow
+
+---
+
 ##### `synth`<sup>Optional</sup> <a name="synth" id="projen-pipelines.IamRoleConfig.property.synth"></a>
 
 ```typescript
@@ -5350,6 +5649,7 @@ const independentStage: IndependentStage = { ... }
 | <code><a href="#projen-pipelines.IndependentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
@@ -5384,6 +5684,21 @@ public readonly diffType: CdkDiffType;
 ```
 
 - *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
+
+---
+
+##### `githubEnvironment`<sup>Optional</sup> <a name="githubEnvironment" id="projen-pipelines.IndependentStage.property.githubEnvironment"></a>
+
+```typescript
+public readonly githubEnvironment: string;
+```
+
+- *Type:* string
+- *Default:* the stage name
+
+The name of the GitHub environment to use for this stage.
+
+If not specified, the stage name will be used as the GitHub environment name.
 
 ---
 
@@ -5449,6 +5764,7 @@ const namedStageOptions: NamedStageOptions = { ... }
 | <code><a href="#projen-pipelines.NamedStageOptions.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.NamedStageOptions.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
@@ -5482,6 +5798,21 @@ public readonly diffType: CdkDiffType;
 ```
 
 - *Type:* <a href="#projen-pipelines.CdkDiffType">CdkDiffType</a>
+
+---
+
+##### `githubEnvironment`<sup>Optional</sup> <a name="githubEnvironment" id="projen-pipelines.NamedStageOptions.property.githubEnvironment"></a>
+
+```typescript
+public readonly githubEnvironment: string;
+```
+
+- *Type:* string
+- *Default:* the stage name
+
+The name of the GitHub environment to use for this stage.
+
+If not specified, the stage name will be used as the GitHub environment name.
 
 ---
 
@@ -5682,6 +6013,40 @@ public readonly splitParameters: boolean;
 ```
 
 - *Type:* boolean
+
+---
+
+### PnpmSetupStepOptions <a name="PnpmSetupStepOptions" id="projen-pipelines.PnpmSetupStepOptions"></a>
+
+Options for the PnpmSetupStep.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.PnpmSetupStepOptions.Initializer"></a>
+
+```typescript
+import { PnpmSetupStepOptions } from 'projen-pipelines'
+
+const pnpmSetupStepOptions: PnpmSetupStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.PnpmSetupStepOptions.property.version">version</a></code> | <code>string</code> | The version of pnpm to install. |
+
+---
+
+##### `version`<sup>Optional</sup> <a name="version" id="projen-pipelines.PnpmSetupStepOptions.property.version"></a>
+
+```typescript
+public readonly version: string;
+```
+
+- *Type:* string
+
+The version of pnpm to install.
+
+If not provided, defaults to '9'.
 
 ---
 
@@ -6037,7 +6402,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.AmplifyDeployStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.AmplifyDeployStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.AmplifyDeployStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.AmplifyDeployStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -6050,16 +6414,6 @@ public toBash(): BashStepConfig
 ```
 
 Generates a configuration for a bash script step.
-
-Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.AmplifyDeployStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
 
 Should be implemented by subclasses.
 
@@ -6124,7 +6478,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.AwsAssumeRoleStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.AwsAssumeRoleStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -6137,16 +6490,6 @@ public toBash(): BashStepConfig
 ```
 
 Generates a configuration for a bash script step.
-
-Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.AwsAssumeRoleStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
 
 Should be implemented by subclasses.
 
@@ -6169,6 +6512,86 @@ public toGitlab(): GitlabStepConfig
 Generates a configuration for a GitLab CI step.
 
 Should be implemented by subclasses.
+
+
+
+
+### CdkOutputsSummaryStep <a name="CdkOutputsSummaryStep" id="projen-pipelines.CdkOutputsSummaryStep"></a>
+
+A pipeline step that writes CDK stack outputs to the CI/CD job summary.
+
+For GitHub Actions: Writes outputs as a markdown table to the job summary.
+For GitLab CI: Displays outputs in a collapsible section in the job log.
+
+This step reads the outputs JSON file generated by CDK deploy and formats
+it for display in the respective CI/CD platform.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.CdkOutputsSummaryStep.Initializer"></a>
+
+```typescript
+import { CdkOutputsSummaryStep } from 'projen-pipelines'
+
+new CdkOutputsSummaryStep(project: Project, options: CdkOutputsSummaryStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.CdkOutputsSummaryStepOptions">CdkOutputsSummaryStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.CdkOutputsSummaryStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.CdkOutputsSummaryStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.CdkOutputsSummaryStepOptions">CdkOutputsSummaryStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.toGithub">toGithub</a></code> | Converts the step into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.CdkOutputsSummaryStep.toGitlab">toGitlab</a></code> | Converts the step into a GitLab CI step configuration. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.CdkOutputsSummaryStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.CdkOutputsSummaryStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the step into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.CdkOutputsSummaryStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the step into a GitLab CI step configuration.
+
+Creates a collapsible section in the job log to display CDK outputs.
 
 
 
@@ -6316,7 +6739,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.CodeArtifactLoginStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
-| <code><a href="#projen-pipelines.CodeArtifactLoginStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.CodeArtifactLoginStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.CodeArtifactLoginStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
 | <code><a href="#projen-pipelines.CodeArtifactLoginStep.addSteps">addSteps</a></code> | *No description.* |
@@ -6331,14 +6753,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the sequence of steps into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.CodeArtifactLoginStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the sequence of steps into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.CodeArtifactLoginStep.toGithub"></a>
 
@@ -6500,7 +6914,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.DownloadArtifactStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.DownloadArtifactStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.DownloadArtifactStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.DownloadArtifactStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -6515,14 +6928,6 @@ public toBash(): BashStepConfig
 Generates a configuration for a bash script step.
 
 Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DownloadArtifactStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.DownloadArtifactStep.toGithub"></a>
 
@@ -6583,7 +6988,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.DriftDetectionStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
-| <code><a href="#projen-pipelines.DriftDetectionStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.DriftDetectionStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.DriftDetectionStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
 | <code><a href="#projen-pipelines.DriftDetectionStep.addSteps">addSteps</a></code> | *No description.* |
@@ -6598,14 +7002,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the sequence of steps into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.DriftDetectionStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the sequence of steps into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.DriftDetectionStep.toGithub"></a>
 
@@ -6690,7 +7086,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.GithubPackagesLoginStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.GithubPackagesLoginStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.GithubPackagesLoginStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.GithubPackagesLoginStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -6703,16 +7098,6 @@ public toBash(): BashStepConfig
 ```
 
 Generates a configuration for a bash script step.
-
-Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.GithubPackagesLoginStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
 
 Should be implemented by subclasses.
 
@@ -6780,7 +7165,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.NpmSecretStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.NpmSecretStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.NpmSecretStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.NpmSecretStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -6793,16 +7177,6 @@ public toBash(): BashStepConfig
 ```
 
 Generates a configuration for a bash script step.
-
-Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.NpmSecretStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
 
 Should be implemented by subclasses.
 
@@ -7087,7 +7461,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.PipelineStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.PipelineStep.toCodeCatalyst">toCodeCatalyst</a></code> | Generates a configuration for a CodeCatalyst Actions step. |
 | <code><a href="#projen-pipelines.PipelineStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.PipelineStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -7103,16 +7476,6 @@ Generates a configuration for a bash script step.
 
 Should be implemented by subclasses.
 
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.PipelineStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Generates a configuration for a CodeCatalyst Actions step.
-
-Should be implemented by subclasses.
-
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.PipelineStep.toGithub"></a>
 
 ```typescript
@@ -7124,6 +7487,86 @@ Generates a configuration for a GitHub Actions step.
 Should be implemented by subclasses.
 
 ##### `toGitlab` <a name="toGitlab" id="projen-pipelines.PipelineStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
+### PnpmSetupStep <a name="PnpmSetupStep" id="projen-pipelines.PnpmSetupStep"></a>
+
+Step to setup pnpm using the pnpm/action-setup GitHub Action.
+
+This step is automatically injected when a project uses pnpm as its package manager.
+It ensures pnpm is available in the GitHub Actions workflow environment before
+running any install commands.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.PnpmSetupStep.Initializer"></a>
+
+```typescript
+import { PnpmSetupStep } from 'projen-pipelines'
+
+new PnpmSetupStep(project: Project, options?: PnpmSetupStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.PnpmSetupStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.PnpmSetupStepOptions">PnpmSetupStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.PnpmSetupStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.PnpmSetupStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.PnpmSetupStepOptions">PnpmSetupStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.PnpmSetupStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.PnpmSetupStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.PnpmSetupStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.PnpmSetupStep.toGitlab"></a>
 
 ```typescript
 public toGitlab(): GitlabStepConfig
@@ -7179,7 +7622,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.ProjenScriptStep.toBash">toBash</a></code> | Converts the step into a Bash script configuration. |
-| <code><a href="#projen-pipelines.ProjenScriptStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.ProjenScriptStep.toGithub">toGithub</a></code> | Converts the step into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.ProjenScriptStep.toGitlab">toGitlab</a></code> | Converts the step into a GitLab CI configuration. |
 
@@ -7192,14 +7634,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the step into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.ProjenScriptStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.ProjenScriptStep.toGithub"></a>
 
@@ -7267,7 +7701,6 @@ Shell commands to execute.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.SimpleCommandStep.toBash">toBash</a></code> | Converts the step into a Bash script configuration. |
-| <code><a href="#projen-pipelines.SimpleCommandStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.SimpleCommandStep.toGithub">toGithub</a></code> | Converts the step into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.SimpleCommandStep.toGitlab">toGitlab</a></code> | Converts the step into a GitLab CI configuration. |
 
@@ -7280,14 +7713,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the step into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.SimpleCommandStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.SimpleCommandStep.toGithub"></a>
 
@@ -7346,7 +7771,6 @@ The sequence of pipeline steps.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.StepSequence.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
-| <code><a href="#projen-pipelines.StepSequence.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the sequence of steps into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.StepSequence.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
 | <code><a href="#projen-pipelines.StepSequence.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
 | <code><a href="#projen-pipelines.StepSequence.addSteps">addSteps</a></code> | *No description.* |
@@ -7361,14 +7785,6 @@ public toBash(): BashStepConfig
 ```
 
 Converts the sequence of steps into a Bash script configuration.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.StepSequence.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the sequence of steps into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.StepSequence.toGithub"></a>
 
@@ -7449,7 +7865,6 @@ The projen project reference.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#projen-pipelines.UploadArtifactStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
-| <code><a href="#projen-pipelines.UploadArtifactStep.toCodeCatalyst">toCodeCatalyst</a></code> | Converts the step into a CodeCatalyst Actions step configuration. |
 | <code><a href="#projen-pipelines.UploadArtifactStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
 | <code><a href="#projen-pipelines.UploadArtifactStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
 
@@ -7464,14 +7879,6 @@ public toBash(): BashStepConfig
 Generates a configuration for a bash script step.
 
 Should be implemented by subclasses.
-
-##### `toCodeCatalyst` <a name="toCodeCatalyst" id="projen-pipelines.UploadArtifactStep.toCodeCatalyst"></a>
-
-```typescript
-public toCodeCatalyst(): CodeCatalystStepConfig
-```
-
-Converts the step into a CodeCatalyst Actions step configuration.
 
 ##### `toGithub` <a name="toGithub" id="projen-pipelines.UploadArtifactStep.toGithub"></a>
 
@@ -8808,7 +9215,6 @@ The component will render workflows for the given system
 | --- | --- |
 | <code><a href="#projen-pipelines.PipelineEngine.GITHUB">GITHUB</a></code> | Create GitHub actions. |
 | <code><a href="#projen-pipelines.PipelineEngine.GITLAB">GITLAB</a></code> | Create a .gitlab-ci.yaml file. |
-| <code><a href="#projen-pipelines.PipelineEngine.CODE_CATALYST">CODE_CATALYST</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.PipelineEngine.BASH">BASH</a></code> | Create bash scripts. |
 
 ---
@@ -8823,11 +9229,6 @@ Create GitHub actions.
 ##### `GITLAB` <a name="GITLAB" id="projen-pipelines.PipelineEngine.GITLAB"></a>
 
 Create a .gitlab-ci.yaml file.
-
----
-
-
-##### `CODE_CATALYST` <a name="CODE_CATALYST" id="projen-pipelines.PipelineEngine.CODE_CATALYST"></a>
 
 ---
 
