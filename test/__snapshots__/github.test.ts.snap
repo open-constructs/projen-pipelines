@@ -111,6 +111,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:my-dev
+      - name: Add CDK outputs to summary - my-dev
+        run: |-
+          if [ -f "cdk-outputs-my-dev.json" ]; then
+            echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-my-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-my-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-my-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -213,6 +239,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -232,11 +284,11 @@ exports[`Github snapshot 4`] = `
     "@stylistic/eslint-plugin": "^2",
     "@types/jest": "*",
     "@types/node": "*",
-    "@types/standard-version": "*",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "aws-cdk": "^2",
     "cdk-assets": "*",
+    "commit-and-tag-version": "*",
     "esbuild": "*",
     "eslint": "^9",
     "eslint-import-resolver-typescript": "*",
@@ -244,7 +296,6 @@ exports[`Github snapshot 4`] = `
     "jest": "*",
     "jest-junit": "^16",
     "projen": "*",
-    "standard-version": "*",
     "ts-jest": "*",
     "ts-node": "*",
     "typescript": "*",
@@ -633,13 +684,13 @@ exports[`Github snapshot 5`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
+          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
         },
         {
           "exec": "npx projen",
@@ -904,6 +955,32 @@ jobs:
           aws-region: eu-central-2
       - run: npx projen deploy:independent2
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - independent2
+        run: |-
+          if [ -f "cdk-outputs-independent2.json" ]; then
+            echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent2.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent2.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent2.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -961,6 +1038,32 @@ jobs:
           aws-region: eu-west-2
       - run: npx projen deploy:independent1
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - independent1
+        run: |-
+          if [ -f "cdk-outputs-independent1.json" ]; then
+            echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent1.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent1.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent1.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1128,6 +1231,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-west-2
       - run: npx projen deploy:stage1
+      - name: Add CDK outputs to summary - stage1
+        run: |-
+          if [ -f "cdk-outputs-stage1.json" ]; then
+            echo "## CDK Stack Outputs - stage1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-stage1.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-stage1.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - stage1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-stage1.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1168,6 +1297,32 @@ jobs:
           aws-region: us-central-2
       - run: npx projen deploy:stage2
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - stage2
+        run: |-
+          if [ -f "cdk-outputs-stage2.json" ]; then
+            echo "## CDK Stack Outputs - stage2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-stage2.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-stage2.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - stage2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-stage2.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1340,6 +1495,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:my-dev
+      - name: Add CDK outputs to summary - my-dev
+        run: |-
+          if [ -f "cdk-outputs-my-dev.json" ]; then
+            echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-my-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-my-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-my-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1377,6 +1558,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:independent
+      - name: Add CDK outputs to summary - independent
+        run: |-
+          if [ -f "cdk-outputs-independent.json" ]; then
+            echo "## CDK Stack Outputs - independent" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1425,6 +1632,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1481,6 +1714,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen deploy:feature
+      - name: Add CDK outputs to summary - feature
+        run: |-
+          if [ -f "cdk-outputs-feature.json" ]; then
+            echo "## CDK Stack Outputs - feature" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-feature.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-feature.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - feature" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-feature.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1809,13 +2068,13 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
+          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
         },
         {
           "exec": "npx projen",
@@ -1940,6 +2199,32 @@ jobs:
           aws-region: eu-central-1
       - run: npx projen deploy:independent2
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - independent2
+        run: |-
+          if [ -f "cdk-outputs-independent2.json" ]; then
+            echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent2.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent2.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent2.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -1997,6 +2282,32 @@ jobs:
           aws-region: eu-central-1
       - run: npx projen deploy:independent1
       - run: echo Post Deploy
+      - name: Add CDK outputs to summary - independent1
+        run: |-
+          if [ -f "cdk-outputs-independent1.json" ]; then
+            echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-independent1.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-independent1.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-independent1.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -2134,6 +2445,32 @@ jobs:
           role-chaining: true
           role-skip-session-tagging: true
       - run: npx projen deploy:dev
+      - name: Add CDK outputs to summary - dev
+        run: |-
+          if [ -f "cdk-outputs-dev.json" ]; then
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -2181,6 +2518,32 @@ jobs:
           role-chaining: true
           role-skip-session-tagging: true
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -2436,11 +2799,11 @@ exports[`Github snapshot with jump roles 3`] = `
     "@stylistic/eslint-plugin": "^2",
     "@types/jest": "*",
     "@types/node": "*",
-    "@types/standard-version": "*",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "aws-cdk": "^2",
     "cdk-assets": "*",
+    "commit-and-tag-version": "*",
     "esbuild": "*",
     "eslint": "^9",
     "eslint-import-resolver-typescript": "*",
@@ -2448,7 +2811,6 @@ exports[`Github snapshot with jump roles 3`] = `
     "jest": "*",
     "jest-junit": "^16",
     "projen": "*",
-    "standard-version": "*",
     "ts-jest": "*",
     "ts-node": "*",
     "typescript": "*",
@@ -2819,13 +3181,13 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
+          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
         },
         {
           "exec": "npx projen",
@@ -3097,6 +3459,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -3207,6 +3595,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:dev
+      - name: Add CDK outputs to summary - dev
+        run: |-
+          if [ -f "cdk-outputs-dev.json" ]; then
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -3454,13 +3868,13 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
+          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
         },
         {
           "exec": "npx projen",
@@ -3472,6 +3886,154 @@ exports[`Github snapshot with multi stack 2`] = `
     },
   },
 }
+`;
+
+exports[`Github snapshot with pnpm package manager 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: deploy
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+jobs:
+  synth:
+    name: Synth CDK application
+    needs: []
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+      - run: npx projen install:ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: synthRole
+          role-session-name: GitHubAction
+          aws-region: us-east-1
+      - run: npx projen build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: cloud-assembly
+          path: cdk.out/
+  assetUpload:
+    name: Publish assets to AWS
+    needs: synth
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - name: Download Artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: cloud-assembly
+          path: cdk.out/
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+      - run: npx projen install:ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: publishRole
+          role-session-name: GitHubAction
+          aws-region: us-east-1
+      - run: npx projen publish:assets
+  deploy-dev:
+    name: Deploy stage dev to AWS
+    needs: assetUpload
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: deploy-dev
+      cancel-in-progress: false
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Download Artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: cloud-assembly
+          path: cdk.out/
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+      - run: npx projen install:ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: devRole
+          role-session-name: GitHubAction
+          aws-region: eu-central-1
+      - run: npx projen deploy:dev
+      - name: Add CDK outputs to summary - dev
+        run: |-
+          if [ -f "cdk-outputs-dev.json" ]; then
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: cdk-outputs-dev
+          path: cdk-outputs-dev.json
+"
 `;
 
 exports[`Github snapshot with preInstallStep 1`] = `undefined`;
@@ -3583,6 +4145,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -3726,6 +4314,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:dev
+      - name: Add CDK outputs to summary - dev
+        run: |-
+          if [ -f "cdk-outputs-dev.json" ]; then
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -3764,6 +4378,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -4019,11 +4659,11 @@ exports[`Github snapshot with separate asset upload jobs 3`] = `
     "@stylistic/eslint-plugin": "^2",
     "@types/jest": "*",
     "@types/node": "*",
-    "@types/standard-version": "*",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "aws-cdk": "^2",
     "cdk-assets": "*",
+    "commit-and-tag-version": "*",
     "esbuild": "*",
     "eslint": "^9",
     "eslint-import-resolver-typescript": "*",
@@ -4031,7 +4671,6 @@ exports[`Github snapshot with separate asset upload jobs 3`] = `
     "jest": "*",
     "jest-junit": "^16",
     "projen": "*",
-    "standard-version": "*",
     "ts-jest": "*",
     "ts-node": "*",
     "typescript": "*",
@@ -4402,13 +5041,13 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
+          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
         },
         {
           "exec": "npx projen",
@@ -4653,6 +5292,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:dev
+      - name: Add CDK outputs to summary - dev
+        run: |-
+          if [ -f "cdk-outputs-dev.json" ]; then
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-dev.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-dev.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -4691,6 +5356,32 @@ jobs:
           role-session-name: GitHubAction
           aws-region: eu-central-1
       - run: npx projen deploy:prod
+      - name: Add CDK outputs to summary - prod
+        run: |-
+          if [ -f "cdk-outputs-prod.json" ]; then
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Check if the file has content
+            if [ -s "cdk-outputs-prod.json" ]; then
+              # Parse JSON and create a markdown table
+              echo "| Stack | Output Key | Output Value |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------|------------|--------------|" >> $GITHUB_STEP_SUMMARY
+
+              # Use jq to parse the JSON and format as table rows
+              jq -r 'to_entries | .[] | .key as $stack | .value | to_entries | .[] | "| \\($stack) | \\(.key) | \\(.value) |"' "cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+
+              echo "" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "No outputs found for this deployment." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Outputs file not found: cdk-outputs-prod.json" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -4946,11 +5637,11 @@ exports[`Github snapshot with versioning enabled 3`] = `
     "@stylistic/eslint-plugin": "^2",
     "@types/jest": "*",
     "@types/node": "*",
-    "@types/standard-version": "*",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "aws-cdk": "^2",
     "cdk-assets": "*",
+    "commit-and-tag-version": "*",
     "esbuild": "*",
     "eslint": "^9",
     "eslint-import-resolver-typescript": "*",
@@ -4958,7 +5649,6 @@ exports[`Github snapshot with versioning enabled 3`] = `
     "jest": "*",
     "jest-junit": "^16",
     "projen": "*",
-    "standard-version": "*",
     "ts-jest": "*",
     "ts-node": "*",
     "typescript": "*",
@@ -5329,13 +6019,13 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@types/standard-version,cdk-assets,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,standard-version,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @types/standard-version @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen standard-version ts-jest ts-node typescript aws-cdk-lib constructs",
+          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
         },
         {
           "exec": "npx projen",
