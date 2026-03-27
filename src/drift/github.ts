@@ -27,7 +27,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
     this.permissions = options.permissions;
     this.createIssues = options.createIssues ?? false;
 
-    this.workflow = (this.project as GitHubProject).github!.addWorkflow('drift-detection');
+    this.workflow = (this.project as GitHubProject).github!.addWorkflow(`${this.namePrefix}drift-detection`);
     this.workflow.on({
       schedule: [{
         cron: this.schedule,
@@ -82,8 +82,8 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
             name: 'Upload results',
             uses: 'actions/upload-artifact@v4',
             with: {
-              name: `drift-results-${stage.name}`,
-              path: `drift-results-${stage.name}.json`,
+              name: `${this.namePrefix}drift-results-${stage.name}`,
+              path: `${this.namePrefix}drift-results-${stage.name}.json`,
             },
           },
           ...(this.createIssues ? [{
@@ -127,7 +127,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
   private generateIssueCreationScript(stage: DriftDetectionStageOptions): string {
     return `
 const fs = require('fs');
-const resultsFile = 'drift-results-${stage.name}.json';
+const resultsFile = '${this.namePrefix}drift-results-${stage.name}.json';
 
 if (!fs.existsSync(resultsFile)) {
   console.log('No results file found');

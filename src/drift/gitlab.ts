@@ -32,7 +32,7 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
     this.config.addStages('drift-detection', 'summary');
 
     this.config.addJobs({
-      '.drift-detection': {
+      [`.${this.namePrefix}drift-detection`]: {
         stage: 'drift-detection',
         tags: this.runnerTags,
         image: { name: this.image },
@@ -60,14 +60,14 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
 
     // Add job for each stage
     for (const stage of this.stages) {
-      const jobName = `drift:${stage.name}`;
+      const jobName = `${this.namePrefix}drift:${stage.name}`;
 
       const driftStep = new DriftDetectionStep(this.project, stage);
       const stepConfig = driftStep.toGitlab();
 
       this.config.addJobs({
         [jobName]: {
-          extends: ['.drift-detection'],
+          extends: [`.${this.namePrefix}drift-detection`],
           variables: {
             ...stepConfig.env,
           },
@@ -79,10 +79,10 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
 
     // Add summary job
     this.config.addJobs({
-      'drift:summary': {
+      [`${this.namePrefix}drift:summary`]: {
         stage: 'summary',
         tags: this.runnerTags,
-        needs: this.stages.map(s => `drift:${s.name}`),
+        needs: this.stages.map(s => `${this.namePrefix}drift:${s.name}`),
         only: {
           refs: ['schedules'],
           variables: ['$CI_PIPELINE_SOURCE == "schedule"', '$DRIFT_DETECTION == "true"'],

@@ -123,6 +123,14 @@ export interface IamRoleConfig {
 export interface CDKPipelineOptions {
 
   /**
+   * A unique name for this pipeline, used as a prefix for workflow files,
+   * concurrency groups, and artifact names to prevent collisions in monorepos.
+   *
+   * @default - the project name if the project has a parent (monorepo subproject), otherwise no prefix
+   */
+  readonly pipelineName?: string;
+
+  /**
    * the name of the branch to deploy from
    * @default main
    */
@@ -216,6 +224,9 @@ export abstract class CDKPipeline extends Component {
   public readonly stackPrefix: string;
   public readonly branchName: string;
 
+  /** Prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. */
+  protected readonly namePrefix: string;
+
   constructor(protected app: awscdk.AwsCdkTypeScriptApp, protected baseOptions: CDKPipelineOptions) {
     super(app);
 
@@ -228,6 +239,8 @@ export abstract class CDKPipeline extends Component {
     // );
     this.project.gitignore.exclude('/cdk-outputs-*.json');
 
+    const pipelineName = baseOptions.pipelineName ?? (app.parent ? app.name : undefined);
+    this.namePrefix = pipelineName ? `${pipelineName}-` : '';
     this.stackPrefix = baseOptions.stackPrefix ?? app.name;
     this.branchName = baseOptions.branchName ?? 'main'; // TODO use defaultReleaseBranch of NodeProject
 

@@ -83,7 +83,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     });
 
     // Initialize the deployment workflow on GitHub.
-    this.deploymentWorkflow = this.app.github!.addWorkflow('deploy');
+    this.deploymentWorkflow = this.app.github!.addWorkflow(`${this.namePrefix}deploy`);
     this.deploymentWorkflow.on({
       push: {
         branches: [this.branchName],
@@ -147,7 +147,7 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a workflow for deploying feature branches when PRs are labeled with 'feature-deployment'.
    */
   private createFeatureDeployWorkflow(): void {
-    const workflow = this.app.github!.addWorkflow('deploy-feature');
+    const workflow = this.app.github!.addWorkflow(`${this.namePrefix}deploy-feature`);
 
     workflow.on({
       pullRequestTarget: {
@@ -163,8 +163,8 @@ export class GithubCDKPipeline extends CDKPipeline {
       this.provideDeployStep({ name: 'feature', env: this.baseOptions.featureStages!.env }),
       new CdkOutputsSummaryStep(this.project, { stageName: 'feature' }),
       new UploadArtifactStep(this.project, {
-        name: 'cdk-outputs-feature',
-        path: 'cdk-outputs-feature.json',
+        name: `${this.namePrefix}cdk-outputs-feature`,
+        path: `${this.namePrefix}cdk-outputs-feature.json`,
       }),
     ].map(s => s.toGithub());
 
@@ -178,7 +178,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         idToken: JobPermission.WRITE,
       }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       concurrency: {
-        'group': 'deploy-feature-${{ github.event.pull_request.number }}',
+        'group': `${this.namePrefix}deploy-feature-\${{ github.event.pull_request.number }}`,
         'cancel-in-progress': false,
       },
       env: {
@@ -205,7 +205,7 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a workflow for destroying feature branches when PRs are closed or unlabeled.
    */
   private createFeatureDestroyWorkflow(): void {
-    const workflow = this.app.github!.addWorkflow('destroy-feature');
+    const workflow = this.app.github!.addWorkflow(`${this.namePrefix}destroy-feature`);
 
     workflow.on({
       pullRequestTarget: {
@@ -236,7 +236,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         idToken: JobPermission.WRITE,
       }, ...(steps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       concurrency: {
-        'group': 'destroy-feature-${{ github.event.pull_request.number }}',
+        'group': `${this.namePrefix}destroy-feature-\${{ github.event.pull_request.number }}`,
         'cancel-in-progress': false,
       },
       env: {
@@ -268,7 +268,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     steps.push(this.provideSynthStep());
 
     steps.push(new UploadArtifactStep(this.project, {
-      name: 'cloud-assembly',
+      name: `${this.namePrefix}cloud-assembly`,
       path: `${this.app.cdkConfig.cdkout}/`,
     }));
 
@@ -310,7 +310,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     const steps = [
       new SimpleCommandStep(this.project, ['git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"']),
       new DownloadArtifactStep(this.project, {
-        name: 'cloud-assembly',
+        name: `${this.namePrefix}cloud-assembly`,
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
       this.provideInstallStep(),
@@ -370,13 +370,13 @@ export class GithubCDKPipeline extends CDKPipeline {
         this.provideDeployStep(stage),
         new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
         new UploadArtifactStep(this.project, {
-          name: `cdk-outputs-${stage.name}`,
+          name: `${this.namePrefix}cdk-outputs-${stage.name}`,
           path: `cdk-outputs-${stage.name}.json`,
         }),
       ].map(s => s.toGithub());
 
       // Create new workflow for deployment
-      const stageWorkflow = this.app.github!.addWorkflow(`release-${stage.name}`);
+      const stageWorkflow = this.app.github!.addWorkflow(`${this.namePrefix}release-${stage.name}`);
       stageWorkflow.on({
         workflowDispatch: {
           inputs: {
@@ -395,7 +395,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           environment: stage.githubEnvironment ?? stage.name,
         },
         concurrency: {
-          'group': `deploy-${stage.name}`,
+          'group': `${this.namePrefix}deploy-${stage.name}`,
           'cancel-in-progress': false,
         },
         env: {
@@ -433,14 +433,14 @@ export class GithubCDKPipeline extends CDKPipeline {
   ) {
     const steps = [
       new DownloadArtifactStep(this.project, {
-        name: 'cloud-assembly',
+        name: `${this.namePrefix}cloud-assembly`,
         path: `${this.app.cdkConfig.cdkout}/`,
       }),
       this.provideInstallStep(),
       this.provideDeployStep(stage),
       new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
       new UploadArtifactStep(this.project, {
-        name: `cdk-outputs-${stage.name}`,
+        name: `${this.namePrefix}cdk-outputs-${stage.name}`,
         path: `cdk-outputs-${stage.name}.json`,
       }),
     ].map(s => s.toGithub());
@@ -452,7 +452,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         environment: stage.githubEnvironment ?? stage.name,
       },
       concurrency: {
-        'group': `deploy-${stage.name}`,
+        'group': `${this.namePrefix}deploy-${stage.name}`,
         'cancel-in-progress': false,
       },
       needs: [`assetUpload${useGithubEnvironmentsForAssetUpload ? `-${stage.name}` : ''}`, ...steps.flatMap(s => s.needs), ...jobDependencies],
@@ -494,13 +494,13 @@ export class GithubCDKPipeline extends CDKPipeline {
         this.provideDeployStep(stage),
         new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
         new UploadArtifactStep(this.project, {
-          name: `cdk-outputs-${stage.name}`,
+          name: `${this.namePrefix}cdk-outputs-${stage.name}`,
           path: `cdk-outputs-${stage.name}.json`,
         }),
       ].map(s => s.toGithub());
 
       // Create new workflow for deployment
-      const stageWorkflow = this.app.github!.addWorkflow(`deploy-${stage.name}`);
+      const stageWorkflow = this.app.github!.addWorkflow(`${this.namePrefix}deploy-${stage.name}`);
       stageWorkflow.on({
         workflowDispatch: {},
       });
@@ -509,7 +509,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
         concurrency: {
-          'group': `deploy-${stage.name}`,
+          'group': `${this.namePrefix}deploy-${stage.name}`,
           'cancel-in-progress': false,
         },
         env: {
