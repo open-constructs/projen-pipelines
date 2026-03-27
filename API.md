@@ -2625,6 +2625,7 @@ const bashCDKPipelineOptions: BashCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
@@ -2722,6 +2723,19 @@ public readonly personalStage: StageOptions;
 - *Type:* <a href="#projen-pipelines.StageOptions">StageOptions</a>
 
 This specifies details for a personal stage.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.BashCDKPipelineOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* the project name if the project has a parent (monorepo subproject), otherwise no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos.
 
 ---
 
@@ -2844,6 +2858,7 @@ const bashDriftDetectionWorkflowOptions: BashDriftDetectionWorkflowOptions = { .
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.scriptPath">scriptPath</a></code> | <code>string</code> | Path to the output script. |
 
@@ -2871,6 +2886,19 @@ public readonly name: string;
 - *Default:* "drift-detection"
 
 Name of the workflow.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.BashDriftDetectionWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
 
 ---
 
@@ -3030,6 +3058,7 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
@@ -3127,6 +3156,19 @@ public readonly personalStage: StageOptions;
 - *Type:* <a href="#projen-pipelines.StageOptions">StageOptions</a>
 
 This specifies details for a personal stage.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.CDKPipelineOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* the project name if the project has a parent (monorepo subproject), otherwise no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos.
 
 ---
 
@@ -4063,6 +4105,7 @@ const driftDetectionWorkflowOptions: DriftDetectionWorkflowOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
 
 ---
@@ -4089,6 +4132,19 @@ public readonly name: string;
 - *Default:* "drift-detection"
 
 Name of the workflow.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.DriftDetectionWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
 
 ---
 
@@ -4296,6 +4352,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
@@ -4397,6 +4454,19 @@ public readonly personalStage: StageOptions;
 - *Type:* <a href="#projen-pipelines.StageOptions">StageOptions</a>
 
 This specifies details for a personal stage.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.GithubCDKPipelineOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* the project name if the project has a parent (monorepo subproject), otherwise no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos.
 
 ---
 
@@ -4577,6 +4647,7 @@ const gitHubDriftDetectionWorkflowOptions: GitHubDriftDetectionWorkflowOptions =
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.createIssues">createIssues</a></code> | <code>boolean</code> | Whether to create issues on drift detection. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.permissions">permissions</a></code> | <code>{[ key: string ]: string}</code> | Additional permissions for GitHub workflow. |
@@ -4605,6 +4676,19 @@ public readonly name: string;
 - *Default:* "drift-detection"
 
 Name of the workflow.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
 
 ---
 
@@ -4939,6 +5023,7 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
@@ -5038,6 +5123,19 @@ public readonly personalStage: StageOptions;
 - *Type:* <a href="#projen-pipelines.StageOptions">StageOptions</a>
 
 This specifies details for a personal stage.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.GitlabCDKPipelineOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* the project name if the project has a parent (monorepo subproject), otherwise no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos.
 
 ---
 
@@ -5184,6 +5282,7 @@ const gitLabDriftDetectionWorkflowOptions: GitLabDriftDetectionWorkflowOptions =
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.image">image</a></code> | <code>string</code> | Docker image to use for drift detection. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | GitLab runner tags. |
@@ -5212,6 +5311,19 @@ public readonly name: string;
 - *Default:* "drift-detection"
 
 Name of the workflow.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
 
 ---
 

@@ -57,6 +57,14 @@ export interface DriftErrorHandler {
 
 export interface DriftDetectionWorkflowOptions {
   /**
+   * A unique name for this pipeline, used as a prefix for workflow files
+   * and artifact names to prevent collisions in monorepos.
+   *
+   * @default - no prefix
+   */
+  readonly pipelineName?: string;
+
+  /**
    * Name of the workflow
    * @default "drift-detection"
    */
@@ -79,9 +87,13 @@ export abstract class DriftDetectionWorkflow extends Component {
   public readonly schedule: string;
   protected readonly stages: DriftDetectionStageOptions[];
 
+  /** Prefix for workflow files and artifact names to prevent collisions in monorepos. */
+  protected readonly namePrefix: string;
+
   constructor(project: Project, options: DriftDetectionWorkflowOptions) {
     super(project);
 
+    this.namePrefix = options.pipelineName ? `${options.pipelineName}-` : '';
     this.name = options.name ?? 'drift-detection';
     this.schedule = options.schedule ?? '0 0 * * *';
     this.stages = options.stages;
