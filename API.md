@@ -2624,6 +2624,7 @@ const bashCDKPipelineOptions: BashCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the pipeline when changed. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
@@ -2713,6 +2714,32 @@ public readonly independentStages: IndependentStage[];
 This specifies details for independent stages.
 
 ---
+
+##### `paths`<sup>Optional</sup> <a name="paths" id="projen-pipelines.BashCDKPipelineOptions.property.paths"></a>
+
+```typescript
+public readonly paths: string[];
+```
+
+- *Type:* string[]
+- *Default:* all paths trigger the pipeline
+
+File path patterns that should trigger the pipeline when changed.
+
+This is useful for monorepos where you only want to run the pipeline
+when files in a specific subproject are modified.
+
+For GitHub, these are used as `on.push.paths` and `on.pull_request.paths` filters.
+For GitLab, these are used as `only.changes` filters.
+
+---
+
+*Example*
+
+```typescript
+['packages/my-app/**', 'shared-libs/**']
+```
+
 
 ##### `personalStage`<sup>Optional</sup> <a name="personalStage" id="projen-pipelines.BashCDKPipelineOptions.property.personalStage"></a>
 
@@ -3057,6 +3084,7 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the pipeline when changed. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
@@ -3146,6 +3174,32 @@ public readonly independentStages: IndependentStage[];
 This specifies details for independent stages.
 
 ---
+
+##### `paths`<sup>Optional</sup> <a name="paths" id="projen-pipelines.CDKPipelineOptions.property.paths"></a>
+
+```typescript
+public readonly paths: string[];
+```
+
+- *Type:* string[]
+- *Default:* all paths trigger the pipeline
+
+File path patterns that should trigger the pipeline when changed.
+
+This is useful for monorepos where you only want to run the pipeline
+when files in a specific subproject are modified.
+
+For GitHub, these are used as `on.push.paths` and `on.pull_request.paths` filters.
+For GitLab, these are used as `only.changes` filters.
+
+---
+
+*Example*
+
+```typescript
+['packages/my-app/**', 'shared-libs/**']
+```
+
 
 ##### `personalStage`<sup>Optional</sup> <a name="personalStage" id="projen-pipelines.CDKPipelineOptions.property.personalStage"></a>
 
@@ -4351,6 +4405,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the pipeline when changed. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
@@ -4444,6 +4499,32 @@ public readonly independentStages: IndependentStage[];
 This specifies details for independent stages.
 
 ---
+
+##### `paths`<sup>Optional</sup> <a name="paths" id="projen-pipelines.GithubCDKPipelineOptions.property.paths"></a>
+
+```typescript
+public readonly paths: string[];
+```
+
+- *Type:* string[]
+- *Default:* all paths trigger the pipeline
+
+File path patterns that should trigger the pipeline when changed.
+
+This is useful for monorepos where you only want to run the pipeline
+when files in a specific subproject are modified.
+
+For GitHub, these are used as `on.push.paths` and `on.pull_request.paths` filters.
+For GitLab, these are used as `only.changes` filters.
+
+---
+
+*Example*
+
+```typescript
+['packages/my-app/**', 'shared-libs/**']
+```
+
 
 ##### `personalStage`<sup>Optional</sup> <a name="personalStage" id="projen-pipelines.GithubCDKPipelineOptions.property.personalStage"></a>
 
@@ -5022,6 +5103,7 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the pipeline when changed. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.personalStage">personalStage</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for a personal stage. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
@@ -5113,6 +5195,32 @@ public readonly independentStages: IndependentStage[];
 This specifies details for independent stages.
 
 ---
+
+##### `paths`<sup>Optional</sup> <a name="paths" id="projen-pipelines.GitlabCDKPipelineOptions.property.paths"></a>
+
+```typescript
+public readonly paths: string[];
+```
+
+- *Type:* string[]
+- *Default:* all paths trigger the pipeline
+
+File path patterns that should trigger the pipeline when changed.
+
+This is useful for monorepos where you only want to run the pipeline
+when files in a specific subproject are modified.
+
+For GitHub, these are used as `on.push.paths` and `on.pull_request.paths` filters.
+For GitLab, these are used as `only.changes` filters.
+
+---
+
+*Example*
+
+```typescript
+['packages/my-app/**', 'shared-libs/**']
+```
+
 
 ##### `personalStage`<sup>Optional</sup> <a name="personalStage" id="projen-pipelines.GitlabCDKPipelineOptions.property.personalStage"></a>
 

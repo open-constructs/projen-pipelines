@@ -858,3 +858,80 @@ test('Github snapshot with pnpm package manager', () => {
   const pnpmSetupCount = (deployYml.match(/pnpm\/action-setup@v4/g) || []).length;
   expect(pnpmSetupCount).toBe(3);
 });
+
+test('Github snapshot with path filters', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.102.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    paths: ['packages/my-app/**', 'shared-libs/**'],
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deployYml = snapshot['.github/workflows/deploy.yml'];
+
+  expect(deployYml).toMatchSnapshot();
+
+  // Verify path filters are present in the workflow trigger
+  expect(deployYml).toContain('packages/my-app/**');
+  expect(deployYml).toContain('shared-libs/**');
+});
+
+test('Github snapshot with path filters and feature stages', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.102.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      default: 'defaultRole',
+    },
+    paths: ['packages/my-app/**'],
+    featureStages: {
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deployYml = snapshot['.github/workflows/deploy.yml'];
+  const deployFeatureYml = snapshot['.github/workflows/deploy-feature.yml'];
+  const destroyFeatureYml = snapshot['.github/workflows/destroy-feature.yml'];
+
+  expect(deployYml).toMatchSnapshot();
+  expect(deployFeatureYml).toMatchSnapshot();
+  expect(destroyFeatureYml).toMatchSnapshot();
+
+  // Verify path filters are present in all workflows
+  expect(deployYml).toContain('packages/my-app/**');
+  expect(deployFeatureYml).toContain('packages/my-app/**');
+  expect(destroyFeatureYml).toContain('packages/my-app/**');
+});

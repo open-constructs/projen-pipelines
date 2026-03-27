@@ -87,6 +87,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.deploymentWorkflow.on({
       push: {
         branches: [this.branchName],
+        ...this.baseOptions.paths && { paths: this.baseOptions.paths },
       },
       workflowDispatch: {},
     });
@@ -151,6 +152,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     workflow.on({
       pullRequestTarget: {
         types: ['synchronize', 'labeled', 'opened', 'reopened'],
+        ...this.baseOptions.paths && { paths: this.baseOptions.paths },
       },
       workflowDispatch: {},
     });
@@ -208,6 +210,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     workflow.on({
       pullRequestTarget: {
         types: ['closed', 'unlabeled'],
+        ...this.baseOptions.paths && { paths: this.baseOptions.paths },
       },
       workflowDispatch: {},
     });
