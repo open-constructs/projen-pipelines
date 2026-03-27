@@ -699,6 +699,126 @@ test('Github snapshot with jump roles', () => {
   expect(snapshot['src/app.ts']).toContain('StringParameter');
 });
 
+test('Github snapshot with explicit pipelineName', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    pipelineName: 'backend',
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+        prod: 'prodRole',
+      },
+    },
+    pkgNamespace: '@assembly',
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }, {
+      name: 'prod',
+      manualApproval: true,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+    featureStages: {
+      env: {
+        account: '123456789012',
+        region: 'us-east-1',
+      },
+    },
+    independentStages: [{
+      name: 'sandbox',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+
+  // Workflow files should be prefixed
+  expect(snapshot['.github/workflows/backend-deploy.yml']).toBeDefined();
+  expect(snapshot['.github/workflows/backend-deploy-feature.yml']).toBeDefined();
+  expect(snapshot['.github/workflows/backend-destroy-feature.yml']).toBeDefined();
+  expect(snapshot['.github/workflows/backend-release-prod.yml']).toBeDefined();
+  expect(snapshot['.github/workflows/backend-deploy-sandbox.yml']).toBeDefined();
+
+  // Old unprefixed files should not exist
+  expect(snapshot['.github/workflows/deploy.yml']).toBeUndefined();
+  expect(snapshot['.github/workflows/deploy-feature.yml']).toBeUndefined();
+  expect(snapshot['.github/workflows/destroy-feature.yml']).toBeUndefined();
+  expect(snapshot['.github/workflows/release-prod.yml']).toBeUndefined();
+  expect(snapshot['.github/workflows/deploy-sandbox.yml']).toBeUndefined();
+
+  // Verify artifact names and concurrency groups are prefixed
+  const deployYml = snapshot['.github/workflows/backend-deploy.yml'];
+  expect(deployYml).toContain('backend-cloud-assembly');
+  expect(deployYml).toContain('backend-cdk-outputs-dev');
+  expect(deployYml).toContain('backend-deploy-dev');
+
+  const featureDeployYml = snapshot['.github/workflows/backend-deploy-feature.yml'];
+  expect(featureDeployYml).toContain('backend-cdk-outputs-feature');
+  expect(featureDeployYml).toContain('backend-deploy-feature-');
+
+  const featureDestroyYml = snapshot['.github/workflows/backend-destroy-feature.yml'];
+  expect(featureDestroyYml).toContain('backend-destroy-feature-');
+
+  const releaseYml = snapshot['.github/workflows/backend-release-prod.yml'];
+  expect(releaseYml).toContain('backend-cdk-outputs-prod');
+  expect(releaseYml).toContain('backend-deploy-prod');
+
+  const sandboxYml = snapshot['.github/workflows/backend-deploy-sandbox.yml'];
+  expect(sandboxYml).toContain('backend-cdk-outputs-sandbox');
+  expect(sandboxYml).toContain('backend-deploy-sandbox');
+
+  expect(deployYml).toMatchSnapshot();
+  expect(featureDeployYml).toMatchSnapshot();
+  expect(featureDestroyYml).toMatchSnapshot();
+  expect(releaseYml).toMatchSnapshot();
+  expect(sandboxYml).toMatchSnapshot();
+});
+
+test('Github snapshot with no pipelineName on standalone project', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+
+  // Standalone project without parent should have no prefix
+  expect(snapshot['.github/workflows/deploy.yml']).toBeDefined();
+  expect(snapshot['.github/workflows/deploy.yml']).toContain('cloud-assembly');
+  expect(snapshot['.github/workflows/deploy.yml']).not.toContain('testapp-cloud-assembly');
+});
+
 test('Github snapshot with pnpm package manager', () => {
   const p = new AwsCdkTypeScriptApp({
     cdkVersion: '2.132.0',
@@ -737,4 +857,81 @@ test('Github snapshot with pnpm package manager', () => {
   // Verify pnpm setup appears in all jobs (synth, assetUpload, deploy)
   const pnpmSetupCount = (deployYml.match(/pnpm\/action-setup@v4/g) || []).length;
   expect(pnpmSetupCount).toBe(3);
+});
+
+test('Github snapshot with path filters', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.102.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    paths: ['packages/my-app/**', 'shared-libs/**'],
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deployYml = snapshot['.github/workflows/deploy.yml'];
+
+  expect(deployYml).toMatchSnapshot();
+
+  // Verify path filters are present in the workflow trigger
+  expect(deployYml).toContain('packages/my-app/**');
+  expect(deployYml).toContain('shared-libs/**');
+});
+
+test('Github snapshot with path filters and feature stages', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.102.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      default: 'defaultRole',
+    },
+    paths: ['packages/my-app/**'],
+    featureStages: {
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deployYml = snapshot['.github/workflows/deploy.yml'];
+  const deployFeatureYml = snapshot['.github/workflows/deploy-feature.yml'];
+  const destroyFeatureYml = snapshot['.github/workflows/destroy-feature.yml'];
+
+  expect(deployYml).toMatchSnapshot();
+  expect(deployFeatureYml).toMatchSnapshot();
+  expect(destroyFeatureYml).toMatchSnapshot();
+
+  // Verify path filters are present in all workflows
+  expect(deployYml).toContain('packages/my-app/**');
+  expect(deployFeatureYml).toContain('packages/my-app/**');
+  expect(destroyFeatureYml).toContain('packages/my-app/**');
 });

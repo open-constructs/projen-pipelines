@@ -498,6 +498,32 @@ When feature stages are configured, two GitHub workflows are created:
 
 The feature deployment uses the `--force` flag when destroying to ensure cleanup without manual confirmation.
 
+### Monorepo / Path Filtering
+
+In monorepo setups, you may want to only trigger a pipeline when changes are made to specific paths. Use the `paths` option to configure path-based filtering:
+
+```typescript
+new GithubCDKPipeline(app, {
+  stackPrefix: 'MyApp',
+  iamRoleArns: {
+    default: 'arn:aws:iam::123456789012:role/GithubDeploymentRole',
+  },
+  paths: ['packages/my-app/**', 'shared-libs/**'],
+  stages: [
+    {
+      name: 'dev',
+      env: { account: '123456789013', region: 'eu-central-1' },
+    },
+  ],
+});
+```
+
+When `paths` is specified:
+- **GitHub Actions**: The deploy workflow will only trigger on pushes that include changes to the matching paths. Feature branch workflows (deploy/destroy) are also filtered. Manual dispatch (`workflow_dispatch`) remains unfiltered and can always be triggered.
+- **GitLab CI**: Deployment and diff jobs use `only.changes` to only run when matching files are modified.
+
+This allows you to have multiple pipelines in the same repository, each responsible for a different subproject, without triggering unnecessary deployments.
+
 ### AWS Amplify Deployment
 
 Projen Pipelines includes support for deploying static websites and single-page applications to AWS Amplify Hosting. This feature provides automated deployment of build artifacts to Amplify, with built-in support for multiple environments and branch-based deployments.

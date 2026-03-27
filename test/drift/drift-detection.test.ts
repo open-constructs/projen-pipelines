@@ -139,6 +139,31 @@ describe('GitHubDriftDetectionWorkflow', () => {
     expect(snapshot['.github/workflows/drift-detection.yml']).toMatchSnapshot();
   });
 
+  it('should prefix workflow and artifact names with pipelineName', () => {
+    new GitHubDriftDetectionWorkflow(project, {
+      pipelineName: 'backend',
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+          roleArn: 'arn:aws:iam::123456789012:role/ProdRole',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(project);
+
+    // Workflow file should be prefixed
+    expect(snapshot['.github/workflows/backend-drift-detection.yml']).toBeDefined();
+    expect(snapshot['.github/workflows/drift-detection.yml']).toBeUndefined();
+
+    // Artifact names should be prefixed
+    const workflowYml = snapshot['.github/workflows/backend-drift-detection.yml'];
+    expect(workflowYml).toContain('backend-drift-results-production');
+
+    expect(workflowYml).toMatchSnapshot();
+  });
+
   it('should support disabling issue creation', () => {
     new GitHubDriftDetectionWorkflow(project, {
       createIssues: false,
@@ -192,6 +217,33 @@ describe('GitLabDriftDetectionWorkflow', () => {
 
     const snapshot = synthSnapshot(project);
     expect(snapshot['.gitlab/drift-detection.yml']).toMatchSnapshot();
+  });
+
+  it('should prefix job names with pipelineName', () => {
+    new GitLabDriftDetectionWorkflow(project, {
+      pipelineName: 'backend',
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+          roleArn: 'arn:aws:iam::123456789012:role/ProdRole',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(project);
+
+    // Find the gitlab ci file (could be .gitlab-ci.yml or .gitlab/drift-detection.yml)
+    const gitlabCiKey = Object.keys(snapshot).find(k => k.includes('gitlab'));
+    expect(gitlabCiKey).toBeDefined();
+    const gitlabCi = snapshot[gitlabCiKey!];
+
+    // Job names should be prefixed, hidden jobs preserve dot prefix
+    expect(gitlabCi).toContain('.backend-drift-detection');
+    expect(gitlabCi).toContain('backend-drift:production');
+    expect(gitlabCi).toContain('backend-drift:summary');
+
+    expect(gitlabCi).toMatchSnapshot();
   });
 
   it('should support custom docker image', () => {
