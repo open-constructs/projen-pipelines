@@ -7098,6 +7098,79 @@ public readonly strategy: VersioningStrategy;
 ---
 
 
+### CorepackSetupStep <a name="CorepackSetupStep" id="projen-pipelines.CorepackSetupStep"></a>
+
+Step to enable corepack for Yarn Berry support.
+
+This step is automatically injected when a project uses Yarn Berry as its package manager.
+It ensures corepack is enabled in the CI environment before running any yarn commands,
+which is required for Yarn Berry (v2+) to work correctly.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.CorepackSetupStep.Initializer"></a>
+
+```typescript
+import { CorepackSetupStep } from 'projen-pipelines'
+
+new CorepackSetupStep(project: Project)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CorepackSetupStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.CorepackSetupStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CorepackSetupStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.CorepackSetupStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.CorepackSetupStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.CorepackSetupStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.CorepackSetupStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.CorepackSetupStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
 ### DownloadArtifactStep <a name="DownloadArtifactStep" id="projen-pipelines.DownloadArtifactStep"></a>
 
 #### Initializers <a name="Initializers" id="projen-pipelines.DownloadArtifactStep.Initializer"></a>

@@ -2,7 +2,7 @@ import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
-import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence, PnpmSetupStep } from '../steps';
+import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence, PnpmSetupStep, CorepackSetupStep } from '../steps';
 import { VersioningConfig, VersioningSetup } from '../versioning';
 
 /**
@@ -291,6 +291,11 @@ export abstract class CDKPipeline extends Component {
       seq.addSteps(new PnpmSetupStep(this.project, {
         version: (this.app.package as any).pnpmVersion,
       }));
+    }
+
+    // Detect and add corepack enable for Yarn Berry
+    if (this.app.package.packageManager === NodePackageManager.YARN_BERRY) {
+      seq.addSteps(new CorepackSetupStep(this.project));
     }
 
     if (this.baseOptions.preInstallCommands) {

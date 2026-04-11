@@ -75,7 +75,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           },
           {
             name: 'Install dependencies',
-            run: 'npm ci',
+            run: `${this.project.projenCommand} install:ci`,
           },
           ...driftStep.steps,
           {

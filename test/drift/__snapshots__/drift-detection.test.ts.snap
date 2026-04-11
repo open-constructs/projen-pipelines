@@ -25,7 +25,7 @@ done
 # Install dependencies if not already installed
 if ! command -v ts-node &> /dev/null; then
   echo "Installing dependencies..."
-  npm ci
+  npx projen install:ci
 fi
 
 # Function to run drift detection for a stage
@@ -172,7 +172,7 @@ done
 # Install dependencies if not already installed
 if ! command -v ts-node &> /dev/null; then
   echo "Installing dependencies..."
-  npm ci
+  npx projen install:ci
 fi
 
 # Function to run drift detection for a stage
@@ -362,7 +362,7 @@ jobs:
         with:
           node-version: "20"
       - name: Install dependencies
-        run: npm ci
+        run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
@@ -395,7 +395,7 @@ jobs:
         with:
           node-version: "20"
       - name: Install dependencies
-        run: npm ci
+        run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
@@ -508,7 +508,7 @@ jobs:
         with:
           node-version: "20"
       - name: Install dependencies
-        run: npm ci
+        run: npx projen install:ci
       - run: detect-drift --region us-east-1
       - name: Upload results
         uses: actions/upload-artifact@v4
@@ -612,7 +612,7 @@ jobs:
         with:
           node-version: "20"
       - name: Install dependencies
-        run: npm ci
+        run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
@@ -721,7 +721,7 @@ jobs:
         with:
           node-version: "20"
       - name: Install dependencies
-        run: npm ci
+        run: npx projen install:ci
       - run: detect-drift --region us-east-1
       - name: Upload results
         uses: actions/upload-artifact@v4
@@ -824,7 +824,7 @@ jobs:
         with:
           node-version: "20"
       - name: Install dependencies
-        run: npm ci
+        run: npx projen install:ci
       - run: detect-drift --region us-east-1
       - name: Upload results
         uses: actions/upload-artifact@v4
@@ -919,7 +919,7 @@ stages:
   before_script:
     - apt-get update && apt-get install -y python3 python3-pip
     - pip3 install awscli
-    - npm ci
+    - npx projen install:ci
   artifacts:
     paths:
       - drift-results-*.json

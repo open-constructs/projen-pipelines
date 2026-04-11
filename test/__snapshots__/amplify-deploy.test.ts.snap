@@ -19,9 +19,10 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v5
         with:
@@ -43,9 +44,10 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v5
         with:
@@ -79,9 +81,10 @@ jobs:
       AWS_REGION: us-east-1
       AWS_DEFAULT_REGION: us-east-1
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v5
       - name: Download Artifact
@@ -582,9 +585,10 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v5
         with:
@@ -606,9 +610,10 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v5
         with:
@@ -642,9 +647,10 @@ jobs:
       AWS_REGION: ap-southeast-1
       AWS_DEFAULT_REGION: ap-southeast-1
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v5
       - name: Download Artifact
@@ -747,9 +753,10 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v5
         with:
@@ -771,9 +778,10 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v5
         with:
@@ -809,9 +817,10 @@ jobs:
       AWS_REGION: eu-central-1
       AWS_DEFAULT_REGION: eu-central-1
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v5
       - name: Download Artifact

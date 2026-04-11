@@ -1,5 +1,5 @@
 import { Project } from 'projen';
-import { GithubStepConfig, PipelineStep } from './step';
+import { BashStepConfig, GithubStepConfig, GitlabStepConfig, PipelineStep } from './step';
 
 /**
  * Options for the PnpmSetupStep.
@@ -36,6 +36,46 @@ export class PnpmSetupStep extends PipelineStep {
           version: this.options.version ?? '9',
         },
       }],
+    };
+  }
+}
+
+/**
+ * Step to enable corepack for Yarn Berry support.
+ *
+ * This step is automatically injected when a project uses Yarn Berry as its package manager.
+ * It ensures corepack is enabled in the CI environment before running any yarn commands,
+ * which is required for Yarn Berry (v2+) to work correctly.
+ */
+export class CorepackSetupStep extends PipelineStep {
+
+  constructor(project: Project) {
+    super(project);
+  }
+
+  public toGithub(): GithubStepConfig {
+    return {
+      env: {},
+      needs: [],
+      steps: [{
+        name: 'Enable corepack',
+        run: 'corepack enable',
+      }],
+    };
+  }
+
+  public toGitlab(): GitlabStepConfig {
+    return {
+      extensions: [],
+      commands: ['corepack enable'],
+      needs: [],
+      env: {},
+    };
+  }
+
+  public toBash(): BashStepConfig {
+    return {
+      commands: ['corepack enable'],
     };
   }
 }
