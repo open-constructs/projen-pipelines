@@ -64,11 +64,11 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
         steps: [
           {
             name: 'Checkout',
-            uses: 'actions/checkout@v5',
+            uses: 'actions/checkout@v6',
           },
           {
             name: 'Setup Node.js',
-            uses: 'actions/setup-node@v5',
+            uses: 'actions/setup-node@v6',
             with: {
               'node-version': '20',
             },
@@ -80,7 +80,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           ...driftStep.steps,
           {
             name: 'Upload results',
-            uses: 'actions/upload-artifact@v4',
+            uses: 'actions/upload-artifact@v7',
             with: {
               name: `${this.namePrefix}drift-results-${stage.name}`,
               path: `${this.namePrefix}drift-results-${stage.name}.json`,
@@ -110,7 +110,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
         steps: [
           {
             name: 'Download all artifacts',
-            uses: 'actions/download-artifact@v5',
+            uses: 'actions/download-artifact@v8',
             with: {
               path: 'drift-results',
             },

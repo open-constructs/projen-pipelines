@@ -24,13 +24,13 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -49,12 +49,12 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -86,9 +86,9 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -163,7 +163,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -590,13 +590,13 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -615,12 +615,12 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -652,9 +652,9 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -727,7 +727,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-production
           path: cdk-outputs-production.json
@@ -758,13 +758,13 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -783,12 +783,12 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -822,9 +822,9 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -899,7 +899,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json

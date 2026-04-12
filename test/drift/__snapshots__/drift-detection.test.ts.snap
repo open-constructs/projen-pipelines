@@ -356,9 +356,9 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
@@ -371,7 +371,7 @@ jobs:
           aws-region: us-east-1
       - run: detect-drift --region us-east-1
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: drift-results-production
           path: drift-results-production.json
@@ -389,9 +389,9 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'staging' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
@@ -404,7 +404,7 @@ jobs:
           aws-region: eu-west-1
       - run: detect-drift --region eu-west-1 --no-fail-on-drift
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: drift-results-staging
           path: drift-results-staging.json
@@ -418,7 +418,7 @@ jobs:
       contents: read
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: drift-results
       - name: Generate summary
@@ -502,16 +502,16 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
         run: npx projen install:ci
       - run: detect-drift --region us-east-1
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: drift-results-production
           path: drift-results-production.json
@@ -523,7 +523,7 @@ jobs:
       contents: read
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: drift-results
       - name: Generate summary
@@ -606,9 +606,9 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
@@ -621,7 +621,7 @@ jobs:
           aws-region: us-east-1
       - run: detect-drift --region us-east-1
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: backend-drift-results-production
           path: backend-drift-results-production.json
@@ -633,7 +633,7 @@ jobs:
       contents: read
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: drift-results
       - name: Generate summary
@@ -715,16 +715,16 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
         run: npx projen install:ci
       - run: detect-drift --region us-east-1
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: drift-results-production
           path: drift-results-production.json
@@ -736,7 +736,7 @@ jobs:
       contents: read
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: drift-results
       - name: Generate summary
@@ -818,16 +818,16 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
         run: npx projen install:ci
       - run: detect-drift --region us-east-1
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: drift-results-production
           path: drift-results-production.json
@@ -839,7 +839,7 @@ jobs:
       contents: read
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: drift-results
       - name: Generate summary
