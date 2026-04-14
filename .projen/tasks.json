@@ -287,7 +287,7 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/fs-extra,@types/jest,@types/node,eslint-import-resolver-typescript,eslint-plugin-import,fs-extra,jest,jsii-diff,jsii-pacmak,projen,ts-jest,ts-node,typescript,commit-and-tag-version"
+          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/fs-extra,@types/jest,@types/node,eslint-import-resolver-typescript,eslint-plugin-import,fs-extra,jest,jsii-diff,jsii-pacmak,projen,ts-jest,ts-node,typescript,commit-and-tag-version"
         },
         {
           "exec": "npm install"

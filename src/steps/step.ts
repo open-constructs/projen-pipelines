@@ -141,7 +141,7 @@ export class SimpleCommandStep extends PipelineStep {
 
 export class ProjenScriptStep extends SimpleCommandStep {
   constructor(project: Project, scriptName: string, args?: string) {
-    super(project, [`npx projen ${scriptName}${args ? ` ${args}` : ''}`]);
+    super(project, [`${project.projenCommand} ${scriptName}${args ? ` ${args}` : ''}`]);
   }
 }
 

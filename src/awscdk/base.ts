@@ -2,7 +2,7 @@ import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
-import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence, PnpmSetupStep } from '../steps';
+import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence, PnpmSetupStep, CorepackSetupStep } from '../steps';
 import { VersioningConfig, VersioningSetup } from '../versioning';
 import { ResourceCountStep } from './resource-count-step';
 
@@ -124,10 +124,31 @@ export interface IamRoleConfig {
 export interface CDKPipelineOptions {
 
   /**
+   * A unique name for this pipeline, used as a prefix for workflow files,
+   * concurrency groups, and artifact names to prevent collisions in monorepos.
+   *
+   * @default - the project name if the project has a parent (monorepo subproject), otherwise no prefix
+   */
+  readonly pipelineName?: string;
+
+  /**
    * the name of the branch to deploy from
    * @default main
    */
   readonly branchName?: string;
+
+  /**
+   * File path patterns that should trigger the pipeline when changed.
+   * This is useful for monorepos where you only want to run the pipeline
+   * when files in a specific subproject are modified.
+   *
+   * For GitHub, these are used as `on.push.paths` and `on.pull_request.paths` filters.
+   * For GitLab, these are used as `only.changes` filters.
+   *
+   * @example ['packages/my-app/**', 'shared-libs/**']
+   * @default - all paths trigger the pipeline
+   */
+  readonly paths?: string[];
 
   /**
    * This field is used to define a prefix for the AWS Stack resources created
@@ -221,6 +242,9 @@ export abstract class CDKPipeline extends Component {
   public readonly stackPrefix: string;
   public readonly branchName: string;
 
+  /** Prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. */
+  protected readonly namePrefix: string;
+
   constructor(protected app: awscdk.AwsCdkTypeScriptApp, protected baseOptions: CDKPipelineOptions) {
     super(app);
 
@@ -233,6 +257,8 @@ export abstract class CDKPipeline extends Component {
     // );
     this.project.gitignore.exclude('/cdk-outputs-*.json');
 
+    const pipelineName = baseOptions.pipelineName ?? (app.parent ? app.name : undefined);
+    this.namePrefix = pipelineName ? `${pipelineName}-` : '';
     this.stackPrefix = baseOptions.stackPrefix ?? app.name;
     this.branchName = baseOptions.branchName ?? 'main'; // TODO use defaultReleaseBranch of NodeProject
 
@@ -283,6 +309,11 @@ export abstract class CDKPipeline extends Component {
       seq.addSteps(new PnpmSetupStep(this.project, {
         version: (this.app.package as any).pnpmVersion,
       }));
+    }
+
+    // Detect and add corepack enable for Yarn Berry
+    if (this.app.package.packageManager === NodePackageManager.YARN_BERRY) {
+      seq.addSteps(new CorepackSetupStep(this.project));
     }
 
     if (this.baseOptions.preInstallCommands) {
