@@ -51,7 +51,7 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
       '# Install dependencies if not already installed',
       'if ! command -v ts-node &> /dev/null; then',
       '  echo "Installing dependencies..."',
-      '  npm ci',
+      `  ${this.project.projenCommand} install:ci`,
       'fi',
       '',
       '# Function to run drift detection for a stage',

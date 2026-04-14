@@ -20,11 +20,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -36,7 +37,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -50,16 +51,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -93,13 +95,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -138,7 +141,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-my-dev
           path: cdk-outputs-my-dev.json
@@ -224,11 +227,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
       - run: mv ./node_modules/@assembly/testapp cdk.out
@@ -266,7 +270,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -349,34 +353,34 @@ exports[`Github snapshot 4`] = `
     "access": "public",
   },
   "scripts": {
-    "build": "npx projen build",
-    "bump": "npx projen bump",
-    "bundle": "npx projen bundle",
-    "clobber": "npx projen clobber",
-    "compile": "npx projen compile",
-    "default": "npx projen default",
-    "deploy:my-dev": "npx projen deploy:my-dev",
-    "deploy:prod": "npx projen deploy:prod",
-    "diff:my-dev": "npx projen diff:my-dev",
-    "diff:prod": "npx projen diff:prod",
-    "eject": "npx projen eject",
-    "eslint": "npx projen eslint",
-    "fastdiff:my-dev": "npx projen fastdiff:my-dev",
-    "fastdiff:prod": "npx projen fastdiff:prod",
-    "package": "npx projen package",
-    "post-compile": "npx projen post-compile",
-    "post-upgrade": "npx projen post-upgrade",
-    "pre-compile": "npx projen pre-compile",
-    "projen": "npx projen",
-    "publish:assets": "npx projen publish:assets",
-    "publish:assets:my-dev": "npx projen publish:assets:my-dev",
-    "publish:assets:prod": "npx projen publish:assets:prod",
-    "release:push-assembly": "npx projen release:push-assembly",
-    "synth": "npx projen synth",
-    "synth:silent": "npx projen synth:silent",
-    "test": "npx projen test",
-    "test:watch": "npx projen test:watch",
-    "upgrade": "npx projen upgrade",
+    "build": "projen build",
+    "bump": "projen bump",
+    "bundle": "projen bundle",
+    "clobber": "projen clobber",
+    "compile": "projen compile",
+    "default": "projen default",
+    "deploy:my-dev": "projen deploy:my-dev",
+    "deploy:prod": "projen deploy:prod",
+    "diff:my-dev": "projen diff:my-dev",
+    "diff:prod": "projen diff:prod",
+    "eject": "projen eject",
+    "eslint": "projen eslint",
+    "fastdiff:my-dev": "projen fastdiff:my-dev",
+    "fastdiff:prod": "projen fastdiff:prod",
+    "package": "projen package",
+    "post-compile": "projen post-compile",
+    "post-upgrade": "projen post-upgrade",
+    "pre-compile": "projen pre-compile",
+    "projen": "projen",
+    "publish:assets": "projen publish:assets",
+    "publish:assets:my-dev": "projen publish:assets:my-dev",
+    "publish:assets:prod": "projen publish:assets:prod",
+    "release:push-assembly": "projen release:push-assembly",
+    "synth": "projen synth",
+    "synth:silent": "projen synth:silent",
+    "test": "projen test",
+    "test:watch": "projen test:watch",
+    "upgrade": "projen upgrade",
   },
   "version": "0.0.0",
 }
@@ -684,7 +688,7 @@ exports[`Github snapshot 5`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
@@ -724,11 +728,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: 22.0.0
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -740,7 +745,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -754,16 +759,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: 22.0.0
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -798,11 +804,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -814,7 +821,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -828,16 +835,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -872,11 +880,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -888,7 +897,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -902,16 +911,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -937,13 +947,14 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -982,7 +993,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent2
           path: cdk-outputs-independent2.json
@@ -1010,11 +1021,12 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -1065,7 +1077,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent1
           path: cdk-outputs-independent1.json
@@ -1149,11 +1161,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -1165,7 +1178,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1179,16 +1192,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1213,13 +1227,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1258,7 +1273,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-stage1
           path: cdk-outputs-stage1.json
@@ -1278,13 +1293,14 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1324,7 +1340,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-stage2
           path: cdk-outputs-stage2.json
@@ -1410,11 +1426,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -1426,7 +1443,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1440,16 +1457,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1477,13 +1495,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1522,7 +1541,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-my-dev
           path: cdk-outputs-my-dev.json
@@ -1540,13 +1559,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -1585,7 +1605,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent
           path: cdk-outputs-independent.json
@@ -1617,11 +1637,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
       - run: mv ./node_modules/@assembly/testapp cdk.out
@@ -1659,7 +1680,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -1686,11 +1707,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -1702,7 +1724,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: backend-cloud-assembly
           path: cdk.out/
@@ -1716,16 +1738,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: backend-cloud-assembly
           path: cdk.out/
@@ -1752,13 +1775,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: backend-cloud-assembly
           path: cdk.out/
@@ -1797,7 +1821,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -1832,11 +1856,12 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -1878,7 +1903,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-feature
           path: backend-cdk-outputs-feature.json
@@ -1911,11 +1936,12 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -1957,11 +1983,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
       - run: mv ./node_modules/@assembly/testapp cdk.out
@@ -1999,7 +2026,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -2026,11 +2053,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -2078,7 +2106,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-sandbox
           path: cdk-outputs-sandbox.json
@@ -2113,11 +2141,12 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -2160,7 +2189,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-feature
           path: cdk-outputs-feature.json
@@ -2193,11 +2222,12 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -2487,7 +2517,7 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
@@ -2535,11 +2565,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -2551,7 +2582,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2565,16 +2596,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2600,13 +2632,14 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2645,7 +2678,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent2
           path: cdk-outputs-independent2.json
@@ -2673,11 +2706,12 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -2728,7 +2762,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent1
           path: cdk-outputs-independent1.json
@@ -2755,11 +2789,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -2780,7 +2815,7 @@ jobs:
           role-skip-session-tagging: true
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2794,16 +2829,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2837,13 +2873,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2891,7 +2928,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -2910,13 +2947,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -2964,7 +3002,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -3283,36 +3321,36 @@ exports[`Github snapshot with jump roles 3`] = `
     "access": "public",
   },
   "scripts": {
-    "build": "npx projen build",
-    "bundle": "npx projen bundle",
-    "clobber": "npx projen clobber",
-    "compile": "npx projen compile",
-    "default": "npx projen default",
-    "deploy:dev": "npx projen deploy:dev",
-    "deploy:prod": "npx projen deploy:prod",
-    "diff:dev": "npx projen diff:dev",
-    "diff:prod": "npx projen diff:prod",
-    "eject": "npx projen eject",
-    "eslint": "npx projen eslint",
-    "fastdiff:dev": "npx projen fastdiff:dev",
-    "fastdiff:prod": "npx projen fastdiff:prod",
-    "package": "npx projen package",
-    "post-compile": "npx projen post-compile",
-    "post-upgrade": "npx projen post-upgrade",
-    "pre-compile": "npx projen pre-compile",
-    "projen": "npx projen",
-    "publish:assets": "npx projen publish:assets",
-    "publish:assets:dev": "npx projen publish:assets:dev",
-    "publish:assets:prod": "npx projen publish:assets:prod",
-    "synth": "npx projen synth",
-    "synth:silent": "npx projen synth:silent",
-    "test": "npx projen test",
-    "test:watch": "npx projen test:watch",
-    "upgrade": "npx projen upgrade",
-    "version:compute": "npx projen version:compute",
-    "version:fetch:dev": "npx projen version:fetch:dev",
-    "version:fetch:prod": "npx projen version:fetch:prod",
-    "version:print": "npx projen version:print",
+    "build": "projen build",
+    "bundle": "projen bundle",
+    "clobber": "projen clobber",
+    "compile": "projen compile",
+    "default": "projen default",
+    "deploy:dev": "projen deploy:dev",
+    "deploy:prod": "projen deploy:prod",
+    "diff:dev": "projen diff:dev",
+    "diff:prod": "projen diff:prod",
+    "eject": "projen eject",
+    "eslint": "projen eslint",
+    "fastdiff:dev": "projen fastdiff:dev",
+    "fastdiff:prod": "projen fastdiff:prod",
+    "package": "projen package",
+    "post-compile": "projen post-compile",
+    "post-upgrade": "projen post-upgrade",
+    "pre-compile": "projen pre-compile",
+    "projen": "projen",
+    "publish:assets": "projen publish:assets",
+    "publish:assets:dev": "projen publish:assets:dev",
+    "publish:assets:prod": "projen publish:assets:prod",
+    "synth": "projen synth",
+    "synth:silent": "projen synth:silent",
+    "test": "projen test",
+    "test:watch": "projen test:watch",
+    "upgrade": "projen upgrade",
+    "version:compute": "projen version:compute",
+    "version:fetch:dev": "projen version:fetch:dev",
+    "version:fetch:prod": "projen version:fetch:prod",
+    "version:print": "projen version:print",
   },
   "version": "0.0.0",
 }
@@ -3600,7 +3638,7 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
@@ -3779,11 +3817,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
@@ -3796,7 +3835,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -3811,16 +3850,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -3863,11 +3903,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: npx projen install:ci
       - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
@@ -3905,7 +3946,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -3932,11 +3973,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -3948,7 +3990,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -3962,16 +4004,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -3996,13 +4039,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4041,7 +4085,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -4287,7 +4331,7 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
@@ -4330,11 +4374,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -4346,7 +4391,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4360,16 +4405,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4394,13 +4440,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4439,7 +4486,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -4467,17 +4514,18 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4491,16 +4539,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4525,13 +4574,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4570,7 +4620,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -4607,11 +4657,12 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - run: npx projen build
       - name: AWS Credentials
@@ -4648,7 +4699,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-feature
           path: cdk-outputs-feature.json
@@ -4683,11 +4734,12 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - run: npx projen install:ci
       - run: npx projen build
       - name: AWS Credentials
@@ -4701,7 +4753,7 @@ jobs:
 `;
 
 exports[`Github snapshot with pnpm package manager 1`] = `
-"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "pnpm exec projen".
 
 name: deploy
 on:
@@ -4720,27 +4772,28 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: "9"
-      - run: npx projen install:ci
+      - run: pnpm exec projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
+      - run: pnpm exec projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4754,16 +4807,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4771,14 +4825,14 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: "9"
-      - run: npx projen install:ci
+      - run: pnpm exec projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - run: pnpm exec projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -4792,13 +4846,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4806,14 +4861,14 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: "9"
-      - run: npx projen install:ci
+      - run: pnpm exec projen install:ci
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - run: pnpm exec projen deploy:dev
       - name: Add CDK outputs to summary - dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
@@ -4841,7 +4896,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -4871,11 +4926,12 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: echo Login
@@ -4888,7 +4944,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4903,16 +4959,17 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4939,13 +4996,14 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -4984,7 +5042,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -5011,11 +5069,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -5027,7 +5086,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -5042,16 +5101,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -5074,16 +5134,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -5108,13 +5169,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -5153,7 +5215,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -5172,13 +5234,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -5217,7 +5280,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -5536,36 +5599,36 @@ exports[`Github snapshot with separate asset upload jobs 3`] = `
     "access": "public",
   },
   "scripts": {
-    "build": "npx projen build",
-    "bundle": "npx projen bundle",
-    "clobber": "npx projen clobber",
-    "compile": "npx projen compile",
-    "default": "npx projen default",
-    "deploy:dev": "npx projen deploy:dev",
-    "deploy:prod": "npx projen deploy:prod",
-    "diff:dev": "npx projen diff:dev",
-    "diff:prod": "npx projen diff:prod",
-    "eject": "npx projen eject",
-    "eslint": "npx projen eslint",
-    "fastdiff:dev": "npx projen fastdiff:dev",
-    "fastdiff:prod": "npx projen fastdiff:prod",
-    "package": "npx projen package",
-    "post-compile": "npx projen post-compile",
-    "post-upgrade": "npx projen post-upgrade",
-    "pre-compile": "npx projen pre-compile",
-    "projen": "npx projen",
-    "publish:assets": "npx projen publish:assets",
-    "publish:assets:dev": "npx projen publish:assets:dev",
-    "publish:assets:prod": "npx projen publish:assets:prod",
-    "synth": "npx projen synth",
-    "synth:silent": "npx projen synth:silent",
-    "test": "npx projen test",
-    "test:watch": "npx projen test:watch",
-    "upgrade": "npx projen upgrade",
-    "version:compute": "npx projen version:compute",
-    "version:fetch:dev": "npx projen version:fetch:dev",
-    "version:fetch:prod": "npx projen version:fetch:prod",
-    "version:print": "npx projen version:print",
+    "build": "projen build",
+    "bundle": "projen bundle",
+    "clobber": "projen clobber",
+    "compile": "projen compile",
+    "default": "projen default",
+    "deploy:dev": "projen deploy:dev",
+    "deploy:prod": "projen deploy:prod",
+    "diff:dev": "projen diff:dev",
+    "diff:prod": "projen diff:prod",
+    "eject": "projen eject",
+    "eslint": "projen eslint",
+    "fastdiff:dev": "projen fastdiff:dev",
+    "fastdiff:prod": "projen fastdiff:prod",
+    "package": "projen package",
+    "post-compile": "projen post-compile",
+    "post-upgrade": "projen post-upgrade",
+    "pre-compile": "projen pre-compile",
+    "projen": "projen",
+    "publish:assets": "projen publish:assets",
+    "publish:assets:dev": "projen publish:assets:dev",
+    "publish:assets:prod": "projen publish:assets:prod",
+    "synth": "projen synth",
+    "synth:silent": "projen synth:silent",
+    "test": "projen test",
+    "test:watch": "projen test:watch",
+    "upgrade": "projen upgrade",
+    "version:compute": "projen version:compute",
+    "version:fetch:dev": "projen version:fetch:dev",
+    "version:fetch:prod": "projen version:fetch:prod",
+    "version:print": "projen version:print",
   },
   "version": "0.0.0",
 }
@@ -5853,7 +5916,7 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
@@ -6022,11 +6085,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: npx projen install:ci
@@ -6038,7 +6102,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -6052,16 +6116,17 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -6086,13 +6151,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -6131,7 +6197,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
           path: cdk-outputs-dev.json
@@ -6150,13 +6216,14 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
+          package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
@@ -6195,7 +6262,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
           path: cdk-outputs-prod.json
@@ -6514,36 +6581,36 @@ exports[`Github snapshot with versioning enabled 3`] = `
     "access": "public",
   },
   "scripts": {
-    "build": "npx projen build",
-    "bundle": "npx projen bundle",
-    "clobber": "npx projen clobber",
-    "compile": "npx projen compile",
-    "default": "npx projen default",
-    "deploy:dev": "npx projen deploy:dev",
-    "deploy:prod": "npx projen deploy:prod",
-    "diff:dev": "npx projen diff:dev",
-    "diff:prod": "npx projen diff:prod",
-    "eject": "npx projen eject",
-    "eslint": "npx projen eslint",
-    "fastdiff:dev": "npx projen fastdiff:dev",
-    "fastdiff:prod": "npx projen fastdiff:prod",
-    "package": "npx projen package",
-    "post-compile": "npx projen post-compile",
-    "post-upgrade": "npx projen post-upgrade",
-    "pre-compile": "npx projen pre-compile",
-    "projen": "npx projen",
-    "publish:assets": "npx projen publish:assets",
-    "publish:assets:dev": "npx projen publish:assets:dev",
-    "publish:assets:prod": "npx projen publish:assets:prod",
-    "synth": "npx projen synth",
-    "synth:silent": "npx projen synth:silent",
-    "test": "npx projen test",
-    "test:watch": "npx projen test:watch",
-    "upgrade": "npx projen upgrade",
-    "version:compute": "npx projen version:compute",
-    "version:fetch:dev": "npx projen version:fetch:dev",
-    "version:fetch:prod": "npx projen version:fetch:prod",
-    "version:print": "npx projen version:print",
+    "build": "projen build",
+    "bundle": "projen bundle",
+    "clobber": "projen clobber",
+    "compile": "projen compile",
+    "default": "projen default",
+    "deploy:dev": "projen deploy:dev",
+    "deploy:prod": "projen deploy:prod",
+    "diff:dev": "projen diff:dev",
+    "diff:prod": "projen diff:prod",
+    "eject": "projen eject",
+    "eslint": "projen eslint",
+    "fastdiff:dev": "projen fastdiff:dev",
+    "fastdiff:prod": "projen fastdiff:prod",
+    "package": "projen package",
+    "post-compile": "projen post-compile",
+    "post-upgrade": "projen post-upgrade",
+    "pre-compile": "projen pre-compile",
+    "projen": "projen",
+    "publish:assets": "projen publish:assets",
+    "publish:assets:dev": "projen publish:assets:dev",
+    "publish:assets:prod": "projen publish:assets:prod",
+    "synth": "projen synth",
+    "synth:silent": "projen synth:silent",
+    "test": "projen test",
+    "test:watch": "projen test:watch",
+    "upgrade": "projen upgrade",
+    "version:compute": "projen version:compute",
+    "version:fetch:dev": "projen version:fetch:dev",
+    "version:fetch:prod": "projen version:fetch:prod",
+    "version:print": "projen version:print",
   },
   "version": "0.0.0",
 }
@@ -6831,7 +6898,7 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
