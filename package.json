@@ -57,14 +57,14 @@
     "jsii-docgen": "^10.5.0",
     "jsii-pacmak": "^1.128.0",
     "jsii-rosetta": "~5.9",
-    "projen": "0.99.47",
+    "projen": "0.99.49",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "constructs": "^10.5.1",
-    "projen": ">=0.99.47 <1.0.0"
+    "projen": ">=0.99.49 <1.0.0"
   },
   "dependencies": {
     "commit-and-tag-version": "^12.7.1"
