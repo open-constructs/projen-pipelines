@@ -19,6 +19,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -36,6 +37,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -727,6 +734,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -744,6 +752,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -803,6 +817,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -820,6 +835,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -879,6 +900,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -896,6 +918,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -1160,6 +1188,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1177,6 +1206,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -1425,6 +1460,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1442,6 +1478,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -2564,6 +2606,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -2581,6 +2624,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -2788,6 +2837,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -2814,6 +2864,12 @@ jobs:
           role-chaining: true
           role-skip-session-tagging: true
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -3816,6 +3872,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -3834,6 +3891,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -3972,6 +4035,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -3989,6 +4053,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -4373,6 +4443,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -4390,6 +4461,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -4925,6 +5002,7 @@ jobs:
     env:
       CI: "true"
       FOO: bar
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -4943,6 +5021,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -5068,6 +5152,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -5085,6 +5170,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -6084,6 +6175,7 @@ jobs:
       id-token: write
     env:
       CI: "true"
+      CLOUD_ASSEMBLY_DIR: cdk.out
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6101,6 +6193,12 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --output-file resource-count-results.json --github-summary
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: resource-count-results
+          path: resource-count-results.json
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
