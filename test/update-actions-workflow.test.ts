@@ -27,12 +27,12 @@ describe('UpdateActionsWorkflow', () => {
     expect(snapshot['.github/workflows/update-actions.yml']).toMatchSnapshot();
   });
 
-  test('default paths target projen-managed files only', () => {
+  test('default paths target projen-managed files (TS + JS) only', () => {
     const app = newApp();
     new UpdateActionsWorkflow(app);
 
     const yaml = synthSnapshot(app)['.github/workflows/update-actions.yml'];
-    expect(yaml).toContain('npx update-github-actions .projen .projenrc.ts');
+    expect(yaml).toContain('npx update-github-actions .projen .projenrc.ts .projenrc.js');
     expect(yaml).not.toMatch(/npx update-github-actions .*\bsrc\b/);
   });
 
@@ -53,7 +53,9 @@ describe('UpdateActionsWorkflow', () => {
     });
 
     const yaml = synthSnapshot(app)['.github/workflows/update-actions.yml'];
-    expect(yaml).toContain('npx tsx src/security/update-github-actions.ts .projen .projenrc.ts');
+    expect(yaml).toContain(
+      'npx tsx src/security/update-github-actions.ts .projen .projenrc.ts .projenrc.js',
+    );
     expect(yaml).not.toContain('npx update-github-actions');
   });
 

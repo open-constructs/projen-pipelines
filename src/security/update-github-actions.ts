@@ -7,7 +7,7 @@
 // Relies on the `gh` CLI for authenticated GitHub API access (GH_TOKEN env).
 
 import { execSync } from 'child_process';
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 /** @internal */
@@ -68,9 +68,11 @@ export const LITERAL_RE = /(uses:\s*')([A-Za-z0-9_.\-/]+)@([A-Za-z0-9_.\-]+)(')/
 /** @internal */
 export const STANDALONE_LINE_RE = /^(\s*uses:\s*'[A-Za-z0-9_.\-/]+@[A-Za-z0-9_.\-]+'\s*,?)(\s*\/\/[^\n]*)?$/gm;
 
+const SCANNABLE_EXTENSIONS = ['.ts', '.js', '.cjs', '.mjs', '.json', '.yml', '.yaml'];
+
 /** @internal */
 export function isScannable(p: string): boolean {
-  return p.endsWith('.ts') || p.endsWith('.json') || p.endsWith('.yml') || p.endsWith('.yaml');
+  return SCANNABLE_EXTENSIONS.some((ext) => p.endsWith(ext));
 }
 
 /** @internal */
@@ -89,6 +91,7 @@ export function walk(dir: string): string[] {
 export function collect(paths: string[]): string[] {
   const out: string[] = [];
   for (const p of paths) {
+    if (!existsSync(p)) continue;
     const s = statSync(p);
     if (s.isDirectory()) out.push(...walk(p));
     else if (isScannable(p)) out.push(p);

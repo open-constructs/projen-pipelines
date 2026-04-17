@@ -9,16 +9,18 @@ export interface UpdateActionsWorkflowOptions {
   /**
    * File or directory paths to scan for `uses: 'owner/repo@ref'` literals.
    *
-   * Directories are walked recursively for `.ts`, `.json`, `.yml`, and `.yaml`
-   * files; individual files are scanned directly.
+   * Directories are walked recursively for `.ts`, `.js`, `.cjs`, `.mjs`,
+   * `.json`, `.yml`, and `.yaml` files; individual files are scanned directly.
+   * Non-existent paths are silently skipped so the default can cover both
+   * TypeScript and JavaScript projen configurations.
    *
    * The default targets projen-managed files only, which is the right scope
-   * for downstream consumers: their action references live in `.projenrc.ts`
-   * and `.projen/` rather than in their application source. Projects that
-   * embed action strings in hand-authored source (such as `projen-pipelines`
+   * for downstream consumers: their action references live in the projen
+   * configuration rather than in application source. Projects that embed
+   * action strings in hand-authored source (such as `projen-pipelines`
    * itself) should extend this list with `'src'`.
    *
-   * @default ['.projen', '.projenrc.ts']
+   * @default ['.projen', '.projenrc.ts', '.projenrc.js']
    */
   readonly paths?: string[];
 
@@ -111,7 +113,7 @@ export class UpdateActionsWorkflow extends Component {
       throw new Error('UpdateActionsWorkflow requires a GitHubProject with github integration enabled.');
     }
 
-    const paths = options.paths ?? ['.projen', '.projenrc.ts'];
+    const paths = options.paths ?? ['.projen', '.projenrc.ts', '.projenrc.js'];
     const schedule = options.schedule ?? '0 6 * * 1';
     const runsOn = options.runnerTags ?? ['ubuntu-latest'];
     const labels = options.labels ?? ['auto-approve', 'dependencies', 'github-actions'];

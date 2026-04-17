@@ -23,8 +23,11 @@ function fixedResolver(table: Record<string, ResolvedAction | null>): Resolver {
 }
 
 describe('isScannable', () => {
-  test('accepts ts/json/yml/yaml', () => {
+  test('accepts ts/js/cjs/mjs/json/yml/yaml', () => {
     expect(isScannable('a.ts')).toBe(true);
+    expect(isScannable('a.js')).toBe(true);
+    expect(isScannable('a.cjs')).toBe(true);
+    expect(isScannable('a.mjs')).toBe(true);
     expect(isScannable('a.json')).toBe(true);
     expect(isScannable('a.yml')).toBe(true);
     expect(isScannable('a.yaml')).toBe(true);
@@ -32,7 +35,7 @@ describe('isScannable', () => {
 
   test('rejects other extensions', () => {
     expect(isScannable('a.md')).toBe(false);
-    expect(isScannable('a.js')).toBe(false);
+    expect(isScannable('a.py')).toBe(false);
     expect(isScannable('README')).toBe(false);
   });
 });
@@ -86,6 +89,27 @@ describe('walk / collect', () => {
     const readme = join(dir, 'README.md');
     writeFileSync(readme, '');
     expect(collect([readme])).toEqual([]);
+  });
+
+  test('collect silently skips non-existent paths', () => {
+    writeFileSync(join(dir, 'exists.ts'), '');
+    const result = collect([
+      join(dir, 'exists.ts'),
+      join(dir, 'does-not-exist.ts'),
+      join(dir, 'also-missing'),
+    ]);
+    expect(result).toEqual([join(dir, 'exists.ts')]);
+  });
+
+  test('walk picks up js/cjs/mjs files', () => {
+    writeFileSync(join(dir, 'a.js'), '');
+    writeFileSync(join(dir, 'b.cjs'), '');
+    writeFileSync(join(dir, 'c.mjs'), '');
+    expect(walk(dir).sort()).toEqual([
+      join(dir, 'a.js'),
+      join(dir, 'b.cjs'),
+      join(dir, 'c.mjs'),
+    ].sort());
   });
 });
 
