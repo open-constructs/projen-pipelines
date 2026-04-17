@@ -590,6 +590,36 @@ const deployStep = new AmplifyDeployStep(project, {
 });
 ```
 
+## Maintenance: keeping generated actions up to date
+
+`projen-pipelines` embeds GitHub Action references (e.g. `actions/checkout@v6`) as TypeScript
+string literals under `src/`. Because they aren't in real workflow YAML, Dependabot and Renovate
+cannot see them, and versions drift over time.
+
+To keep them current, this repository runs a scheduled `update-actions` workflow
+(`.github/workflows/update-actions.yml`, weekly on Monday 06:00 UTC; also `workflow_dispatch`):
+
+1. Scans `src/` for `uses: 'owner/repo@ref'` literals.
+2. For each unique action, queries the GitHub Releases API for the latest stable tag
+   (pre-releases are skipped unless `ALLOW_PRERELEASE=true`).
+3. Resolves the tag to a full commit SHA (following annotated tags to the underlying commit).
+4. Rewrites the literal in place, recording the tag as a trailing TypeScript comment so
+   maintainers can see the human-readable version next to the SHA.
+5. Runs `npx projen build` to regenerate workflow snapshots and example output.
+6. Opens (or updates) a single PR labelled `dependencies,github-actions` with the resolved
+   changes. A job-summary table lists every bumped action with its old ref, new SHA, and tag.
+
+The pinning script lives at `scripts/update-github-actions.mjs` and can be run locally
+(`GH_TOKEN=$(gh auth token) node scripts/update-github-actions.mjs`) for a dry-run.
+
+### Reviewing PRs produced by `update-actions`
+
+* Confirm each bumped action's release notes at `https://github.com/<owner>/<repo>/releases`.
+* Verify the job summary matches the diff — every change should be an SHA replacement plus
+  an updated `// v<tag>` comment.
+* Check that `npx projen build` output (snapshots, `API.md`) is a noise-only diff.
+* Merge as a single PR; the `auto-approve` label fast-tracks it through mergify.
+
 ## Current Status
 
 Projen-Pipelines is currently in version 0.x, awaiting Projen's 1.0 release. Despite its pre-1.0 status, it's being used in several production environments.
