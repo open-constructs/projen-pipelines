@@ -10,18 +10,29 @@ import { execSync } from 'child_process';
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-interface ResolvedAction {
+/** @internal */
+export interface ResolvedAction {
   readonly tag: string;
   readonly sha: string;
 }
 
-interface Change {
+/** @internal */
+export interface Change {
   readonly file: string;
   readonly repo: string;
   readonly from: string;
   readonly to: string;
   readonly tag: string;
 }
+
+/** @internal */
+export interface RewriteResult {
+  readonly updated: string;
+  readonly changes: Change[];
+}
+
+/** @internal */
+export type Resolver = (repo: string) => ResolvedAction | null;
 
 interface GitObject {
   readonly type: 'tag' | 'commit';
@@ -44,29 +55,26 @@ interface Tag {
   readonly name: string;
 }
 
-const PATHS = process.argv.slice(2);
-if (PATHS.length === 0) {
-  console.error('usage: update-github-actions <path> [<path> ...]');
-  process.exit(2);
-}
-const ALLOW_PRERELEASE = process.env.ALLOW_PRERELEASE === 'true';
-
 // Matches any `uses: 'owner/repo@ref'` literal, including inline forms like
 // `{ name: 'Checkout', uses: 'actions/checkout@v6' },`. Group 1 captures the
 // `uses:<ws>'` prefix, 2 the owner/repo(/sub), 3 the ref, 4 the closing quote.
-const LITERAL_RE = /(uses:\s*')([A-Za-z0-9_.\-/]+)@([A-Za-z0-9_.\-]+)(')/g;
+/** @internal */
+export const LITERAL_RE = /(uses:\s*')([A-Za-z0-9_.\-/]+)@([A-Za-z0-9_.\-]+)(')/g;
 
 // Matches a line whose only non-whitespace content is a `uses:` literal (plus
 // optional trailing comma and optional existing `// tag` comment). Group 1
 // captures everything up to and including the closing quote + comma; group 2
 // captures any existing trailing comment, which we replace.
-const STANDALONE_LINE_RE = /^(\s*uses:\s*'[A-Za-z0-9_.\-/]+@[A-Za-z0-9_.\-]+'\s*,?)(\s*\/\/[^\n]*)?$/gm;
+/** @internal */
+export const STANDALONE_LINE_RE = /^(\s*uses:\s*'[A-Za-z0-9_.\-/]+@[A-Za-z0-9_.\-]+'\s*,?)(\s*\/\/[^\n]*)?$/gm;
 
-function isScannable(p: string): boolean {
+/** @internal */
+export function isScannable(p: string): boolean {
   return p.endsWith('.ts') || p.endsWith('.json') || p.endsWith('.yml') || p.endsWith('.yaml');
 }
 
-function walk(dir: string): string[] {
+/** @internal */
+export function walk(dir: string): string[] {
   const out: string[] = [];
   for (const entry of readdirSync(dir)) {
     const p = join(dir, entry);
@@ -77,7 +85,8 @@ function walk(dir: string): string[] {
   return out;
 }
 
-function collect(paths: string[]): string[] {
+/** @internal */
+export function collect(paths: string[]): string[] {
   const out: string[] = [];
   for (const p of paths) {
     const s = statSync(p);
@@ -87,20 +96,62 @@ function collect(paths: string[]): string[] {
   return out;
 }
 
-function gh<T>(path: string): T {
-  const raw = execSync(`gh api ${path}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-  return JSON.parse(raw) as T;
-}
-
-function repoRoot(useRef: string): string {
+/** @internal */
+export function repoRoot(useRef: string): string {
   // Sub-path actions like `github/codeql-action/init` must be resolved against
   // the root repo. Take only the first two path segments.
   const [owner, repo] = useRef.split('/');
   return `${owner}/${repo}`;
 }
 
-function latestStableTag(repo: string): string {
-  if (ALLOW_PRERELEASE) {
+/**
+ * Rewrites a file's content, swapping each resolved ref with its SHA and
+ * adding/refreshing a trailing `// <tag>` comment on lines whose only
+ * non-whitespace content is a `uses:` literal. Inline occurrences are
+ * SHA-swapped only — their comment state is left untouched so surrounding
+ * properties stay intact.
+ * @internal
+ */
+export function rewriteContent(file: string, original: string, resolve: Resolver): RewriteResult {
+  const tagByRepo = new Map<string, string>();
+  const changes: Change[] = [];
+
+  let updated = original.replace(LITERAL_RE, (match, pre, repo, ref, quote) => {
+    const target = resolve(repo);
+    if (!target || ref === target.sha) return match;
+    changes.push({ file, repo, from: ref, to: target.sha, tag: target.tag });
+    tagByRepo.set(repo, target.tag);
+    return `${pre}${repo}@${target.sha}${quote}`;
+  });
+
+  updated = updated.replace(STANDALONE_LINE_RE, (line, head) => {
+    const m = /'([A-Za-z0-9_.\-/]+)@[A-Za-z0-9_.\-]+'/.exec(head);
+    if (!m) return line;
+    const resolved = resolve(m[1]);
+    const tag = tagByRepo.get(m[1]) ?? resolved?.tag;
+    if (!tag) return line;
+    return `${head.trimEnd()} // ${tag}`;
+  });
+
+  return { updated, changes };
+}
+
+/** @internal */
+export function renderSummary(changes: Change[]): string {
+  const lines = ['## Action updates', '', '| Action | From | To (SHA) | Tag |', '| --- | --- | --- | --- |'];
+  for (const c of changes) {
+    lines.push(`| \`${c.repo}\` | \`${c.from}\` | \`${c.to}\` | \`${c.tag}\` |`);
+  }
+  return lines.join('\n') + '\n';
+}
+
+function gh<T>(path: string): T {
+  const raw = execSync(`gh api ${path}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  return JSON.parse(raw) as T;
+}
+
+function latestStableTag(repo: string, allowPrerelease: boolean): string {
+  if (allowPrerelease) {
     const releases = gh<Release[]>(`/repos/${repo}/releases?per_page=10`);
     if (Array.isArray(releases) && releases.length > 0) return releases[0].tag_name;
   } else {
@@ -120,7 +171,6 @@ function latestStableTag(repo: string): string {
 function resolveSha(repo: string, tag: string): string {
   const ref = gh<GitRefResponse>(`/repos/${repo}/git/ref/tags/${encodeURIComponent(tag)}`);
   let object: GitObject = ref.object;
-  // Annotated tags point to a tag object; follow through to the commit.
   while (object.type === 'tag') {
     const t = gh<GitTagResponse>(`/repos/${repo}/git/tags/${object.sha}`);
     object = t.object;
@@ -129,65 +179,48 @@ function resolveSha(repo: string, tag: string): string {
   return object.sha;
 }
 
-const files = collect(PATHS);
-const seen = new Map<string, ResolvedAction | null>();
-const changes: Change[] = [];
-
-function resolve(repoPath: string): ResolvedAction | null {
-  const root = repoRoot(repoPath);
-  const cached = seen.get(root);
-  if (cached !== undefined) return cached;
-  try {
-    const tag = latestStableTag(root);
-    const sha = resolveSha(root, tag);
-    const resolved: ResolvedAction = { tag, sha };
-    seen.set(root, resolved);
-    console.error(`resolved ${root} ${tag} -> ${sha}`);
-    return resolved;
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error(`skip ${root}: ${message}`);
-    seen.set(root, null);
-    return null;
+function main(): void {
+  const paths = process.argv.slice(2);
+  if (paths.length === 0) {
+    console.error('usage: update-github-actions <path> [<path> ...]');
+    process.exit(2);
   }
-}
+  const allowPrerelease = process.env.ALLOW_PRERELEASE === 'true';
+  const cache = new Map<string, ResolvedAction | null>();
 
-for (const file of files) {
-  const original = readFileSync(file, 'utf8');
-  const tagByRepo = new Map<string, string>();
+  const resolve: Resolver = (repoPath: string): ResolvedAction | null => {
+    const root = repoRoot(repoPath);
+    const cached = cache.get(root);
+    if (cached !== undefined) return cached;
+    try {
+      const tag = latestStableTag(root, allowPrerelease);
+      const sha = resolveSha(root, tag);
+      const resolved: ResolvedAction = { tag, sha };
+      cache.set(root, resolved);
+      console.error(`resolved ${root} ${tag} -> ${sha}`);
+      return resolved;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`skip ${root}: ${message}`);
+      cache.set(root, null);
+      return null;
+    }
+  };
 
-  // Pass 1: replace the ref with the resolved SHA in every `uses:` literal,
-  // including inline occurrences that share their line with other properties.
-  let updated = original.replace(LITERAL_RE, (match, pre, repo, ref, quote) => {
-    const target = resolve(repo);
-    if (!target || ref === target.sha) return match;
-    changes.push({ file, repo, from: ref, to: target.sha, tag: target.tag });
-    tagByRepo.set(repo, target.tag);
-    return `${pre}${repo}@${target.sha}${quote}`;
-  });
-
-  // Pass 2: on lines whose only content is a single `uses:` literal, insert or
-  // refresh a trailing `// <tag>` comment so reviewers see the human-readable
-  // version alongside the SHA. Inline forms are skipped to avoid corrupting
-  // surrounding properties.
-  updated = updated.replace(STANDALONE_LINE_RE, (line, head) => {
-    const m = /'([A-Za-z0-9_.\-/]+)@[A-Za-z0-9_.\-]+'/.exec(head);
-    if (!m) return line;
-    const tag = tagByRepo.get(m[1]) ?? seen.get(repoRoot(m[1]))?.tag;
-    if (!tag) return line;
-    return `${head.trimEnd()} // ${tag}`;
-  });
-
-  if (updated !== original) writeFileSync(file, updated);
-}
-
-const summaryPath = process.env.GITHUB_STEP_SUMMARY;
-if (summaryPath && changes.length > 0) {
-  const lines = ['## Action updates', '', '| Action | From | To (SHA) | Tag |', '| --- | --- | --- | --- |'];
-  for (const c of changes) {
-    lines.push(`| \`${c.repo}\` | \`${c.from}\` | \`${c.to}\` | \`${c.tag}\` |`);
+  const allChanges: Change[] = [];
+  for (const file of collect(paths)) {
+    const original = readFileSync(file, 'utf8');
+    const { updated, changes } = rewriteContent(file, original, resolve);
+    allChanges.push(...changes);
+    if (updated !== original) writeFileSync(file, updated);
   }
-  writeFileSync(summaryPath, lines.join('\n') + '\n', { flag: 'a' });
+
+  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (summaryPath && allChanges.length > 0) {
+    writeFileSync(summaryPath, renderSummary(allChanges), { flag: 'a' });
+  }
+
+  console.log(JSON.stringify({ changes: allChanges, resolved: [...cache.entries()] }, null, 2));
 }
 
-console.log(JSON.stringify({ changes, resolved: [...seen.entries()] }, null, 2));
+if (require.main === module) main();
