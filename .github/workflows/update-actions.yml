@@ -25,7 +25,7 @@ jobs:
       - name: Pin actions to latest release SHAs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx tsx scripts/update-github-actions.ts src .projen .projenrc.ts
+        run: npx tsx src/security/update-github-actions.ts src .projen .projenrc.ts
       - name: Regenerate project
         run: npx projen build
       - name: Find mutations

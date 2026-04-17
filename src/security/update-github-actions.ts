@@ -1,13 +1,14 @@
-// Scans TypeScript source for `uses: 'owner/repo@ref'` literals, resolves each
-// action's latest stable release to a full commit SHA, and rewrites the
+#!/usr/bin/env node
+// Scans configured source paths for `uses: 'owner/repo@ref'` literals, resolves
+// each action to the latest stable release's commit SHA, and rewrites the
 // literals in place. The resolved tag is recorded as a trailing TypeScript
 // comment so reviewers can see the human-readable version alongside the SHA.
 //
 // Relies on the `gh` CLI for authenticated GitHub API access (GH_TOKEN env).
 
-import { execSync } from 'node:child_process';
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { execSync } from 'child_process';
+import { readdirSync, readFileSync, statSync, writeFileSync } from 'fs';
+import { join } from 'path';
 
 interface ResolvedAction {
   readonly tag: string;
