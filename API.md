@@ -2352,6 +2352,205 @@ public readonly schedule: string;
 ---
 
 
+### UpdateActionsWorkflow <a name="UpdateActionsWorkflow" id="projen-pipelines.UpdateActionsWorkflow"></a>
+
+Adds an `update-actions` workflow that pins GitHub Action references to the latest stable release commit SHAs and opens a PR with the result.
+
+The workflow scans source files (TypeScript, JSON, YAML) for
+`uses: 'owner/repo@ref'` literals, resolves each action's latest release to
+a full commit SHA via the GitHub API, rewrites the literals in place, runs
+`npx projen build` to regenerate outputs, and opens a single PR with the
+results and a per-action summary.
+
+```ts
+import { UpdateActionsWorkflow } from 'projen-pipelines';
+
+new UpdateActionsWorkflow(project);
+```
+
+#### Initializers <a name="Initializers" id="projen-pipelines.UpdateActionsWorkflow.Initializer"></a>
+
+```typescript
+import { UpdateActionsWorkflow } from 'projen-pipelines'
+
+new UpdateActionsWorkflow(scope: GitHubProject, options?: UpdateActionsWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.Initializer.parameter.scope">scope</a></code> | <code>projen.github.GitHubProject</code> | *No description.* |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions">UpdateActionsWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="projen-pipelines.UpdateActionsWorkflow.Initializer.parameter.scope"></a>
+
+- *Type:* projen.github.GitHubProject
+
+---
+
+##### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.UpdateActionsWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.UpdateActionsWorkflowOptions">UpdateActionsWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.UpdateActionsWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.UpdateActionsWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.UpdateActionsWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.UpdateActionsWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.UpdateActionsWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.UpdateActionsWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.UpdateActionsWorkflow.isConstruct"></a>
+
+```typescript
+import { UpdateActionsWorkflow } from 'projen-pipelines'
+
+UpdateActionsWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.UpdateActionsWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.UpdateActionsWorkflow.isComponent"></a>
+
+```typescript
+import { UpdateActionsWorkflow } from 'projen-pipelines'
+
+UpdateActionsWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.UpdateActionsWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.UpdateActionsWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.UpdateActionsWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+
 ## Structs <a name="Structs" id="Structs"></a>
 
 ### AmplifyDeployStepConfig <a name="AmplifyDeployStepConfig" id="projen-pipelines.AmplifyDeployStepConfig"></a>
@@ -6375,6 +6574,162 @@ public readonly parameterName: string;
 ```
 
 - *Type:* string
+
+---
+
+### UpdateActionsWorkflowOptions <a name="UpdateActionsWorkflowOptions" id="projen-pipelines.UpdateActionsWorkflowOptions"></a>
+
+Options for the {@link UpdateActionsWorkflow} maintenance workflow.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.UpdateActionsWorkflowOptions.Initializer"></a>
+
+```typescript
+import { UpdateActionsWorkflowOptions } from 'projen-pipelines'
+
+const updateActionsWorkflowOptions: UpdateActionsWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions.property.allowPrerelease">allowPrerelease</a></code> | <code>boolean</code> | Include pre-releases when resolving the latest stable tag. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions.property.branch">branch</a></code> | <code>string</code> | Branch name used for the pull request. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions.property.command">command</a></code> | <code>string</code> | Shell command that invokes the pinning script. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions.property.labels">labels</a></code> | <code>string[]</code> | Labels applied to the pull request created by the workflow. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions.property.paths">paths</a></code> | <code>string[]</code> | File or directory paths to scan for `uses: 'owner/repo@ref'` literals. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | Runner tags for both jobs in the workflow. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron expression for the scheduled run. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions.property.tokenAppIdSecret">tokenAppIdSecret</a></code> | <code>string</code> | Name of the GitHub secret holding the GitHub App ID used to create the PR. |
+| <code><a href="#projen-pipelines.UpdateActionsWorkflowOptions.property.tokenAppPrivateKeySecret">tokenAppPrivateKeySecret</a></code> | <code>string</code> | Name of the GitHub secret holding the GitHub App private key. |
+
+---
+
+##### `allowPrerelease`<sup>Optional</sup> <a name="allowPrerelease" id="projen-pipelines.UpdateActionsWorkflowOptions.property.allowPrerelease"></a>
+
+```typescript
+public readonly allowPrerelease: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Include pre-releases when resolving the latest stable tag.
+
+---
+
+##### `branch`<sup>Optional</sup> <a name="branch" id="projen-pipelines.UpdateActionsWorkflowOptions.property.branch"></a>
+
+```typescript
+public readonly branch: string;
+```
+
+- *Type:* string
+- *Default:* 'github-actions/update-actions'
+
+Branch name used for the pull request.
+
+---
+
+##### `command`<sup>Optional</sup> <a name="command" id="projen-pipelines.UpdateActionsWorkflowOptions.property.command"></a>
+
+```typescript
+public readonly command: string;
+```
+
+- *Type:* string
+- *Default:* 'npx update-github-actions'
+
+Shell command that invokes the pinning script.
+
+For projects that install `projen-pipelines` as a dependency, the default
+`npx update-github-actions` resolves the bin exposed by the package. When
+this library maintains itself, the source location is used instead.
+
+---
+
+##### `labels`<sup>Optional</sup> <a name="labels" id="projen-pipelines.UpdateActionsWorkflowOptions.property.labels"></a>
+
+```typescript
+public readonly labels: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['auto-approve', 'dependencies', 'github-actions']
+
+Labels applied to the pull request created by the workflow.
+
+---
+
+##### `paths`<sup>Optional</sup> <a name="paths" id="projen-pipelines.UpdateActionsWorkflowOptions.property.paths"></a>
+
+```typescript
+public readonly paths: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['src', '.projen', '.projenrc.ts']
+
+File or directory paths to scan for `uses: 'owner/repo@ref'` literals.
+
+Directories are walked recursively for `.ts`, `.json`, `.yml`, and `.yaml`
+files; individual files are scanned directly.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.UpdateActionsWorkflowOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['ubuntu-latest']
+
+Runner tags for both jobs in the workflow.
+
+---
+
+##### `schedule`<sup>Optional</sup> <a name="schedule" id="projen-pipelines.UpdateActionsWorkflowOptions.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+- *Default:* '0 6 * * 1' (weekly on Monday at 06:00 UTC)
+
+Cron expression for the scheduled run.
+
+---
+
+##### `tokenAppIdSecret`<sup>Optional</sup> <a name="tokenAppIdSecret" id="projen-pipelines.UpdateActionsWorkflowOptions.property.tokenAppIdSecret"></a>
+
+```typescript
+public readonly tokenAppIdSecret: string;
+```
+
+- *Type:* string
+- *Default:* 'PROJEN_APP_ID'
+
+Name of the GitHub secret holding the GitHub App ID used to create the PR.
+
+The app token is preferred over the default `GITHUB_TOKEN` so that CI runs
+on the created PR. Set to an empty string to skip the app-token step and
+fall back to the workflow's default token.
+
+---
+
+##### `tokenAppPrivateKeySecret`<sup>Optional</sup> <a name="tokenAppPrivateKeySecret" id="projen-pipelines.UpdateActionsWorkflowOptions.property.tokenAppPrivateKeySecret"></a>
+
+```typescript
+public readonly tokenAppPrivateKeySecret: string;
+```
+
+- *Type:* string
+- *Default:* 'PROJEN_APP_PRIVATE_KEY'
+
+Name of the GitHub secret holding the GitHub App private key.
 
 ---
 

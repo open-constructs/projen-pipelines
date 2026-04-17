@@ -77,7 +77,7 @@ jobs:
           title: "chore(deps): update pinned GitHub Actions"
           labels: auto-approve,dependencies,github-actions
           body: |-
-            Pins action references in `src/` to the latest stable release commit SHAs.
+            Pins action references to the latest stable release commit SHAs.
 
             See the job summary of the [workflow run] for a per-action diff.
 

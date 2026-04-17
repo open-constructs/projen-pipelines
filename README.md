@@ -609,9 +609,27 @@ To keep them current, this repository runs a scheduled `update-actions` workflow
 6. Opens (or updates) a single PR labelled `dependencies,github-actions` with the resolved
    changes. A job-summary table lists every bumped action with its old ref, new SHA, and tag.
 
-The pinning script lives at `src/security/update-github-actions.ts` and can be run locally
-(`GH_TOKEN=$(gh auth token) npx tsx src/security/update-github-actions.ts src .projen .projenrc.ts`)
-for a dry-run. Any number of file or directory paths may be passed as arguments.
+The pinning script is exposed as the `update-github-actions` bin of this package, so a local
+dry-run is `GH_TOKEN=$(gh auth token) npx update-github-actions src .projen .projenrc.ts`. Any
+number of file or directory paths may be passed as arguments. The script source lives at
+`src/security/update-github-actions.ts`.
+
+### Opting in from a downstream project
+
+Downstream projects that depend on `projen-pipelines` can enable the same maintenance workflow
+for themselves by adding the `UpdateActionsWorkflow` component to their `.projenrc.ts`:
+
+```ts
+import { UpdateActionsWorkflow } from 'projen-pipelines';
+
+new UpdateActionsWorkflow(project);
+```
+
+Options cover the cron schedule, the paths to scan, the PR branch and labels, and the names of
+the GitHub App secrets used to open the pull request. Without overrides the workflow scans
+`src`, `.projen`, and `.projenrc.ts` on a weekly schedule and opens a PR via the
+`PROJEN_APP_ID` / `PROJEN_APP_PRIVATE_KEY` app token. Pass `tokenAppIdSecret: ''` to fall back
+to the default `GITHUB_TOKEN`.
 
 ### Reviewing PRs produced by `update-actions`
 
