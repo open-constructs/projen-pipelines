@@ -609,8 +609,9 @@ To keep them current, this repository runs a scheduled `update-actions` workflow
 6. Opens (or updates) a single PR labelled `dependencies,github-actions` with the resolved
    changes. A job-summary table lists every bumped action with its old ref, new SHA, and tag.
 
-The pinning script lives at `scripts/update-github-actions.mjs` and can be run locally
-(`GH_TOKEN=$(gh auth token) node scripts/update-github-actions.mjs`) for a dry-run.
+The pinning script lives at `scripts/update-github-actions.ts` and can be run locally
+(`GH_TOKEN=$(gh auth token) npx ts-node --project tsconfig.dev.json scripts/update-github-actions.ts`)
+for a dry-run.
 
 ### Reviewing PRs produced by `update-actions`
 

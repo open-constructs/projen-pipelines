@@ -64,6 +64,12 @@ const project = new cdk.JsiiProject({
 
 project.deps.removeDependency('commit-and-tag-version', DependencyType.BUILD);
 
+// Include the update-github-actions maintenance script in the dev tsconfig and
+// the eslint scope so it participates in lint/type-checking alongside the rest
+// of the codebase.
+project.tsconfigDev.addInclude('scripts/**/*.ts');
+project.eslint?.addLintPattern('scripts');
+
 project.addTask('local-push', { exec: 'npx yalc push' }).prependSpawn(project.buildTask);
 
 project.gitpod?.addCustomTask({
@@ -163,7 +169,7 @@ updateActionsWf?.addJobs({
       {
         name: 'Pin actions to latest release SHAs',
         env: { GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
-        run: 'node scripts/update-github-actions.mjs',
+        run: 'npx ts-node --project tsconfig.dev.json scripts/update-github-actions.ts',
       },
       { name: 'Regenerate project', run: 'npx projen build' },
       {

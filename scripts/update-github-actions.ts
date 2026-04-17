@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // Scans TypeScript source for `uses: 'owner/repo@ref'` literals, resolves each
 // action's latest stable release to a full commit SHA, and rewrites the
 // literals in place. The resolved tag is recorded as a trailing TypeScript
@@ -10,6 +9,40 @@ import { execSync } from 'node:child_process';
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+interface ResolvedAction {
+  readonly tag: string;
+  readonly sha: string;
+}
+
+interface Change {
+  readonly file: string;
+  readonly repo: string;
+  readonly from: string;
+  readonly to: string;
+  readonly tag: string;
+}
+
+interface GitObject {
+  readonly type: 'tag' | 'commit';
+  readonly sha: string;
+}
+
+interface GitRefResponse {
+  readonly object: GitObject;
+}
+
+interface GitTagResponse {
+  readonly object: GitObject;
+}
+
+interface Release {
+  readonly tag_name: string;
+}
+
+interface Tag {
+  readonly name: string;
+}
+
 const ROOT = process.argv[2] ?? 'src';
 const ALLOW_PRERELEASE = process.env.ALLOW_PRERELEASE === 'true';
 
@@ -20,8 +53,8 @@ const ALLOW_PRERELEASE = process.env.ALLOW_PRERELEASE === 'true';
 // Group 4: closing `'` + optional comma, Group 5: trailing characters.
 const LINE_RE = /^(\s*uses:\s*')([A-Za-z0-9_.\-/]+)@([A-Za-z0-9_.\-]+)('\s*,?)([^\n]*)$/gm;
 
-function walk(dir) {
-  const out = [];
+function walk(dir: string): string[] {
+  const out: string[] = [];
   for (const entry of readdirSync(dir)) {
     const p = join(dir, entry);
     const s = statSync(p);
@@ -31,58 +64,58 @@ function walk(dir) {
   return out;
 }
 
-function gh(path) {
+function gh<T>(path: string): T {
   const raw = execSync(`gh api ${path}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-  return JSON.parse(raw);
+  return JSON.parse(raw) as T;
 }
 
-function repoRoot(useRef) {
+function repoRoot(useRef: string): string {
   // Sub-path actions like `github/codeql-action/init` must be resolved against
   // the root repo. Take only the first two path segments.
   const [owner, repo] = useRef.split('/');
   return `${owner}/${repo}`;
 }
 
-function latestStableTag(repo) {
+function latestStableTag(repo: string): string {
   if (ALLOW_PRERELEASE) {
-    const releases = gh(`/repos/${repo}/releases?per_page=10`);
-    if (Array.isArray(releases) && releases.length) return releases[0].tag_name;
+    const releases = gh<Release[]>(`/repos/${repo}/releases?per_page=10`);
+    if (Array.isArray(releases) && releases.length > 0) return releases[0].tag_name;
   } else {
     try {
-      return gh(`/repos/${repo}/releases/latest`).tag_name;
+      return gh<Release>(`/repos/${repo}/releases/latest`).tag_name;
     } catch {
       // Repo may not publish GitHub Releases; fall through to tags.
     }
   }
-  const tags = gh(`/repos/${repo}/tags?per_page=1`);
+  const tags = gh<Tag[]>(`/repos/${repo}/tags?per_page=1`);
   if (!Array.isArray(tags) || tags.length === 0) {
     throw new Error(`No releases or tags found for ${repo}`);
   }
   return tags[0].name;
 }
 
-function resolveSha(repo, tag) {
-  const ref = gh(`/repos/${repo}/git/ref/tags/${encodeURIComponent(tag)}`);
-  let object = ref.object;
+function resolveSha(repo: string, tag: string): string {
+  const ref = gh<GitRefResponse>(`/repos/${repo}/git/ref/tags/${encodeURIComponent(tag)}`);
+  let object: GitObject = ref.object;
   // Annotated tags point to a tag object; follow through to the commit.
-  while (object && object.type === 'tag') {
-    const t = gh(`/repos/${repo}/git/tags/${object.sha}`);
+  while (object.type === 'tag') {
+    const t = gh<GitTagResponse>(`/repos/${repo}/git/tags/${object.sha}`);
     object = t.object;
   }
-  if (!object || !object.sha) throw new Error(`Unable to resolve SHA for ${repo}@${tag}`);
+  if (!object.sha) throw new Error(`Unable to resolve SHA for ${repo}@${tag}`);
   return object.sha;
 }
 
 const files = walk(ROOT);
-const seen = new Map(); // repoRoot -> { tag, sha }
-const changes = []; // { file, repo, from, to, tag }
+const seen = new Map<string, ResolvedAction | null>();
+const changes: Change[] = [];
 
 for (const file of files) {
   const original = readFileSync(file, 'utf8');
   const updated = original.replace(LINE_RE, (line, pre, repo, ref, post, trailing) => {
     const root = repoRoot(repo);
     let target = seen.get(root);
-    if (!target) {
+    if (target === undefined) {
       try {
         const tag = latestStableTag(root);
         const sha = resolveSha(root, tag);
@@ -90,12 +123,13 @@ for (const file of files) {
         seen.set(root, target);
         console.error(`resolved ${root} ${tag} -> ${sha}`);
       } catch (err) {
-        console.error(`skip ${root}: ${err.message}`);
+        const message = err instanceof Error ? err.message : String(err);
+        console.error(`skip ${root}: ${message}`);
         seen.set(root, null);
         return line;
       }
     }
-    if (!target) return line;
+    if (target === null) return line;
     if (ref === target.sha) return line;
 
     changes.push({ file, repo, from: ref, to: target.sha, tag: target.tag });
@@ -106,7 +140,7 @@ for (const file of files) {
 }
 
 const summaryPath = process.env.GITHUB_STEP_SUMMARY;
-if (summaryPath && changes.length) {
+if (summaryPath && changes.length > 0) {
   const lines = ['## Action updates', '', '| Action | From | To (SHA) | Tag |', '| --- | --- | --- | --- |'];
   for (const c of changes) {
     lines.push(`| \`${c.repo}\` | \`${c.from}\` | \`${c.to}\` | \`${c.tag}\` |`);
