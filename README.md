@@ -590,6 +590,60 @@ const deployStep = new AmplifyDeployStep(project, {
 });
 ```
 
+## Maintenance: keeping generated actions up to date
+
+`projen-pipelines` embeds GitHub Action references (e.g. `actions/checkout@v6`) as TypeScript
+string literals under `src/`. Because they aren't in real workflow YAML, Dependabot and Renovate
+cannot see them, and versions drift over time.
+
+To keep them current, this repository runs a scheduled `update-actions` workflow
+(`.github/workflows/update-actions.yml`, weekly on Monday 06:00 UTC; also `workflow_dispatch`):
+
+1. Scans `src/`, `.projen/`, and `.projenrc.ts` for `uses: 'owner/repo@ref'` literals.
+2. For each unique action, queries the GitHub Releases API for the latest stable tag
+   (pre-releases are skipped unless `ALLOW_PRERELEASE=true`).
+3. Resolves the tag to a full commit SHA (following annotated tags to the underlying commit).
+4. Rewrites the literal in place, recording the tag as a trailing TypeScript comment so
+   maintainers can see the human-readable version next to the SHA.
+5. Runs `npx projen build` to regenerate workflow snapshots and example output.
+6. Opens (or updates) a single PR labelled `dependencies,github-actions` with the resolved
+   changes. A job-summary table lists every bumped action with its old ref, new SHA, and tag.
+
+The pinning script is exposed as the `update-github-actions` bin of this package, so a local
+dry-run is `GH_TOKEN=$(gh auth token) npx update-github-actions src .projen .projenrc.ts`. Any
+number of file or directory paths may be passed as arguments. The script source lives at
+`src/security/update-github-actions.ts`.
+
+### Opting in from a downstream project
+
+Downstream projects that depend on `projen-pipelines` can enable the same maintenance workflow
+for themselves by adding the `UpdateActionsWorkflow` component to their `.projenrc.ts`:
+
+```ts
+import { UpdateActionsWorkflow } from 'projen-pipelines';
+
+new UpdateActionsWorkflow(project);
+```
+
+Options cover the cron schedule, the paths to scan, the PR branch and labels, and the names of
+the GitHub App secrets used to open the pull request. The default scans only
+projen-managed files (`.projen/`, `.projenrc.ts`, `.projenrc.js`), which is the right scope
+for most consumers — their action references live in the projen configuration, not in
+hand-authored source. Missing paths are silently skipped, so the TypeScript and JavaScript
+projenrc variants can both be listed by default. Projects that embed action strings directly
+in their library code (such as `projen-pipelines` itself) should extend the list with
+`paths: ['src', '.projen', '.projenrc.ts']`. Without overrides the workflow runs weekly and
+opens a PR via the `PROJEN_APP_ID` / `PROJEN_APP_PRIVATE_KEY` app token. Pass
+`tokenAppIdSecret: ''` to fall back to the default `GITHUB_TOKEN`.
+
+### Reviewing PRs produced by `update-actions`
+
+* Confirm each bumped action's release notes at `https://github.com/<owner>/<repo>/releases`.
+* Verify the job summary matches the diff — every change should be an SHA replacement plus
+  an updated `// v<tag>` comment.
+* Check that `npx projen build` output (snapshots, `API.md`) is a noise-only diff.
+* Merge as a single PR; the `auto-approve` label fast-tracks it through mergify.
+
 ## Current Status
 
 Projen-Pipelines is currently in version 0.x, awaiting Projen's 1.0 release. Despite its pre-1.0 status, it's being used in several production environments.

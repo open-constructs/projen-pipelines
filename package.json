@@ -6,7 +6,8 @@
   },
   "bin": {
     "detect-drift": "lib/drift/detect-drift.js",
-    "pipelines-release": "lib/release.js"
+    "pipelines-release": "lib/release.js",
+    "update-github-actions": "lib/security/update-github-actions.js"
   },
   "scripts": {
     "build": "projen build",
@@ -60,6 +61,7 @@
     "projen": "0.99.49",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {

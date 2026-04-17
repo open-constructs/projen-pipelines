@@ -1,6 +1,7 @@
 import { DependencyType, ReleasableCommits, cdk, github, javascript } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
 import { GitHubAssignApprover } from './src/assign-approver';
+import { UpdateActionsWorkflow } from './src/security';
 
 const project = new cdk.JsiiProject({
   author: 'The Open Construct Foundation',
@@ -20,6 +21,7 @@ const project = new cdk.JsiiProject({
     'constructs',
     'fs-extra',
     '@types/fs-extra',
+    'tsx',
   ],
   deps: [
     'commit-and-tag-version',
@@ -51,6 +53,7 @@ const project = new cdk.JsiiProject({
   bin: {
     'pipelines-release': 'lib/release.js',
     'detect-drift': 'lib/drift/detect-drift.js',
+    'update-github-actions': 'lib/security/update-github-actions.js',
   },
   releaseToNpm: true,
   npmTrustedPublishing: true,
@@ -133,6 +136,19 @@ new GitHubAssignApprover(project, {
     { author: 'Lock128', approvers: ['hoegertn'] },
   ],
   defaultApprovers: ['hoegertn', 'Lock128'],
+});
+
+// Weekly maintenance: scan TypeScript source for `uses:` action references,
+// pin them to the latest stable release's commit SHA, and open a PR with the
+// result. Keeps generated pipelines on current, security-patched actions
+// despite them living as string literals (invisible to Dependabot/Renovate).
+// This package self-hosts the script from source so the workflow can run
+// before the `update-github-actions` bin is installed into node_modules, and
+// it extends the default paths with `src` because projen-pipelines embeds
+// action strings in its hand-authored library code.
+new UpdateActionsWorkflow(project, {
+  paths: ['src', '.projen', '.projenrc.ts'],
+  command: 'npx tsx src/security/update-github-actions.ts',
 });
 
 project.synth();
