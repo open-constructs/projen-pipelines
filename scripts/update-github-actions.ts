@@ -43,15 +43,27 @@ interface Tag {
   readonly name: string;
 }
 
-const ROOT = process.argv[2] ?? 'src';
+const PATHS = process.argv.slice(2);
+if (PATHS.length === 0) {
+  console.error('usage: update-github-actions <path> [<path> ...]');
+  process.exit(2);
+}
 const ALLOW_PRERELEASE = process.env.ALLOW_PRERELEASE === 'true';
 
-// Captures lines like:
-//   uses: 'actions/checkout@v6',
-//   uses: 'aws-actions/configure-aws-credentials@a1b2c3', // v5.0.0
-// Group 1: leading `  uses: '`, Group 2: owner/repo(/sub), Group 3: ref,
-// Group 4: closing `'` + optional comma, Group 5: trailing characters.
-const LINE_RE = /^(\s*uses:\s*')([A-Za-z0-9_.\-/]+)@([A-Za-z0-9_.\-]+)('\s*,?)([^\n]*)$/gm;
+// Matches any `uses: 'owner/repo@ref'` literal, including inline forms like
+// `{ name: 'Checkout', uses: 'actions/checkout@v6' },`. Group 1 captures the
+// `uses:<ws>'` prefix, 2 the owner/repo(/sub), 3 the ref, 4 the closing quote.
+const LITERAL_RE = /(uses:\s*')([A-Za-z0-9_.\-/]+)@([A-Za-z0-9_.\-]+)(')/g;
+
+// Matches a line whose only non-whitespace content is a `uses:` literal (plus
+// optional trailing comma and optional existing `// tag` comment). Group 1
+// captures everything up to and including the closing quote + comma; group 2
+// captures any existing trailing comment, which we replace.
+const STANDALONE_LINE_RE = /^(\s*uses:\s*'[A-Za-z0-9_.\-/]+@[A-Za-z0-9_.\-]+'\s*,?)(\s*\/\/[^\n]*)?$/gm;
+
+function isScannable(p: string): boolean {
+  return p.endsWith('.ts') || p.endsWith('.json') || p.endsWith('.yml') || p.endsWith('.yaml');
+}
 
 function walk(dir: string): string[] {
   const out: string[] = [];
@@ -59,7 +71,17 @@ function walk(dir: string): string[] {
     const p = join(dir, entry);
     const s = statSync(p);
     if (s.isDirectory()) out.push(...walk(p));
-    else if (p.endsWith('.ts')) out.push(p);
+    else if (isScannable(p)) out.push(p);
+  }
+  return out;
+}
+
+function collect(paths: string[]): string[] {
+  const out: string[] = [];
+  for (const p of paths) {
+    const s = statSync(p);
+    if (s.isDirectory()) out.push(...walk(p));
+    else if (isScannable(p)) out.push(p);
   }
   return out;
 }
@@ -106,36 +128,55 @@ function resolveSha(repo: string, tag: string): string {
   return object.sha;
 }
 
-const files = walk(ROOT);
+const files = collect(PATHS);
 const seen = new Map<string, ResolvedAction | null>();
 const changes: Change[] = [];
 
+function resolve(repoPath: string): ResolvedAction | null {
+  const root = repoRoot(repoPath);
+  const cached = seen.get(root);
+  if (cached !== undefined) return cached;
+  try {
+    const tag = latestStableTag(root);
+    const sha = resolveSha(root, tag);
+    const resolved: ResolvedAction = { tag, sha };
+    seen.set(root, resolved);
+    console.error(`resolved ${root} ${tag} -> ${sha}`);
+    return resolved;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`skip ${root}: ${message}`);
+    seen.set(root, null);
+    return null;
+  }
+}
+
 for (const file of files) {
   const original = readFileSync(file, 'utf8');
-  const updated = original.replace(LINE_RE, (line, pre, repo, ref, post, trailing) => {
-    const root = repoRoot(repo);
-    let target = seen.get(root);
-    if (target === undefined) {
-      try {
-        const tag = latestStableTag(root);
-        const sha = resolveSha(root, tag);
-        target = { tag, sha };
-        seen.set(root, target);
-        console.error(`resolved ${root} ${tag} -> ${sha}`);
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
-        console.error(`skip ${root}: ${message}`);
-        seen.set(root, null);
-        return line;
-      }
-    }
-    if (target === null) return line;
-    if (ref === target.sha) return line;
+  const tagByRepo = new Map<string, string>();
 
+  // Pass 1: replace the ref with the resolved SHA in every `uses:` literal,
+  // including inline occurrences that share their line with other properties.
+  let updated = original.replace(LITERAL_RE, (match, pre, repo, ref, quote) => {
+    const target = resolve(repo);
+    if (!target || ref === target.sha) return match;
     changes.push({ file, repo, from: ref, to: target.sha, tag: target.tag });
-    const stripped = trailing.replace(/\s*\/\/.*$/, '').trimEnd();
-    return `${pre}${repo}@${target.sha}${post}${stripped} // ${target.tag}`.trimEnd();
+    tagByRepo.set(repo, target.tag);
+    return `${pre}${repo}@${target.sha}${quote}`;
   });
+
+  // Pass 2: on lines whose only content is a single `uses:` literal, insert or
+  // refresh a trailing `// <tag>` comment so reviewers see the human-readable
+  // version alongside the SHA. Inline forms are skipped to avoid corrupting
+  // surrounding properties.
+  updated = updated.replace(STANDALONE_LINE_RE, (line, head) => {
+    const m = /'([A-Za-z0-9_.\-/]+)@[A-Za-z0-9_.\-]+'/.exec(head);
+    if (!m) return line;
+    const tag = tagByRepo.get(m[1]) ?? seen.get(repoRoot(m[1]))?.tag;
+    if (!tag) return line;
+    return `${head.trimEnd()} // ${tag}`;
+  });
+
   if (updated !== original) writeFileSync(file, updated);
 }
 

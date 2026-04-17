@@ -599,7 +599,7 @@ cannot see them, and versions drift over time.
 To keep them current, this repository runs a scheduled `update-actions` workflow
 (`.github/workflows/update-actions.yml`, weekly on Monday 06:00 UTC; also `workflow_dispatch`):
 
-1. Scans `src/` for `uses: 'owner/repo@ref'` literals.
+1. Scans `src/`, `.projen/`, and `.projenrc.ts` for `uses: 'owner/repo@ref'` literals.
 2. For each unique action, queries the GitHub Releases API for the latest stable tag
    (pre-releases are skipped unless `ALLOW_PRERELEASE=true`).
 3. Resolves the tag to a full commit SHA (following annotated tags to the underlying commit).
@@ -610,8 +610,8 @@ To keep them current, this repository runs a scheduled `update-actions` workflow
    changes. A job-summary table lists every bumped action with its old ref, new SHA, and tag.
 
 The pinning script lives at `scripts/update-github-actions.ts` and can be run locally
-(`GH_TOKEN=$(gh auth token) npx ts-node --project tsconfig.dev.json scripts/update-github-actions.ts`)
-for a dry-run.
+(`GH_TOKEN=$(gh auth token) npx tsx scripts/update-github-actions.ts src .projen .projenrc.ts`)
+for a dry-run. Any number of file or directory paths may be passed as arguments.
 
 ### Reviewing PRs produced by `update-actions`
 

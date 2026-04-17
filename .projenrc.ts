@@ -20,6 +20,7 @@ const project = new cdk.JsiiProject({
     'constructs',
     'fs-extra',
     '@types/fs-extra',
+    'tsx',
   ],
   deps: [
     'commit-and-tag-version',
@@ -169,7 +170,7 @@ updateActionsWf?.addJobs({
       {
         name: 'Pin actions to latest release SHAs',
         env: { GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
-        run: 'npx ts-node --project tsconfig.dev.json scripts/update-github-actions.ts',
+        run: 'npx tsx scripts/update-github-actions.ts src .projen .projenrc.ts',
       },
       { name: 'Regenerate project', run: 'npx projen build' },
       {
