@@ -6668,12 +6668,18 @@ public readonly paths: string[];
 ```
 
 - *Type:* string[]
-- *Default:* ['src', '.projen', '.projenrc.ts']
+- *Default:* ['.projen', '.projenrc.ts']
 
 File or directory paths to scan for `uses: 'owner/repo@ref'` literals.
 
 Directories are walked recursively for `.ts`, `.json`, `.yml`, and `.yaml`
 files; individual files are scanned directly.
+
+The default targets projen-managed files only, which is the right scope
+for downstream consumers: their action references live in `.projenrc.ts`
+and `.projen/` rather than in their application source. Projects that
+embed action strings in hand-authored source (such as `projen-pipelines`
+itself) should extend this list with `'src'`.
 
 ---
 
