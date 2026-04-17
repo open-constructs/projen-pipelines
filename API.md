@@ -6668,17 +6668,19 @@ public readonly paths: string[];
 ```
 
 - *Type:* string[]
-- *Default:* ['.projen', '.projenrc.ts']
+- *Default:* ['.projen', '.projenrc.ts', '.projenrc.js']
 
 File or directory paths to scan for `uses: 'owner/repo@ref'` literals.
 
-Directories are walked recursively for `.ts`, `.json`, `.yml`, and `.yaml`
-files; individual files are scanned directly.
+Directories are walked recursively for `.ts`, `.js`, `.cjs`, `.mjs`,
+`.json`, `.yml`, and `.yaml` files; individual files are scanned directly.
+Non-existent paths are silently skipped so the default can cover both
+TypeScript and JavaScript projen configurations.
 
 The default targets projen-managed files only, which is the right scope
-for downstream consumers: their action references live in `.projenrc.ts`
-and `.projen/` rather than in their application source. Projects that
-embed action strings in hand-authored source (such as `projen-pipelines`
+for downstream consumers: their action references live in the projen
+configuration rather than in application source. Projects that embed
+action strings in hand-authored source (such as `projen-pipelines`
 itself) should extend this list with `'src'`.
 
 ---
