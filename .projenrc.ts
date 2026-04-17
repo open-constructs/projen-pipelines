@@ -143,8 +143,11 @@ new GitHubAssignApprover(project, {
 // result. Keeps generated pipelines on current, security-patched actions
 // despite them living as string literals (invisible to Dependabot/Renovate).
 // This package self-hosts the script from source so the workflow can run
-// before the `update-github-actions` bin is installed into node_modules.
+// before the `update-github-actions` bin is installed into node_modules, and
+// it extends the default paths with `src` because projen-pipelines embeds
+// action strings in its hand-authored library code.
 new UpdateActionsWorkflow(project, {
+  paths: ['src', '.projen', '.projenrc.ts'],
   command: 'npx tsx src/security/update-github-actions.ts',
 });
 

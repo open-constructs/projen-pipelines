@@ -626,8 +626,12 @@ new UpdateActionsWorkflow(project);
 ```
 
 Options cover the cron schedule, the paths to scan, the PR branch and labels, and the names of
-the GitHub App secrets used to open the pull request. Without overrides the workflow scans
-`src`, `.projen`, and `.projenrc.ts` on a weekly schedule and opens a PR via the
+the GitHub App secrets used to open the pull request. The default scans only
+projen-managed files (`.projen/` and `.projenrc.ts`), which is the right scope for most
+consumers — their action references live in the projen configuration, not in hand-authored
+source. Projects that embed action strings directly in their library code (such as
+`projen-pipelines` itself) should extend the list with `paths: ['src', '.projen', '.projenrc.ts']`.
+Without overrides the workflow runs weekly and opens a PR via the
 `PROJEN_APP_ID` / `PROJEN_APP_PRIVATE_KEY` app token. Pass `tokenAppIdSecret: ''` to fall back
 to the default `GITHUB_TOKEN`.
 

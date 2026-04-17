@@ -12,7 +12,13 @@ export interface UpdateActionsWorkflowOptions {
    * Directories are walked recursively for `.ts`, `.json`, `.yml`, and `.yaml`
    * files; individual files are scanned directly.
    *
-   * @default ['src', '.projen', '.projenrc.ts']
+   * The default targets projen-managed files only, which is the right scope
+   * for downstream consumers: their action references live in `.projenrc.ts`
+   * and `.projen/` rather than in their application source. Projects that
+   * embed action strings in hand-authored source (such as `projen-pipelines`
+   * itself) should extend this list with `'src'`.
+   *
+   * @default ['.projen', '.projenrc.ts']
    */
   readonly paths?: string[];
 
@@ -105,7 +111,7 @@ export class UpdateActionsWorkflow extends Component {
       throw new Error('UpdateActionsWorkflow requires a GitHubProject with github integration enabled.');
     }
 
-    const paths = options.paths ?? ['src', '.projen', '.projenrc.ts'];
+    const paths = options.paths ?? ['.projen', '.projenrc.ts'];
     const schedule = options.schedule ?? '0 6 * * 1';
     const runsOn = options.runnerTags ?? ['ubuntu-latest'];
     const labels = options.labels ?? ['auto-approve', 'dependencies', 'github-actions'];
