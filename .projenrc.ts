@@ -28,7 +28,7 @@ const project = new cdk.JsiiProject({
     'commit-and-tag-version',
   ],
   peerDeps: [
-    'projen@>=0.99.49 <1.0.0',
+    'projen@>=0.99.57 <1.0.0',
     'constructs@^10.5.1',
   ],
   autoApproveUpgrades: true,
