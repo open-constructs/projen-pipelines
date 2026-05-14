@@ -788,7 +788,7 @@ ${appCode}
 
     imports.push("import { CfnOutput } from 'aws-cdk-lib';");
     imports.push("import { StringParameter } from 'aws-cdk-lib/aws-ssm';");
-    imports.push("import * as fs from 'fs';");
+    imports.push("import * as fs from 'node:fs';");
 
     return imports.join('\n');
   }
