@@ -260,12 +260,12 @@ class DriftReverter {
 
       // Create change set with REVERT_DRIFT deployment mode
       execSync(
-        `aws cloudformation create-change-set ` +
+        'aws cloudformation create-change-set ' +
         `--stack-name "${stackName}" ` +
         `--change-set-name "${changeSetName}" ` +
-        `--change-set-type UPDATE ` +
-        `--use-previous-template ` +
-        `--deployment-mode REVERT_DRIFT ` +
+        '--change-set-type UPDATE ' +
+        '--use-previous-template ' +
+        '--deployment-mode REVERT_DRIFT ' +
         `--region ${this.options.region}`,
         { encoding: 'utf8', stdio: 'pipe' },
       );
@@ -274,7 +274,7 @@ class DriftReverter {
       console.log('  Waiting for change set creation...');
       try {
         execSync(
-          `aws cloudformation wait change-set-create-complete ` +
+          'aws cloudformation wait change-set-create-complete ' +
           `--stack-name "${stackName}" ` +
           `--change-set-name "${changeSetName}" ` +
           `--region ${this.options.region}`,
@@ -283,19 +283,19 @@ class DriftReverter {
       } catch (waitError: any) {
         // Check if the change set has no changes
         const describeOutput = execSync(
-          `aws cloudformation describe-change-set ` +
+          'aws cloudformation describe-change-set ' +
           `--stack-name "${stackName}" ` +
           `--change-set-name "${changeSetName}" ` +
           `--region ${this.options.region} ` +
-          `--output json`,
+          '--output json',
           { encoding: 'utf8', stdio: 'pipe' },
         );
         const changeSetInfo = JSON.parse(describeOutput);
 
         if (changeSetInfo.StatusReason?.includes('didn\'t contain changes')) {
-          console.log(`  Change set contains no changes. Deleting and skipping.`);
+          console.log('  Change set contains no changes. Deleting and skipping.');
           execSync(
-            `aws cloudformation delete-change-set ` +
+            'aws cloudformation delete-change-set ' +
             `--stack-name "${stackName}" ` +
             `--change-set-name "${changeSetName}" ` +
             `--region ${this.options.region}`,
@@ -318,7 +318,7 @@ class DriftReverter {
       // Execute the change set
       console.log('  Executing change set...');
       execSync(
-        `aws cloudformation execute-change-set ` +
+        'aws cloudformation execute-change-set ' +
         `--stack-name "${stackName}" ` +
         `--change-set-name "${changeSetName}" ` +
         `--region ${this.options.region}`,
@@ -328,7 +328,7 @@ class DriftReverter {
       // Wait for stack update to complete
       console.log('  Waiting for stack update to complete...');
       execSync(
-        `aws cloudformation wait stack-update-complete ` +
+        'aws cloudformation wait stack-update-complete ' +
         `--stack-name "${stackName}" ` +
         `--region ${this.options.region}`,
         { encoding: 'utf8', stdio: 'pipe' },

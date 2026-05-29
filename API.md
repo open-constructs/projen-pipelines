@@ -2884,6 +2884,7 @@ const bashDriftDetectionWorkflowOptions: BashDriftDetectionWorkflowOptions = { .
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.defaultRemediation">defaultRemediation</a></code> | <code><a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a></code> | Default remediation options merged into every stage that does not specify its own. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
@@ -2900,6 +2901,21 @@ public readonly stages: DriftDetectionStageOptions[];
 - *Type:* <a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]
 
 Drift detection configurations for different environments.
+
+---
+
+##### `defaultRemediation`<sup>Optional</sup> <a name="defaultRemediation" id="projen-pipelines.BashDriftDetectionWorkflowOptions.property.defaultRemediation"></a>
+
+```typescript
+public readonly defaultRemediation: DriftRemediationOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a>
+- *Default:* { policy: 'off' }
+
+Default remediation options merged into every stage that does not specify its own.
+
+Stage-level values win.
 
 ---
 
@@ -3930,6 +3946,7 @@ const driftDetectionStageOptions: DriftDetectionStageOptions = { ... }
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role to assume before the main role. |
+| <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.remediation">remediation</a></code> | <code><a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a></code> | Drift reconciliation (revert) configuration for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
 | <code><a href="#projen-pipelines.DriftDetectionStageOptions.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
 
@@ -3996,6 +4013,19 @@ Jump role to assume before the main role.
 
 ---
 
+##### `remediation`<sup>Optional</sup> <a name="remediation" id="projen-pipelines.DriftDetectionStageOptions.property.remediation"></a>
+
+```typescript
+public readonly remediation: DriftRemediationOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a>
+- *Default:* { policy: 'off' }
+
+Drift reconciliation (revert) configuration for this stage.
+
+---
+
 ##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.DriftDetectionStageOptions.property.roleArn"></a>
 
 ```typescript
@@ -4039,6 +4069,7 @@ const driftDetectionStepProps: DriftDetectionStepProps = { ... }
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.failOnDrift">failOnDrift</a></code> | <code>boolean</code> | Whether to fail if drift is detected. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role to assume before the main role. |
+| <code><a href="#projen-pipelines.DriftDetectionStepProps.property.remediation">remediation</a></code> | <code><a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a></code> | Drift reconciliation (revert) configuration for this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.roleArn">roleArn</a></code> | <code>string</code> | Role to assume for drift detection. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to check in this stage. |
 | <code><a href="#projen-pipelines.DriftDetectionStepProps.property.timeout">timeout</a></code> | <code>number</code> | Timeout in minutes for drift detection. |
@@ -4106,6 +4137,19 @@ Jump role to assume before the main role.
 
 ---
 
+##### `remediation`<sup>Optional</sup> <a name="remediation" id="projen-pipelines.DriftDetectionStepProps.property.remediation"></a>
+
+```typescript
+public readonly remediation: DriftRemediationOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a>
+- *Default:* { policy: 'off' }
+
+Drift reconciliation (revert) configuration for this stage.
+
+---
+
 ##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.DriftDetectionStepProps.property.roleArn"></a>
 
 ```typescript
@@ -4158,6 +4202,7 @@ const driftDetectionWorkflowOptions: DriftDetectionWorkflowOptions = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.defaultRemediation">defaultRemediation</a></code> | <code><a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a></code> | Default remediation options merged into every stage that does not specify its own. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
@@ -4173,6 +4218,21 @@ public readonly stages: DriftDetectionStageOptions[];
 - *Type:* <a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]
 
 Drift detection configurations for different environments.
+
+---
+
+##### `defaultRemediation`<sup>Optional</sup> <a name="defaultRemediation" id="projen-pipelines.DriftDetectionWorkflowOptions.property.defaultRemediation"></a>
+
+```typescript
+public readonly defaultRemediation: DriftRemediationOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a>
+- *Default:* { policy: 'off' }
+
+Default remediation options merged into every stage that does not specify its own.
+
+Stage-level values win.
 
 ---
 
@@ -4268,6 +4328,315 @@ public readonly message: string;
 - *Type:* string
 
 Optional message to display.
+
+---
+
+### DriftRemediationOptions <a name="DriftRemediationOptions" id="projen-pipelines.DriftRemediationOptions"></a>
+
+Configuration for drift reconciliation (revert) on a per-stage basis.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DriftRemediationOptions.Initializer"></a>
+
+```typescript
+import { DriftRemediationOptions } from 'projen-pipelines'
+
+const driftRemediationOptions: DriftRemediationOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftRemediationOptions.property.approvalEnvironment">approvalEnvironment</a></code> | <code>string</code> | For mode 'manual' on GitHub: the protected environment name whose reviewers gate the revert job. |
+| <code><a href="#projen-pipelines.DriftRemediationOptions.property.deployRoleArn">deployRoleArn</a></code> | <code>string</code> | IAM role to assume for the revert (CFN change-set execute permissions). |
+| <code><a href="#projen-pipelines.DriftRemediationOptions.property.excludeResourceTypes">excludeResourceTypes</a></code> | <code>string[]</code> | Resource types that must NEVER be auto-reverted (takes precedence over includeResourceTypes). |
+| <code><a href="#projen-pipelines.DriftRemediationOptions.property.includeResourceTypes">includeResourceTypes</a></code> | <code>string[]</code> | Resource types eligible for revert (glob on CFN type, e.g. 'AWS::S3::*'). If set, only matching drifted resources trigger/permit a revert. |
+| <code><a href="#projen-pipelines.DriftRemediationOptions.property.policy">policy</a></code> | <code>string</code> | Remediation behaviour for this stage. |
+
+---
+
+##### `approvalEnvironment`<sup>Optional</sup> <a name="approvalEnvironment" id="projen-pipelines.DriftRemediationOptions.property.approvalEnvironment"></a>
+
+```typescript
+public readonly approvalEnvironment: string;
+```
+
+- *Type:* string
+
+For mode 'manual' on GitHub: the protected environment name whose reviewers gate the revert job.
+
+Ignored for other engines.
+
+---
+
+##### `deployRoleArn`<sup>Optional</sup> <a name="deployRoleArn" id="projen-pipelines.DriftRemediationOptions.property.deployRoleArn"></a>
+
+```typescript
+public readonly deployRoleArn: string;
+```
+
+- *Type:* string
+- *Default:* stage.roleArn
+
+IAM role to assume for the revert (CFN change-set execute permissions).
+
+Falls back to the stage's detection roleArn if omitted — but a separate,
+more-privileged role is recommended (detection is read-only).
+
+---
+
+##### `excludeResourceTypes`<sup>Optional</sup> <a name="excludeResourceTypes" id="projen-pipelines.DriftRemediationOptions.property.excludeResourceTypes"></a>
+
+```typescript
+public readonly excludeResourceTypes: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['AWS::RDS::*', 'AWS::DynamoDB::Table']
+
+Resource types that must NEVER be auto-reverted (takes precedence over includeResourceTypes).
+
+Drift in these still reports; with policy 'auto'
+the stage is downgraded to 'manual' for that run.
+
+---
+
+##### `includeResourceTypes`<sup>Optional</sup> <a name="includeResourceTypes" id="projen-pipelines.DriftRemediationOptions.property.includeResourceTypes"></a>
+
+```typescript
+public readonly includeResourceTypes: string[];
+```
+
+- *Type:* string[]
+- *Default:* all supported types
+
+Resource types eligible for revert (glob on CFN type, e.g. 'AWS::S3::*'). If set, only matching drifted resources trigger/permit a revert.
+
+---
+
+##### `policy`<sup>Optional</sup> <a name="policy" id="projen-pipelines.DriftRemediationOptions.property.policy"></a>
+
+```typescript
+public readonly policy: string;
+```
+
+- *Type:* string
+- *Default:* 'off'
+
+Remediation behaviour for this stage.
+
+'off':    detect only (current behaviour). DEFAULT.
+- 'manual': detection runs unattended; the revert job is created but gated
+            behind an approval (GH environment protection / GL when:manual /
+            Bash confirmation prompt).
+- 'auto':   revert runs automatically when drift is detected.
+
+---
+
+### DriftRemediationStepProps <a name="DriftRemediationStepProps" id="projen-pipelines.DriftRemediationStepProps"></a>
+
+Props for the DriftRemediationStep.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DriftRemediationStepProps.Initializer"></a>
+
+```typescript
+import { DriftRemediationStepProps } from 'projen-pipelines'
+
+const driftRemediationStepProps: DriftRemediationStepProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftRemediationStepProps.property.region">region</a></code> | <code>string</code> | AWS region. |
+| <code><a href="#projen-pipelines.DriftRemediationStepProps.property.remediation">remediation</a></code> | <code><a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a></code> | Resolved remediation options. |
+| <code><a href="#projen-pipelines.DriftRemediationStepProps.property.stageName">stageName</a></code> | <code>string</code> | Name of the stage. |
+| <code><a href="#projen-pipelines.DriftRemediationStepProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables. |
+| <code><a href="#projen-pipelines.DriftRemediationStepProps.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role for role chaining. |
+| <code><a href="#projen-pipelines.DriftRemediationStepProps.property.roleArn">roleArn</a></code> | <code>string</code> | Role ARN for the revert operation (typically deployRoleArn). |
+| <code><a href="#projen-pipelines.DriftRemediationStepProps.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to revert (if not specified, reverts all drifted stacks from detection). |
+
+---
+
+##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.DriftRemediationStepProps.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+AWS region.
+
+---
+
+##### `remediation`<sup>Required</sup> <a name="remediation" id="projen-pipelines.DriftRemediationStepProps.property.remediation"></a>
+
+```typescript
+public readonly remediation: DriftRemediationOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a>
+
+Resolved remediation options.
+
+---
+
+##### `stageName`<sup>Required</sup> <a name="stageName" id="projen-pipelines.DriftRemediationStepProps.property.stageName"></a>
+
+```typescript
+public readonly stageName: string;
+```
+
+- *Type:* string
+
+Name of the stage.
+
+---
+
+##### `environment`<sup>Optional</sup> <a name="environment" id="projen-pipelines.DriftRemediationStepProps.property.environment"></a>
+
+```typescript
+public readonly environment: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Environment variables.
+
+---
+
+##### `jumpRoleArn`<sup>Optional</sup> <a name="jumpRoleArn" id="projen-pipelines.DriftRemediationStepProps.property.jumpRoleArn"></a>
+
+```typescript
+public readonly jumpRoleArn: string;
+```
+
+- *Type:* string
+
+Jump role for role chaining.
+
+---
+
+##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.DriftRemediationStepProps.property.roleArn"></a>
+
+```typescript
+public readonly roleArn: string;
+```
+
+- *Type:* string
+
+Role ARN for the revert operation (typically deployRoleArn).
+
+---
+
+##### `stackNames`<sup>Optional</sup> <a name="stackNames" id="projen-pipelines.DriftRemediationStepProps.property.stackNames"></a>
+
+```typescript
+public readonly stackNames: string[];
+```
+
+- *Type:* string[]
+
+Stack names to revert (if not specified, reverts all drifted stacks from detection).
+
+---
+
+### DriftVerificationStepProps <a name="DriftVerificationStepProps" id="projen-pipelines.DriftVerificationStepProps"></a>
+
+Props for the DriftVerificationStep — re-runs detection after remediation.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.DriftVerificationStepProps.Initializer"></a>
+
+```typescript
+import { DriftVerificationStepProps } from 'projen-pipelines'
+
+const driftVerificationStepProps: DriftVerificationStepProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftVerificationStepProps.property.region">region</a></code> | <code>string</code> | AWS region. |
+| <code><a href="#projen-pipelines.DriftVerificationStepProps.property.stageName">stageName</a></code> | <code>string</code> | Name of the stage. |
+| <code><a href="#projen-pipelines.DriftVerificationStepProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables. |
+| <code><a href="#projen-pipelines.DriftVerificationStepProps.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role for role chaining. |
+| <code><a href="#projen-pipelines.DriftVerificationStepProps.property.roleArn">roleArn</a></code> | <code>string</code> | Role ARN for re-detection (detection role, read-only). |
+| <code><a href="#projen-pipelines.DriftVerificationStepProps.property.stackNames">stackNames</a></code> | <code>string[]</code> | Stack names to verify. |
+
+---
+
+##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.DriftVerificationStepProps.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+AWS region.
+
+---
+
+##### `stageName`<sup>Required</sup> <a name="stageName" id="projen-pipelines.DriftVerificationStepProps.property.stageName"></a>
+
+```typescript
+public readonly stageName: string;
+```
+
+- *Type:* string
+
+Name of the stage.
+
+---
+
+##### `environment`<sup>Optional</sup> <a name="environment" id="projen-pipelines.DriftVerificationStepProps.property.environment"></a>
+
+```typescript
+public readonly environment: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Environment variables.
+
+---
+
+##### `jumpRoleArn`<sup>Optional</sup> <a name="jumpRoleArn" id="projen-pipelines.DriftVerificationStepProps.property.jumpRoleArn"></a>
+
+```typescript
+public readonly jumpRoleArn: string;
+```
+
+- *Type:* string
+
+Jump role for role chaining.
+
+---
+
+##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.DriftVerificationStepProps.property.roleArn"></a>
+
+```typescript
+public readonly roleArn: string;
+```
+
+- *Type:* string
+
+Role ARN for re-detection (detection role, read-only).
+
+---
+
+##### `stackNames`<sup>Optional</sup> <a name="stackNames" id="projen-pipelines.DriftVerificationStepProps.property.stackNames"></a>
+
+```typescript
+public readonly stackNames: string[];
+```
+
+- *Type:* string[]
+
+Stack names to verify.
 
 ---
 
@@ -4727,6 +5096,7 @@ const gitHubDriftDetectionWorkflowOptions: GitHubDriftDetectionWorkflowOptions =
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.defaultRemediation">defaultRemediation</a></code> | <code><a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a></code> | Default remediation options merged into every stage that does not specify its own. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
@@ -4744,6 +5114,21 @@ public readonly stages: DriftDetectionStageOptions[];
 - *Type:* <a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]
 
 Drift detection configurations for different environments.
+
+---
+
+##### `defaultRemediation`<sup>Optional</sup> <a name="defaultRemediation" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.defaultRemediation"></a>
+
+```typescript
+public readonly defaultRemediation: DriftRemediationOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a>
+- *Default:* { policy: 'off' }
+
+Default remediation options merged into every stage that does not specify its own.
+
+Stage-level values win.
 
 ---
 
@@ -5389,6 +5774,7 @@ const gitLabDriftDetectionWorkflowOptions: GitLabDriftDetectionWorkflowOptions =
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.defaultRemediation">defaultRemediation</a></code> | <code><a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a></code> | Default remediation options merged into every stage that does not specify its own. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
@@ -5406,6 +5792,21 @@ public readonly stages: DriftDetectionStageOptions[];
 - *Type:* <a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]
 
 Drift detection configurations for different environments.
+
+---
+
+##### `defaultRemediation`<sup>Optional</sup> <a name="defaultRemediation" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.defaultRemediation"></a>
+
+```typescript
+public readonly defaultRemediation: DriftRemediationOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.DriftRemediationOptions">DriftRemediationOptions</a>
+- *Default:* { policy: 'off' }
+
+Default remediation options merged into every stage that does not specify its own.
+
+Stage-level values win.
 
 ---
 
@@ -7331,6 +7732,200 @@ public prependSteps(steps: ...PipelineStep[]): void
 ```
 
 ###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftDetectionStep.prependSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+
+
+
+### DriftRemediationStep <a name="DriftRemediationStep" id="projen-pipelines.DriftRemediationStep"></a>
+
+Step that executes drift remediation (REVERT_DRIFT change set) for a stage.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DriftRemediationStep.Initializer"></a>
+
+```typescript
+import { DriftRemediationStep } from 'projen-pipelines'
+
+new DriftRemediationStep(project: Project, props: DriftRemediationStepProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftRemediationStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.DriftRemediationStep.Initializer.parameter.props">props</a></code> | <code><a href="#projen-pipelines.DriftRemediationStepProps">DriftRemediationStepProps</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DriftRemediationStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="projen-pipelines.DriftRemediationStep.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#projen-pipelines.DriftRemediationStepProps">DriftRemediationStepProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DriftRemediationStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.DriftRemediationStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.DriftRemediationStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.DriftRemediationStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftRemediationStep.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.DriftRemediationStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DriftRemediationStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DriftRemediationStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.DriftRemediationStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftRemediationStep.addSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.DriftRemediationStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftRemediationStep.prependSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+
+
+
+### DriftVerificationStep <a name="DriftVerificationStep" id="projen-pipelines.DriftVerificationStep"></a>
+
+Step that re-runs drift detection after remediation to verify IN_SYNC status.
+
+Always fails on drift (the whole point is to confirm revert succeeded).
+
+#### Initializers <a name="Initializers" id="projen-pipelines.DriftVerificationStep.Initializer"></a>
+
+```typescript
+import { DriftVerificationStep } from 'projen-pipelines'
+
+new DriftVerificationStep(project: Project, props: DriftVerificationStepProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.DriftVerificationStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.DriftVerificationStep.Initializer.parameter.props">props</a></code> | <code><a href="#projen-pipelines.DriftVerificationStepProps">DriftVerificationStepProps</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.DriftVerificationStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="projen-pipelines.DriftVerificationStep.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#projen-pipelines.DriftVerificationStepProps">DriftVerificationStepProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.DriftVerificationStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.DriftVerificationStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.DriftVerificationStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.DriftVerificationStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DriftVerificationStep.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.DriftVerificationStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.DriftVerificationStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.DriftVerificationStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.DriftVerificationStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftVerificationStep.addSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.DriftVerificationStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.DriftVerificationStep.prependSteps.parameter.steps"></a>
 
 - *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 

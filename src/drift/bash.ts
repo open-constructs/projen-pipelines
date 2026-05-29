@@ -138,137 +138,137 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
     // Only include remediation/verification helper functions when needed
     if (hasAnyRemediation) {
       lines.push(
-      '# Function to run drift remediation for a stage',
-      'run_remediation() {',
-      '  local stage_name=$1',
-      '  local region=$2',
-      '  local deploy_role_arn=$3',
-      '  local policy=$4',
-      '  local include_types=$5',
-      '  local exclude_types=$6',
-      '',
-      '  echo "========================================"',
-      '  echo "Running drift remediation for stage: $stage_name"',
-      '  echo "========================================"',
-      '',
-      '  # Check if drift was detected',
-      '  local results_file="drift-results-$stage_name.json"',
-      '  if [[ ! -f "$results_file" ]]; then',
-      '    echo "No detection results found for stage $stage_name. Skipping remediation."',
-      '    return 0',
-      '  fi',
-      '',
-      '  local drifted=$(jq \'[.[] | select(.driftStatus == "DRIFTED")] | length\' "$results_file")',
-      '  if [[ "$drifted" -eq 0 ]]; then',
-      '    echo "No drift detected in stage $stage_name. Skipping remediation."',
-      '    return 0',
-      '  fi',
-      '',
-      '  # For manual policy, prompt for confirmation (unless --yes)',
-      '  if [[ "$policy" == "manual" ]] && [[ "$AUTO_YES" != "true" ]]; then',
-      '    echo ""',
-      '    echo "\\u26a0\\ufe0f  Drift detected in $drifted stacks in stage $stage_name."',
-      '    echo "Remediation policy is \'manual\'. Approval required to proceed."',
-      '    echo ""',
-      '    read -p "Do you want to proceed with drift remediation? (yes/no): " CONFIRM',
-      '    if [[ "$CONFIRM" != "yes" ]]; then',
-      '      echo "Remediation skipped by user."',
-      '      return 0',
-      '    fi',
-      '  fi',
-      '',
-      '  # Set environment variables',
-      '  export AWS_DEFAULT_REGION="$region"',
-      '  export DRIFT_DETECTION_INPUT="$results_file"',
-      '  export DRIFT_REMEDIATION_OUTPUT="drift-remediation-$stage_name.json"',
-      '  export STAGE_NAME="$stage_name"',
-      '',
-      '  # Assume deploy role if provided',
-      '  if [[ -n "$deploy_role_arn" ]]; then',
-      '    echo "Assuming deploy role: $deploy_role_arn"',
-      '    CREDS=$(aws sts assume-role \\',
-      '      --role-arn "$deploy_role_arn" \\',
-      '      --role-session-name "drift-remediation-$stage_name" \\',
-      '      --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \\',
-      '      --output text)',
-      '    export AWS_ACCESS_KEY_ID=$(echo $CREDS | cut -d\' \' -f1)',
-      '    export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | cut -d\' \' -f2)',
-      '    export AWS_SESSION_TOKEN=$(echo $CREDS | cut -d\' \' -f3)',
-      '  fi',
-      '',
-      '  # Build revert command',
-      '  local cmd="npx ts-node src/drift/revert-drift.ts --region $region --detection-results $results_file"',
-      '',
-      '  if [[ -n "$include_types" ]]; then',
-      '    cmd="$cmd --include-resource-types $include_types"',
-      '  fi',
-      '',
-      '  if [[ -n "$exclude_types" ]]; then',
-      '    cmd="$cmd --exclude-resource-types $exclude_types"',
-      '  fi',
-      '',
-      '  if [[ "$policy" == "auto" ]] || [[ "$AUTO_YES" == "true" ]]; then',
-      '    cmd="$cmd --yes"',
-      '  fi',
-      '',
-      '  # Run remediation',
-      '  echo "Running: $cmd"',
-      '  eval "$cmd"',
-      '}',
-      '',
-      '# Function to run drift verification for a stage',
-      'run_verification() {',
-      '  local stage_name=$1',
-      '  local region=$2',
-      '  local role_arn=$3',
-      '  local stacks=$4',
-      '',
-      '  echo "========================================"',
-      '  echo "Running drift verification for stage: $stage_name"',
-      '  echo "========================================"',
-      '',
-      '  # Check if remediation was performed',
-      '  local remediation_file="drift-remediation-$stage_name.json"',
-      '  if [[ ! -f "$remediation_file" ]]; then',
-      '    echo "No remediation results found for stage $stage_name. Skipping verification."',
-      '    return 0',
-      '  fi',
-      '',
-      '  local reverted=$(jq \'.summary.revertedStacks\' "$remediation_file")',
-      '  if [[ "$reverted" -eq 0 ]]; then',
-      '    echo "No stacks were reverted in stage $stage_name. Skipping verification."',
-      '    return 0',
-      '  fi',
-      '',
-      '  # Set environment variables',
-      '  export AWS_DEFAULT_REGION="$region"',
-      '  export DRIFT_DETECTION_OUTPUT="drift-verify-$stage_name.json"',
-      '',
-      '  # Assume role if provided',
-      '  if [[ -n "$role_arn" ]]; then',
-      '    echo "Assuming role: $role_arn"',
-      '    CREDS=$(aws sts assume-role \\',
-      '      --role-arn "$role_arn" \\',
-      '      --role-session-name "drift-verify-$stage_name" \\',
-      '      --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \\',
-      '      --output text)',
-      '    export AWS_ACCESS_KEY_ID=$(echo $CREDS | cut -d\' \' -f1)',
-      '    export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | cut -d\' \' -f2)',
-      '    export AWS_SESSION_TOKEN=$(echo $CREDS | cut -d\' \' -f3)',
-      '  fi',
-      '',
-      '  # Build verify command (re-run detection, always fail on drift)',
-      '  local cmd="npx ts-node src/drift/detect-drift.ts --region $region"',
-      '',
-      '  if [[ -n "$stacks" ]]; then',
-      '    cmd="$cmd --stacks $stacks"',
-      '  fi',
-      '',
-      '  # Run verification',
-      '  echo "Running: $cmd"',
-      '  eval "$cmd"',
-      '}',
-      '',
+        '# Function to run drift remediation for a stage',
+        'run_remediation() {',
+        '  local stage_name=$1',
+        '  local region=$2',
+        '  local deploy_role_arn=$3',
+        '  local policy=$4',
+        '  local include_types=$5',
+        '  local exclude_types=$6',
+        '',
+        '  echo "========================================"',
+        '  echo "Running drift remediation for stage: $stage_name"',
+        '  echo "========================================"',
+        '',
+        '  # Check if drift was detected',
+        '  local results_file="drift-results-$stage_name.json"',
+        '  if [[ ! -f "$results_file" ]]; then',
+        '    echo "No detection results found for stage $stage_name. Skipping remediation."',
+        '    return 0',
+        '  fi',
+        '',
+        '  local drifted=$(jq \'[.[] | select(.driftStatus == "DRIFTED")] | length\' "$results_file")',
+        '  if [[ "$drifted" -eq 0 ]]; then',
+        '    echo "No drift detected in stage $stage_name. Skipping remediation."',
+        '    return 0',
+        '  fi',
+        '',
+        '  # For manual policy, prompt for confirmation (unless --yes)',
+        '  if [[ "$policy" == "manual" ]] && [[ "$AUTO_YES" != "true" ]]; then',
+        '    echo ""',
+        '    echo "\\u26a0\\ufe0f  Drift detected in $drifted stacks in stage $stage_name."',
+        '    echo "Remediation policy is \'manual\'. Approval required to proceed."',
+        '    echo ""',
+        '    read -p "Do you want to proceed with drift remediation? (yes/no): " CONFIRM',
+        '    if [[ "$CONFIRM" != "yes" ]]; then',
+        '      echo "Remediation skipped by user."',
+        '      return 0',
+        '    fi',
+        '  fi',
+        '',
+        '  # Set environment variables',
+        '  export AWS_DEFAULT_REGION="$region"',
+        '  export DRIFT_DETECTION_INPUT="$results_file"',
+        '  export DRIFT_REMEDIATION_OUTPUT="drift-remediation-$stage_name.json"',
+        '  export STAGE_NAME="$stage_name"',
+        '',
+        '  # Assume deploy role if provided',
+        '  if [[ -n "$deploy_role_arn" ]]; then',
+        '    echo "Assuming deploy role: $deploy_role_arn"',
+        '    CREDS=$(aws sts assume-role \\',
+        '      --role-arn "$deploy_role_arn" \\',
+        '      --role-session-name "drift-remediation-$stage_name" \\',
+        '      --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \\',
+        '      --output text)',
+        '    export AWS_ACCESS_KEY_ID=$(echo $CREDS | cut -d\' \' -f1)',
+        '    export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | cut -d\' \' -f2)',
+        '    export AWS_SESSION_TOKEN=$(echo $CREDS | cut -d\' \' -f3)',
+        '  fi',
+        '',
+        '  # Build revert command',
+        '  local cmd="npx ts-node src/drift/revert-drift.ts --region $region --detection-results $results_file"',
+        '',
+        '  if [[ -n "$include_types" ]]; then',
+        '    cmd="$cmd --include-resource-types $include_types"',
+        '  fi',
+        '',
+        '  if [[ -n "$exclude_types" ]]; then',
+        '    cmd="$cmd --exclude-resource-types $exclude_types"',
+        '  fi',
+        '',
+        '  if [[ "$policy" == "auto" ]] || [[ "$AUTO_YES" == "true" ]]; then',
+        '    cmd="$cmd --yes"',
+        '  fi',
+        '',
+        '  # Run remediation',
+        '  echo "Running: $cmd"',
+        '  eval "$cmd"',
+        '}',
+        '',
+        '# Function to run drift verification for a stage',
+        'run_verification() {',
+        '  local stage_name=$1',
+        '  local region=$2',
+        '  local role_arn=$3',
+        '  local stacks=$4',
+        '',
+        '  echo "========================================"',
+        '  echo "Running drift verification for stage: $stage_name"',
+        '  echo "========================================"',
+        '',
+        '  # Check if remediation was performed',
+        '  local remediation_file="drift-remediation-$stage_name.json"',
+        '  if [[ ! -f "$remediation_file" ]]; then',
+        '    echo "No remediation results found for stage $stage_name. Skipping verification."',
+        '    return 0',
+        '  fi',
+        '',
+        '  local reverted=$(jq \'.summary.revertedStacks\' "$remediation_file")',
+        '  if [[ "$reverted" -eq 0 ]]; then',
+        '    echo "No stacks were reverted in stage $stage_name. Skipping verification."',
+        '    return 0',
+        '  fi',
+        '',
+        '  # Set environment variables',
+        '  export AWS_DEFAULT_REGION="$region"',
+        '  export DRIFT_DETECTION_OUTPUT="drift-verify-$stage_name.json"',
+        '',
+        '  # Assume role if provided',
+        '  if [[ -n "$role_arn" ]]; then',
+        '    echo "Assuming role: $role_arn"',
+        '    CREDS=$(aws sts assume-role \\',
+        '      --role-arn "$role_arn" \\',
+        '      --role-session-name "drift-verify-$stage_name" \\',
+        '      --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \\',
+        '      --output text)',
+        '    export AWS_ACCESS_KEY_ID=$(echo $CREDS | cut -d\' \' -f1)',
+        '    export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | cut -d\' \' -f2)',
+        '    export AWS_SESSION_TOKEN=$(echo $CREDS | cut -d\' \' -f3)',
+        '  fi',
+        '',
+        '  # Build verify command (re-run detection, always fail on drift)',
+        '  local cmd="npx ts-node src/drift/detect-drift.ts --region $region"',
+        '',
+        '  if [[ -n "$stacks" ]]; then',
+        '    cmd="$cmd --stacks $stacks"',
+        '  fi',
+        '',
+        '  # Run verification',
+        '  echo "Running: $cmd"',
+        '  eval "$cmd"',
+        '}',
+        '',
       ); // end if (hasAnyRemediation)
     }
 
@@ -391,30 +391,30 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
     const lines: string[] = [];
 
     // Add check for drift detection results
-    lines.push(`  # Check if drift was detected`);
+    lines.push('  # Check if drift was detected');
     lines.push(`  if [[ ! -f "drift-results-${stage.name}.json" ]]; then`);
-    lines.push(`    echo "No detection results found. Skipping remediation."`);
-    lines.push(`    return 0`);
-    lines.push(`  fi`);
+    lines.push('    echo "No detection results found. Skipping remediation."');
+    lines.push('    return 0');
+    lines.push('  fi');
     lines.push(`  local drifted=$(jq '[.[] | select(.driftStatus == "DRIFTED")] | length' "drift-results-${stage.name}.json")`);
-    lines.push(`  if [[ "$drifted" -eq 0 ]]; then`);
-    lines.push(`    echo "No drift detected. Skipping remediation."`);
-    lines.push(`    return 0`);
-    lines.push(`  fi`);
+    lines.push('  if [[ "$drifted" -eq 0 ]]; then');
+    lines.push('    echo "No drift detected. Skipping remediation."');
+    lines.push('    return 0');
+    lines.push('  fi');
     lines.push('');
 
     // Add confirmation prompt for manual policy
     if (remediation.policy === 'manual') {
-      lines.push(`  # Manual policy: require confirmation`);
-      lines.push(`  if [[ "$AUTO_YES" != "true" ]]; then`);
-      lines.push(`    echo ""`);
-      lines.push(`    echo "Drift detected in $drifted stacks. Remediation requires approval."`);
+      lines.push('  # Manual policy: require confirmation');
+      lines.push('  if [[ "$AUTO_YES" != "true" ]]; then');
+      lines.push('    echo ""');
+      lines.push('    echo "Drift detected in $drifted stacks. Remediation requires approval."');
       lines.push(`    read -p "Proceed with remediation for stage ${stage.name}? (yes/no): " CONFIRM`);
-      lines.push(`    if [[ "$CONFIRM" != "yes" ]]; then`);
-      lines.push(`      echo "Remediation skipped by user."`);
-      lines.push(`      return 0`);
-      lines.push(`    fi`);
-      lines.push(`  fi`);
+      lines.push('    if [[ "$CONFIRM" != "yes" ]]; then');
+      lines.push('      echo "Remediation skipped by user."');
+      lines.push('      return 0');
+      lines.push('    fi');
+      lines.push('  fi');
       lines.push('');
     }
 
@@ -439,16 +439,16 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
     const lines: string[] = [];
 
     // Add check for remediation results
-    lines.push(`  # Check if remediation was performed`);
+    lines.push('  # Check if remediation was performed');
     lines.push(`  if [[ ! -f "drift-remediation-${stage.name}.json" ]]; then`);
-    lines.push(`    echo "No remediation results found. Skipping verification."`);
-    lines.push(`    return 0`);
-    lines.push(`  fi`);
+    lines.push('    echo "No remediation results found. Skipping verification."');
+    lines.push('    return 0');
+    lines.push('  fi');
     lines.push(`  local reverted=$(jq '.summary.revertedStacks' "drift-remediation-${stage.name}.json")`);
-    lines.push(`  if [[ "$reverted" -eq 0 ]]; then`);
-    lines.push(`    echo "No stacks were reverted. Skipping verification."`);
-    lines.push(`    return 0`);
-    lines.push(`  fi`);
+    lines.push('  if [[ "$reverted" -eq 0 ]]; then');
+    lines.push('    echo "No stacks were reverted. Skipping verification."');
+    lines.push('    return 0');
+    lines.push('  fi');
     lines.push('');
 
     // Add step commands
