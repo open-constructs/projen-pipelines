@@ -624,7 +624,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: backend-drift-results-production
-          path: backend-drift-results-production.json
+          path: drift-results-production.json
   drift-summary:
     name: Drift Detection Summary
     needs: drift-production
@@ -941,7 +941,8 @@ backend-drift:summary:
   stage: summary
   tags: []
   needs:
-    - backend-drift:production
+    - job: backend-drift:production
+      artifacts: true
   only:
     refs:
       - schedules
