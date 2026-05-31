@@ -63,15 +63,8 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           uses: 'actions/checkout@v6',
         },
         {
-          name: 'Setup Node.js',
-          uses: 'actions/setup-node@v6',
-          with: {
-            'node-version': '20',
-          },
-        },
-        {
           name: 'Install dependencies',
-          run: `${this.project.projenCommand} install:ci`,
+          run: 'npm install',
         },
         ...driftStep.steps,
       ];
@@ -156,6 +149,14 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
         needs: allJobIds,
         steps: [
           {
+            name: 'Checkout',
+            uses: 'actions/checkout@v6',
+          },
+          {
+            name: 'Install dependencies',
+            run: 'npm install',
+          },
+          {
             name: 'Download all artifacts',
             uses: 'actions/download-artifact@v8',
             with: {
@@ -164,7 +165,11 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           },
           {
             name: 'Generate summary',
-            run: anyRemediation ? this.generateSummaryScript() : this.generateDetectionOnlySummaryScript(),
+            run: 'generate-drift-summary --results-dir drift-results --output drift-summary.md',
+          },
+          {
+            name: 'Write summary to job summary',
+            run: 'cat drift-summary.md >> $GITHUB_STEP_SUMMARY',
           },
         ],
       };
@@ -211,15 +216,8 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           uses: 'actions/checkout@v6',
         },
         {
-          name: 'Setup Node.js',
-          uses: 'actions/setup-node@v6',
-          with: {
-            'node-version': '20',
-          },
-        },
-        {
           name: 'Install dependencies',
-          run: `${this.project.projenCommand} install:ci`,
+          run: 'npm install',
         },
         {
           name: 'Download detection results',
@@ -280,15 +278,8 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           uses: 'actions/checkout@v6',
         },
         {
-          name: 'Setup Node.js',
-          uses: 'actions/setup-node@v6',
-          with: {
-            'node-version': '20',
-          },
-        },
-        {
           name: 'Install dependencies',
-          run: `${this.project.projenCommand} install:ci`,
+          run: 'npm install',
         },
         ...verifyStep.steps,
         {
@@ -413,149 +404,6 @@ if (issues.data.length === 0) {
     body: body,
   });
 }
-`;
-  }
-
-  private generateSummaryScript(): string {
-    return `#!/bin/bash
-echo "## Drift Detection & Remediation Summary" >> $GITHUB_STEP_SUMMARY
-echo "" >> $GITHUB_STEP_SUMMARY
-
-total_stacks=0
-total_drifted=0
-total_errors=0
-total_reverted=0
-total_skipped=0
-total_failed=0
-total_gated=0
-
-# Process detection results
-for dir in drift-results/*/; do
-  if [[ -d "$dir" ]]; then
-    for file in "$dir"drift-results-*.json; do
-      if [[ -f "$file" ]]; then
-        stage=$(basename "$file" | sed 's/drift-results-//;s/.json//')
-        echo "### Stage: $stage" >> $GITHUB_STEP_SUMMARY
-
-        # Parse JSON and generate summary
-        jq -r '
-          . as $results |
-          "- Total stacks: " + ($results | length | tostring) + "\\n" +
-          "- Drifted: " + ([$results[] | select(.driftStatus == "DRIFTED")] | length | tostring) + "\\n" +
-          "- Errors: " + ([$results[] | select(.error)] | length | tostring) + "\\n" +
-          ([$results[] | select(.driftStatus == "DRIFTED")] |
-            if length > 0 then
-              "\\n**Drifted stacks:**\\n" +
-              (map("  - " + .stackName + " (" + ((.driftedResources // []) | length | tostring) + " resources)") | join("\\n"))
-            else "" end)
-        ' "$file" >> $GITHUB_STEP_SUMMARY
-
-        echo "" >> $GITHUB_STEP_SUMMARY
-
-        # Count totals
-        total_stacks=$((total_stacks + $(jq 'length' "$file")))
-        total_drifted=$((total_drifted + $(jq '[.[] | select(.driftStatus == "DRIFTED")] | length' "$file")))
-        total_errors=$((total_errors + $(jq '[.[] | select(.error)] | length' "$file")))
-      fi
-    done
-  fi
-done
-
-# Process remediation results
-for dir in drift-results/*/; do
-  if [[ -d "$dir" ]]; then
-    for file in "$dir"drift-remediation-*.json; do
-      if [[ -f "$file" ]]; then
-        stage=$(jq -r '.stageName' "$file")
-        echo "#### Remediation - $stage" >> $GITHUB_STEP_SUMMARY
-
-        reverted=$(jq '.summary.revertedStacks' "$file")
-        skipped=$(jq '.summary.skippedStacks' "$file")
-        failed=$(jq '.summary.failedStacks' "$file")
-        gated=$(jq '.summary.gatedStacks' "$file")
-
-        echo "- Reverted: $reverted" >> $GITHUB_STEP_SUMMARY
-        echo "- Skipped: $skipped" >> $GITHUB_STEP_SUMMARY
-        echo "- Failed: $failed" >> $GITHUB_STEP_SUMMARY
-        echo "- Gated (requires approval): $gated" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-
-        total_reverted=$((total_reverted + reverted))
-        total_skipped=$((total_skipped + skipped))
-        total_failed=$((total_failed + failed))
-        total_gated=$((total_gated + gated))
-      fi
-    done
-  fi
-done
-
-echo "### Overall Summary" >> $GITHUB_STEP_SUMMARY
-echo "- Total stacks checked: $total_stacks" >> $GITHUB_STEP_SUMMARY
-echo "- Total drifted stacks: $total_drifted" >> $GITHUB_STEP_SUMMARY
-echo "- Total errors: $total_errors" >> $GITHUB_STEP_SUMMARY
-
-if [[ $total_reverted -gt 0 ]] || [[ $total_failed -gt 0 ]] || [[ $total_gated -gt 0 ]]; then
-  echo "" >> $GITHUB_STEP_SUMMARY
-  echo "**Remediation:**" >> $GITHUB_STEP_SUMMARY
-  echo "- Stacks reverted: $total_reverted" >> $GITHUB_STEP_SUMMARY
-  echo "- Stacks skipped: $total_skipped" >> $GITHUB_STEP_SUMMARY
-  echo "- Stacks failed: $total_failed" >> $GITHUB_STEP_SUMMARY
-  echo "- Stacks gated: $total_gated" >> $GITHUB_STEP_SUMMARY
-fi
-
-if [[ $total_drifted -gt 0 ]]; then
-  echo "" >> $GITHUB_STEP_SUMMARY
-  echo "\\u26a0\\ufe0f **Action required:** Drift detected in $total_drifted stacks" >> $GITHUB_STEP_SUMMARY
-fi
-`;
-  }
-
-  private generateDetectionOnlySummaryScript(): string {
-    return `
-#!/bin/bash
-echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
-echo "" >> $GITHUB_STEP_SUMMARY
-
-total_stacks=0
-total_drifted=0
-total_errors=0
-
-for file in drift-results-*.json; do
-  if [[ -f "$file" ]]; then
-    stage=$(basename $(dirname "$file"))
-    echo "### Stage: $stage" >> $GITHUB_STEP_SUMMARY
-    
-    # Parse JSON and generate summary
-    jq -r '
-      . as $results |
-      "- Total stacks: " + ($results | length | tostring) + "\\n" +
-      "- Drifted: " + ([$results[] | select(.driftStatus == "DRIFTED")] | length | tostring) + "\\n" +
-      "- Errors: " + ([$results[] | select(.error)] | length | tostring) + "\\n" +
-      ([$results[] | select(.driftStatus == "DRIFTED")] | 
-        if length > 0 then
-          "\\n**Drifted stacks:**\\n" + 
-          (map("  - " + .stackName + " (" + ((.driftedResources // []) | length | tostring) + " resources)") | join("\\n"))
-        else "" end)
-    ' "$file" >> $GITHUB_STEP_SUMMARY
-    
-    echo "" >> $GITHUB_STEP_SUMMARY
-    
-    # Count totals
-    total_stacks=$((total_stacks + $(jq 'length' "$file")))
-    total_drifted=$((total_drifted + $(jq '[.[] | select(.driftStatus == "DRIFTED")] | length' "$file")))
-    total_errors=$((total_errors + $(jq '[.[] | select(.error)] | length' "$file")))
-  fi
-done
-
-echo "### Overall Summary" >> $GITHUB_STEP_SUMMARY
-echo "- Total stacks checked: $total_stacks" >> $GITHUB_STEP_SUMMARY
-echo "- Total drifted stacks: $total_drifted" >> $GITHUB_STEP_SUMMARY
-echo "- Total errors: $total_errors" >> $GITHUB_STEP_SUMMARY
-
-if [[ $total_drifted -gt 0 ]]; then
-  echo "" >> $GITHUB_STEP_SUMMARY
-  echo "⚠️ **Action required:** Drift detected in $total_drifted stacks" >> $GITHUB_STEP_SUMMARY
-fi
 `;
   }
 

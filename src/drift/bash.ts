@@ -72,7 +72,7 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
       '# Install dependencies if not already installed',
       'if ! command -v ts-node &> /dev/null; then',
       '  echo "Installing dependencies..."',
-      `  ${this.project.projenCommand} install:ci`,
+      '  npm install',
       'fi',
       '',
       '# Function to run drift detection for a stage',
@@ -458,29 +458,9 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
   }
 
   private generateBashSummaryScript(): string {
-    return `# Print remediation summary
-total_reverted=0
-total_failed=0
-total_gated=0
-
-for file in drift-remediation-*.json; do
-  if [[ -f "$file" ]]; then
-    stage=$(jq -r '.stageName' "$file")
-    reverted=$(jq '.summary.revertedStacks' "$file")
-    failed=$(jq '.summary.failedStacks' "$file")
-    gated=$(jq '.summary.gatedStacks' "$file")
-    
-    echo "Remediation - $stage: reverted=$reverted, failed=$failed, gated=$gated"
-    
-    total_reverted=$((total_reverted + reverted))
-    total_failed=$((total_failed + failed))
-    total_gated=$((total_gated + gated))
-  fi
-done
-
-if [[ $total_reverted -gt 0 ]] || [[ $total_failed -gt 0 ]] || [[ $total_gated -gt 0 ]]; then
-  echo ""
-  echo "Remediation totals: reverted=$total_reverted, failed=$total_failed, gated=$total_gated"
-fi`;
+    return `# Generate and display summary
+generate-drift-summary --results-dir . --output drift-summary.md
+echo ""
+cat drift-summary.md`;
   }
 }
