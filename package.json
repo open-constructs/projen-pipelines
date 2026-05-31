@@ -6,7 +6,6 @@
   },
   "bin": {
     "detect-drift": "lib/drift/detect-drift.js",
-    "revert-drift": "lib/drift/revert-drift.js",
     "pipelines-release": "lib/release.js"
   },
   "scripts": {
