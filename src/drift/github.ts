@@ -84,7 +84,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
         uses: 'actions/upload-artifact@v7',
         with: {
           name: `${this.namePrefix}drift-results-${stage.name}`,
-          path: `drift-results-${stage.name}.json`,
+          path: `drift-results-${stage.name}*`,
         },
       });
 
@@ -149,14 +149,6 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
         needs: allJobIds,
         steps: [
           {
-            name: 'Checkout',
-            uses: 'actions/checkout@v6',
-          },
-          {
-            name: 'Install dependencies',
-            run: 'npm install',
-          },
-          {
             name: 'Download all artifacts',
             uses: 'actions/download-artifact@v8',
             with: {
@@ -164,12 +156,11 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
             },
           },
           {
-            name: 'Generate summary',
-            run: 'generate-drift-summary --results-dir drift-results --output drift-summary.md',
-          },
-          {
-            name: 'Write summary to job summary',
-            run: 'cat drift-summary.md >> $GITHUB_STEP_SUMMARY',
+            name: 'Write summary',
+            run: [
+              'echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY',
+              'for f in drift-results/**/*-summary.md; do [ -f "$f" ] && cat "$f" >> $GITHUB_STEP_SUMMARY; done',
+            ].join('\n'),
           },
         ],
       };
@@ -233,7 +224,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           uses: 'actions/upload-artifact@v7',
           with: {
             name: `${this.namePrefix}drift-remediation-${stage.name}`,
-            path: `drift-remediation-${stage.name}.json`,
+            path: `drift-remediation-${stage.name}*`,
           },
         },
       ],
@@ -288,7 +279,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           uses: 'actions/upload-artifact@v7',
           with: {
             name: `${this.namePrefix}drift-verify-${stage.name}`,
-            path: `drift-verify-${stage.name}.json`,
+            path: `drift-verify-${stage.name}*`,
           },
         },
       ],

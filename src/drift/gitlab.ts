@@ -59,7 +59,7 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
           'npm install',
         ],
         artifacts: {
-          paths: ['drift-results-*.json'],
+          paths: ['drift-results-*.json', 'drift-results-*-summary.md'],
           expireIn: '1 week',
           when: gitlab.CacheWhen.ALWAYS,
           ...(hasRemediation ? { reports: { dotenv: ['drift-env.env'] } } : {}),
@@ -89,7 +89,7 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
             'npm install',
           ],
           artifacts: {
-            paths: ['drift-remediation-*.json'],
+            paths: ['drift-remediation-*.json', 'drift-remediation-*-summary.md'],
             expireIn: '1 week',
             when: gitlab.CacheWhen.ALWAYS,
           },
@@ -116,7 +116,7 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
             'npm install',
           ],
           artifacts: {
-            paths: ['drift-verify-*.json'],
+            paths: ['drift-verify-*.json', 'drift-verify-*-summary.md'],
             expireIn: '1 week',
             when: gitlab.CacheWhen.ALWAYS,
           },
@@ -223,18 +223,14 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
       [`${this.namePrefix}drift:summary`]: {
         stage: 'summary',
         tags: this.runnerTags,
-        image: { name: this.image },
         needs: summaryNeeds.map(job => ({ job, artifacts: true })),
         only: {
           refs: ['schedules'],
           variables: ['$CI_PIPELINE_SOURCE == "schedule"', '$DRIFT_DETECTION == "true"'],
         },
-        beforeScript: [
-          'npm install',
-        ],
         script: [
-          'generate-drift-summary --results-dir . --output drift-summary.md',
-          'cat drift-summary.md',
+          'echo "## Drift Detection Summary"',
+          'for f in *-summary.md; do [ -f "$f" ] && cat "$f"; done',
         ],
         when: gitlab.JobWhen.ALWAYS,
       },

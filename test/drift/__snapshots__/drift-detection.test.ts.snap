@@ -370,7 +370,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: drift-results-production
-          path: drift-results-production.json
+          path: drift-results-production*
   drift-staging:
     name: Drift Detection - staging
     runs-on: ubuntu-latest
@@ -399,7 +399,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: drift-results-staging
-          path: drift-results-staging.json
+          path: drift-results-staging*
   drift-summary:
     name: Drift Detection Summary
     needs:
@@ -409,18 +409,14 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Install dependencies
-        run: npm install
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
           path: drift-results
-      - name: Generate summary
-        run: generate-drift-summary --results-dir drift-results --output drift-summary.md
-      - name: Write summary to job summary
-        run: cat drift-summary.md >> $GITHUB_STEP_SUMMARY
+      - name: Write summary
+        run: |-
+          echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
+          for f in drift-results/**/*-summary.md; do [ -f "$f" ] && cat "$f" >> $GITHUB_STEP_SUMMARY; done
 "
 `;
 
@@ -463,7 +459,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: drift-results-production
-          path: drift-results-production.json
+          path: drift-results-production*
   drift-summary:
     name: Drift Detection Summary
     needs: drift-production
@@ -471,18 +467,14 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Install dependencies
-        run: npm install
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
           path: drift-results
-      - name: Generate summary
-        run: generate-drift-summary --results-dir drift-results --output drift-summary.md
-      - name: Write summary to job summary
-        run: cat drift-summary.md >> $GITHUB_STEP_SUMMARY
+      - name: Write summary
+        run: |-
+          echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
+          for f in drift-results/**/*-summary.md; do [ -f "$f" ] && cat "$f" >> $GITHUB_STEP_SUMMARY; done
 "
 `;
 
@@ -530,7 +522,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: backend-drift-results-production
-          path: drift-results-production.json
+          path: drift-results-production*
   drift-summary:
     name: Drift Detection Summary
     needs: drift-production
@@ -538,18 +530,14 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Install dependencies
-        run: npm install
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
           path: drift-results
-      - name: Generate summary
-        run: generate-drift-summary --results-dir drift-results --output drift-summary.md
-      - name: Write summary to job summary
-        run: cat drift-summary.md >> $GITHUB_STEP_SUMMARY
+      - name: Write summary
+        run: |-
+          echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
+          for f in drift-results/**/*-summary.md; do [ -f "$f" ] && cat "$f" >> $GITHUB_STEP_SUMMARY; done
 "
 `;
 
@@ -590,7 +578,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: drift-results-production
-          path: drift-results-production.json
+          path: drift-results-production*
   drift-summary:
     name: Drift Detection Summary
     needs: drift-production
@@ -598,18 +586,14 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Install dependencies
-        run: npm install
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
           path: drift-results
-      - name: Generate summary
-        run: generate-drift-summary --results-dir drift-results --output drift-summary.md
-      - name: Write summary to job summary
-        run: cat drift-summary.md >> $GITHUB_STEP_SUMMARY
+      - name: Write summary
+        run: |-
+          echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
+          for f in drift-results/**/*-summary.md; do [ -f "$f" ] && cat "$f" >> $GITHUB_STEP_SUMMARY; done
 "
 `;
 
@@ -650,7 +634,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: drift-results-production
-          path: drift-results-production.json
+          path: drift-results-production*
   drift-summary:
     name: Drift Detection Summary
     needs: drift-production
@@ -658,18 +642,14 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Install dependencies
-        run: npm install
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
           path: drift-results
-      - name: Generate summary
-        run: generate-drift-summary --results-dir drift-results --output drift-summary.md
-      - name: Write summary to job summary
-        run: cat drift-summary.md >> $GITHUB_STEP_SUMMARY
+      - name: Write summary
+        run: |-
+          echo "## Drift Detection Summary" >> $GITHUB_STEP_SUMMARY
+          for f in drift-results/**/*-summary.md; do [ -f "$f" ] && cat "$f" >> $GITHUB_STEP_SUMMARY; done
 "
 `;
 
@@ -704,6 +684,7 @@ stages:
   artifacts:
     paths:
       - drift-results-*.json
+      - drift-results-*-summary.md
     expire_in: 1 week
     when: always
 backend-drift:production:
@@ -721,8 +702,6 @@ backend-drift:production:
 backend-drift:summary:
   stage: summary
   tags: []
-  image:
-    name: node:18
   needs:
     - job: backend-drift:production
       artifacts: true
@@ -732,11 +711,9 @@ backend-drift:summary:
     variables:
       - $CI_PIPELINE_SOURCE == "schedule"
       - $DRIFT_DETECTION == "true"
-  before_script:
-    - npm install
   script:
-    - generate-drift-summary --results-dir . --output drift-summary.md
-    - cat drift-summary.md
+    - echo "## Drift Detection Summary"
+    - for f in *-summary.md; do [ -f "$f" ] && cat "$f"; done
   when: always
 "
 `;

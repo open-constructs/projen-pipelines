@@ -418,6 +418,42 @@ class DriftReverter {
 
     writeFileSync(outputFile, JSON.stringify(report, null, 2));
     console.log(`\nRemediation results saved to: ${outputFile}`);
+
+    // Write markdown summary alongside the JSON
+    const summaryFile = outputFile.replace('.json', '-summary.md');
+    writeFileSync(summaryFile, this.renderMarkdownSummary(report));
+    console.log(`Summary saved to: ${summaryFile}`);
+  }
+
+  private renderMarkdownSummary(report: RemediationReport): string {
+    const lines: string[] = [];
+
+    lines.push(`### Remediation: ${report.stageName}`);
+    lines.push(`- Reverted: ${report.summary.revertedStacks}`);
+    lines.push(`- Skipped: ${report.summary.skippedStacks}`);
+    lines.push(`- Failed: ${report.summary.failedStacks}`);
+    lines.push(`- Gated (requires approval): ${report.summary.gatedStacks}`);
+
+    const failed = this.results.filter(r => r.status === 'failed');
+    if (failed.length > 0) {
+      lines.push('');
+      lines.push('**Failed:**');
+      for (const stack of failed) {
+        lines.push(`  - ${stack.stackName}: ${stack.error}`);
+      }
+    }
+
+    const gatedStacks = this.results.filter(r => r.status === 'gated');
+    if (gatedStacks.length > 0) {
+      lines.push('');
+      lines.push('**Gated (auto→manual downgrade):**');
+      for (const stack of gatedStacks) {
+        lines.push(`  - ${stack.stackName} (${stack.gatedResourceCount} gated resources)`);
+      }
+    }
+
+    lines.push('');
+    return lines.join('\n');
   }
 }
 
