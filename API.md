@@ -3649,6 +3649,156 @@ public readonly repository: string;
 
 ---
 
+### CreateReleaseStepOptions <a name="CreateReleaseStepOptions" id="projen-pipelines.CreateReleaseStepOptions"></a>
+
+Options for the CreateReleaseStep.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.CreateReleaseStepOptions.Initializer"></a>
+
+```typescript
+import { CreateReleaseStepOptions } from 'projen-pipelines'
+
+const createReleaseStepOptions: CreateReleaseStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CreateReleaseStepOptions.property.stageName">stageName</a></code> | <code>string</code> | The stage name this release is for. |
+| <code><a href="#projen-pipelines.CreateReleaseStepOptions.property.currentVersionFile">currentVersionFile</a></code> | <code>string</code> | Path to the file containing version info from after the deployment. |
+| <code><a href="#projen-pipelines.CreateReleaseStepOptions.property.draft">draft</a></code> | <code>boolean</code> | Whether to create the release as a draft. |
+| <code><a href="#projen-pipelines.CreateReleaseStepOptions.property.environment">environment</a></code> | <code>string</code> | The GitHub environment name to associate the release with. |
+| <code><a href="#projen-pipelines.CreateReleaseStepOptions.property.includeEnvironmentInTag">includeEnvironmentInTag</a></code> | <code>boolean</code> | Whether to include the stage/environment name as a suffix in the tag. |
+| <code><a href="#projen-pipelines.CreateReleaseStepOptions.property.prerelease">prerelease</a></code> | <code>boolean</code> | Whether to mark the release as a prerelease. |
+| <code><a href="#projen-pipelines.CreateReleaseStepOptions.property.previousVersionFile">previousVersionFile</a></code> | <code>string</code> | Path to the file containing version info from before the deployment. |
+| <code><a href="#projen-pipelines.CreateReleaseStepOptions.property.tagPrefix">tagPrefix</a></code> | <code>string</code> | Optional prefix for the git tag. |
+| <code><a href="#projen-pipelines.CreateReleaseStepOptions.property.tagSuffix">tagSuffix</a></code> | <code>string</code> | Optional suffix for the git tag to distinguish per-environment releases. |
+
+---
+
+##### `stageName`<sup>Required</sup> <a name="stageName" id="projen-pipelines.CreateReleaseStepOptions.property.stageName"></a>
+
+```typescript
+public readonly stageName: string;
+```
+
+- *Type:* string
+
+The stage name this release is for.
+
+---
+
+##### `currentVersionFile`<sup>Optional</sup> <a name="currentVersionFile" id="projen-pipelines.CreateReleaseStepOptions.property.currentVersionFile"></a>
+
+```typescript
+public readonly currentVersionFile: string;
+```
+
+- *Type:* string
+- *Default:* `version-info-<stageName>-after.json`
+
+Path to the file containing version info from after the deployment.
+
+This file should contain a JSON object with at least a `commitHash` and `version` field.
+
+---
+
+##### `draft`<sup>Optional</sup> <a name="draft" id="projen-pipelines.CreateReleaseStepOptions.property.draft"></a>
+
+```typescript
+public readonly draft: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Whether to create the release as a draft.
+
+---
+
+##### `environment`<sup>Optional</sup> <a name="environment" id="projen-pipelines.CreateReleaseStepOptions.property.environment"></a>
+
+```typescript
+public readonly environment: string;
+```
+
+- *Type:* string
+- *Default:* the stage name
+
+The GitHub environment name to associate the release with.
+
+If provided, the release will reference this environment.
+
+---
+
+##### `includeEnvironmentInTag`<sup>Optional</sup> <a name="includeEnvironmentInTag" id="projen-pipelines.CreateReleaseStepOptions.property.includeEnvironmentInTag"></a>
+
+```typescript
+public readonly includeEnvironmentInTag: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to include the stage/environment name as a suffix in the tag.
+
+---
+
+##### `prerelease`<sup>Optional</sup> <a name="prerelease" id="projen-pipelines.CreateReleaseStepOptions.property.prerelease"></a>
+
+```typescript
+public readonly prerelease: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Whether to mark the release as a prerelease.
+
+---
+
+##### `previousVersionFile`<sup>Optional</sup> <a name="previousVersionFile" id="projen-pipelines.CreateReleaseStepOptions.property.previousVersionFile"></a>
+
+```typescript
+public readonly previousVersionFile: string;
+```
+
+- *Type:* string
+- *Default:* `version-info-<stageName>-before.json`
+
+Path to the file containing version info from before the deployment.
+
+This file should contain a JSON object with at least a `commitHash` field.
+
+---
+
+##### `tagPrefix`<sup>Optional</sup> <a name="tagPrefix" id="projen-pipelines.CreateReleaseStepOptions.property.tagPrefix"></a>
+
+```typescript
+public readonly tagPrefix: string;
+```
+
+- *Type:* string
+- *Default:* 'v'
+
+Optional prefix for the git tag.
+
+---
+
+##### `tagSuffix`<sup>Optional</sup> <a name="tagSuffix" id="projen-pipelines.CreateReleaseStepOptions.property.tagSuffix"></a>
+
+```typescript
+public readonly tagSuffix: string;
+```
+
+- *Type:* string
+- *Default:* the stage name (e.g., v1.0.0-production)
+
+Optional suffix for the git tag to distinguish per-environment releases.
+
+---
+
 ### CustomVersioningConfig <a name="CustomVersioningConfig" id="projen-pipelines.CustomVersioningConfig"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.CustomVersioningConfig.Initializer"></a>
@@ -3780,8 +3930,9 @@ const deploymentStage: DeploymentStage = { ... }
 | <code><a href="#projen-pipelines.DeploymentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
-| <code><a href="#projen-pipelines.DeploymentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute after the deployment step. These run after `cdk deploy` completes successfully. |
 | <code><a href="#projen-pipelines.DeploymentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.preDeploySteps">preDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute before the deployment step. These run after the AWS role is assumed but before `cdk deploy`. |
 | <code><a href="#projen-pipelines.DeploymentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.manualApproval">manualApproval</a></code> | <code>boolean</code> | *No description.* |
 
@@ -3840,6 +3991,10 @@ public readonly postDeploySteps: PipelineStep[];
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
+Steps to execute after the deployment step. These run after `cdk deploy` completes successfully.
+
+Useful for capturing post-deployment state or triggering downstream actions.
+
 ---
 
 ##### `postDiffSteps`<sup>Optional</sup> <a name="postDiffSteps" id="projen-pipelines.DeploymentStage.property.postDiffSteps"></a>
@@ -3849,6 +4004,20 @@ public readonly postDiffSteps: PipelineStep[];
 ```
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `preDeploySteps`<sup>Optional</sup> <a name="preDeploySteps" id="projen-pipelines.DeploymentStage.property.preDeploySteps"></a>
+
+```typescript
+public readonly preDeploySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to execute before the deployment step. These run after the AWS role is assumed but before `cdk deploy`.
+
+Useful for capturing pre-deployment state (e.g., saving current version info).
 
 ---
 
@@ -5870,8 +6039,9 @@ const independentStage: IndependentStage = { ... }
 | <code><a href="#projen-pipelines.IndependentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
-| <code><a href="#projen-pipelines.IndependentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute after the deployment step. These run after `cdk deploy` completes successfully. |
 | <code><a href="#projen-pipelines.IndependentStage.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.preDeploySteps">preDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute before the deployment step. These run after the AWS role is assumed but before `cdk deploy`. |
 | <code><a href="#projen-pipelines.IndependentStage.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.deployOnPush">deployOnPush</a></code> | <code>boolean</code> | This specifies whether the stage should be deployed on push. |
 
@@ -5930,6 +6100,10 @@ public readonly postDeploySteps: PipelineStep[];
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
+Steps to execute after the deployment step. These run after `cdk deploy` completes successfully.
+
+Useful for capturing post-deployment state or triggering downstream actions.
+
 ---
 
 ##### `postDiffSteps`<sup>Optional</sup> <a name="postDiffSteps" id="projen-pipelines.IndependentStage.property.postDiffSteps"></a>
@@ -5939,6 +6113,20 @@ public readonly postDiffSteps: PipelineStep[];
 ```
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `preDeploySteps`<sup>Optional</sup> <a name="preDeploySteps" id="projen-pipelines.IndependentStage.property.preDeploySteps"></a>
+
+```typescript
+public readonly preDeploySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to execute before the deployment step. These run after the AWS role is assumed but before `cdk deploy`.
+
+Useful for capturing pre-deployment state (e.g., saving current version info).
 
 ---
 
@@ -5985,8 +6173,9 @@ const namedStageOptions: NamedStageOptions = { ... }
 | <code><a href="#projen-pipelines.NamedStageOptions.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
-| <code><a href="#projen-pipelines.NamedStageOptions.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.NamedStageOptions.property.postDeploySteps">postDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute after the deployment step. These run after `cdk deploy` completes successfully. |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.postDiffSteps">postDiffSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.NamedStageOptions.property.preDeploySteps">preDeploySteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute before the deployment step. These run after the AWS role is assumed but before `cdk deploy`. |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.watchable">watchable</a></code> | <code>boolean</code> | *No description.* |
 
 ---
@@ -6044,6 +6233,10 @@ public readonly postDeploySteps: PipelineStep[];
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
 
+Steps to execute after the deployment step. These run after `cdk deploy` completes successfully.
+
+Useful for capturing post-deployment state or triggering downstream actions.
+
 ---
 
 ##### `postDiffSteps`<sup>Optional</sup> <a name="postDiffSteps" id="projen-pipelines.NamedStageOptions.property.postDiffSteps"></a>
@@ -6053,6 +6246,20 @@ public readonly postDiffSteps: PipelineStep[];
 ```
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `preDeploySteps`<sup>Optional</sup> <a name="preDeploySteps" id="projen-pipelines.NamedStageOptions.property.preDeploySteps"></a>
+
+```typescript
+public readonly preDeploySteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to execute before the deployment step. These run after the AWS role is assumed but before `cdk deploy`.
+
+Useful for capturing pre-deployment state (e.g., saving current version info).
 
 ---
 
@@ -6267,6 +6474,92 @@ public readonly version: string;
 The version of pnpm to install.
 
 If not provided, defaults to '9'.
+
+---
+
+### SaveVersionInfoStepOptions <a name="SaveVersionInfoStepOptions" id="projen-pipelines.SaveVersionInfoStepOptions"></a>
+
+Options for the SaveVersionInfoStep.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.SaveVersionInfoStepOptions.Initializer"></a>
+
+```typescript
+import { SaveVersionInfoStepOptions } from 'projen-pipelines'
+
+const saveVersionInfoStepOptions: SaveVersionInfoStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.SaveVersionInfoStepOptions.property.region">region</a></code> | <code>string</code> | The AWS region where the stack is deployed. |
+| <code><a href="#projen-pipelines.SaveVersionInfoStepOptions.property.stackName">stackName</a></code> | <code>string</code> | The CloudFormation stack name to query for version outputs. |
+| <code><a href="#projen-pipelines.SaveVersionInfoStepOptions.property.stageName">stageName</a></code> | <code>string</code> | The stage name, used for naming the output file. |
+| <code><a href="#projen-pipelines.SaveVersionInfoStepOptions.property.outputFile">outputFile</a></code> | <code>string</code> | The output file path to write version info to. |
+| <code><a href="#projen-pipelines.SaveVersionInfoStepOptions.property.phase">phase</a></code> | <code>string</code> | Whether this is capturing the "before" or "after" deployment state. |
+
+---
+
+##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.SaveVersionInfoStepOptions.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+The AWS region where the stack is deployed.
+
+---
+
+##### `stackName`<sup>Required</sup> <a name="stackName" id="projen-pipelines.SaveVersionInfoStepOptions.property.stackName"></a>
+
+```typescript
+public readonly stackName: string;
+```
+
+- *Type:* string
+
+The CloudFormation stack name to query for version outputs.
+
+---
+
+##### `stageName`<sup>Required</sup> <a name="stageName" id="projen-pipelines.SaveVersionInfoStepOptions.property.stageName"></a>
+
+```typescript
+public readonly stageName: string;
+```
+
+- *Type:* string
+
+The stage name, used for naming the output file.
+
+---
+
+##### `outputFile`<sup>Optional</sup> <a name="outputFile" id="projen-pipelines.SaveVersionInfoStepOptions.property.outputFile"></a>
+
+```typescript
+public readonly outputFile: string;
+```
+
+- *Type:* string
+- *Default:* `version-info-<stageName>-<suffix>.json`
+
+The output file path to write version info to.
+
+---
+
+##### `phase`<sup>Optional</sup> <a name="phase" id="projen-pipelines.SaveVersionInfoStepOptions.property.phase"></a>
+
+```typescript
+public readonly phase: string;
+```
+
+- *Type:* string
+- *Default:* 'before'
+
+Whether this is capturing the "before" or "after" deployment state.
 
 ---
 
@@ -7171,6 +7464,91 @@ Should be implemented by subclasses.
 
 
 
+### CreateReleaseStep <a name="CreateReleaseStep" id="projen-pipelines.CreateReleaseStep"></a>
+
+A pipeline step that creates a release with a changelog generated from git history between two commit hashes.
+
+This step:
+1. Reads the previous and current version info files (produced by SaveVersionInfoStep)
+2. Extracts the commit hashes from both
+3. Generates a changelog from git log between the two commits
+4. Creates a GitHub release (or GitLab release) with the version tag and changelog
+
+For GitHub: Uses the `gh` CLI to create releases with environment association.
+For GitLab: Uses the GitLab release CLI or API to create releases with environment association.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.CreateReleaseStep.Initializer"></a>
+
+```typescript
+import { CreateReleaseStep } from 'projen-pipelines'
+
+new CreateReleaseStep(project: Project, options: CreateReleaseStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.CreateReleaseStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.CreateReleaseStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.CreateReleaseStepOptions">CreateReleaseStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.CreateReleaseStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.CreateReleaseStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.CreateReleaseStepOptions">CreateReleaseStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.CreateReleaseStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.CreateReleaseStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.CreateReleaseStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.CreateReleaseStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.CreateReleaseStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.CreateReleaseStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
+
+
+
+
 ### DownloadArtifactStep <a name="DownloadArtifactStep" id="projen-pipelines.DownloadArtifactStep"></a>
 
 #### Initializers <a name="Initializers" id="projen-pipelines.DownloadArtifactStep.Initializer"></a>
@@ -7943,6 +8321,88 @@ public toGitlab(): GitlabStepConfig
 ```
 
 Converts the step into a GitLab CI configuration.
+
+
+
+
+### SaveVersionInfoStep <a name="SaveVersionInfoStep" id="projen-pipelines.SaveVersionInfoStep"></a>
+
+A pipeline step that fetches current version information from CloudFormation stack outputs and saves it to a JSON file.
+
+This step is designed to be used before and after deployment:
+- Before: captures the currently deployed version (previous commit hash)
+- After: captures the newly deployed version (current commit hash)
+
+The output files can then be consumed by CreateReleaseStep to generate changelogs.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.SaveVersionInfoStep.Initializer"></a>
+
+```typescript
+import { SaveVersionInfoStep } from 'projen-pipelines'
+
+new SaveVersionInfoStep(project: Project, options: SaveVersionInfoStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.SaveVersionInfoStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.SaveVersionInfoStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.SaveVersionInfoStepOptions">SaveVersionInfoStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.SaveVersionInfoStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.SaveVersionInfoStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.SaveVersionInfoStepOptions">SaveVersionInfoStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.SaveVersionInfoStep.toBash">toBash</a></code> | Generates a configuration for a bash script step. |
+| <code><a href="#projen-pipelines.SaveVersionInfoStep.toGithub">toGithub</a></code> | Generates a configuration for a GitHub Actions step. |
+| <code><a href="#projen-pipelines.SaveVersionInfoStep.toGitlab">toGitlab</a></code> | Generates a configuration for a GitLab CI step. |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.SaveVersionInfoStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Generates a configuration for a bash script step.
+
+Should be implemented by subclasses.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.SaveVersionInfoStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Generates a configuration for a GitHub Actions step.
+
+Should be implemented by subclasses.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.SaveVersionInfoStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Generates a configuration for a GitLab CI step.
+
+Should be implemented by subclasses.
 
 
 

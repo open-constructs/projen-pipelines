@@ -267,12 +267,12 @@ echo "Release created successfully: $TAG_NAME"
       '    \\"tag_name\\": \\"$TAG_NAME\\",',
       `    \\"name\\": \\"Release \${CURRENT_VERSION} (${this.options.stageName})\\",`,
       '    \\"description\\": $(echo "$RELEASE_DESC" | jq -Rs .),',
-      `    \\"milestones\\": [],`,
-      `    \\"assets\\": { \\"links\\": [] }`,
+      '    \\"milestones\\": [],',
+      '    \\"assets\\": { \\"links\\": [] }',
       '  }" \\',
       '  "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/releases" || echo "Release may already exist, skipping..."',
       '',
-      `echo "Release created successfully: $TAG_NAME"`,
+      'echo "Release created successfully: $TAG_NAME"',
     ];
   }
 
