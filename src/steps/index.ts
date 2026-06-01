@@ -5,3 +5,5 @@ export * from './registries';
 export * from './amplify-deploy.step';
 export * from './github-summary.step';
 export * from './package-manager-setup.step';
+export * from './save-version-info.step';
+export * from './create-release.step';
