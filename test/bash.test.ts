@@ -161,3 +161,38 @@ test('Bash snapshot with monorepo subproject', () => {
 
   expect(pipelineMd).toMatchSnapshot();
 });
+
+test('Bash snapshot with monorepo subproject and preBuildCommand', () => {
+  const root = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'root-app',
+  });
+
+  const sub = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'backend',
+    parent: root,
+    outdir: 'packages/backend',
+  });
+
+  new BashCDKPipeline(sub, {
+    iamRoleArns: {},
+    preBuildCommand: 'pnpm -r --filter backend^... run build',
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(root);
+  const pipelineMd = snapshot['packages/backend/pipeline.md'];
+  expect(pipelineMd).toBeDefined();
+
+  // preBuildCommand should run from repo root using a subshell
+  expect(pipelineMd).toContain('(cd "$(git rev-parse --show-toplevel)" && pnpm -r --filter backend^... run build)');
+});

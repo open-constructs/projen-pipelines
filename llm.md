@@ -306,7 +306,7 @@ When the CDK pipeline is attached to a projen subproject (i.e. a project with `p
 | Option | Description |
 |--------|-------------|
 | `workingDirectory` | Explicit override for the working directory (auto-computed from project hierarchy if not set) |
-| `preBuildCommand` | Command to run before the build step, from the working directory. Useful for building workspace dependencies. |
+| `preBuildCommand` | Command to run before the build step, executed from the repository root. Useful for building workspace dependencies. |
 
 ### Monorepo Usage Example
 

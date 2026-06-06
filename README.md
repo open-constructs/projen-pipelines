@@ -570,7 +570,7 @@ When the pipeline is attached to a subproject:
 
 #### preBuildCommand
 
-In monorepos, workspace sibling packages may need to be built before the app can compile. Use `preBuildCommand` to inject a build step before the synth/build:
+In monorepos, workspace sibling packages may need to be built before the app can compile. Use `preBuildCommand` to inject a build step that runs from the repository root before the synth/build:
 
 | Package Manager | preBuildCommand |
 |-----------------|-----------------|

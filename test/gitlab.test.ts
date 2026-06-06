@@ -474,3 +474,47 @@ test('Gitlab snapshot with monorepo subproject', () => {
 
   expect(gitlabCi).toMatchSnapshot();
 });
+
+test('Gitlab snapshot with monorepo subproject and preBuildCommand', () => {
+  const root = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'root-app',
+  });
+
+  const sub = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'backend',
+    parent: root,
+    outdir: 'packages/backend',
+  });
+
+  new GitlabCDKPipeline(sub, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    preBuildCommand: 'pnpm -r --filter backend^... run build',
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(root);
+  const gitlabCi = snapshot['packages/backend/.gitlab-ci.yml'];
+  expect(gitlabCi).toBeDefined();
+
+  // preBuildCommand should run from repo root using a subshell
+  expect(gitlabCi).toContain('(cd $CI_PROJECT_DIR && pnpm -r --filter backend^... run build)');
+
+  // Should still have cd into working directory
+  expect(gitlabCi).toContain('cd packages/backend');
+});

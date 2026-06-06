@@ -1043,6 +1043,54 @@ test('Github snapshot with monorepo subproject and preBuildCommand', () => {
   expect(deployYml).toMatchSnapshot();
 });
 
+test('Github snapshot with monorepo subproject and manualApproval', () => {
+  const root = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'root-app',
+  });
+
+  const sub = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'backend',
+    parent: root,
+    outdir: 'packages/backend',
+  });
+
+  new GithubCDKPipeline(sub, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        prod: 'prodRole',
+      },
+    },
+    pkgNamespace: '@myorg',
+    stages: [{
+      name: 'prod',
+      manualApproval: true,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(root);
+  const releaseYml = snapshot['.github/workflows/backend-release-prod.yml'];
+  expect(releaseYml).toBeDefined();
+
+  // The release workflow should have working-directory set
+  expect(releaseYml).toContain('working-directory: packages/backend');
+
+  // The mv command should work relative to working directory (no prefix needed)
+  expect(releaseYml).toContain('mv ./node_modules/@myorg/backend cdk.out');
+
+  // The cdk-outputs artifact path should be prefixed for upload
+  expect(releaseYml).toContain('path: packages/backend/cdk-outputs-prod.json');
+});
+
 test('Github snapshot with monorepo subproject and feature stages', () => {
   const root = new AwsCdkTypeScriptApp({
     cdkVersion: '2.132.0',

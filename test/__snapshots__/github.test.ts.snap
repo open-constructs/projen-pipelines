@@ -4207,7 +4207,7 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: pnpm -r --filter backend^... run build
+      - run: cd $GITHUB_WORKSPACE && pnpm -r --filter backend^... run build
       - run: npx projen build
       - name: Upload Artifact
         uses: actions/upload-artifact@v7

@@ -224,7 +224,9 @@ export interface CDKPipelineOptions {
 
   /**
    * A command to run before the build step, executed from the repository root.
-   * This is useful in monorepos to build workspace dependencies before the app.
+   * When a workingDirectory is set (monorepo subproject), the command is
+   * automatically wrapped to execute from the repository root regardless of
+   * the job's working directory setting.
    *
    * For pnpm workspaces: `pnpm -r --filter <appname>^... run build`
    * For npm workspaces: `npm run build --workspaces --if-present`
@@ -359,7 +361,7 @@ export abstract class CDKPipeline extends Component {
     }
 
     if (this.baseOptions.preBuildCommand) {
-      seq.addSteps(new SimpleCommandStep(this.project, [this.baseOptions.preBuildCommand]));
+      seq.addSteps(new SimpleCommandStep(this.project, [this.preBuildCommandWrapped()]));
     }
 
     seq.addSteps(new ProjenScriptStep(this.project, 'build'));
@@ -369,6 +371,28 @@ export abstract class CDKPipeline extends Component {
       seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.postSynthCommands));
     }
     return seq;
+  }
+
+  /**
+   * Returns the preBuildCommand wrapped to execute from the repository root.
+   * When workingDirectory is set, the command is prefixed with a cd to the
+   * repo root using engine-appropriate environment variables.
+   */
+  private preBuildCommandWrapped(): string {
+    const cmd = this.baseOptions.preBuildCommand!;
+    if (!this.workingDirectory) {
+      return cmd;
+    }
+    switch (this.engineType()) {
+      case PipelineEngine.GITHUB:
+        return `cd $GITHUB_WORKSPACE && ${cmd}`;
+      case PipelineEngine.GITLAB:
+        return `(cd $CI_PROJECT_DIR && ${cmd})`;
+      case PipelineEngine.BASH:
+        return `(cd "$(git rev-parse --show-toplevel)" && ${cmd})`;
+      default:
+        return cmd;
+    }
   }
 
   protected provideAssetUploadStep(stageName?: string): PipelineStep {
