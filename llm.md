@@ -289,6 +289,70 @@ export interface AmplifyDeployStepConfig {
 
 Projen-Pipelines is currently in version 0.x, awaiting Projen's 1.0 release. Despite being pre-1.0, it's being used in production environments.
 
+## Monorepo / Subproject Support
+
+When the CDK pipeline is attached to a projen subproject (i.e. a project with `parent` set), the library automatically:
+
+1. **Detects the working directory**: Computes the relative path from the repo root to the subproject using `path.relative(app.root.outdir, app.outdir)`.
+2. **Runs CI commands in the subproject directory**:
+   - GitHub: Sets `defaults.run.working-directory` on every job.
+   - GitLab: Prepends `cd <workingDirectory>` to job scripts.
+   - Bash: Includes `cd <workingDirectory>` in the pipeline instructions.
+3. **Prefixes artifact paths**: Upload/download artifact paths (cloud assembly, CDK outputs) are prefixed with the working directory since they resolve against the repo root, not the job working directory.
+4. **Attaches workflows to the root GitHub component**: Since GitHub only discovers workflows in the repo-root `.github/workflows/`, subproject pipelines use `GitHub.of(app.root)` to add workflows.
+
+### Configuration Options
+
+| Option | Description |
+|--------|-------------|
+| `workingDirectory` | Explicit override for the working directory (auto-computed from project hierarchy if not set) |
+| `preBuildCommand` | Command to run before the build step, from the working directory. Useful for building workspace dependencies. |
+
+### Monorepo Usage Example
+
+```typescript
+import { awscdk } from 'projen';
+import { GithubCDKPipeline } from 'projen-pipelines';
+
+// Root monorepo project
+const root = new awscdk.AwsCdkTypeScriptApp({
+  cdkVersion: '2.150.0',
+  name: 'my-monorepo',
+  defaultReleaseBranch: 'main',
+});
+
+// Subproject (e.g. packages/backend)
+const backend = new awscdk.AwsCdkTypeScriptApp({
+  cdkVersion: '2.150.0',
+  name: 'backend',
+  defaultReleaseBranch: 'main',
+  parent: root,
+  outdir: 'packages/backend',
+  devDeps: ['projen-pipelines'],
+});
+
+// Pipeline for the subproject
+new GithubCDKPipeline(backend, {
+  iamRoleArns: {
+    default: 'arn:aws:iam::123456789012:role/DeployRole',
+  },
+  // Build workspace dependencies before the app build
+  preBuildCommand: 'pnpm -r --filter backend^... run build',
+  stages: [
+    { name: 'dev', env: { account: '123456789012', region: 'eu-central-1' } },
+    { name: 'prod', env: { account: '123456789013', region: 'eu-central-1' } },
+  ],
+});
+```
+
+### preBuildCommand Examples
+
+| Package Manager | Command |
+|-----------------|---------|
+| pnpm | `pnpm -r --filter <appname>^... run build` |
+| npm | `npm run build --workspaces --if-present` |
+| yarn | `yarn workspaces foreach -Rt run build` |
+
 ## Extension Points
 
 The library is designed for extension via:

@@ -1,5 +1,5 @@
 import { awscdk } from 'projen';
-import { GithubWorkflow } from 'projen/lib/github';
+import { GitHub, GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model';
 import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage, NamedStageOptions } from './base';
 import { PipelineEngine } from '../engine';
@@ -62,6 +62,8 @@ export class GithubCDKPipeline extends CDKPipeline {
   private deploymentWorkflow: GithubWorkflow;
   /** List of deployment stages for the pipeline. */
   private deploymentStages: string[] = [];
+  /** The GitHub component used for adding workflows. */
+  private readonly gh: GitHub;
 
   protected useGithubPackages: boolean;
   protected minNodeVersion: string | undefined;
@@ -82,8 +84,16 @@ export class GithubCDKPipeline extends CDKPipeline {
       },
     });
 
+    // For subprojects, use the root project's GitHub component since
+    // GitHub Actions only discovers workflows in the repo-root .github/workflows/
+    const gh = this.workingDirectory ? GitHub.of(this.app.root) : this.app.github;
+    if (!gh) {
+      throw new Error('GitHub component not found. For subprojects, ensure the root project has a GitHub component.');
+    }
+    this.gh = gh;
+
     // Initialize the deployment workflow on GitHub.
-    this.deploymentWorkflow = this.app.github!.addWorkflow(`${this.namePrefix}deploy`);
+    this.deploymentWorkflow = this.gh.addWorkflow(`${this.namePrefix}deploy`);
     this.deploymentWorkflow.on({
       push: {
         branches: [this.branchName],
@@ -136,6 +146,32 @@ export class GithubCDKPipeline extends CDKPipeline {
   }
 
   /**
+   * Returns the artifact path prefixed with workingDirectory if set.
+   * Artifact upload/download paths resolve against GITHUB_WORKSPACE,
+   * not the job working-directory, so they must be prefixed explicitly.
+   */
+  private artifactPath(relativePath: string): string {
+    if (this.workingDirectory) {
+      return `${this.workingDirectory}/${relativePath}`;
+    }
+    return relativePath;
+  }
+
+  /**
+   * Returns job defaults for working directory when set.
+   */
+  private jobDefaults(): object | undefined {
+    if (this.workingDirectory) {
+      return {
+        run: {
+          'working-directory': this.workingDirectory,
+        },
+      };
+    }
+    return undefined;
+  }
+
+  /**
    * Creates feature branch workflows for deploying and destroying feature environments.
    */
   protected createFeatureWorkflows(): void {
@@ -147,7 +183,7 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a workflow for deploying feature branches when PRs are labeled with 'feature-deployment'.
    */
   private createFeatureDeployWorkflow(): void {
-    const workflow = this.app.github!.addWorkflow(`${this.namePrefix}deploy-feature`);
+    const workflow = this.gh.addWorkflow(`${this.namePrefix}deploy-feature`);
 
     workflow.on({
       pullRequestTarget: {
@@ -164,7 +200,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       new CdkOutputsSummaryStep(this.project, { stageName: 'feature' }),
       new UploadArtifactStep(this.project, {
         name: `${this.namePrefix}cdk-outputs-feature`,
-        path: `${this.namePrefix}cdk-outputs-feature.json`,
+        path: this.artifactPath(`${this.namePrefix}cdk-outputs-feature.json`),
       }),
     ].map(s => s.toGithub());
 
@@ -173,6 +209,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       if: "contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')",
       needs: [],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      ...this.jobDefaults() && { defaults: this.jobDefaults() },
       permissions: mergeJobPermissions({
         contents: JobPermission.READ,
         idToken: JobPermission.WRITE,
@@ -205,7 +242,7 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a workflow for destroying feature branches when PRs are closed or unlabeled.
    */
   private createFeatureDestroyWorkflow(): void {
-    const workflow = this.app.github!.addWorkflow(`${this.namePrefix}destroy-feature`);
+    const workflow = this.gh.addWorkflow(`${this.namePrefix}destroy-feature`);
 
     workflow.on({
       pullRequestTarget: {
@@ -231,6 +268,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       if: "github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')",
       needs: [],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      ...this.jobDefaults() && { defaults: this.jobDefaults() },
       permissions: mergeJobPermissions({
         contents: JobPermission.READ,
         idToken: JobPermission.WRITE,
@@ -269,7 +307,7 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     steps.push(new UploadArtifactStep(this.project, {
       name: `${this.namePrefix}cloud-assembly`,
-      path: `${this.app.cdkConfig.cdkout}/`,
+      path: this.artifactPath(`${this.app.cdkConfig.cdkout}/`),
     }));
 
     const githubSteps = steps.map(s => s.toGithub());
@@ -277,6 +315,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.deploymentWorkflow.addJob('synth', {
       name: 'Synth CDK application',
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      ...this.jobDefaults() && { defaults: this.jobDefaults() },
       env: {
         CI: 'true',
         ...githubSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
@@ -311,7 +350,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       new SimpleCommandStep(this.project, ['git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"']),
       new DownloadArtifactStep(this.project, {
         name: `${this.namePrefix}cloud-assembly`,
-        path: `${this.app.cdkConfig.cdkout}/`,
+        path: this.artifactPath(`${this.app.cdkConfig.cdkout}/`),
       }),
       this.provideInstallStep(),
       this.provideAssetUploadStep(stageName),
@@ -327,6 +366,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       name: `Publish assets to AWS${stageName ? ` for stage ${stageName}` : ''}`,
       needs: ['synth', ...ghSteps.flatMap(s => s.needs)],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      ...this.jobDefaults() && { defaults: this.jobDefaults() },
       ...(this.options.useGithubEnvironmentsForAssetUpload && stageName && { environment: githubEnvironment ?? stageName }),
       env: {
         CI: 'true',
@@ -371,12 +411,12 @@ export class GithubCDKPipeline extends CDKPipeline {
         new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
         new UploadArtifactStep(this.project, {
           name: `${this.namePrefix}cdk-outputs-${stage.name}`,
-          path: `cdk-outputs-${stage.name}.json`,
+          path: this.artifactPath(`cdk-outputs-${stage.name}.json`),
         }),
       ].map(s => s.toGithub());
 
       // Create new workflow for deployment
-      const stageWorkflow = this.app.github!.addWorkflow(`${this.namePrefix}release-${stage.name}`);
+      const stageWorkflow = this.gh.addWorkflow(`${this.namePrefix}release-${stage.name}`);
       stageWorkflow.on({
         workflowDispatch: {
           inputs: {
@@ -391,6 +431,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         name: `Release stage ${stage.name} to AWS`,
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+        ...this.jobDefaults() && { defaults: this.jobDefaults() },
         ...this.options.useGithubEnvironments && {
           environment: stage.githubEnvironment ?? stage.name,
         },
@@ -434,14 +475,14 @@ export class GithubCDKPipeline extends CDKPipeline {
     const steps = [
       new DownloadArtifactStep(this.project, {
         name: `${this.namePrefix}cloud-assembly`,
-        path: `${this.app.cdkConfig.cdkout}/`,
+        path: this.artifactPath(`${this.app.cdkConfig.cdkout}/`),
       }),
       this.provideInstallStep(),
       this.provideDeployStep(stage),
       new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
       new UploadArtifactStep(this.project, {
         name: `${this.namePrefix}cdk-outputs-${stage.name}`,
-        path: `cdk-outputs-${stage.name}.json`,
+        path: this.artifactPath(`cdk-outputs-${stage.name}.json`),
       }),
     ].map(s => s.toGithub());
 
@@ -451,6 +492,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       ...this.options.useGithubEnvironments && {
         environment: stage.githubEnvironment ?? stage.name,
       },
+      ...this.jobDefaults() && { defaults: this.jobDefaults() },
       concurrency: {
         'group': `${this.namePrefix}deploy-${stage.name}`,
         'cancel-in-progress': false,
@@ -495,12 +537,12 @@ export class GithubCDKPipeline extends CDKPipeline {
         new CdkOutputsSummaryStep(this.project, { stageName: stage.name }),
         new UploadArtifactStep(this.project, {
           name: `${this.namePrefix}cdk-outputs-${stage.name}`,
-          path: `cdk-outputs-${stage.name}.json`,
+          path: this.artifactPath(`cdk-outputs-${stage.name}.json`),
         }),
       ].map(s => s.toGithub());
 
       // Create new workflow for deployment
-      const stageWorkflow = this.app.github!.addWorkflow(`${this.namePrefix}deploy-${stage.name}`);
+      const stageWorkflow = this.gh.addWorkflow(`${this.namePrefix}deploy-${stage.name}`);
       stageWorkflow.on({
         workflowDispatch: {},
       });
@@ -508,6 +550,7 @@ export class GithubCDKPipeline extends CDKPipeline {
         name: `Release stage ${stage.name} to AWS`,
         needs: steps.flatMap(s => s.needs),
         runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+        ...this.jobDefaults() && { defaults: this.jobDefaults() },
         concurrency: {
           'group': `${this.namePrefix}deploy-${stage.name}`,
           'cancel-in-progress': false,

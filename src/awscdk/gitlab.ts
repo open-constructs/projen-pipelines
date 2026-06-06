@@ -96,6 +96,9 @@ export class GitlabCDKPipeline extends CDKPipeline {
    * facilitating artifact caching and AWS authentication setup.
    */
   protected setupSnippets() {
+    const cdkOutPath = this.workingDirectory ? `${this.workingDirectory}/cdk.out` : 'cdk.out';
+    const cdkOutputsPath = this.workingDirectory ? `${this.workingDirectory}/cdk-outputs-*.json` : 'cdk-outputs-*.json';
+
     this.config.addJobs({
       [`.${this.namePrefix}artifacts_cdk`]: {
         artifacts: {
@@ -103,7 +106,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
           expireIn: '30 days',
           name: 'CDK Assembly - $CI_JOB_NAME-$CI_COMMIT_REF_SLUG',
           untracked: false,
-          paths: ['cdk.out'],
+          paths: [cdkOutPath],
         },
       },
       [`.${this.namePrefix}artifacts_cdkdeploy`]: {
@@ -112,7 +115,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
           expireIn: '30 days',
           name: 'CDK Outputs - $CI_JOB_NAME-$CI_COMMIT_REF_SLUG',
           untracked: false,
-          paths: ['cdk-outputs-*.json'],
+          paths: [cdkOutputsPath],
         },
       },
       [`.${this.namePrefix}aws_base`]: {
@@ -132,6 +135,16 @@ export class GitlabCDKPipeline extends CDKPipeline {
 
   protected createFeatureWorkflows(): void {
     // TODO deploy and destroy feature stages
+  }
+
+  /**
+   * Prepends a `cd` command to the script array when workingDirectory is set.
+   */
+  private withWorkingDirectory(commands: string[]): string[] {
+    if (this.workingDirectory) {
+      return [`cd ${this.workingDirectory}`, ...commands];
+    }
+    return commands;
   }
 
   /**
@@ -155,7 +168,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
         needs: gitlabSteps.flatMap(s => s.needs),
         stage: 'synth',
         tags: this.options.runnerTags?.synth ?? this.options.runnerTags?.default,
-        script: gitlabSteps.flatMap(s => s.commands),
+        script: this.withWorkingDirectory(gitlabSteps.flatMap(s => s.commands)),
         variables: gitlabSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
     });
@@ -186,7 +199,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
         stage: 'publish_assets',
         tags: this.options.runnerTags?.assetPublishing ?? this.options.runnerTags?.default,
         needs: [{ job: `${this.namePrefix}synth`, artifacts: true }, ...gitlabSteps.flatMap(s => s.needs)],
-        script: gitlabSteps.flatMap(s => s.commands),
+        script: this.withWorkingDirectory(gitlabSteps.flatMap(s => s.commands)),
         variables: gitlabSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
     });
@@ -229,7 +242,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
             { job: `${this.namePrefix}publish_assets` },
             ...diffSteps.flatMap(s => s.needs),
           ],
-          script: diffSteps.flatMap(s => s.commands),
+          script: this.withWorkingDirectory(diffSteps.flatMap(s => s.commands)),
           variables: diffSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
         },
       },
@@ -250,7 +263,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
           ...(stage.diffType !== CdkDiffType.NONE) ? [{ job: `${this.namePrefix}diff-${stage.name}` }] : [],
           ...deploySteps.flatMap(s => s.needs),
         ],
-        script: deploySteps.flatMap(s => s.commands),
+        script: this.withWorkingDirectory(deploySteps.flatMap(s => s.commands)),
         variables: deploySteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
     });
@@ -287,7 +300,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
           when: gitlab.JobWhen.MANUAL,
         },
         needs: steps.flatMap(s => s.needs),
-        script: steps.flatMap(s => s.commands),
+        script: this.withWorkingDirectory(steps.flatMap(s => s.commands)),
         variables: steps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
     });

@@ -118,3 +118,46 @@ test('Bash snapshot with versioning enabled', () => {
   expect(snapshot['src/app.ts']).toContain('CfnOutput');
   expect(snapshot['src/app.ts']).toContain('StringParameter');
 });
+
+test('Bash snapshot with monorepo subproject', () => {
+  const root = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'root-app',
+  });
+
+  const sub = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'backend',
+    parent: root,
+    outdir: 'packages/backend',
+  });
+
+  new BashCDKPipeline(sub, {
+    iamRoleArns: {},
+    personalStage: {
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(root);
+  const pipelineMd = snapshot['packages/backend/pipeline.md'];
+  expect(pipelineMd).toBeDefined();
+
+  // Verify working directory note and cd commands
+  expect(pipelineMd).toContain('packages/backend');
+  expect(pipelineMd).toContain('cd packages/backend');
+
+  expect(pipelineMd).toMatchSnapshot();
+});

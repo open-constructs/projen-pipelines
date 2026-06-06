@@ -524,6 +524,71 @@ When `paths` is specified:
 
 This allows you to have multiple pipelines in the same repository, each responsible for a different subproject, without triggering unnecessary deployments.
 
+### Monorepo Subproject Pipelines
+
+For monorepos using projen subprojects, you can attach a pipeline directly to a subproject. The library automatically detects that the project is a subproject and configures CI to run commands in the correct subdirectory.
+
+```typescript
+import { awscdk } from 'projen';
+import { GithubCDKPipeline } from 'projen-pipelines';
+
+// Root monorepo project
+const root = new awscdk.AwsCdkTypeScriptApp({
+  cdkVersion: '2.150.0',
+  name: 'my-monorepo',
+  defaultReleaseBranch: 'main',
+});
+
+// Subproject at packages/backend
+const backend = new awscdk.AwsCdkTypeScriptApp({
+  cdkVersion: '2.150.0',
+  name: 'backend',
+  defaultReleaseBranch: 'main',
+  parent: root,
+  outdir: 'packages/backend',
+  devDeps: ['projen-pipelines'],
+});
+
+// Pipeline for the subproject - automatically sets working directory
+new GithubCDKPipeline(backend, {
+  iamRoleArns: {
+    default: 'arn:aws:iam::123456789012:role/DeployRole',
+  },
+  // Optional: build workspace dependencies first
+  preBuildCommand: 'pnpm -r --filter backend^... run build',
+  stages: [
+    { name: 'dev', env: { account: '123456789012', region: 'eu-central-1' } },
+    { name: 'prod', env: { account: '123456789013', region: 'eu-central-1' } },
+  ],
+});
+```
+
+When the pipeline is attached to a subproject:
+- **GitHub Actions**: Every job gets `defaults.run.working-directory: packages/backend`, and artifact paths are prefixed with `packages/backend/`. Workflows are placed in the root `.github/workflows/` directory (since GitHub only discovers workflows there).
+- **GitLab CI**: Job scripts are prefixed with `cd packages/backend`, and artifact paths are adjusted.
+- **Bash**: The pipeline.md instructions include `cd packages/backend` before each command block.
+
+#### preBuildCommand
+
+In monorepos, workspace sibling packages may need to be built before the app can compile. Use `preBuildCommand` to inject a build step before the synth/build:
+
+| Package Manager | preBuildCommand |
+|-----------------|-----------------|
+| pnpm | `pnpm -r --filter <appname>^... run build` |
+| npm | `npm run build --workspaces --if-present` |
+| yarn | `yarn workspaces foreach -Rt run build` |
+
+#### workingDirectory
+
+The working directory is automatically computed from the project hierarchy. You can also set it explicitly via the `workingDirectory` option if needed (for example, when the pipeline project is not a projen subproject):
+
+```typescript
+new GithubCDKPipeline(app, {
+  workingDirectory: 'packages/backend',
+  // ...
+});
+```
+
 ### AWS Amplify Deployment
 
 Projen Pipelines includes support for deploying static websites and single-page applications to AWS Amplify Hosting. This feature provides automated deployment of build artifacts to Amplify, with built-in support for multiple environments and branch-based deployments.

@@ -420,3 +420,57 @@ test('Gitlab snapshot with path filters', () => {
   expect(gitlabCi).toContain('packages/my-app/**');
   expect(gitlabCi).toContain('shared-libs/**');
 });
+
+test('Gitlab snapshot with monorepo subproject', () => {
+  const root = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'root-app',
+  });
+
+  const sub = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'backend',
+    parent: root,
+    outdir: 'packages/backend',
+  });
+
+  new GitlabCDKPipeline(sub, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+        prod: 'prodRole',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      diffType: CdkDiffType.FAST,
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }, {
+      name: 'prod',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(root);
+  const gitlabCi = snapshot['packages/backend/.gitlab-ci.yml'];
+  expect(gitlabCi).toBeDefined();
+
+  // Verify that scripts have cd into the working directory
+  expect(gitlabCi).toContain('cd packages/backend');
+
+  // Verify artifact paths are prefixed
+  expect(gitlabCi).toContain('packages/backend/cdk.out');
+  expect(gitlabCi).toContain('packages/backend/cdk-outputs-*.json');
+
+  expect(gitlabCi).toMatchSnapshot();
+});

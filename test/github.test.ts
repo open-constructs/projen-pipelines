@@ -935,3 +935,197 @@ test('Github snapshot with path filters and feature stages', () => {
   expect(deployFeatureYml).toContain('packages/my-app/**');
   expect(destroyFeatureYml).toContain('packages/my-app/**');
 });
+
+test('Github snapshot with monorepo subproject', () => {
+  const root = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'root-app',
+  });
+
+  const sub = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'backend',
+    parent: root,
+    outdir: 'packages/backend',
+  });
+
+  new GithubCDKPipeline(sub, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+        prod: 'prodRole',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }, {
+      name: 'prod',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(root);
+
+  // Workflow should exist in root .github/workflows/ with prefix
+  const deployYml = snapshot['.github/workflows/backend-deploy.yml'];
+  expect(deployYml).toBeDefined();
+
+  // Each job should have defaults.run.working-directory
+  expect(deployYml).toContain('working-directory: packages/backend');
+
+  // Artifact upload/download paths should be prefixed with packages/backend/
+  expect(deployYml).toContain('path: packages/backend/cdk.out/');
+  expect(deployYml).toContain('path: packages/backend/cdk-outputs-dev.json');
+  expect(deployYml).toContain('path: packages/backend/cdk-outputs-prod.json');
+
+  // Artifact names should use the prefix
+  expect(deployYml).toContain('name: backend-cloud-assembly');
+  expect(deployYml).toContain('name: backend-cdk-outputs-dev');
+  expect(deployYml).toContain('name: backend-cdk-outputs-prod');
+
+  expect(deployYml).toMatchSnapshot();
+});
+
+test('Github snapshot with monorepo subproject and preBuildCommand', () => {
+  const root = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'root-app',
+  });
+
+  const sub = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'backend',
+    parent: root,
+    outdir: 'packages/backend',
+  });
+
+  new GithubCDKPipeline(sub, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    preBuildCommand: 'pnpm -r --filter backend^... run build',
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(root);
+  const deployYml = snapshot['.github/workflows/backend-deploy.yml'];
+  expect(deployYml).toBeDefined();
+
+  // The pre-build command should appear before the build step
+  expect(deployYml).toContain('pnpm -r --filter backend^... run build');
+
+  // Should still have working-directory set
+  expect(deployYml).toContain('working-directory: packages/backend');
+
+  expect(deployYml).toMatchSnapshot();
+});
+
+test('Github snapshot with monorepo subproject and feature stages', () => {
+  const root = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'root-app',
+  });
+
+  const sub = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'backend',
+    parent: root,
+    outdir: 'packages/backend',
+  });
+
+  new GithubCDKPipeline(sub, {
+    iamRoleArns: {
+      default: 'defaultRole',
+    },
+    featureStages: {
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(root);
+
+  // Feature workflows should be in root .github/workflows/ with prefix
+  const featureDeployYml = snapshot['.github/workflows/backend-deploy-feature.yml'];
+  const featureDestroyYml = snapshot['.github/workflows/backend-destroy-feature.yml'];
+  expect(featureDeployYml).toBeDefined();
+  expect(featureDestroyYml).toBeDefined();
+
+  // Should have working-directory set
+  expect(featureDeployYml).toContain('working-directory: packages/backend');
+  expect(featureDestroyYml).toContain('working-directory: packages/backend');
+
+  // Artifact paths should be prefixed
+  expect(featureDeployYml).toContain('path: packages/backend/backend-cdk-outputs-feature.json');
+});
+
+test('Github snapshot with explicit workingDirectory override', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    workingDirectory: 'apps/my-app',
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deployYml = snapshot['.github/workflows/deploy.yml'];
+  expect(deployYml).toBeDefined();
+
+  // Should have the explicitly set working-directory
+  expect(deployYml).toContain('working-directory: apps/my-app');
+
+  // Artifact paths should be prefixed
+  expect(deployYml).toContain('path: apps/my-app/cdk.out/');
+  expect(deployYml).toContain('path: apps/my-app/cdk-outputs-dev.json');
+});
