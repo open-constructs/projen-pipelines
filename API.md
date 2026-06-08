@@ -2630,12 +2630,14 @@ const bashCDKPipelineOptions: BashCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preBuildCommand">preBuildCommand</a></code> | <code>string</code> | A command to run before the build step, executed from the repository root. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preInstallCommands">preInstallCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the pipeline relative to the repository root. |
 
 ---
 
@@ -2804,6 +2806,27 @@ public readonly postSynthSteps: PipelineStep[];
 
 ---
 
+##### `preBuildCommand`<sup>Optional</sup> <a name="preBuildCommand" id="projen-pipelines.BashCDKPipelineOptions.property.preBuildCommand"></a>
+
+```typescript
+public readonly preBuildCommand: string;
+```
+
+- *Type:* string
+- *Default:* no pre-build command
+
+A command to run before the build step, executed from the repository root.
+
+When a workingDirectory is set (monorepo subproject), the command is
+automatically wrapped to execute from the repository root regardless of
+the job's working directory setting.
+
+For pnpm workspaces: `pnpm -r --filter <appname>^... run build`
+For npm workspaces: `npm run build --workspaces --if-present`
+For yarn workspaces: `yarn workspaces foreach -Rt run build`
+
+---
+
 ##### `preInstallCommands`<sup>Optional</sup> <a name="preInstallCommands" id="projen-pipelines.BashCDKPipelineOptions.property.preInstallCommands"></a>
 
 ```typescript
@@ -2866,6 +2889,24 @@ public readonly versioning: VersioningConfig;
 - *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
 
 Versioning configuration.
+
+---
+
+##### `workingDirectory`<sup>Optional</sup> <a name="workingDirectory" id="projen-pipelines.BashCDKPipelineOptions.property.workingDirectory"></a>
+
+```typescript
+public readonly workingDirectory: string;
+```
+
+- *Type:* string
+- *Default:* automatically computed from the project's position in the monorepo (empty string for root projects)
+
+The working directory for the pipeline relative to the repository root.
+
+This is automatically computed for subprojects but can be explicitly set.
+
+When set, CI jobs will run commands in this directory, and artifact paths
+will be prefixed accordingly.
 
 ---
 
@@ -3090,12 +3131,14 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.preBuildCommand">preBuildCommand</a></code> | <code>string</code> | A command to run before the build step, executed from the repository root. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preInstallCommands">preInstallCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the pipeline relative to the repository root. |
 
 ---
 
@@ -3264,6 +3307,27 @@ public readonly postSynthSteps: PipelineStep[];
 
 ---
 
+##### `preBuildCommand`<sup>Optional</sup> <a name="preBuildCommand" id="projen-pipelines.CDKPipelineOptions.property.preBuildCommand"></a>
+
+```typescript
+public readonly preBuildCommand: string;
+```
+
+- *Type:* string
+- *Default:* no pre-build command
+
+A command to run before the build step, executed from the repository root.
+
+When a workingDirectory is set (monorepo subproject), the command is
+automatically wrapped to execute from the repository root regardless of
+the job's working directory setting.
+
+For pnpm workspaces: `pnpm -r --filter <appname>^... run build`
+For npm workspaces: `npm run build --workspaces --if-present`
+For yarn workspaces: `yarn workspaces foreach -Rt run build`
+
+---
+
 ##### `preInstallCommands`<sup>Optional</sup> <a name="preInstallCommands" id="projen-pipelines.CDKPipelineOptions.property.preInstallCommands"></a>
 
 ```typescript
@@ -3326,6 +3390,24 @@ public readonly versioning: VersioningConfig;
 - *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
 
 Versioning configuration.
+
+---
+
+##### `workingDirectory`<sup>Optional</sup> <a name="workingDirectory" id="projen-pipelines.CDKPipelineOptions.property.workingDirectory"></a>
+
+```typescript
+public readonly workingDirectory: string;
+```
+
+- *Type:* string
+- *Default:* automatically computed from the project's position in the monorepo (empty string for root projects)
+
+The working directory for the pipeline relative to the repository root.
+
+This is automatically computed for subprojects but can be explicitly set.
+
+When set, CI jobs will run commands in this directory, and artifact paths
+will be prefixed accordingly.
 
 ---
 
@@ -4411,12 +4493,14 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preBuildCommand">preBuildCommand</a></code> | <code>string</code> | A command to run before the build step, executed from the repository root. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preInstallCommands">preInstallCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the pipeline relative to the repository root. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | runner tags to use to select runners. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironments">useGithubEnvironments</a></code> | <code>boolean</code> | whether to use GitHub environments for deployment stages. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.useGithubEnvironmentsForAssetUpload">useGithubEnvironmentsForAssetUpload</a></code> | <code>boolean</code> | whether to use GitHub environments for asset upload step Create separate, parallel jobs for asset upload since GitHub Environments require unique environment names per job. |
@@ -4589,6 +4673,27 @@ public readonly postSynthSteps: PipelineStep[];
 
 ---
 
+##### `preBuildCommand`<sup>Optional</sup> <a name="preBuildCommand" id="projen-pipelines.GithubCDKPipelineOptions.property.preBuildCommand"></a>
+
+```typescript
+public readonly preBuildCommand: string;
+```
+
+- *Type:* string
+- *Default:* no pre-build command
+
+A command to run before the build step, executed from the repository root.
+
+When a workingDirectory is set (monorepo subproject), the command is
+automatically wrapped to execute from the repository root regardless of
+the job's working directory setting.
+
+For pnpm workspaces: `pnpm -r --filter <appname>^... run build`
+For npm workspaces: `npm run build --workspaces --if-present`
+For yarn workspaces: `yarn workspaces foreach -Rt run build`
+
+---
+
 ##### `preInstallCommands`<sup>Optional</sup> <a name="preInstallCommands" id="projen-pipelines.GithubCDKPipelineOptions.property.preInstallCommands"></a>
 
 ```typescript
@@ -4651,6 +4756,24 @@ public readonly versioning: VersioningConfig;
 - *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
 
 Versioning configuration.
+
+---
+
+##### `workingDirectory`<sup>Optional</sup> <a name="workingDirectory" id="projen-pipelines.GithubCDKPipelineOptions.property.workingDirectory"></a>
+
+```typescript
+public readonly workingDirectory: string;
+```
+
+- *Type:* string
+- *Default:* automatically computed from the project's position in the monorepo (empty string for root projects)
+
+The working directory for the pipeline relative to the repository root.
+
+This is automatically computed for subprojects but can be explicitly set.
+
+When set, CI jobs will run commands in this directory, and artifact paths
+will be prefixed accordingly.
 
 ---
 
@@ -5109,12 +5232,14 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | This field determines the NPM namespace to be used when packaging CDK cloud assemblies. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preBuildCommand">preBuildCommand</a></code> | <code>string</code> | A command to run before the build step, executed from the repository root. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preInstallCommands">preInstallCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the pipeline relative to the repository root. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.image">image</a></code> | <code>string</code> | The Docker image to use for running the pipeline jobs. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.runnerTags">runnerTags</a></code> | <code><a href="#projen-pipelines.GitlabRunnerTags">GitlabRunnerTags</a></code> | Runner tags configuration for the pipeline. |
 
@@ -5285,6 +5410,27 @@ public readonly postSynthSteps: PipelineStep[];
 
 ---
 
+##### `preBuildCommand`<sup>Optional</sup> <a name="preBuildCommand" id="projen-pipelines.GitlabCDKPipelineOptions.property.preBuildCommand"></a>
+
+```typescript
+public readonly preBuildCommand: string;
+```
+
+- *Type:* string
+- *Default:* no pre-build command
+
+A command to run before the build step, executed from the repository root.
+
+When a workingDirectory is set (monorepo subproject), the command is
+automatically wrapped to execute from the repository root regardless of
+the job's working directory setting.
+
+For pnpm workspaces: `pnpm -r --filter <appname>^... run build`
+For npm workspaces: `npm run build --workspaces --if-present`
+For yarn workspaces: `yarn workspaces foreach -Rt run build`
+
+---
+
 ##### `preInstallCommands`<sup>Optional</sup> <a name="preInstallCommands" id="projen-pipelines.GitlabCDKPipelineOptions.property.preInstallCommands"></a>
 
 ```typescript
@@ -5347,6 +5493,24 @@ public readonly versioning: VersioningConfig;
 - *Type:* <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>
 
 Versioning configuration.
+
+---
+
+##### `workingDirectory`<sup>Optional</sup> <a name="workingDirectory" id="projen-pipelines.GitlabCDKPipelineOptions.property.workingDirectory"></a>
+
+```typescript
+public readonly workingDirectory: string;
+```
+
+- *Type:* string
+- *Default:* automatically computed from the project's position in the monorepo (empty string for root projects)
+
+The working directory for the pipeline relative to the repository root.
+
+This is automatically computed for subprojects but can be explicitly set.
+
+When set, CI jobs will run commands in this directory, and artifact paths
+will be prefixed accordingly.
 
 ---
 

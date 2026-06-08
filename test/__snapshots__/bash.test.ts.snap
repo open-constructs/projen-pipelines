@@ -176,6 +176,73 @@ npx projen destroy:feature
 "
 `;
 
+exports[`Bash snapshot with monorepo subproject 1`] = `
+"# How to run your pipeline
+
+> **Note:** This pipeline is for a monorepo subproject. Commands should be run from the \`packages/backend\` directory.
+
+\`\`\`bash
+cd packages/backend
+\`\`\`
+
+## Build phase
+
+Synthesize your CDK project:
+\`\`\`bash
+cd packages/backend
+yarn install --check-files --frozen-lockfile
+npx projen build
+\`\`\`
+
+Publish all your CDK assets like Lambda function code and container images:
+\`\`\`bash
+cd packages/backend
+yarn install --check-files --frozen-lockfile
+echo "Login to AWS using role undefined for region undefined"
+npx projen publish:assets
+\`\`\`
+
+If you want to store your cloud assembly and assets for future use or compliance reasons, use:
+\`\`\`bash
+cd packages/backend
+yarn install --check-files --frozen-lockfile
+echo "Login to AWS using role undefined for region undefined"
+npx projen publish:assets
+\`\`\`
+
+## Deployment phase
+
+For every stage some scripts are generated for diff and deploy
+
+Stage: dev
+\`\`\`bash
+cd packages/backend
+echo "Login to AWS using role undefined for region eu-central-1"
+npx projen diff:dev
+
+echo "Login to AWS using role undefined for region eu-central-1"
+npx projen deploy:dev
+\`\`\`
+
+The stage \`personal\` is meant to be deployed manually by the developer and also has a watch script for live updates.
+\`\`\`bash
+cd packages/backend
+npx projen diff:personal
+npx projen deploy:personal
+npx projen destroy:personal
+npx projen watch:personal
+\`\`\`
+
+The stage \`feature\` is meant to be deployed for feature branches.
+\`\`\`bash
+cd packages/backend
+npx projen diff:feature
+npx projen deploy:feature
+npx projen destroy:feature
+\`\`\`
+"
+`;
+
 exports[`Bash snapshot with pkgNamespace 1`] = `
 "# How to run your pipeline
 
