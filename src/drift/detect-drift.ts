@@ -290,6 +290,44 @@ class DriftDetector {
     const outputFile = process.env.DRIFT_DETECTION_OUTPUT || 'drift-detection-results.json';
     writeFileSync(outputFile, JSON.stringify(this.results, null, 2));
     console.log(`\nResults saved to: ${outputFile}`);
+
+    // Write markdown summary alongside the JSON
+    const summaryFile = outputFile.replace('.json', '-summary.md');
+    writeFileSync(summaryFile, this.renderMarkdownSummary());
+    console.log(`Summary saved to: ${summaryFile}`);
+  }
+
+  private renderMarkdownSummary(): string {
+    const stageName = process.env.STAGE_NAME || 'unknown';
+    const lines: string[] = [];
+
+    const driftedStacks = this.results.filter(r => r.driftStatus === 'DRIFTED');
+    const errorStacks = this.results.filter(r => r.error);
+
+    lines.push(`### Stage: ${stageName}`);
+    lines.push(`- Total stacks: ${this.results.length}`);
+    lines.push(`- Drifted: ${driftedStacks.length}`);
+    lines.push(`- Errors: ${errorStacks.length}`);
+
+    if (driftedStacks.length > 0) {
+      lines.push('');
+      lines.push('**Drifted stacks:**');
+      for (const stack of driftedStacks) {
+        const resourceCount = stack.driftedResources?.length || 0;
+        lines.push(`  - ${stack.stackName} (${resourceCount} resources)`);
+      }
+    }
+
+    if (errorStacks.length > 0) {
+      lines.push('');
+      lines.push('**Errors:**');
+      for (const stack of errorStacks) {
+        lines.push(`  - ${stack.stackName}: ${stack.error}`);
+      }
+    }
+
+    lines.push('');
+    return lines.join('\n');
   }
 
   private shouldFail(): boolean {
