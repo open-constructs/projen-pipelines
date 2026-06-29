@@ -85,7 +85,7 @@ integWf?.addJobs({
     steps: [
       {
         name: 'Checkout',
-        uses: 'actions/checkout@v6',
+        uses: 'actions/checkout@v7',
         with:
         {
           ref: '${{github.event.pull_request.head.ref}}',
@@ -106,7 +106,7 @@ integWf?.addJobs({
     needs: ['build'],
     permissions: {},
     steps: [
-      { name: 'Checkout', uses: 'actions/checkout@v6' },
+      { name: 'Checkout', uses: 'actions/checkout@v7' },
       { name: 'Download artifact', uses: 'actions/download-artifact@v8', with: { name: 'integ-artifact' } },
       { name: 'Run yalc', run: 'npx yalc publish' },
       { name: 'Add yalc', run: 'cd integ/existing && npx yalc add projen-pipelines' },
@@ -118,7 +118,7 @@ integWf?.addJobs({
     needs: ['build'],
     permissions: {},
     steps: [
-      { name: 'Checkout', uses: 'actions/checkout@v6' },
+      { name: 'Checkout', uses: 'actions/checkout@v7' },
       { name: 'Download artifact', uses: 'actions/download-artifact@v8', with: { name: 'integ-artifact' } },
       { name: 'Run yalc', run: 'npx yalc publish' },
       { name: 'Add yalc', run: 'cd integ/existing && npx yalc add projen-pipelines' },

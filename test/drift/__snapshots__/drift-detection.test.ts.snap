@@ -294,7 +294,7 @@ exports[`DriftDetectionStep should generate correct GitHub job configuration 1`]
   "steps": [
     {
       "name": "AWS Credentials",
-      "uses": "aws-actions/configure-aws-credentials@v5",
+      "uses": "aws-actions/configure-aws-credentials@v6",
       "with": {
         "aws-region": "us-east-1",
         "role-session-name": "GitHubAction",
@@ -356,15 +356,15 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Install dependencies
         run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::123456789012:role/ProdRole
           role-session-name: GitHubAction
@@ -389,15 +389,15 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'staging' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Install dependencies
         run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::123456789012:role/StagingRole
           role-session-name: GitHubAction
@@ -502,11 +502,11 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Install dependencies
         run: npx projen install:ci
       - run: detect-drift --region us-east-1
@@ -606,15 +606,15 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Install dependencies
         run: npx projen install:ci
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::123456789012:role/ProdRole
           role-session-name: GitHubAction
@@ -715,11 +715,11 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Install dependencies
         run: npx projen install:ci
       - run: detect-drift --region us-east-1
@@ -818,11 +818,11 @@ jobs:
     if: \${{ github.event_name == 'schedule' || github.event.inputs.stage == '' || github.event.inputs.stage == 'production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Install dependencies
         run: npx projen install:ci
       - run: detect-drift --region us-east-1

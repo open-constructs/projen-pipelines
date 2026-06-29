@@ -15,7 +15,7 @@ jobs:
       patch_created: ${{ steps.create_patch.outputs.patch_created }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: main
       - name: Install dependencies
@@ -46,12 +46,12 @@ jobs:
     steps:
       - name: Generate token
         id: generate_token
-        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.PROJEN_APP_ID }}
           private-key: ${{ secrets.PROJEN_APP_PRIVATE_KEY }}
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: main
       - name: Download patch

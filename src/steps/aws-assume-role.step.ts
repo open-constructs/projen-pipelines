@@ -56,7 +56,7 @@ export class AwsAssumeRoleStep extends PipelineStep {
     if (this.config.jumpRoleArn) {
       steps.push({
         name: 'Assume Jump Role',
-        uses: 'aws-actions/configure-aws-credentials@v5',
+        uses: 'aws-actions/configure-aws-credentials@v6',
         with: {
           'role-to-assume': this.config.jumpRoleArn,
           'role-session-name': this.config.sessionName ?? 'GitHubAction',
@@ -69,7 +69,7 @@ export class AwsAssumeRoleStep extends PipelineStep {
     }
     steps.push({
       name: 'AWS Credentials',
-      uses: 'aws-actions/configure-aws-credentials@v5',
+      uses: 'aws-actions/configure-aws-credentials@v6',
       with: {
         'role-to-assume': this.config.roleArn,
         'role-session-name': this.config.sessionName ?? 'GitHubAction',
