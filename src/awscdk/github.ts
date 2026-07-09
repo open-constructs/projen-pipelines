@@ -10,6 +10,7 @@ import { CdkOutputsSummaryStep } from '../steps/github-summary.step';
 import { GithubPackagesLoginStep } from '../steps/registries';
 
 const DEFAULT_RUNNER_TAGS = ['ubuntu-latest'];
+const WORKFLOW_DIR = '.github/workflows';
 
 
 /**
@@ -97,7 +98,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     this.deploymentWorkflow.on({
       push: {
         branches: [this.branchName],
-        ...this.baseOptions.paths && { paths: this.baseOptions.paths },
+        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('deploy') },
       },
       workflowDispatch: {},
     });
@@ -146,6 +147,16 @@ export class GithubCDKPipeline extends CDKPipeline {
   }
 
   /**
+   * Returns the paths filter array with the workflow file itself included.
+   * This ensures that changes to the workflow file also trigger the pipeline.
+   * @param workflowName - The name of the workflow (used to derive the file path).
+   */
+  private pathsWithWorkflowFile(workflowName: string): string[] {
+    const workflowFilePath = `${WORKFLOW_DIR}/${this.namePrefix}${workflowName}.yml`;
+    return [...this.baseOptions.paths!, workflowFilePath];
+  }
+
+  /**
    * Returns the artifact path prefixed with workingDirectory if set.
    * Artifact upload/download paths resolve against GITHUB_WORKSPACE,
    * not the job working-directory, so they must be prefixed explicitly.
@@ -188,7 +199,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     workflow.on({
       pullRequestTarget: {
         types: ['synchronize', 'labeled', 'opened', 'reopened'],
-        ...this.baseOptions.paths && { paths: this.baseOptions.paths },
+        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('deploy-feature') },
       },
       workflowDispatch: {},
     });
@@ -247,7 +258,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     workflow.on({
       pullRequestTarget: {
         types: ['closed', 'unlabeled'],
-        ...this.baseOptions.paths && { paths: this.baseOptions.paths },
+        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('destroy-feature') },
       },
       workflowDispatch: {},
     });
