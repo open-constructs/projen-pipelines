@@ -82,6 +82,21 @@ export interface NamedStageOptions extends StageOptions {
   readonly watchable?: boolean;
   readonly diffType?: CdkDiffType;
   readonly postDiffSteps?: PipelineStep[];
+
+  /**
+   * Steps to execute before the deployment step.
+   * These run after the AWS role is assumed but before `cdk deploy`.
+   *
+   * Useful for capturing pre-deployment state (e.g., saving current version info).
+   */
+  readonly preDeploySteps?: PipelineStep[];
+
+  /**
+   * Steps to execute after the deployment step.
+   * These run after `cdk deploy` completes successfully.
+   *
+   * Useful for capturing post-deployment state or triggering downstream actions.
+   */
   readonly postDeploySteps?: PipelineStep[];
 }
 
@@ -446,6 +461,7 @@ export abstract class CDKPipeline extends Component {
         region: stage.env.region,
         jumpRoleArn: this.baseOptions.iamRoleArns.jump?.[stage.name],
       }),
+      ...stage.preDeploySteps ?? [],
       new ProjenScriptStep(this.project, `deploy:${stage.name}`),
       ...stage.postDeploySteps ?? [],
     ]);
