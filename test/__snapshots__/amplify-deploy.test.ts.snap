@@ -24,7 +24,7 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - run: yarn install --check-files --frozen-lockfile
@@ -49,7 +49,7 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
@@ -60,7 +60,7 @@ jobs:
           path: cdk.out/
       - run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
@@ -86,7 +86,7 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Download Artifact
         uses: actions/download-artifact@v8
         with:
@@ -94,7 +94,7 @@ jobs:
           path: cdk.out/
       - run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
@@ -590,7 +590,7 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - run: yarn install --check-files --frozen-lockfile
@@ -615,7 +615,7 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
@@ -626,7 +626,7 @@ jobs:
           path: cdk.out/
       - run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
@@ -652,7 +652,7 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Download Artifact
         uses: actions/download-artifact@v8
         with:
@@ -660,7 +660,7 @@ jobs:
           path: cdk.out/
       - run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
@@ -758,7 +758,7 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - run: yarn install --check-files --frozen-lockfile
@@ -783,7 +783,7 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
@@ -794,7 +794,7 @@ jobs:
           path: cdk.out/
       - run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
@@ -822,7 +822,7 @@ jobs:
           node-version: "20"
           package-manager-cache: "false"
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Download Artifact
         uses: actions/download-artifact@v8
         with:
@@ -830,7 +830,7 @@ jobs:
           path: cdk.out/
       - run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
