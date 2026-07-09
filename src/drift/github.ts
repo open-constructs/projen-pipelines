@@ -73,6 +73,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
               'node-version': '20',
             },
           },
+          ...this.preInstallSteps.flatMap(step => step.toGithub().steps),
           {
             name: 'Install dependencies',
             run: `${this.project.projenCommand} install:ci`,

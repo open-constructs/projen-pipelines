@@ -1,4 +1,5 @@
 import { Component, Project } from 'projen';
+import { PipelineStep } from '../steps';
 
 export interface DriftDetectionStageOptions {
   /**
@@ -80,12 +81,21 @@ export interface DriftDetectionWorkflowOptions {
    * Drift detection configurations for different environments
    */
   readonly stages: DriftDetectionStageOptions[];
+
+  /**
+   * Steps to execute before installing dependencies.
+   * Use this to add package manager setup steps like PnpmSetupStep or CorepackSetupStep.
+   *
+   * @default - no pre-install steps
+   */
+  readonly preInstallSteps?: PipelineStep[];
 }
 
 export abstract class DriftDetectionWorkflow extends Component {
   public readonly name: string;
   public readonly schedule: string;
   protected readonly stages: DriftDetectionStageOptions[];
+  protected readonly preInstallSteps: PipelineStep[];
 
   /** Prefix for workflow files and artifact names to prevent collisions in monorepos. */
   protected readonly namePrefix: string;
@@ -97,6 +107,7 @@ export abstract class DriftDetectionWorkflow extends Component {
     this.name = options.name ?? 'drift-detection';
     this.schedule = options.schedule ?? '0 0 * * *';
     this.stages = options.stages;
+    this.preInstallSteps = options.preInstallSteps ?? [];
   }
 
 }
