@@ -2927,6 +2927,7 @@ const bashDriftDetectionWorkflowOptions: BashDriftDetectionWorkflowOptions = { .
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute before installing dependencies. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
 | <code><a href="#projen-pipelines.BashDriftDetectionWorkflowOptions.property.scriptPath">scriptPath</a></code> | <code>string</code> | Path to the output script. |
 
@@ -2967,6 +2968,21 @@ public readonly pipelineName: string;
 - *Default:* no prefix
 
 A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.BashDriftDetectionWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+- *Default:* no pre-install steps
+
+Steps to execute before installing dependencies.
+
+Use this to add package manager setup steps like PnpmSetupStep or CorepackSetupStep.
 
 ---
 
@@ -4242,6 +4258,7 @@ const driftDetectionWorkflowOptions: DriftDetectionWorkflowOptions = { ... }
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute before installing dependencies. |
 | <code><a href="#projen-pipelines.DriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
 
 ---
@@ -4281,6 +4298,21 @@ public readonly pipelineName: string;
 - *Default:* no prefix
 
 A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.DriftDetectionWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+- *Default:* no pre-install steps
+
+Steps to execute before installing dependencies.
+
+Use this to add package manager setup steps like PnpmSetupStep or CorepackSetupStep.
 
 ---
 
@@ -4852,6 +4884,7 @@ const gitHubDriftDetectionWorkflowOptions: GitHubDriftDetectionWorkflowOptions =
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute before installing dependencies. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.createIssues">createIssues</a></code> | <code>boolean</code> | Whether to create issues on drift detection. |
 | <code><a href="#projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.permissions">permissions</a></code> | <code>{[ key: string ]: string}</code> | Additional permissions for GitHub workflow. |
@@ -4893,6 +4926,21 @@ public readonly pipelineName: string;
 - *Default:* no prefix
 
 A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.GitHubDriftDetectionWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+- *Default:* no pre-install steps
+
+Steps to execute before installing dependencies.
+
+Use this to add package manager setup steps like PnpmSetupStep or CorepackSetupStep.
 
 ---
 
@@ -5555,6 +5603,7 @@ const gitLabDriftDetectionWorkflowOptions: GitLabDriftDetectionWorkflowOptions =
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DriftDetectionStageOptions">DriftDetectionStageOptions</a>[]</code> | Drift detection configurations for different environments. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.name">name</a></code> | <code>string</code> | Name of the workflow. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to execute before installing dependencies. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for drift detection. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.image">image</a></code> | <code>string</code> | Docker image to use for drift detection. |
 | <code><a href="#projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | GitLab runner tags. |
@@ -5596,6 +5645,21 @@ public readonly pipelineName: string;
 - *Default:* no prefix
 
 A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+- *Default:* no pre-install steps
+
+Steps to execute before installing dependencies.
+
+Use this to add package manager setup steps like PnpmSetupStep or CorepackSetupStep.
 
 ---
 
