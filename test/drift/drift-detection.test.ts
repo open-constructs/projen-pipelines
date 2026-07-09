@@ -1,5 +1,6 @@
 import { Project } from 'projen';
 import { GitHubProject } from 'projen/lib/github';
+import { NodePackageManager, NodeProject } from 'projen/lib/javascript';
 import { synthSnapshot } from 'projen/lib/util/synth';
 import {
   DriftDetectionStep,
@@ -7,6 +8,7 @@ import {
   GitLabDriftDetectionWorkflow,
   BashDriftDetectionWorkflow,
 } from '../../src/drift';
+import { PnpmSetupStep, CorepackSetupStep } from '../../src/steps';
 
 describe('DriftDetectionStep', () => {
   let project: Project;
@@ -178,6 +180,86 @@ describe('GitHubDriftDetectionWorkflow', () => {
     const snapshot = synthSnapshot(project);
     expect(snapshot['.github/workflows/drift-detection.yml']).toMatchSnapshot();
   });
+
+  it('should include pnpm setup step when preInstallSteps contains PnpmSetupStep', () => {
+    new GitHubDriftDetectionWorkflow(project, {
+      preInstallSteps: [new PnpmSetupStep(project, { version: '9' })],
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+          roleArn: 'arn:aws:iam::123456789012:role/ProdRole',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(project);
+    const workflowYml = snapshot['.github/workflows/drift-detection.yml'];
+    expect(workflowYml).toContain('pnpm/action-setup@v4');
+    expect(workflowYml).toMatchSnapshot();
+  });
+
+  it('should include corepack setup step when preInstallSteps contains CorepackSetupStep', () => {
+    new GitHubDriftDetectionWorkflow(project, {
+      preInstallSteps: [new CorepackSetupStep(project)],
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(project);
+    const workflowYml = snapshot['.github/workflows/drift-detection.yml'];
+    expect(workflowYml).toContain('corepack enable');
+    expect(workflowYml).toMatchSnapshot();
+  });
+
+  it('should auto-detect pnpm and include setup step for NodeProject with pnpm', () => {
+    const pnpmProject = new NodeProject({
+      name: 'pnpm-project',
+      defaultReleaseBranch: 'main',
+      packageManager: NodePackageManager.PNPM,
+      pnpmVersion: '9',
+    });
+
+    new GitHubDriftDetectionWorkflow(pnpmProject, {
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(pnpmProject);
+    const workflowYml = snapshot['.github/workflows/drift-detection.yml'];
+    expect(workflowYml).toContain('pnpm/action-setup@v4');
+    expect(workflowYml).toMatchSnapshot();
+  });
+
+  it('should auto-detect yarn berry and include corepack setup for NodeProject with yarn berry', () => {
+    const yarnProject = new NodeProject({
+      name: 'yarn-berry-project',
+      defaultReleaseBranch: 'main',
+      packageManager: NodePackageManager.YARN_BERRY,
+    });
+
+    new GitHubDriftDetectionWorkflow(yarnProject, {
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(yarnProject);
+    const workflowYml = snapshot['.github/workflows/drift-detection.yml'];
+    expect(workflowYml).toContain('corepack enable');
+    expect(workflowYml).toMatchSnapshot();
+  });
 });
 
 describe('GitLabDriftDetectionWorkflow', () => {
@@ -260,6 +342,49 @@ describe('GitLabDriftDetectionWorkflow', () => {
     const snapshot = synthSnapshot(project);
     expect(snapshot['.gitlab/drift-detection.yml']).toMatchSnapshot();
   });
+
+  it('should include corepack setup in beforeScript when preInstallSteps contains CorepackSetupStep', () => {
+    new GitLabDriftDetectionWorkflow(project, {
+      preInstallSteps: [new CorepackSetupStep(project)],
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(project);
+    const gitlabCiKey = Object.keys(snapshot).find(k => k.includes('gitlab'));
+    expect(gitlabCiKey).toBeDefined();
+    const gitlabCi = snapshot[gitlabCiKey!];
+    expect(gitlabCi).toContain('corepack enable');
+    expect(gitlabCi).toMatchSnapshot();
+  });
+
+  it('should auto-detect yarn berry and include corepack setup for NodeProject', () => {
+    const yarnProject = new NodeProject({
+      name: 'yarn-berry-project',
+      defaultReleaseBranch: 'main',
+      packageManager: NodePackageManager.YARN_BERRY,
+    });
+
+    new GitLabDriftDetectionWorkflow(yarnProject, {
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(yarnProject);
+    const gitlabCiKey = Object.keys(snapshot).find(k => k.includes('gitlab'));
+    expect(gitlabCiKey).toBeDefined();
+    const gitlabCi = snapshot[gitlabCiKey!];
+    expect(gitlabCi).toContain('corepack enable');
+    expect(gitlabCi).toMatchSnapshot();
+  });
 });
 
 describe('BashDriftDetectionWorkflow', () => {
@@ -303,5 +428,45 @@ describe('BashDriftDetectionWorkflow', () => {
 
     const snapshot = synthSnapshot(project);
     expect(snapshot['scripts/check-drift.sh']).toMatchSnapshot();
+  });
+
+  it('should include corepack setup when preInstallSteps contains CorepackSetupStep', () => {
+    new BashDriftDetectionWorkflow(project, {
+      preInstallSteps: [new CorepackSetupStep(project)],
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(project);
+    const script = snapshot['drift-detection.sh'];
+    expect(script).toContain('corepack enable');
+    expect(script).toMatchSnapshot();
+  });
+
+  it('should auto-detect pnpm and include pnpm install for NodeProject with pnpm', () => {
+    const pnpmProject = new NodeProject({
+      name: 'pnpm-project',
+      defaultReleaseBranch: 'main',
+      packageManager: NodePackageManager.PNPM,
+      pnpmVersion: '9',
+    });
+
+    new BashDriftDetectionWorkflow(pnpmProject, {
+      stages: [
+        {
+          name: 'production',
+          region: 'us-east-1',
+        },
+      ],
+    });
+
+    const snapshot = synthSnapshot(pnpmProject);
+    const script = snapshot['drift-detection.sh'];
+    expect(script).toContain('npm install -g pnpm@9');
+    expect(script).toMatchSnapshot();
   });
 });

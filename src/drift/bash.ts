@@ -51,6 +51,7 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
       '# Install dependencies if not already installed',
       'if ! command -v ts-node &> /dev/null; then',
       '  echo "Installing dependencies..."',
+      ...this.preInstallSteps.flatMap(step => step.toBash().commands.map(cmd => `  ${cmd}`)),
       `  ${this.project.projenCommand} install:ci`,
       'fi',
       '',
