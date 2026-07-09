@@ -53,4 +53,5 @@ tsconfig.json
 !/API.md
 !/.github/workflows/integ.yml
 !/.github/workflows/assign-approver.yml
+!/.github/workflows/update-actions.yml
 !/.projenrc.ts
