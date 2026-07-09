@@ -4727,6 +4727,7 @@ on:
     paths:
       - packages/my-app/**
       - shared-libs/**
+      - .github/workflows/deploy.yml
   workflow_dispatch: {}
 jobs:
   synth:
@@ -4868,6 +4869,7 @@ on:
       - main
     paths:
       - packages/my-app/**
+      - .github/workflows/deploy.yml
   workflow_dispatch: {}
 jobs:
   synth:
@@ -5005,6 +5007,7 @@ on:
       - reopened
     paths:
       - packages/my-app/**
+      - .github/workflows/deploy-feature.yml
   workflow_dispatch: {}
 jobs:
   synth-and-deploy:
@@ -5082,6 +5085,7 @@ on:
       - unlabeled
     paths:
       - packages/my-app/**
+      - .github/workflows/destroy-feature.yml
   workflow_dispatch: {}
 jobs:
   destroy-feature:
