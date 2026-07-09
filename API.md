@@ -3877,6 +3877,7 @@ const deploymentStage: DeploymentStage = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.DeploymentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.DeploymentStage.property.cfnExpressMode">cfnExpressMode</a></code> | <code>boolean</code> | Enable CloudFormation Express mode for this stage. |
 | <code><a href="#projen-pipelines.DeploymentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.DeploymentStage.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
@@ -3894,6 +3895,25 @@ public readonly env: Environment;
 ```
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
+
+---
+
+##### `cfnExpressMode`<sup>Optional</sup> <a name="cfnExpressMode" id="projen-pipelines.DeploymentStage.property.cfnExpressMode"></a>
+
+```typescript
+public readonly cfnExpressMode: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable CloudFormation Express mode for this stage.
+
+Express mode accelerates deployments by completing when CloudFormation confirms
+resource configuration is applied, rather than waiting for extended stabilization checks.
+This can reduce deployment time by up to 4x.
+
+> [https://aws.amazon.com/blogs/aws/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/](https://aws.amazon.com/blogs/aws/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/)
 
 ---
 
@@ -6103,6 +6123,7 @@ const independentStage: IndependentStage = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.IndependentStage.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.IndependentStage.property.cfnExpressMode">cfnExpressMode</a></code> | <code>boolean</code> | Enable CloudFormation Express mode for this stage. |
 | <code><a href="#projen-pipelines.IndependentStage.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.IndependentStage.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
@@ -6120,6 +6141,25 @@ public readonly env: Environment;
 ```
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
+
+---
+
+##### `cfnExpressMode`<sup>Optional</sup> <a name="cfnExpressMode" id="projen-pipelines.IndependentStage.property.cfnExpressMode"></a>
+
+```typescript
+public readonly cfnExpressMode: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable CloudFormation Express mode for this stage.
+
+Express mode accelerates deployments by completing when CloudFormation confirms
+resource configuration is applied, rather than waiting for extended stabilization checks.
+This can reduce deployment time by up to 4x.
+
+> [https://aws.amazon.com/blogs/aws/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/](https://aws.amazon.com/blogs/aws/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/)
 
 ---
 
@@ -6218,6 +6258,7 @@ const namedStageOptions: NamedStageOptions = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.NamedStageOptions.property.cfnExpressMode">cfnExpressMode</a></code> | <code>boolean</code> | Enable CloudFormation Express mode for this stage. |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.name">name</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.diffType">diffType</a></code> | <code><a href="#projen-pipelines.CdkDiffType">CdkDiffType</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.NamedStageOptions.property.githubEnvironment">githubEnvironment</a></code> | <code>string</code> | The name of the GitHub environment to use for this stage. |
@@ -6234,6 +6275,25 @@ public readonly env: Environment;
 ```
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
+
+---
+
+##### `cfnExpressMode`<sup>Optional</sup> <a name="cfnExpressMode" id="projen-pipelines.NamedStageOptions.property.cfnExpressMode"></a>
+
+```typescript
+public readonly cfnExpressMode: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable CloudFormation Express mode for this stage.
+
+Express mode accelerates deployments by completing when CloudFormation confirms
+resource configuration is applied, rather than waiting for extended stabilization checks.
+This can reduce deployment time by up to 4x.
+
+> [https://aws.amazon.com/blogs/aws/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/](https://aws.amazon.com/blogs/aws/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/)
 
 ---
 
@@ -6523,6 +6583,7 @@ const stageOptions: StageOptions = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.StageOptions.property.env">env</a></code> | <code><a href="#projen-pipelines.Environment">Environment</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.StageOptions.property.cfnExpressMode">cfnExpressMode</a></code> | <code>boolean</code> | Enable CloudFormation Express mode for this stage. |
 
 ---
 
@@ -6533,6 +6594,25 @@ public readonly env: Environment;
 ```
 
 - *Type:* <a href="#projen-pipelines.Environment">Environment</a>
+
+---
+
+##### `cfnExpressMode`<sup>Optional</sup> <a name="cfnExpressMode" id="projen-pipelines.StageOptions.property.cfnExpressMode"></a>
+
+```typescript
+public readonly cfnExpressMode: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable CloudFormation Express mode for this stage.
+
+Express mode accelerates deployments by completing when CloudFormation confirms
+resource configuration is applied, rather than waiting for extended stabilization checks.
+This can reduce deployment time by up to 4x.
+
+> [https://aws.amazon.com/blogs/aws/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/](https://aws.amazon.com/blogs/aws/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/)
 
 ---
 
