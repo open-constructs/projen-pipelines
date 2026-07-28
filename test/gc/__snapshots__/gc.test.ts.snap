@@ -497,9 +497,9 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Setup pnpm
@@ -508,7 +508,17 @@ jobs:
           version: "9"
       - name: Install dependencies
         run: pnpm exec projen install:ci
-      - run: pnpm exec projen gc:dev
+      - run: pnpm exec projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -532,16 +542,26 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Enable corepack
         run: corepack enable
       - name: Install dependencies
         run: yarn projen install:ci
-      - run: yarn projen gc:dev
+      - run: yarn projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -566,9 +586,9 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
@@ -579,7 +599,17 @@ jobs:
           role-to-assume: arn:aws:iam::123456789012:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:dev
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
   gc-prod:
     name: GC - prod
     runs-on: ubuntu-latest
@@ -592,9 +622,9 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
@@ -605,7 +635,17 @@ jobs:
           role-to-assume: arn:aws:iam::987654321098:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:prod
+      - run: npx projen gc:prod 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -630,9 +670,9 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
@@ -643,7 +683,17 @@ jobs:
           role-to-assume: arn:aws:iam::123456789012:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:dev
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
   gc-prod:
     name: GC - prod
     runs-on: ubuntu-latest
@@ -656,9 +706,9 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
@@ -669,7 +719,17 @@ jobs:
           role-to-assume: arn:aws:iam::987654321098:role/GcRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen gc:prod
+      - run: npx projen gc:prod 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -694,9 +754,9 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
@@ -707,7 +767,17 @@ jobs:
           role-to-assume: arn:aws:iam::123456789012:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:dev
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -731,14 +801,24 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -762,9 +842,9 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Setup pnpm
@@ -773,7 +853,17 @@ jobs:
           version: "9"
       - name: Install dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -797,14 +887,24 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -829,9 +929,9 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
@@ -842,7 +942,17 @@ jobs:
           role-to-assume: arn:aws:iam::123456789012:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:dev
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -866,14 +976,24 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
 "
 `;
 
@@ -897,14 +1017,24 @@ jobs:
     env: {}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
     timeout-minutes: 60
 "
 `;

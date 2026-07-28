@@ -76,6 +76,7 @@ export class GitLabGarbageCollectionWorkflow extends GarbageCollectionWorkflow {
           extends: [`.${this.namePrefix}cdk-gc`],
           variables: {
             ...stepConfig.env,
+            ...(stage.environment ?? {}),
           },
           script: stepConfig.commands,
         },

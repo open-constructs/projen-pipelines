@@ -37,7 +37,10 @@ export class GitHubGarbageCollectionWorkflow extends GarbageCollectionWorkflow {
       workflowDispatch: {},
     });
 
-    // Deduplicate stages sharing the same account/region pair
+    // Deduplicate stages sharing the same account/region pair.
+    // Since CDK bootstrap resources are per-account-per-region, only the first
+    // stage for each account/region is kept. If later stages have differing
+    // gcOptions, those overrides are silently dropped.
     const seen = new Set<string>();
     const deduplicatedStages = this.stages.filter(stage => {
       const key = `${stage.env.account}/${stage.env.region}`;
@@ -58,6 +61,12 @@ export class GitHubGarbageCollectionWorkflow extends GarbageCollectionWorkflow {
       });
       const githubConfig = gcStep.toGithub();
 
+      // Merge stage environment variables into job env
+      const jobEnv: Record<string, string> = {
+        ...githubConfig.env,
+        ...(stage.environment ?? {}),
+      };
+
       this.workflow.addJob(jobId, {
         name: `GC - ${stage.name}`,
         runsOn: ['ubuntu-latest'],
@@ -66,7 +75,7 @@ export class GitHubGarbageCollectionWorkflow extends GarbageCollectionWorkflow {
           group: `${this.namePrefix}cdk-gc-${stage.name}`,
           cancelInProgress: false,
         },
-        env: githubConfig.env,
+        env: jobEnv,
         permissions: {
           contents: JobPermission.READ,
           ...(githubConfig.permissions ?? {}),
@@ -75,11 +84,11 @@ export class GitHubGarbageCollectionWorkflow extends GarbageCollectionWorkflow {
         steps: [
           {
             name: 'Checkout',
-            uses: 'actions/checkout@v4',
+            uses: 'actions/checkout@v6',
           },
           {
             name: 'Setup Node.js',
-            uses: 'actions/setup-node@v4',
+            uses: 'actions/setup-node@v6',
             with: {
               'node-version': '20',
             },
@@ -89,7 +98,23 @@ export class GitHubGarbageCollectionWorkflow extends GarbageCollectionWorkflow {
             name: 'Install dependencies',
             run: `${this.project.projenCommand} install:ci`,
           },
-          ...githubConfig.steps,
+          ...githubConfig.steps.map(step => ({
+            ...step,
+            run: step.run ? `${step.run} 2>&1 | tee cdk-gc-output.txt` : step.run,
+          })),
+          {
+            name: 'Write to job summary',
+            if: 'always()',
+            run: [
+              'if [ -f cdk-gc-output.txt ]; then',
+              `  echo "## CDK Garbage Collection - ${stage.name}" >> $GITHUB_STEP_SUMMARY`,
+              '  echo "" >> $GITHUB_STEP_SUMMARY',
+              '  echo "\\`\\`\\`" >> $GITHUB_STEP_SUMMARY',
+              '  cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY',
+              '  echo "\\`\\`\\`" >> $GITHUB_STEP_SUMMARY',
+              'fi',
+            ].join('\n'),
+          },
         ],
       });
     }

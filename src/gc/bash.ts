@@ -135,7 +135,13 @@ export class BashGarbageCollectionWorkflow extends GarbageCollectionWorkflow {
 
     const stepConfig = gcStep.toBash();
 
-    // Indent all commands
-    return stepConfig.commands.map(cmd => `  ${cmd}`);
+    // Include stage environment variables and indent all commands
+    const envExports = Object.entries(stage.environment ?? {}).map(
+      ([key, value]) => `  export ${key}="${value}"`,
+    );
+    return [
+      ...envExports,
+      ...stepConfig.commands.map(cmd => `  ${cmd}`),
+    ];
   }
 }

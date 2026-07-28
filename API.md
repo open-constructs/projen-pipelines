@@ -5576,7 +5576,7 @@ public readonly action: GcAction;
 ```
 
 - *Type:* <a href="#projen-pipelines.GcAction">GcAction</a>
-- *Default:* GcAction.FULL
+- *Default:* uses CDK CLI default
 
 Action to perform during garbage collection.
 
@@ -5628,7 +5628,7 @@ public readonly type: GcAssetType;
 ```
 
 - *Type:* <a href="#projen-pipelines.GcAssetType">GcAssetType</a>
-- *Default:* GcAssetType.ALL
+- *Default:* uses CDK CLI default
 
 Type of assets to garbage collect.
 
@@ -5652,7 +5652,7 @@ const gcStageOptions: GcStageOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GcStageOptions.property.env">env</a></code> | <code><a href="#projen-pipelines.AwsEnvironment">AwsEnvironment</a></code> | AWS environment for this stage (account and region). |
 | <code><a href="#projen-pipelines.GcStageOptions.property.name">name</a></code> | <code>string</code> | Name of the stage. |
-| <code><a href="#projen-pipelines.GcStageOptions.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
+| <code><a href="#projen-pipelines.GcStageOptions.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables to inject into the garbage collection job for this stage. |
 | <code><a href="#projen-pipelines.GcStageOptions.property.gcOptions">gcOptions</a></code> | <code><a href="#projen-pipelines.GcOptions">GcOptions</a></code> | Per-stage garbage collection options (shallow-merged over workflow-level gcOptions). |
 | <code><a href="#projen-pipelines.GcStageOptions.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role to assume before the main role. |
 | <code><a href="#projen-pipelines.GcStageOptions.property.roleArn">roleArn</a></code> | <code>string</code> | Role ARN to assume for garbage collection. |
@@ -5692,7 +5692,10 @@ public readonly environment: {[ key: string ]: string};
 
 - *Type:* {[ key: string ]: string}
 
-Environment variables for this stage.
+Environment variables to inject into the garbage collection job for this stage.
+
+Merged into the job's env (GitHub), variables (GitLab), or exported in the
+stage function (Bash).
 
 ---
 
@@ -5705,6 +5708,11 @@ public readonly gcOptions: GcOptions;
 - *Type:* <a href="#projen-pipelines.GcOptions">GcOptions</a>
 
 Per-stage garbage collection options (shallow-merged over workflow-level gcOptions).
+
+Note: In the GitHub engine, stages sharing the same account/region are
+deduplicated and only the first stage's options are kept. If later stages
+have differing gcOptions for the same account/region, those overrides are
+silently dropped.
 
 ---
 

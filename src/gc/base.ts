@@ -34,13 +34,13 @@ export enum GcAssetType {
 export interface GcOptions {
   /**
    * Action to perform during garbage collection.
-   * @default GcAction.FULL
+   * @default - uses CDK CLI default
    */
   readonly action?: GcAction;
 
   /**
    * Type of assets to garbage collect.
-   * @default GcAssetType.ALL
+   * @default - uses CDK CLI default
    */
   readonly type?: GcAssetType;
 
@@ -99,11 +99,18 @@ export interface GcStageOptions {
 
   /**
    * Per-stage garbage collection options (shallow-merged over workflow-level gcOptions).
+   *
+   * Note: In the GitHub engine, stages sharing the same account/region are
+   * deduplicated and only the first stage's options are kept. If later stages
+   * have differing gcOptions for the same account/region, those overrides are
+   * silently dropped.
    */
   readonly gcOptions?: GcOptions;
 
   /**
-   * Environment variables for this stage.
+   * Environment variables to inject into the garbage collection job for this stage.
+   * Merged into the job's env (GitHub), variables (GitLab), or exported in the
+   * stage function (Bash).
    */
   readonly environment?: Record<string, string>;
 
