@@ -641,6 +641,209 @@ public readonly schedule: string;
 ---
 
 
+### BashGarbageCollectionWorkflow <a name="BashGarbageCollectionWorkflow" id="projen-pipelines.BashGarbageCollectionWorkflow"></a>
+
+Generates a bash script that runs CDK garbage collection for each configured stage.
+
+Supports running a specific stage via `--stage`
+or all stages if no argument is provided.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.BashGarbageCollectionWorkflow.Initializer"></a>
+
+```typescript
+import { BashGarbageCollectionWorkflow } from 'projen-pipelines'
+
+new BashGarbageCollectionWorkflow(project: Project, options: BashGarbageCollectionWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.BashGarbageCollectionWorkflowOptions">BashGarbageCollectionWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.BashGarbageCollectionWorkflow.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.BashGarbageCollectionWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.BashGarbageCollectionWorkflowOptions">BashGarbageCollectionWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.BashGarbageCollectionWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.BashGarbageCollectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.BashGarbageCollectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.BashGarbageCollectionWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.BashGarbageCollectionWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.BashGarbageCollectionWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.BashGarbageCollectionWorkflow.isConstruct"></a>
+
+```typescript
+import { BashGarbageCollectionWorkflow } from 'projen-pipelines'
+
+BashGarbageCollectionWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.BashGarbageCollectionWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.BashGarbageCollectionWorkflow.isComponent"></a>
+
+```typescript
+import { BashGarbageCollectionWorkflow } from 'projen-pipelines'
+
+BashGarbageCollectionWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.BashGarbageCollectionWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for the workflow. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.BashGarbageCollectionWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.BashGarbageCollectionWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.BashGarbageCollectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+
+Cron schedule for the workflow.
+
+---
+
+
 ### CDKPipeline <a name="CDKPipeline" id="projen-pipelines.CDKPipeline"></a>
 
 The CDKPipeline class extends the Component class and sets up the necessary configuration for deploying AWS CDK (Cloud Development Kit) applications across multiple stages.
@@ -1095,6 +1298,209 @@ public readonly schedule: string;
 ```
 
 - *Type:* string
+
+---
+
+
+### GarbageCollectionWorkflow <a name="GarbageCollectionWorkflow" id="projen-pipelines.GarbageCollectionWorkflow"></a>
+
+Abstract base class for CDK garbage collection workflows.
+
+Generates scheduled jobs that run `cdk gc` against each configured stage
+to clean up unused S3 and ECR assets from the CDK bootstrap resources.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GarbageCollectionWorkflow.Initializer"></a>
+
+```typescript
+import { GarbageCollectionWorkflow } from 'projen-pipelines'
+
+new GarbageCollectionWorkflow(project: Project, options: GarbageCollectionWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GarbageCollectionWorkflowOptions">GarbageCollectionWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GarbageCollectionWorkflow.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GarbageCollectionWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GarbageCollectionWorkflowOptions">GarbageCollectionWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GarbageCollectionWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GarbageCollectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GarbageCollectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GarbageCollectionWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GarbageCollectionWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GarbageCollectionWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GarbageCollectionWorkflow.isConstruct"></a>
+
+```typescript
+import { GarbageCollectionWorkflow } from 'projen-pipelines'
+
+GarbageCollectionWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GarbageCollectionWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GarbageCollectionWorkflow.isComponent"></a>
+
+```typescript
+import { GarbageCollectionWorkflow } from 'projen-pipelines'
+
+GarbageCollectionWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GarbageCollectionWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for the workflow. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GarbageCollectionWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GarbageCollectionWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.GarbageCollectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+
+Cron schedule for the workflow.
 
 ---
 
@@ -1829,6 +2235,209 @@ public readonly schedule: string;
 ---
 
 
+### GitHubGarbageCollectionWorkflow <a name="GitHubGarbageCollectionWorkflow" id="projen-pipelines.GitHubGarbageCollectionWorkflow"></a>
+
+Creates a GitHub Actions workflow that runs CDK garbage collection on a schedule for each configured stage.
+
+Stages sharing the same account/region pair are deduplicated to avoid
+running garbage collection twice on the same bootstrap resources.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GitHubGarbageCollectionWorkflow.Initializer"></a>
+
+```typescript
+import { GitHubGarbageCollectionWorkflow } from 'projen-pipelines'
+
+new GitHubGarbageCollectionWorkflow(project: Project, options: GitHubGarbageCollectionWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflowOptions">GitHubGarbageCollectionWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitHubGarbageCollectionWorkflow.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GitHubGarbageCollectionWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GitHubGarbageCollectionWorkflowOptions">GitHubGarbageCollectionWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GitHubGarbageCollectionWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitHubGarbageCollectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitHubGarbageCollectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitHubGarbageCollectionWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GitHubGarbageCollectionWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GitHubGarbageCollectionWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GitHubGarbageCollectionWorkflow.isConstruct"></a>
+
+```typescript
+import { GitHubGarbageCollectionWorkflow } from 'projen-pipelines'
+
+GitHubGarbageCollectionWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitHubGarbageCollectionWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GitHubGarbageCollectionWorkflow.isComponent"></a>
+
+```typescript
+import { GitHubGarbageCollectionWorkflow } from 'projen-pipelines'
+
+GitHubGarbageCollectionWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitHubGarbageCollectionWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for the workflow. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GitHubGarbageCollectionWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitHubGarbageCollectionWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.GitHubGarbageCollectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+
+Cron schedule for the workflow.
+
+---
+
+
 ### GitlabCDKPipeline <a name="GitlabCDKPipeline" id="projen-pipelines.GitlabCDKPipeline"></a>
 
 The GitlabCDKPipeline class extends CDKPipeline to provide a way to configure and execute AWS CDK deployment pipelines within GitLab CI/CD environments.
@@ -2352,6 +2961,206 @@ public readonly schedule: string;
 ---
 
 
+### GitLabGarbageCollectionWorkflow <a name="GitLabGarbageCollectionWorkflow" id="projen-pipelines.GitLabGarbageCollectionWorkflow"></a>
+
+Creates a GitLab CI configuration that runs CDK garbage collection on a schedule for each configured stage.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GitLabGarbageCollectionWorkflow.Initializer"></a>
+
+```typescript
+import { GitLabGarbageCollectionWorkflow } from 'projen-pipelines'
+
+new GitLabGarbageCollectionWorkflow(project: Project, options: GitLabGarbageCollectionWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflowOptions">GitLabGarbageCollectionWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitLabGarbageCollectionWorkflow.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="projen-pipelines.GitLabGarbageCollectionWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GitLabGarbageCollectionWorkflowOptions">GitLabGarbageCollectionWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GitLabGarbageCollectionWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GitLabGarbageCollectionWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GitLabGarbageCollectionWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitLabGarbageCollectionWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GitLabGarbageCollectionWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GitLabGarbageCollectionWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GitLabGarbageCollectionWorkflow.isConstruct"></a>
+
+```typescript
+import { GitLabGarbageCollectionWorkflow } from 'projen-pipelines'
+
+GitLabGarbageCollectionWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitLabGarbageCollectionWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GitLabGarbageCollectionWorkflow.isComponent"></a>
+
+```typescript
+import { GitLabGarbageCollectionWorkflow } from 'projen-pipelines'
+
+GitLabGarbageCollectionWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GitLabGarbageCollectionWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for the workflow. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GitLabGarbageCollectionWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GitLabGarbageCollectionWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+##### `schedule`<sup>Required</sup> <a name="schedule" id="projen-pipelines.GitLabGarbageCollectionWorkflow.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+
+Cron schedule for the workflow.
+
+---
+
+
 ## Structs <a name="Structs" id="Structs"></a>
 
 ### AmplifyDeployStepConfig <a name="AmplifyDeployStepConfig" id="projen-pipelines.AmplifyDeployStepConfig"></a>
@@ -2601,6 +3410,51 @@ public readonly sessionName: string;
 - *Type:* string
 
 An identifier for the assumed role session.
+
+---
+
+### AwsEnvironment <a name="AwsEnvironment" id="projen-pipelines.AwsEnvironment"></a>
+
+AWS environment configuration with account and region.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.AwsEnvironment.Initializer"></a>
+
+```typescript
+import { AwsEnvironment } from 'projen-pipelines'
+
+const awsEnvironment: AwsEnvironment = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.AwsEnvironment.property.account">account</a></code> | <code>string</code> | AWS account ID. |
+| <code><a href="#projen-pipelines.AwsEnvironment.property.region">region</a></code> | <code>string</code> | AWS region. |
+
+---
+
+##### `account`<sup>Required</sup> <a name="account" id="projen-pipelines.AwsEnvironment.property.account"></a>
+
+```typescript
+public readonly account: string;
+```
+
+- *Type:* string
+
+AWS account ID.
+
+---
+
+##### `region`<sup>Required</sup> <a name="region" id="projen-pipelines.AwsEnvironment.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
+
+- *Type:* string
+
+AWS region.
 
 ---
 
@@ -3009,6 +3863,113 @@ public readonly scriptPath: string;
 
 - *Type:* string
 - *Default:* "drift-detection.sh"
+
+Path to the output script.
+
+---
+
+### BashGarbageCollectionWorkflowOptions <a name="BashGarbageCollectionWorkflowOptions" id="projen-pipelines.BashGarbageCollectionWorkflowOptions"></a>
+
+Options for the Bash garbage collection workflow.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.BashGarbageCollectionWorkflowOptions.Initializer"></a>
+
+```typescript
+import { BashGarbageCollectionWorkflowOptions } from 'projen-pipelines'
+
+const bashGarbageCollectionWorkflowOptions: BashGarbageCollectionWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.GcStageOptions">GcStageOptions</a>[]</code> | Stages to run garbage collection against. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflowOptions.property.gcOptions">gcOptions</a></code> | <code><a href="#projen-pipelines.GcOptions">GcOptions</a></code> | Default garbage collection options applied to all stages. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to execute before installing dependencies. These steps are executed before the package manager setup and install command. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for garbage collection. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflowOptions.property.scriptPath">scriptPath</a></code> | <code>string</code> | Path to the output script. |
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.BashGarbageCollectionWorkflowOptions.property.stages"></a>
+
+```typescript
+public readonly stages: GcStageOptions[];
+```
+
+- *Type:* <a href="#projen-pipelines.GcStageOptions">GcStageOptions</a>[]
+
+Stages to run garbage collection against.
+
+---
+
+##### `gcOptions`<sup>Optional</sup> <a name="gcOptions" id="projen-pipelines.BashGarbageCollectionWorkflowOptions.property.gcOptions"></a>
+
+```typescript
+public readonly gcOptions: GcOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.GcOptions">GcOptions</a>
+
+Default garbage collection options applied to all stages.
+
+Per-stage gcOptions are shallow-merged over these defaults.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.BashGarbageCollectionWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.BashGarbageCollectionWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+- *Default:* no additional pre-install steps
+
+Additional steps to execute before installing dependencies. These steps are executed before the package manager setup and install command.
+
+Note: Package manager setup (e.g., PnpmSetupStep for pnpm or CorepackSetupStep
+for Yarn Berry) is automatically detected from the project and always included.
+Use this option for any additional pre-install steps you need.
+
+---
+
+##### `schedule`<sup>Optional</sup> <a name="schedule" id="projen-pipelines.BashGarbageCollectionWorkflowOptions.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+- *Default:* "0 3 * * 0" (weekly, Sunday 03:00 UTC)
+
+Cron schedule for garbage collection.
+
+---
+
+##### `scriptPath`<sup>Optional</sup> <a name="scriptPath" id="projen-pipelines.BashGarbageCollectionWorkflowOptions.property.scriptPath"></a>
+
+```typescript
+public readonly scriptPath: string;
+```
+
+- *Type:* string
+- *Default:* "cdk-gc.sh"
 
 Path to the output script.
 
@@ -4444,6 +5405,345 @@ availability, and pricing.
 
 ---
 
+### GarbageCollectionStepProps <a name="GarbageCollectionStepProps" id="projen-pipelines.GarbageCollectionStepProps"></a>
+
+Properties for creating a GarbageCollectionStep.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GarbageCollectionStepProps.Initializer"></a>
+
+```typescript
+import { GarbageCollectionStepProps } from 'projen-pipelines'
+
+const garbageCollectionStepProps: GarbageCollectionStepProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GarbageCollectionStepProps.property.stage">stage</a></code> | <code><a href="#projen-pipelines.GcStageOptions">GcStageOptions</a></code> | Stage configuration for garbage collection. |
+| <code><a href="#projen-pipelines.GarbageCollectionStepProps.property.workflowGcOptions">workflowGcOptions</a></code> | <code><a href="#projen-pipelines.GcOptions">GcOptions</a></code> | Workflow-level garbage collection options. |
+
+---
+
+##### `stage`<sup>Required</sup> <a name="stage" id="projen-pipelines.GarbageCollectionStepProps.property.stage"></a>
+
+```typescript
+public readonly stage: GcStageOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.GcStageOptions">GcStageOptions</a>
+
+Stage configuration for garbage collection.
+
+---
+
+##### `workflowGcOptions`<sup>Optional</sup> <a name="workflowGcOptions" id="projen-pipelines.GarbageCollectionStepProps.property.workflowGcOptions"></a>
+
+```typescript
+public readonly workflowGcOptions: GcOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.GcOptions">GcOptions</a>
+
+Workflow-level garbage collection options.
+
+Per-stage options are shallow-merged over these.
+
+---
+
+### GarbageCollectionWorkflowOptions <a name="GarbageCollectionWorkflowOptions" id="projen-pipelines.GarbageCollectionWorkflowOptions"></a>
+
+Options for the garbage collection workflow.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GarbageCollectionWorkflowOptions.Initializer"></a>
+
+```typescript
+import { GarbageCollectionWorkflowOptions } from 'projen-pipelines'
+
+const garbageCollectionWorkflowOptions: GarbageCollectionWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.GcStageOptions">GcStageOptions</a>[]</code> | Stages to run garbage collection against. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflowOptions.property.gcOptions">gcOptions</a></code> | <code><a href="#projen-pipelines.GcOptions">GcOptions</a></code> | Default garbage collection options applied to all stages. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to execute before installing dependencies. These steps are executed before the package manager setup and install command. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for garbage collection. |
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.GarbageCollectionWorkflowOptions.property.stages"></a>
+
+```typescript
+public readonly stages: GcStageOptions[];
+```
+
+- *Type:* <a href="#projen-pipelines.GcStageOptions">GcStageOptions</a>[]
+
+Stages to run garbage collection against.
+
+---
+
+##### `gcOptions`<sup>Optional</sup> <a name="gcOptions" id="projen-pipelines.GarbageCollectionWorkflowOptions.property.gcOptions"></a>
+
+```typescript
+public readonly gcOptions: GcOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.GcOptions">GcOptions</a>
+
+Default garbage collection options applied to all stages.
+
+Per-stage gcOptions are shallow-merged over these defaults.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.GarbageCollectionWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.GarbageCollectionWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+- *Default:* no additional pre-install steps
+
+Additional steps to execute before installing dependencies. These steps are executed before the package manager setup and install command.
+
+Note: Package manager setup (e.g., PnpmSetupStep for pnpm or CorepackSetupStep
+for Yarn Berry) is automatically detected from the project and always included.
+Use this option for any additional pre-install steps you need.
+
+---
+
+##### `schedule`<sup>Optional</sup> <a name="schedule" id="projen-pipelines.GarbageCollectionWorkflowOptions.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+- *Default:* "0 3 * * 0" (weekly, Sunday 03:00 UTC)
+
+Cron schedule for garbage collection.
+
+---
+
+### GcOptions <a name="GcOptions" id="projen-pipelines.GcOptions"></a>
+
+Options for the CDK garbage collection command.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GcOptions.Initializer"></a>
+
+```typescript
+import { GcOptions } from 'projen-pipelines'
+
+const gcOptions: GcOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GcOptions.property.action">action</a></code> | <code><a href="#projen-pipelines.GcAction">GcAction</a></code> | Action to perform during garbage collection. |
+| <code><a href="#projen-pipelines.GcOptions.property.bootstrapStackName">bootstrapStackName</a></code> | <code>string</code> | Name of the CDK bootstrap stack. |
+| <code><a href="#projen-pipelines.GcOptions.property.createdBufferDays">createdBufferDays</a></code> | <code>number</code> | Number of days to keep assets based on their creation date. |
+| <code><a href="#projen-pipelines.GcOptions.property.rollbackBufferDays">rollbackBufferDays</a></code> | <code>number</code> | Number of days to keep assets that are referenced by rolled-back stacks. |
+| <code><a href="#projen-pipelines.GcOptions.property.type">type</a></code> | <code><a href="#projen-pipelines.GcAssetType">GcAssetType</a></code> | Type of assets to garbage collect. |
+
+---
+
+##### `action`<sup>Optional</sup> <a name="action" id="projen-pipelines.GcOptions.property.action"></a>
+
+```typescript
+public readonly action: GcAction;
+```
+
+- *Type:* <a href="#projen-pipelines.GcAction">GcAction</a>
+- *Default:* GcAction.FULL
+
+Action to perform during garbage collection.
+
+---
+
+##### `bootstrapStackName`<sup>Optional</sup> <a name="bootstrapStackName" id="projen-pipelines.GcOptions.property.bootstrapStackName"></a>
+
+```typescript
+public readonly bootstrapStackName: string;
+```
+
+- *Type:* string
+- *Default:* uses CDK default (CDKToolkit)
+
+Name of the CDK bootstrap stack.
+
+---
+
+##### `createdBufferDays`<sup>Optional</sup> <a name="createdBufferDays" id="projen-pipelines.GcOptions.property.createdBufferDays"></a>
+
+```typescript
+public readonly createdBufferDays: number;
+```
+
+- *Type:* number
+- *Default:* 1
+
+Number of days to keep assets based on their creation date.
+
+---
+
+##### `rollbackBufferDays`<sup>Optional</sup> <a name="rollbackBufferDays" id="projen-pipelines.GcOptions.property.rollbackBufferDays"></a>
+
+```typescript
+public readonly rollbackBufferDays: number;
+```
+
+- *Type:* number
+- *Default:* 30
+
+Number of days to keep assets that are referenced by rolled-back stacks.
+
+---
+
+##### `type`<sup>Optional</sup> <a name="type" id="projen-pipelines.GcOptions.property.type"></a>
+
+```typescript
+public readonly type: GcAssetType;
+```
+
+- *Type:* <a href="#projen-pipelines.GcAssetType">GcAssetType</a>
+- *Default:* GcAssetType.ALL
+
+Type of assets to garbage collect.
+
+---
+
+### GcStageOptions <a name="GcStageOptions" id="projen-pipelines.GcStageOptions"></a>
+
+Configuration for a garbage collection stage.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GcStageOptions.Initializer"></a>
+
+```typescript
+import { GcStageOptions } from 'projen-pipelines'
+
+const gcStageOptions: GcStageOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GcStageOptions.property.env">env</a></code> | <code><a href="#projen-pipelines.AwsEnvironment">AwsEnvironment</a></code> | AWS environment for this stage (account and region). |
+| <code><a href="#projen-pipelines.GcStageOptions.property.name">name</a></code> | <code>string</code> | Name of the stage. |
+| <code><a href="#projen-pipelines.GcStageOptions.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Environment variables for this stage. |
+| <code><a href="#projen-pipelines.GcStageOptions.property.gcOptions">gcOptions</a></code> | <code><a href="#projen-pipelines.GcOptions">GcOptions</a></code> | Per-stage garbage collection options (shallow-merged over workflow-level gcOptions). |
+| <code><a href="#projen-pipelines.GcStageOptions.property.jumpRoleArn">jumpRoleArn</a></code> | <code>string</code> | Jump role to assume before the main role. |
+| <code><a href="#projen-pipelines.GcStageOptions.property.roleArn">roleArn</a></code> | <code>string</code> | Role ARN to assume for garbage collection. |
+| <code><a href="#projen-pipelines.GcStageOptions.property.timeoutMinutes">timeoutMinutes</a></code> | <code>number</code> | Timeout in minutes for the garbage collection job. |
+
+---
+
+##### `env`<sup>Required</sup> <a name="env" id="projen-pipelines.GcStageOptions.property.env"></a>
+
+```typescript
+public readonly env: AwsEnvironment;
+```
+
+- *Type:* <a href="#projen-pipelines.AwsEnvironment">AwsEnvironment</a>
+
+AWS environment for this stage (account and region).
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="projen-pipelines.GcStageOptions.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+Name of the stage.
+
+---
+
+##### `environment`<sup>Optional</sup> <a name="environment" id="projen-pipelines.GcStageOptions.property.environment"></a>
+
+```typescript
+public readonly environment: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Environment variables for this stage.
+
+---
+
+##### `gcOptions`<sup>Optional</sup> <a name="gcOptions" id="projen-pipelines.GcStageOptions.property.gcOptions"></a>
+
+```typescript
+public readonly gcOptions: GcOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.GcOptions">GcOptions</a>
+
+Per-stage garbage collection options (shallow-merged over workflow-level gcOptions).
+
+---
+
+##### `jumpRoleArn`<sup>Optional</sup> <a name="jumpRoleArn" id="projen-pipelines.GcStageOptions.property.jumpRoleArn"></a>
+
+```typescript
+public readonly jumpRoleArn: string;
+```
+
+- *Type:* string
+
+Jump role to assume before the main role.
+
+---
+
+##### `roleArn`<sup>Optional</sup> <a name="roleArn" id="projen-pipelines.GcStageOptions.property.roleArn"></a>
+
+```typescript
+public readonly roleArn: string;
+```
+
+- *Type:* string
+
+Role ARN to assume for garbage collection.
+
+---
+
+##### `timeoutMinutes`<sup>Optional</sup> <a name="timeoutMinutes" id="projen-pipelines.GcStageOptions.property.timeoutMinutes"></a>
+
+```typescript
+public readonly timeoutMinutes: number;
+```
+
+- *Type:* number
+
+Timeout in minutes for the garbage collection job.
+
+---
+
 ### GitHubAssignApproverOptions <a name="GitHubAssignApproverOptions" id="projen-pipelines.GitHubAssignApproverOptions"></a>
 
 #### Initializer <a name="Initializer" id="projen-pipelines.GitHubAssignApproverOptions.Initializer"></a>
@@ -4985,6 +6285,112 @@ public readonly permissions: {[ key: string ]: string};
 - *Type:* {[ key: string ]: string}
 
 Additional permissions for GitHub workflow.
+
+---
+
+### GitHubGarbageCollectionWorkflowOptions <a name="GitHubGarbageCollectionWorkflowOptions" id="projen-pipelines.GitHubGarbageCollectionWorkflowOptions"></a>
+
+Options for the GitHub garbage collection workflow.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitHubGarbageCollectionWorkflowOptions.Initializer"></a>
+
+```typescript
+import { GitHubGarbageCollectionWorkflowOptions } from 'projen-pipelines'
+
+const gitHubGarbageCollectionWorkflowOptions: GitHubGarbageCollectionWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.GcStageOptions">GcStageOptions</a>[]</code> | Stages to run garbage collection against. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.gcOptions">gcOptions</a></code> | <code><a href="#projen-pipelines.GcOptions">GcOptions</a></code> | Default garbage collection options applied to all stages. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to execute before installing dependencies. These steps are executed before the package manager setup and install command. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for garbage collection. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.permissions">permissions</a></code> | <code>{[ key: string ]: string}</code> | Additional permissions for the GitHub workflow jobs. |
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.stages"></a>
+
+```typescript
+public readonly stages: GcStageOptions[];
+```
+
+- *Type:* <a href="#projen-pipelines.GcStageOptions">GcStageOptions</a>[]
+
+Stages to run garbage collection against.
+
+---
+
+##### `gcOptions`<sup>Optional</sup> <a name="gcOptions" id="projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.gcOptions"></a>
+
+```typescript
+public readonly gcOptions: GcOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.GcOptions">GcOptions</a>
+
+Default garbage collection options applied to all stages.
+
+Per-stage gcOptions are shallow-merged over these defaults.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+- *Default:* no additional pre-install steps
+
+Additional steps to execute before installing dependencies. These steps are executed before the package manager setup and install command.
+
+Note: Package manager setup (e.g., PnpmSetupStep for pnpm or CorepackSetupStep
+for Yarn Berry) is automatically detected from the project and always included.
+Use this option for any additional pre-install steps you need.
+
+---
+
+##### `schedule`<sup>Optional</sup> <a name="schedule" id="projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+- *Default:* "0 3 * * 0" (weekly, Sunday 03:00 UTC)
+
+Cron schedule for garbage collection.
+
+---
+
+##### `permissions`<sup>Optional</sup> <a name="permissions" id="projen-pipelines.GitHubGarbageCollectionWorkflowOptions.property.permissions"></a>
+
+```typescript
+public readonly permissions: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Additional permissions for the GitHub workflow jobs.
 
 ---
 
@@ -5698,6 +7104,126 @@ Docker image to use for drift detection.
 ---
 
 ##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GitLabDriftDetectionWorkflowOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+
+GitLab runner tags.
+
+---
+
+### GitLabGarbageCollectionWorkflowOptions <a name="GitLabGarbageCollectionWorkflowOptions" id="projen-pipelines.GitLabGarbageCollectionWorkflowOptions"></a>
+
+Options for the GitLab garbage collection workflow.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GitLabGarbageCollectionWorkflowOptions.Initializer"></a>
+
+```typescript
+import { GitLabGarbageCollectionWorkflowOptions } from 'projen-pipelines'
+
+const gitLabGarbageCollectionWorkflowOptions: GitLabGarbageCollectionWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.GcStageOptions">GcStageOptions</a>[]</code> | Stages to run garbage collection against. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.gcOptions">gcOptions</a></code> | <code><a href="#projen-pipelines.GcOptions">GcOptions</a></code> | Default garbage collection options applied to all stages. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Additional steps to execute before installing dependencies. These steps are executed before the package manager setup and install command. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.schedule">schedule</a></code> | <code>string</code> | Cron schedule for garbage collection. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.image">image</a></code> | <code>string</code> | Docker image to use for garbage collection jobs. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | GitLab runner tags. |
+
+---
+
+##### `stages`<sup>Required</sup> <a name="stages" id="projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.stages"></a>
+
+```typescript
+public readonly stages: GcStageOptions[];
+```
+
+- *Type:* <a href="#projen-pipelines.GcStageOptions">GcStageOptions</a>[]
+
+Stages to run garbage collection against.
+
+---
+
+##### `gcOptions`<sup>Optional</sup> <a name="gcOptions" id="projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.gcOptions"></a>
+
+```typescript
+public readonly gcOptions: GcOptions;
+```
+
+- *Type:* <a href="#projen-pipelines.GcOptions">GcOptions</a>
+
+Default garbage collection options applied to all stages.
+
+Per-stage gcOptions are shallow-merged over these defaults.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name for this pipeline, used as a prefix for workflow files and artifact names to prevent collisions in monorepos.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+- *Default:* no additional pre-install steps
+
+Additional steps to execute before installing dependencies. These steps are executed before the package manager setup and install command.
+
+Note: Package manager setup (e.g., PnpmSetupStep for pnpm or CorepackSetupStep
+for Yarn Berry) is automatically detected from the project and always included.
+Use this option for any additional pre-install steps you need.
+
+---
+
+##### `schedule`<sup>Optional</sup> <a name="schedule" id="projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.schedule"></a>
+
+```typescript
+public readonly schedule: string;
+```
+
+- *Type:* string
+- *Default:* "0 3 * * 0" (weekly, Sunday 03:00 UTC)
+
+Cron schedule for garbage collection.
+
+---
+
+##### `image`<sup>Optional</sup> <a name="image" id="projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.image"></a>
+
+```typescript
+public readonly image: string;
+```
+
+- *Type:* string
+- *Default:* "node:20"
+
+Docker image to use for garbage collection jobs.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GitLabGarbageCollectionWorkflowOptions.property.runnerTags"></a>
 
 ```typescript
 public readonly runnerTags: string[];
@@ -7573,6 +9099,124 @@ public prependSteps(steps: ...PipelineStep[]): void
 ---
 
 
+
+
+### GarbageCollectionStep <a name="GarbageCollectionStep" id="projen-pipelines.GarbageCollectionStep"></a>
+
+A step sequence that assumes a role and runs the CDK garbage collection command.
+
+Registers a projen task `gc:<stage.name>` on the project so the same command
+can be run locally with `npx projen gc:<stage>`.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GarbageCollectionStep.Initializer"></a>
+
+```typescript
+import { GarbageCollectionStep } from 'projen-pipelines'
+
+new GarbageCollectionStep(project: Project, props: GarbageCollectionStepProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GarbageCollectionStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.GarbageCollectionStep.Initializer.parameter.props">props</a></code> | <code><a href="#projen-pipelines.GarbageCollectionStepProps">GarbageCollectionStepProps</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GarbageCollectionStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="projen-pipelines.GarbageCollectionStep.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#projen-pipelines.GarbageCollectionStepProps">GarbageCollectionStepProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GarbageCollectionStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.GarbageCollectionStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.GarbageCollectionStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.GarbageCollectionStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.GarbageCollectionStep.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.GarbageCollectionStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.GarbageCollectionStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.GarbageCollectionStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.GarbageCollectionStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.GarbageCollectionStep.addSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.GarbageCollectionStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.GarbageCollectionStep.prependSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GarbageCollectionStep.property.task">task</a></code> | <code>projen.Task</code> | The projen task registered for this stage. |
+
+---
+
+##### `task`<sup>Required</sup> <a name="task" id="projen-pipelines.GarbageCollectionStep.property.task"></a>
+
+```typescript
+public readonly task: Task;
+```
+
+- *Type:* projen.Task
+
+The projen task registered for this stage.
+
+---
 
 
 ### GithubPackagesLoginStep <a name="GithubPackagesLoginStep" id="projen-pipelines.GithubPackagesLoginStep"></a>
@@ -9728,6 +11372,84 @@ Perform a fast template diff (--no-changeset).
 ##### `FULL` <a name="FULL" id="projen-pipelines.CdkDiffType.FULL"></a>
 
 Perform a full CloudFormation diff (--changeset).
+
+---
+
+
+### GcAction <a name="GcAction" id="projen-pipelines.GcAction"></a>
+
+Action to perform during garbage collection.
+
+#### Members <a name="Members" id="Members"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GcAction.PRINT">PRINT</a></code> | Print assets that would be garbage collected without taking action. |
+| <code><a href="#projen-pipelines.GcAction.TAG">TAG</a></code> | Tag assets for deletion without actually deleting them. |
+| <code><a href="#projen-pipelines.GcAction.DELETE_TAGGED">DELETE_TAGGED</a></code> | Delete previously tagged assets. |
+| <code><a href="#projen-pipelines.GcAction.FULL">FULL</a></code> | Perform full garbage collection (tag and delete in one pass). |
+
+---
+
+##### `PRINT` <a name="PRINT" id="projen-pipelines.GcAction.PRINT"></a>
+
+Print assets that would be garbage collected without taking action.
+
+---
+
+
+##### `TAG` <a name="TAG" id="projen-pipelines.GcAction.TAG"></a>
+
+Tag assets for deletion without actually deleting them.
+
+---
+
+
+##### `DELETE_TAGGED` <a name="DELETE_TAGGED" id="projen-pipelines.GcAction.DELETE_TAGGED"></a>
+
+Delete previously tagged assets.
+
+---
+
+
+##### `FULL` <a name="FULL" id="projen-pipelines.GcAction.FULL"></a>
+
+Perform full garbage collection (tag and delete in one pass).
+
+---
+
+
+### GcAssetType <a name="GcAssetType" id="projen-pipelines.GcAssetType"></a>
+
+Type of assets to garbage collect.
+
+#### Members <a name="Members" id="Members"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GcAssetType.S3">S3</a></code> | Only garbage collect S3 assets. |
+| <code><a href="#projen-pipelines.GcAssetType.ECR">ECR</a></code> | Only garbage collect ECR images. |
+| <code><a href="#projen-pipelines.GcAssetType.ALL">ALL</a></code> | Garbage collect both S3 and ECR assets. |
+
+---
+
+##### `S3` <a name="S3" id="projen-pipelines.GcAssetType.S3"></a>
+
+Only garbage collect S3 assets.
+
+---
+
+
+##### `ECR` <a name="ECR" id="projen-pipelines.GcAssetType.ECR"></a>
+
+Only garbage collect ECR images.
+
+---
+
+
+##### `ALL` <a name="ALL" id="projen-pipelines.GcAssetType.ALL"></a>
+
+Garbage collect both S3 and ECR assets.
 
 ---
 
