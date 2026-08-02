@@ -132,7 +132,7 @@ try {
   // Compute version
   const computer = new VersionComputer(strategy);
   computer.computeVersionInfo(context).then(versionInfo => {
-    fs.writeFileSync('./.version.tmp.json', versionInfo.toJson());
+    fs.writeFileSync('.version.tmp.json', versionInfo.toJson());
     console.log('Version computed:', versionInfo.version, '(commit:', versionInfo.commitHashShort + ')');
   }).catch(error => {
     console.error('Error computing version:', error.message);
