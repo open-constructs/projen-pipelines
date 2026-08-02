@@ -884,7 +884,7 @@ export interface VersionInfo {
  */
 export function loadVersionInfo(): VersionInfo {
   try {
-    return JSON.parse(fs.readFileSync('~version.json', 'utf8'));
+    return JSON.parse(fs.readFileSync('./.version.tmp.json', 'utf8'));
   } catch (error) {
     console.warn('Could not load version info, using fallback');
     return {

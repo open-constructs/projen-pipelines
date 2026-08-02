@@ -23,7 +23,7 @@ export class VersioningSetup {
     this.integrateWithBuildProcess();
 
     // Add version file to gitignore
-    this.project.gitignore.exclude('~version.json');
+    this.project.gitignore.exclude('.version.tmp.json');
   }
 
   /**
@@ -48,7 +48,7 @@ export class VersioningSetup {
     this.project.addTask('version:print', {
       description: 'Print version information',
       steps: [
-        { exec: 'cat ~version.json' },
+        { exec: 'cat ./.version.tmp.json' },
       ],
     });
   }
@@ -132,7 +132,7 @@ try {
   // Compute version
   const computer = new VersionComputer(strategy);
   computer.computeVersionInfo(context).then(versionInfo => {
-    fs.writeFileSync('~version.json', versionInfo.toJson());
+    fs.writeFileSync('./.version.tmp.json', versionInfo.toJson());
     console.log('Version computed:', versionInfo.version, '(commit:', versionInfo.commitHashShort + ')');
   }).catch(error => {
     console.error('Error computing version:', error.message);
@@ -147,7 +147,7 @@ try {
       deployedBy: 'unknown',
       environment: 'unknown'
     };
-    fs.writeFileSync('~version.json', JSON.stringify(fallback, null, 2));
+    fs.writeFileSync('./.version.tmp.json', JSON.stringify(fallback, null, 2));
   });
 } catch (e) {
   console.error('Error in version computation:', e.message);
@@ -162,7 +162,7 @@ try {
     deployedBy: 'unknown',
     environment: 'unknown'
   };
-  fs.writeFileSync('~version.json', JSON.stringify(fallback, null, 2));
+  fs.writeFileSync('./.version.tmp.json', JSON.stringify(fallback, null, 2));
 }"`;
   }
 }
