@@ -273,7 +273,6 @@ export abstract class CDKPipeline extends Component {
     // Add development dependencies
     this.app.addDevDeps(
       'commit-and-tag-version',
-      'cdk-assets',
     );
     // this.app.addDeps(
     // );
@@ -639,7 +638,7 @@ ${appCode}
     for (const stage of stages) {
       this.project.addTask(`publish:assets:${stage.name}`, {
         steps: [{
-          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}${sep}${stage.name}.assets.json publish`,
+          exec: `npx cdk publish-assets -a ${this.app.cdkConfig.cdkout}/${this.stackPrefix}${sep}${stage.name}.assets.json`,
         }],
       });
     }

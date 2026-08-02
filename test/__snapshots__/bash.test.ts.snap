@@ -14,7 +14,6 @@ exports[`Bash snapshot 1`] = `
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "aws-cdk": "^2",
-    "cdk-assets": "*",
     "commit-and-tag-version": "*",
     "esbuild": "*",
     "eslint": "^9",
@@ -623,7 +622,6 @@ exports[`Bash snapshot with versioning enabled 3`] = `
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "aws-cdk": "^2",
-    "cdk-assets": "*",
     "commit-and-tag-version": "*",
     "esbuild": "*",
     "eslint": "^9",
@@ -936,7 +934,7 @@ exports[`Bash snapshot with versioning enabled 4`] = `
       "name": "publish:assets:dev",
       "steps": [
         {
-          "exec": "npx cdk-assets -p cdk.out/testapp-dev.assets.json publish",
+          "exec": "npx cdk publish-assets -a cdk.out/testapp-dev.assets.json",
         },
       ],
     },
@@ -944,7 +942,7 @@ exports[`Bash snapshot with versioning enabled 4`] = `
       "name": "publish:assets:prod",
       "steps": [
         {
-          "exec": "npx cdk-assets -p cdk.out/testapp-prod.assets.json publish",
+          "exec": "npx cdk publish-assets -a cdk.out/testapp-prod.assets.json",
         },
       ],
     },
@@ -1002,13 +1000,13 @@ exports[`Bash snapshot with versioning enabled 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
+          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
         },
         {
           "exec": "npx projen",
