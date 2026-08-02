@@ -147,7 +147,7 @@ try {
       deployedBy: 'unknown',
       environment: 'unknown'
     };
-    fs.writeFileSync('./.version.tmp.json', JSON.stringify(fallback, null, 2));
+    fs.writeFileSync('.version.tmp.json', JSON.stringify(fallback, null, 2));
   });
 } catch (e) {
   console.error('Error in version computation:', e.message);
@@ -162,7 +162,7 @@ try {
     deployedBy: 'unknown',
     environment: 'unknown'
   };
-  fs.writeFileSync('./.version.tmp.json', JSON.stringify(fallback, null, 2));
+  fs.writeFileSync('.version.tmp.json', JSON.stringify(fallback, null, 2));
 }"`;
   }
 }
