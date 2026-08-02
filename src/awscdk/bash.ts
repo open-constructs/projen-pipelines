@@ -15,11 +15,24 @@ export class BashCDKPipeline extends CDKPipeline {
 
     readme.addLine('# How to run your pipeline');
     readme.addLine('');
+
+    if (this.workingDirectory) {
+      readme.addLine(`> **Note:** This pipeline is for a monorepo subproject. Commands should be run from the \`${this.workingDirectory}\` directory.`);
+      readme.addLine('');
+      readme.addLine('```bash');
+      readme.addLine(`cd ${this.workingDirectory}`);
+      readme.addLine('```');
+      readme.addLine('');
+    }
+
     readme.addLine('## Build phase');
     readme.addLine('');
 
     readme.addLine('Synthesize your CDK project:');
     readme.addLine('```bash');
+    if (this.workingDirectory) {
+      readme.addLine(`cd ${this.workingDirectory}`);
+    }
     readme.addLine(`${this.provideInstallStep().toBash().commands.join('\n')}`);
     readme.addLine(`${this.provideSynthStep().toBash().commands.join('\n')}`);
     readme.addLine('```');
@@ -27,12 +40,18 @@ export class BashCDKPipeline extends CDKPipeline {
 
     readme.addLine('Publish all your CDK assets like Lambda function code and container images:');
     readme.addLine('```bash');
+    if (this.workingDirectory) {
+      readme.addLine(`cd ${this.workingDirectory}`);
+    }
     readme.addLine(`${this.provideInstallStep().toBash().commands.join('\n')}`);
     readme.addLine(`${this.provideAssetUploadStep().toBash().commands.join('\n')}`);
     readme.addLine('```');
     readme.addLine('');
     readme.addLine('If you want to store your cloud assembly and assets for future use or compliance reasons, use:');
     readme.addLine('```bash');
+    if (this.workingDirectory) {
+      readme.addLine(`cd ${this.workingDirectory}`);
+    }
     readme.addLine(`${this.provideInstallStep().toBash().commands.join('\n')}`);
     readme.addLine(`${this.provideAssetUploadStep().toBash().commands.join('\n')}`);
     if (this.baseOptions.pkgNamespace) {
@@ -48,6 +67,9 @@ export class BashCDKPipeline extends CDKPipeline {
     for (const stage of options.stages) {
       readme.addLine(`Stage: ${stage.name}`);
       readme.addLine('```bash');
+      if (this.workingDirectory) {
+        readme.addLine(`cd ${this.workingDirectory}`);
+      }
       if (stage.diffType !== CdkDiffType.NONE) {
         readme.addLine(`${this.provideDiffStep(stage, stage.diffType == CdkDiffType.FAST).toBash().commands.join('\n')}`);
         readme.addLine('');
@@ -59,6 +81,9 @@ export class BashCDKPipeline extends CDKPipeline {
 
     readme.addLine('The stage `personal` is meant to be deployed manually by the developer and also has a watch script for live updates.');
     readme.addLine('```bash');
+    if (this.workingDirectory) {
+      readme.addLine(`cd ${this.workingDirectory}`);
+    }
     readme.addLine('npx projen diff:personal');
     readme.addLine('npx projen deploy:personal');
     readme.addLine('npx projen destroy:personal');
@@ -67,6 +92,9 @@ export class BashCDKPipeline extends CDKPipeline {
     readme.addLine('');
     readme.addLine('The stage `feature` is meant to be deployed for feature branches.');
     readme.addLine('```bash');
+    if (this.workingDirectory) {
+      readme.addLine(`cd ${this.workingDirectory}`);
+    }
     readme.addLine('npx projen diff:feature');
     readme.addLine('npx projen deploy:feature');
     readme.addLine('npx projen destroy:feature');

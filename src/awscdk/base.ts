@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
@@ -211,6 +212,31 @@ export interface CDKPipelineOptions {
   readonly postSynthSteps?: PipelineStep[];
 
   /**
+   * The working directory for the pipeline relative to the repository root.
+   * This is automatically computed for subprojects but can be explicitly set.
+   *
+   * When set, CI jobs will run commands in this directory, and artifact paths
+   * will be prefixed accordingly.
+   *
+   * @default - automatically computed from the project's position in the monorepo (empty string for root projects)
+   */
+  readonly workingDirectory?: string;
+
+  /**
+   * A command to run before the build step, executed from the repository root.
+   * When a workingDirectory is set (monorepo subproject), the command is
+   * automatically wrapped to execute from the repository root regardless of
+   * the job's working directory setting.
+   *
+   * For pnpm workspaces: `pnpm -r --filter <appname>^... run build`
+   * For npm workspaces: `npm run build --workspaces --if-present`
+   * For yarn workspaces: `yarn workspaces foreach -Rt run build`
+   *
+   * @default - no pre-build command
+   */
+  readonly preBuildCommand?: string;
+
+  /**
    * Versioning configuration
    */
   readonly versioning?: VersioningConfig;
@@ -227,8 +253,22 @@ export abstract class CDKPipeline extends Component {
   /** Prefix for workflow files, concurrency groups, and artifact names to prevent collisions in monorepos. */
   protected readonly namePrefix: string;
 
+  /**
+   * The working directory relative to the repository root for this pipeline.
+   * Undefined when the pipeline is at the repository root.
+   */
+  protected readonly workingDirectory: string | undefined;
+
   constructor(protected app: awscdk.AwsCdkTypeScriptApp, protected baseOptions: CDKPipelineOptions) {
     super(app);
+
+    // Compute working directory for monorepo support
+    if (baseOptions.workingDirectory) {
+      this.workingDirectory = baseOptions.workingDirectory;
+    } else {
+      const rel = path.relative(this.app.root.outdir, this.app.outdir).replace(/\\/g, '/');
+      this.workingDirectory = rel || undefined;
+    }
 
     // Add development dependencies
     this.app.addDevDeps(
@@ -319,6 +359,10 @@ export abstract class CDKPipeline extends Component {
       seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.preSynthCommands));
     }
 
+    if (this.baseOptions.preBuildCommand) {
+      seq.addSteps(new SimpleCommandStep(this.project, [this.preBuildCommandWrapped()]));
+    }
+
     seq.addSteps(new ProjenScriptStep(this.project, 'build'));
 
     seq.addSteps(...this.baseOptions.postSynthSteps ?? []);
@@ -326,6 +370,28 @@ export abstract class CDKPipeline extends Component {
       seq.addSteps(new SimpleCommandStep(this.project, this.baseOptions.postSynthCommands));
     }
     return seq;
+  }
+
+  /**
+   * Returns the preBuildCommand wrapped to execute from the repository root.
+   * When workingDirectory is set, the command is prefixed with a cd to the
+   * repo root using engine-appropriate environment variables.
+   */
+  private preBuildCommandWrapped(): string {
+    const cmd = this.baseOptions.preBuildCommand!;
+    if (!this.workingDirectory) {
+      return cmd;
+    }
+    switch (this.engineType()) {
+      case PipelineEngine.GITHUB:
+        return `cd $GITHUB_WORKSPACE && ${cmd}`;
+      case PipelineEngine.GITLAB:
+        return `(cd $CI_PROJECT_DIR && ${cmd})`;
+      case PipelineEngine.BASH:
+        return `(cd "$(git rev-parse --show-toplevel)" && ${cmd})`;
+      default:
+        return cmd;
+    }
   }
 
   protected provideAssetUploadStep(stageName?: string): PipelineStep {
