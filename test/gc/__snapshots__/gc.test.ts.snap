@@ -1,0 +1,1241 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BashGarbageCollectionWorkflow should auto-detect pnpm and include pnpm install for NodeProject 1`] = `
+"#!/bin/bash
+set -euo pipefail
+
+# CDK Garbage Collection Script
+
+# Parse command line arguments
+STAGE=""
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --stage)
+      STAGE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--stage STAGE_NAME]"
+      exit 1
+      ;;
+  esac
+done
+
+# Install dependencies if not already installed
+if ! command -v cdk &> /dev/null; then
+  echo "Installing dependencies..."
+  npm install -g pnpm@9
+  pnpm exec projen install:ci
+fi
+
+# Stage functions
+# Stage: dev
+run_stage_dev() {
+  echo "========================================"
+  echo "Running garbage collection for stage: dev"
+  echo "========================================"
+  pnpm exec projen gc:dev
+}
+
+# Main execution
+FAILED_STAGES=()
+
+if [[ -n "$STAGE" ]]; then
+  # Run specific stage
+  case "$STAGE" in
+    dev)
+      run_stage_dev || FAILED_STAGES+=("dev")
+      ;;
+    *)
+      echo "Unknown stage: $STAGE"
+      echo "Available stages:"
+      echo "  - dev"
+      exit 1
+      ;;
+  esac
+else
+  # Run all stages
+  run_stage_dev || FAILED_STAGES+=("dev")
+fi
+
+# Summary
+echo ""
+echo "========================================"
+echo "CDK GARBAGE COLLECTION COMPLETE"
+echo "========================================"
+
+if [[ \${#FAILED_STAGES[@]} -gt 0 ]]; then
+  echo "Failed stages:"
+  printf '  - %s\\n' "\${FAILED_STAGES[@]}"
+  exit 1
+else
+  echo "All stages completed successfully"
+fi"
+`;
+
+exports[`BashGarbageCollectionWorkflow should create bash script 1`] = `
+"#!/bin/bash
+set -euo pipefail
+
+# CDK Garbage Collection Script
+
+# Parse command line arguments
+STAGE=""
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --stage)
+      STAGE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--stage STAGE_NAME]"
+      exit 1
+      ;;
+  esac
+done
+
+# Install dependencies if not already installed
+if ! command -v cdk &> /dev/null; then
+  echo "Installing dependencies..."
+  npx projen install:ci
+fi
+
+# Stage functions
+# Stage: dev
+run_stage_dev() {
+  echo "========================================"
+  echo "Running garbage collection for stage: dev"
+  echo "========================================"
+  echo "Login to AWS using role arn:aws:iam::123456789012:role/GcRole for region eu-central-1"
+  npx projen gc:dev
+}
+
+# Stage: prod
+run_stage_prod() {
+  echo "========================================"
+  echo "Running garbage collection for stage: prod"
+  echo "========================================"
+  npx projen gc:prod
+}
+
+# Main execution
+FAILED_STAGES=()
+
+if [[ -n "$STAGE" ]]; then
+  # Run specific stage
+  case "$STAGE" in
+    dev)
+      run_stage_dev || FAILED_STAGES+=("dev")
+      ;;
+    prod)
+      run_stage_prod || FAILED_STAGES+=("prod")
+      ;;
+    *)
+      echo "Unknown stage: $STAGE"
+      echo "Available stages:"
+      echo "  - dev"
+      echo "  - prod"
+      exit 1
+      ;;
+  esac
+else
+  # Run all stages
+  run_stage_dev || FAILED_STAGES+=("dev")
+  run_stage_prod || FAILED_STAGES+=("prod")
+fi
+
+# Summary
+echo ""
+echo "========================================"
+echo "CDK GARBAGE COLLECTION COMPLETE"
+echo "========================================"
+
+if [[ \${#FAILED_STAGES[@]} -gt 0 ]]; then
+  echo "Failed stages:"
+  printf '  - %s\\n' "\${FAILED_STAGES[@]}"
+  exit 1
+else
+  echo "All stages completed successfully"
+fi"
+`;
+
+exports[`BashGarbageCollectionWorkflow should include corepack setup when preInstallSteps contains CorepackSetupStep 1`] = `
+"#!/bin/bash
+set -euo pipefail
+
+# CDK Garbage Collection Script
+
+# Parse command line arguments
+STAGE=""
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --stage)
+      STAGE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--stage STAGE_NAME]"
+      exit 1
+      ;;
+  esac
+done
+
+# Install dependencies if not already installed
+if ! command -v cdk &> /dev/null; then
+  echo "Installing dependencies..."
+  corepack enable
+  npx projen install:ci
+fi
+
+# Stage functions
+# Stage: dev
+run_stage_dev() {
+  echo "========================================"
+  echo "Running garbage collection for stage: dev"
+  echo "========================================"
+  npx projen gc:dev
+}
+
+# Main execution
+FAILED_STAGES=()
+
+if [[ -n "$STAGE" ]]; then
+  # Run specific stage
+  case "$STAGE" in
+    dev)
+      run_stage_dev || FAILED_STAGES+=("dev")
+      ;;
+    *)
+      echo "Unknown stage: $STAGE"
+      echo "Available stages:"
+      echo "  - dev"
+      exit 1
+      ;;
+  esac
+else
+  # Run all stages
+  run_stage_dev || FAILED_STAGES+=("dev")
+fi
+
+# Summary
+echo ""
+echo "========================================"
+echo "CDK GARBAGE COLLECTION COMPLETE"
+echo "========================================"
+
+if [[ \${#FAILED_STAGES[@]} -gt 0 ]]; then
+  echo "Failed stages:"
+  printf '  - %s\\n' "\${FAILED_STAGES[@]}"
+  exit 1
+else
+  echo "All stages completed successfully"
+fi"
+`;
+
+exports[`BashGarbageCollectionWorkflow should support --stage argument 1`] = `
+"#!/bin/bash
+set -euo pipefail
+
+# CDK Garbage Collection Script
+
+# Parse command line arguments
+STAGE=""
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --stage)
+      STAGE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--stage STAGE_NAME]"
+      exit 1
+      ;;
+  esac
+done
+
+# Install dependencies if not already installed
+if ! command -v cdk &> /dev/null; then
+  echo "Installing dependencies..."
+  npx projen install:ci
+fi
+
+# Stage functions
+# Stage: dev
+run_stage_dev() {
+  echo "========================================"
+  echo "Running garbage collection for stage: dev"
+  echo "========================================"
+  npx projen gc:dev
+}
+
+# Stage: prod
+run_stage_prod() {
+  echo "========================================"
+  echo "Running garbage collection for stage: prod"
+  echo "========================================"
+  npx projen gc:prod
+}
+
+# Main execution
+FAILED_STAGES=()
+
+if [[ -n "$STAGE" ]]; then
+  # Run specific stage
+  case "$STAGE" in
+    dev)
+      run_stage_dev || FAILED_STAGES+=("dev")
+      ;;
+    prod)
+      run_stage_prod || FAILED_STAGES+=("prod")
+      ;;
+    *)
+      echo "Unknown stage: $STAGE"
+      echo "Available stages:"
+      echo "  - dev"
+      echo "  - prod"
+      exit 1
+      ;;
+  esac
+else
+  # Run all stages
+  run_stage_dev || FAILED_STAGES+=("dev")
+  run_stage_prod || FAILED_STAGES+=("prod")
+fi
+
+# Summary
+echo ""
+echo "========================================"
+echo "CDK GARBAGE COLLECTION COMPLETE"
+echo "========================================"
+
+if [[ \${#FAILED_STAGES[@]} -gt 0 ]]; then
+  echo "Failed stages:"
+  printf '  - %s\\n' "\${FAILED_STAGES[@]}"
+  exit 1
+else
+  echo "All stages completed successfully"
+fi"
+`;
+
+exports[`BashGarbageCollectionWorkflow should support custom script path 1`] = `
+"#!/bin/bash
+set -euo pipefail
+
+# CDK Garbage Collection Script
+
+# Parse command line arguments
+STAGE=""
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --stage)
+      STAGE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--stage STAGE_NAME]"
+      exit 1
+      ;;
+  esac
+done
+
+# Install dependencies if not already installed
+if ! command -v cdk &> /dev/null; then
+  echo "Installing dependencies..."
+  npx projen install:ci
+fi
+
+# Stage functions
+# Stage: dev
+run_stage_dev() {
+  echo "========================================"
+  echo "Running garbage collection for stage: dev"
+  echo "========================================"
+  npx projen gc:dev
+}
+
+# Main execution
+FAILED_STAGES=()
+
+if [[ -n "$STAGE" ]]; then
+  # Run specific stage
+  case "$STAGE" in
+    dev)
+      run_stage_dev || FAILED_STAGES+=("dev")
+      ;;
+    *)
+      echo "Unknown stage: $STAGE"
+      echo "Available stages:"
+      echo "  - dev"
+      exit 1
+      ;;
+  esac
+else
+  # Run all stages
+  run_stage_dev || FAILED_STAGES+=("dev")
+fi
+
+# Summary
+echo ""
+echo "========================================"
+echo "CDK GARBAGE COLLECTION COMPLETE"
+echo "========================================"
+
+if [[ \${#FAILED_STAGES[@]} -gt 0 ]]; then
+  echo "Failed stages:"
+  printf '  - %s\\n' "\${FAILED_STAGES[@]}"
+  exit 1
+else
+  echo "All stages completed successfully"
+fi"
+`;
+
+exports[`GarbageCollectionStep should generate correct Bash configuration 1`] = `
+{
+  "commands": [
+    "echo "Login to AWS using role arn:aws:iam::987654321098:role/GcRole for region us-east-1"",
+    "npx projen gc:prod",
+  ],
+}
+`;
+
+exports[`GarbageCollectionStep should generate correct GitHub job configuration 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {
+    "idToken": "write",
+  },
+  "steps": [
+    {
+      "name": "AWS Credentials",
+      "uses": "aws-actions/configure-aws-credentials@v5",
+      "with": {
+        "aws-region": "eu-central-1",
+        "role-session-name": "GitHubAction",
+        "role-to-assume": "arn:aws:iam::123456789012:role/GcRole",
+      },
+    },
+    {
+      "run": "npx projen gc:dev",
+    },
+  ],
+}
+`;
+
+exports[`GarbageCollectionStep should generate correct GitLab configuration 1`] = `
+{
+  "commands": [
+    "export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "arn:aws:iam::123456789012:role/GcRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))",
+    "npx projen gc:staging",
+  ],
+  "env": {
+    "AWS_REGION": "eu-west-1",
+  },
+  "extensions": [],
+  "needs": [],
+}
+`;
+
+exports[`GarbageCollectionStep should support jump role 1`] = `
+{
+  "env": {},
+  "needs": [],
+  "permissions": {
+    "idToken": "write",
+  },
+  "steps": [
+    {
+      "name": "Assume Jump Role",
+      "uses": "aws-actions/configure-aws-credentials@v5",
+      "with": {
+        "aws-region": "eu-central-1",
+        "role-session-name": "GitHubAction",
+        "role-skip-session-tagging": true,
+        "role-to-assume": "arn:aws:iam::000000000000:role/JumpRole",
+      },
+    },
+    {
+      "name": "AWS Credentials",
+      "uses": "aws-actions/configure-aws-credentials@v5",
+      "with": {
+        "aws-region": "eu-central-1",
+        "role-chaining": true,
+        "role-session-name": "GitHubAction",
+        "role-skip-session-tagging": true,
+        "role-to-assume": "arn:aws:iam::123456789012:role/GcRole",
+      },
+    },
+    {
+      "run": "npx projen gc:dev",
+    },
+  ],
+}
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should auto-detect pnpm for NodeProject with pnpm 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "pnpm exec projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+      - name: Install dependencies
+        run: pnpm exec projen install:ci
+      - run: pnpm exec projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should auto-detect yarn berry and include corepack setup 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "yarn projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: yarn projen install:ci
+      - run: yarn projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should create GitHub workflow with basic configuration 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/GcRole
+          role-session-name: GitHubAction
+          aws-region: eu-central-1
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+  gc-prod:
+    name: GC - prod
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: cdk-gc-prod
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::987654321098:role/GcRole
+          role-session-name: GitHubAction
+          aws-region: eu-central-1
+      - run: npx projen gc:prod 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should deduplicate stages sharing the same account/region 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/GcRole
+          role-session-name: GitHubAction
+          aws-region: eu-central-1
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+  gc-prod:
+    name: GC - prod
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: cdk-gc-prod
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::987654321098:role/GcRole
+          role-session-name: GitHubAction
+          aws-region: us-east-1
+      - run: npx projen gc:prod 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - prod" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should include OIDC role assumption 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/GcRole
+          role-session-name: GitHubAction
+          aws-region: eu-central-1
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should include concurrency group 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should include pnpm setup step when preInstallSteps contains PnpmSetupStep 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should include workflow_dispatch trigger 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should prefix workflow name with pipelineName 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: backend-cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: backend-cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/GcRole
+          role-session-name: GitHubAction
+          aws-region: eu-central-1
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should support custom schedule 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+"
+`;
+
+exports[`GitHubGarbageCollectionWorkflow should support timeoutMinutes per job 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: cdk-gc
+on:
+  schedule:
+    - cron: 0 3 * * 0
+  workflow_dispatch: {}
+jobs:
+  gc-dev:
+    name: GC - dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: cdk-gc-dev
+      cancelInProgress: false
+    env: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npx projen install:ci
+      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - name: Write to job summary
+        if: always()
+        run: |-
+          if [ -f cdk-gc-output.txt ]; then
+            echo "## CDK Garbage Collection - dev" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+            cat cdk-gc-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\\\`\\\`\\\`" >> $GITHUB_STEP_SUMMARY
+          fi
+    timeout-minutes: 60
+"
+`;
+
+exports[`GitLabGarbageCollectionWorkflow should add runner tags when specified 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+stages:
+  - gc
+.cdk-gc:
+  stage: gc
+  tags:
+    - docker
+    - aws
+  image:
+    name: node:20
+  id_tokens:
+    AWS_TOKEN:
+      aud: https://sts.amazonaws.com
+  only:
+    refs:
+      - schedules
+    variables:
+      - $CI_PIPELINE_SOURCE == "schedule"
+      - $CDK_GC == "true"
+  before_script:
+    - apt-get update && apt-get install -y python3 python3-pip
+    - pip3 install awscli
+    - npx projen install:ci
+gc:dev:
+  extends:
+    - .cdk-gc
+  variables: {}
+  script:
+    - npx projen gc:dev
+"
+`;
+
+exports[`GitLabGarbageCollectionWorkflow should create GitLab pipeline 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+stages:
+  - gc
+.cdk-gc:
+  stage: gc
+  tags: []
+  image:
+    name: node:20
+  id_tokens:
+    AWS_TOKEN:
+      aud: https://sts.amazonaws.com
+  only:
+    refs:
+      - schedules
+    variables:
+      - $CI_PIPELINE_SOURCE == "schedule"
+      - $CDK_GC == "true"
+  before_script:
+    - apt-get update && apt-get install -y python3 python3-pip
+    - pip3 install awscli
+    - npx projen install:ci
+gc:dev:
+  extends:
+    - .cdk-gc
+  variables:
+    AWS_REGION: eu-central-1
+  script:
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "arn:aws:iam::123456789012:role/GcRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen gc:dev
+"
+`;
+
+exports[`GitLabGarbageCollectionWorkflow should include OIDC token configuration 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+stages:
+  - gc
+.cdk-gc:
+  stage: gc
+  tags: []
+  image:
+    name: node:20
+  id_tokens:
+    AWS_TOKEN:
+      aud: https://sts.amazonaws.com
+  only:
+    refs:
+      - schedules
+    variables:
+      - $CI_PIPELINE_SOURCE == "schedule"
+      - $CDK_GC == "true"
+  before_script:
+    - apt-get update && apt-get install -y python3 python3-pip
+    - pip3 install awscli
+    - npx projen install:ci
+gc:dev:
+  extends:
+    - .cdk-gc
+  variables:
+    AWS_REGION: eu-central-1
+  script:
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "arn:aws:iam::123456789012:role/GcRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen gc:dev
+"
+`;
+
+exports[`GitLabGarbageCollectionWorkflow should include corepack setup in beforeScript when preInstallSteps contains CorepackSetupStep 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+stages:
+  - gc
+.cdk-gc:
+  stage: gc
+  tags: []
+  image:
+    name: node:20
+  id_tokens:
+    AWS_TOKEN:
+      aud: https://sts.amazonaws.com
+  only:
+    refs:
+      - schedules
+    variables:
+      - $CI_PIPELINE_SOURCE == "schedule"
+      - $CDK_GC == "true"
+  before_script:
+    - apt-get update && apt-get install -y python3 python3-pip
+    - pip3 install awscli
+    - corepack enable
+    - npx projen install:ci
+gc:dev:
+  extends:
+    - .cdk-gc
+  variables: {}
+  script:
+    - npx projen gc:dev
+"
+`;
+
+exports[`GitLabGarbageCollectionWorkflow should prefix job names with pipelineName 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+stages:
+  - gc
+.backend-cdk-gc:
+  stage: gc
+  tags: []
+  image:
+    name: node:20
+  id_tokens:
+    AWS_TOKEN:
+      aud: https://sts.amazonaws.com
+  only:
+    refs:
+      - schedules
+    variables:
+      - $CI_PIPELINE_SOURCE == "schedule"
+      - $CDK_GC == "true"
+  before_script:
+    - apt-get update && apt-get install -y python3 python3-pip
+    - pip3 install awscli
+    - npx projen install:ci
+backend-gc:dev:
+  extends:
+    - .backend-cdk-gc
+  variables:
+    AWS_REGION: eu-central-1
+  script:
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "arn:aws:iam::123456789012:role/GcRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen gc:dev
+"
+`;
+
+exports[`GitLabGarbageCollectionWorkflow should support custom docker image 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+stages:
+  - gc
+.cdk-gc:
+  stage: gc
+  tags: []
+  image:
+    name: custom/node:20-aws
+  id_tokens:
+    AWS_TOKEN:
+      aud: https://sts.amazonaws.com
+  only:
+    refs:
+      - schedules
+    variables:
+      - $CI_PIPELINE_SOURCE == "schedule"
+      - $CDK_GC == "true"
+  before_script:
+    - apt-get update && apt-get install -y python3 python3-pip
+    - pip3 install awscli
+    - npx projen install:ci
+gc:dev:
+  extends:
+    - .cdk-gc
+  variables: {}
+  script:
+    - npx projen gc:dev
+"
+`;
