@@ -961,36 +961,20 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 400 --resource-limit 1000 --output-file resource-count-results.json --github-summary || true
-      - name: Download baseline resource counts
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
       - name: Post PR comment with resource counts
         uses: actions/github-script@v7
         with:
           script: |-
             const fs = require('fs');
             const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
             if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
             const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
             let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
+            body += '| Stack | Resources | Limit | Usage | Status |\\n';
+            body += '| --- | --- | --- | --- | --- |\\n';
             for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
               const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
+              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${status} |\\n\`;
             }
             if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
             else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
@@ -5966,36 +5950,20 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
-      - name: Download baseline resource counts
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
       - name: Post PR comment with resource counts
         uses: actions/github-script@v7
         with:
           script: |-
             const fs = require('fs');
             const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
             if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
             const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
             let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
+            body += '| Stack | Resources | Limit | Usage | Status |\\n';
+            body += '| --- | --- | --- | --- | --- |\\n';
             for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
               const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
+              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${status} |\\n\`;
             }
             if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
             else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }

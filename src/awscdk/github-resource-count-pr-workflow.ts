@@ -318,17 +318,6 @@ export class GithubResourceCountPRWorkflow extends Component {
         },
         ...githubSteps.flatMap(s => s.steps),
         {
-          name: 'Download baseline resource counts',
-          uses: 'actions/checkout@v6',
-          with: {
-            'ref': '${{ github.event.pull_request.base.ref }}',
-            'path': '__baseline',
-            'sparse-checkout': 'resource-count-results.json',
-            'sparse-checkout-cone-mode': false,
-          },
-          continueOnError: true,
-        },
-        {
           name: 'Post PR comment with resource counts',
           uses: 'actions/github-script@v7',
           with: {
@@ -341,30 +330,21 @@ export class GithubResourceCountPRWorkflow extends Component {
 
   /**
    * Generates the JavaScript code used by actions/github-script to post a PR comment
-   * with resource counts and deltas versus the target branch baseline.
+   * with resource counts per stack.
    */
   private generatePrCommentScript(): string {
     const resultsFile = this.workingDirectory ? `${this.workingDirectory}/resource-count-results.json` : 'resource-count-results.json';
-    const baselineFile = '__baseline/resource-count-results.json';
     return [
       'const fs = require(\'fs\');',
       `const resultsPath = '${resultsFile}';`,
-      `const baselinePath = '${baselineFile}';`,
       'if (!fs.existsSync(resultsPath)) { console.log(\'No resource count results found\'); return; }',
       'const results = JSON.parse(fs.readFileSync(resultsPath, \'utf8\'));',
-      'let baseline = null;',
-      'try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, \'utf8\')); } } catch (e) { console.log(\'No baseline found\'); }',
-      'const baselineMap = {};',
-      'if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }',
       'let body = \'## CloudFormation Resource Count\\n\\n\';',
-      'body += \'| Stack | Resources | Limit | Usage | Delta | Status |\\n\';',
-      'body += \'| --- | --- | --- | --- | --- | --- |\\n\';',
+      'body += \'| Stack | Resources | Limit | Usage | Status |\\n\';',
+      'body += \'| --- | --- | --- | --- | --- |\\n\';',
       'for (const stack of results.stacks) {',
-      '  const prev = baselineMap[stack.stackName];',
-      '  const delta = prev !== undefined ? stack.resourceCount - prev : null;',
-      '  const deltaStr = delta !== null ? (delta > 0 ? `+${delta}` : `${delta}`) : \'N/A\';',
       '  const status = stack.exceeded ? \'🔴 Exceeded\' : stack.warning ? \'🟡 Warning\' : \'🟢 OK\';',
-      '  body += `| ${stack.stackName} | ${stack.resourceCount} | ${stack.resourceLimit} | ${stack.percentUsed}% | ${deltaStr} | ${status} |\\n`;',
+      '  body += `| ${stack.stackName} | ${stack.resourceCount} | ${stack.resourceLimit} | ${stack.percentUsed}% | ${status} |\\n`;',
       '}',
       'if (results.hasExceeded) { body += \'\\n> **Error:** One or more stacks exceed the resource limit!\\n\'; }',
       'else if (results.hasWarnings) { body += \'\\n> **Warning:** One or more stacks are approaching the resource limit.\\n\'; }',
