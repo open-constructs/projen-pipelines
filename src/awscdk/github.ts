@@ -323,16 +323,16 @@ export class GithubCDKPipeline extends CDKPipeline {
     const prCommentSteps: any[] = [];
     if (enableResourceCounting) {
       prCommentSteps.push({
-        'name': 'Download baseline resource counts',
-        'if': "github.event_name == 'pull_request'",
-        'uses': 'actions/checkout@v6',
-        'with': {
+        name: 'Download baseline resource counts',
+        if: "github.event_name == 'pull_request'",
+        uses: 'actions/checkout@v6',
+        with: {
           'ref': '${{ github.event.pull_request.base.ref }}',
           'path': '__baseline',
           'sparse-checkout': 'resource-count-results.json',
           'sparse-checkout-cone-mode': false,
         },
-        'continue-on-error': true,
+        continueOnError: true,
       },
       {
         name: 'Post PR comment with resource counts',

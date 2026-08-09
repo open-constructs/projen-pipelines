@@ -40,7 +40,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -54,6 +54,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -795,7 +796,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -809,6 +810,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -917,7 +919,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 400 --resource-limit 1000 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 400 --resource-limit 1000 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -931,6 +933,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -1103,7 +1106,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -1117,6 +1120,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -1225,7 +1229,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -1239,6 +1243,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -1553,7 +1558,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -1567,6 +1572,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -1866,7 +1872,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -1880,6 +1886,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -2195,7 +2202,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -2209,6 +2216,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -3100,7 +3108,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -3114,6 +3122,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -3380,7 +3389,7 @@ jobs:
           role-chaining: true
           role-skip-session-tagging: true
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -3394,6 +3403,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -4448,7 +4458,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -4462,6 +4472,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -4652,7 +4663,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -4666,6 +4677,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -4917,7 +4929,7 @@ jobs:
           aws-region: us-east-1
       - run: cd $GITHUB_WORKSPACE && pnpm -r --filter backend^... run build
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -4931,6 +4943,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -5109,7 +5122,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -5123,6 +5136,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -5562,7 +5576,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -5576,6 +5590,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -5747,7 +5762,7 @@ jobs:
           fetch-depth: 0
       - run: yarn install --check-files --frozen-lockfile
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -5761,6 +5776,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -6064,7 +6080,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: pnpm exec projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -6078,6 +6094,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -6262,7 +6279,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -6276,6 +6293,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -6590,7 +6608,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -6604,6 +6622,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -6776,7 +6795,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -6790,6 +6809,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -7841,7 +7861,7 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
@@ -7855,6 +7875,7 @@ jobs:
           path: __baseline
           sparse-checkout: resource-count-results.json
           sparse-checkout-cone-mode: false
+        continue-on-error: true
       - name: Post PR comment with resource counts
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7

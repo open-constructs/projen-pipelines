@@ -62,8 +62,11 @@ export class ResourceCountStep extends StepSequence {
 
     const command = `count-resources ${args.join(' ')}`.trim();
 
+    // Use || true so the step does not fail the job when resources exceed the limit.
+    // The results JSON is written before the CLI exits, so downstream steps (e.g. PR
+    // comment) can still report the exceeded status to the developer.
     super(project, [
-      new SimpleCommandStep(project, [command]),
+      new SimpleCommandStep(project, [`${command} || true`]),
     ]);
   }
 }

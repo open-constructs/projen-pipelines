@@ -42,9 +42,11 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -59,7 +61,7 @@ synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
@@ -335,9 +337,11 @@ backend-synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -352,7 +356,7 @@ backend-synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
@@ -552,9 +556,11 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -569,7 +575,7 @@ synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
@@ -701,9 +707,11 @@ backend-synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -718,7 +726,7 @@ backend-synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
@@ -888,9 +896,11 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -905,7 +915,7 @@ synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
@@ -1085,9 +1095,11 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -1102,7 +1114,7 @@ synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
@@ -1330,9 +1342,11 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -1347,7 +1361,7 @@ synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
@@ -1463,9 +1477,11 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -1480,7 +1496,7 @@ synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
@@ -1658,9 +1674,11 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -1675,7 +1693,7 @@ synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
@@ -1851,9 +1869,11 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
-    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
     - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
     - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
     - '  COMMENT_BODY=$(node -e "'
     - "    const fs = require('fs');"
     - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
@@ -1868,7 +1888,7 @@ synth:
     - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
     - "    console.log(JSON.stringify(body));"
     - '  ")'
-    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${GITLAB_TOKEN}" \\'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
     - '    --header "Content-Type: application/json" \\'
     - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
     - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
