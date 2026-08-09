@@ -1206,23 +1206,38 @@ test('Github snapshot with resource counting enabled (default)', () => {
   const deployYml = snapshot['.github/workflows/deploy.yml'];
   expect(deployYml).toBeDefined();
 
-  // Should contain count-resources command
+  // Deploy workflow should contain count-resources command (for GitHub summary)
   expect(deployYml).toContain('count-resources');
 
-  // Should have pull_request trigger
-  expect(deployYml).toContain('pull_request');
+  // Deploy workflow should NOT have pull_request trigger
+  expect(deployYml).not.toContain('pull_request');
 
-  // Should have PR comment step
-  expect(deployYml).toContain('Post PR comment with resource counts');
-  expect(deployYml).toContain('actions/github-script@v7');
+  // Deploy workflow should NOT have PR comment steps
+  expect(deployYml).not.toContain('Post PR comment with resource counts');
 
-  // Should have if condition on asset upload and deploy jobs to skip on PRs
-  expect(deployYml).toContain("github.event_name != 'pull_request'");
-
-  // Should have pull-requests write permission for PR comments
-  expect(deployYml).toContain('pull-requests: write');
+  // Deploy workflow should NOT have the if condition to skip on PRs
+  expect(deployYml).not.toContain("github.event_name != 'pull_request'");
 
   expect(deployYml).toMatchSnapshot();
+
+  // Separate resource-count workflow should exist for PRs
+  const rcYml = snapshot['.github/workflows/resource-count.yml'];
+  expect(rcYml).toBeDefined();
+
+  // Should have pull_request trigger
+  expect(rcYml).toContain('pull_request');
+
+  // Should have PR comment step
+  expect(rcYml).toContain('Post PR comment with resource counts');
+  expect(rcYml).toContain('actions/github-script@v7');
+
+  // Should have pull-requests write permission for PR comments
+  expect(rcYml).toContain('pull-requests: write');
+
+  // Should have count-resources command
+  expect(rcYml).toContain('count-resources');
+
+  expect(rcYml).toMatchSnapshot();
 });
 
 test('Github snapshot with resource counting disabled', () => {
@@ -1266,6 +1281,10 @@ test('Github snapshot with resource counting disabled', () => {
   // Should NOT have the if condition to skip PRs
   expect(deployYml).not.toContain("github.event_name != 'pull_request'");
 
+  // Should NOT have a separate resource-count workflow
+  const rcYml = snapshot['.github/workflows/resource-count.yml'];
+  expect(rcYml).not.toBeDefined();
+
   expect(deployYml).toMatchSnapshot();
 });
 
@@ -1299,9 +1318,16 @@ test('Github snapshot with custom resource count limits', () => {
   const deployYml = snapshot['.github/workflows/deploy.yml'];
   expect(deployYml).toBeDefined();
 
-  // Should contain custom threshold and limit values
+  // Should contain custom threshold and limit values in deploy workflow
   expect(deployYml).toContain('--warning-threshold 400');
   expect(deployYml).toContain('--resource-limit 1000');
 
+  // Separate resource-count workflow should also have custom limits
+  const rcYml = snapshot['.github/workflows/resource-count.yml'];
+  expect(rcYml).toBeDefined();
+  expect(rcYml).toContain('--warning-threshold 400');
+  expect(rcYml).toContain('--resource-limit 1000');
+
   expect(deployYml).toMatchSnapshot();
+  expect(rcYml).toMatchSnapshot();
 });

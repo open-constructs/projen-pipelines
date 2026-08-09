@@ -60,7 +60,7 @@ export class GithubCDKPipeline extends CDKPipeline {
   public readonly needsVersionedArtifacts: boolean;
 
   /** The GitHub workflow associated with the pipeline. */
-  private deploymentWorkflow!: GithubWorkflow;
+  private deploymentWorkflow: GithubWorkflow;
   /** List of deployment stages for the pipeline. */
   private deploymentStages: string[] = [];
   /** The GitHub component used for adding workflows. */
@@ -92,6 +92,16 @@ export class GithubCDKPipeline extends CDKPipeline {
       throw new Error('GitHub component not found. For subprojects, ensure the root project has a GitHub component.');
     }
     this.gh = gh;
+
+    // Initialize the deployment workflow on GitHub.
+    this.deploymentWorkflow = this.gh.addWorkflow(`${this.namePrefix}deploy`);
+    this.deploymentWorkflow.on({
+      push: {
+        branches: [this.branchName],
+        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('deploy') },
+      },
+      workflowDispatch: {},
+    });
 
     // Determine if versioned artifacts are necessary.
     this.needsVersionedArtifacts = options.stages.find(s => s.manualApproval === true) !== undefined;
@@ -128,6 +138,11 @@ export class GithubCDKPipeline extends CDKPipeline {
     // Create feature workflows if feature stages are configured
     if (options.featureStages) {
       this.createFeatureWorkflows();
+    }
+
+    // Create a separate PR workflow for resource counting if enabled
+    if (this.baseOptions.enableResourceCounting !== false) {
+      this.createResourceCountPRWorkflow();
     }
   }
 
@@ -319,50 +334,6 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     const githubSteps = steps.map(s => s.toGithub());
 
-    // Build the PR comment steps for resource counting
-    const prCommentSteps: any[] = [];
-    if (enableResourceCounting) {
-      prCommentSteps.push({
-        name: 'Download baseline resource counts',
-        if: "github.event_name == 'pull_request'",
-        uses: 'actions/checkout@v6',
-        with: {
-          'ref': '${{ github.event.pull_request.base.ref }}',
-          'path': '__baseline',
-          'sparse-checkout': 'resource-count-results.json',
-          'sparse-checkout-cone-mode': false,
-        },
-        continueOnError: true,
-      },
-      {
-        name: 'Post PR comment with resource counts',
-        if: "github.event_name == 'pull_request'",
-        uses: 'actions/github-script@v7',
-        with: {
-          script: this.generatePrCommentScript(),
-        },
-      });
-    }
-
-    // Add pull_request trigger if resource counting is enabled
-    const workflowTriggers: any = {
-      push: {
-        branches: [this.branchName],
-        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('deploy') },
-      },
-      workflowDispatch: {},
-    };
-    if (enableResourceCounting) {
-      workflowTriggers.pullRequest = {
-        branches: [this.branchName],
-        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('deploy') },
-      };
-    }
-
-    // Re-create workflow triggers with pull_request if needed
-    this.deploymentWorkflow = this.gh.addWorkflow(`${this.namePrefix}deploy`);
-    this.deploymentWorkflow.on(workflowTriggers);
-
     this.deploymentWorkflow.addJob('synth', {
       name: 'Synth CDK application',
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
@@ -374,7 +345,6 @@ export class GithubCDKPipeline extends CDKPipeline {
       needs: [...githubSteps.flatMap(s => s.needs)],
       permissions: mergeJobPermissions({
         contents: JobPermission.READ,
-        ...enableResourceCounting && { pullRequests: JobPermission.WRITE },
       }, ...(githubSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       tools: {
         node: {
@@ -390,7 +360,6 @@ export class GithubCDKPipeline extends CDKPipeline {
           },
         },
         ...githubSteps.flatMap(s => s.steps),
-        ...prCommentSteps,
       ],
     });
   }
@@ -399,8 +368,6 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a job to upload assets to AWS as part of the pipeline.
    */
   public createAssetUpload(stageName?: string, githubEnvironment?: string): void {
-    const enableResourceCounting = this.options.enableResourceCounting !== false;
-
     const steps = [
       new SimpleCommandStep(this.project, ['git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"']),
       new DownloadArtifactStep(this.project, {
@@ -419,7 +386,6 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     this.deploymentWorkflow.addJob(`assetUpload${stageName ? `-${stageName}` : ''}`, {
       name: `Publish assets to AWS${stageName ? ` for stage ${stageName}` : ''}`,
-      ...enableResourceCounting && { if: "github.event_name != 'pull_request'" },
       needs: ['synth', ...ghSteps.flatMap(s => s.needs)],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       ...this.jobDefaults() && { defaults: this.jobDefaults() },
@@ -528,8 +494,6 @@ export class GithubCDKPipeline extends CDKPipeline {
     stage: NamedStageOptions,
     useGithubEnvironmentsForAssetUpload?: boolean,
   ) {
-    const enableResourceCounting = this.options.enableResourceCounting !== false;
-
     const steps = [
       new DownloadArtifactStep(this.project, {
         name: `${this.namePrefix}cloud-assembly`,
@@ -547,7 +511,6 @@ export class GithubCDKPipeline extends CDKPipeline {
     // Add deployment to CI/CD workflow
     workflow.addJob(`deploy-${stage.name}`, {
       name: `Deploy stage ${stage.name} to AWS`,
-      ...enableResourceCounting && { if: "github.event_name != 'pull_request'" },
       ...this.options.useGithubEnvironments && {
         environment: stage.githubEnvironment ?? stage.name,
       },
@@ -636,6 +599,72 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
 
     }
+  }
+
+  /**
+   * Creates a separate workflow triggered on pull_request that synths, counts resources,
+   * downloads the baseline from the target branch, and posts a PR comment with deltas.
+   */
+  private createResourceCountPRWorkflow(): void {
+    const workflow = this.gh.addWorkflow(`${this.namePrefix}resource-count`);
+    workflow.on({
+      pullRequest: {
+        branches: [this.branchName],
+        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('resource-count') },
+      },
+    });
+
+    const steps: PipelineStep[] = [];
+    steps.push(this.provideInstallStep());
+    steps.push(this.provideSynthStep());
+    steps.push(this.provideResourceCountStep());
+
+    const githubSteps = steps.map(s => s.toGithub());
+
+    workflow.addJob('resource-count', {
+      name: 'Count CloudFormation resources',
+      runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
+      ...this.jobDefaults() && { defaults: this.jobDefaults() },
+      env: {
+        CI: 'true',
+        ...githubSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
+      },
+      needs: [...githubSteps.flatMap(s => s.needs)],
+      permissions: mergeJobPermissions({
+        contents: JobPermission.READ,
+        pullRequests: JobPermission.WRITE,
+      }, ...(githubSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
+      tools: {
+        node: {
+          version: this.minNodeVersion ?? '20',
+        },
+      },
+      steps: [
+        {
+          name: 'Checkout',
+          uses: 'actions/checkout@v6',
+        },
+        ...githubSteps.flatMap(s => s.steps),
+        {
+          name: 'Download baseline resource counts',
+          uses: 'actions/checkout@v6',
+          with: {
+            'ref': '${{ github.event.pull_request.base.ref }}',
+            'path': '__baseline',
+            'sparse-checkout': 'resource-count-results.json',
+            'sparse-checkout-cone-mode': false,
+          },
+          continueOnError: true,
+        },
+        {
+          name: 'Post PR comment with resource counts',
+          uses: 'actions/github-script@v7',
+          with: {
+            script: this.generatePrCommentScript(),
+          },
+        },
+      ],
+    });
   }
 
   /**

@@ -9,9 +9,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -19,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -46,47 +42,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -96,7 +51,6 @@ jobs:
       contents: write
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -141,7 +95,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -765,9 +718,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -775,7 +725,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -802,47 +751,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -852,7 +760,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -888,9 +795,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -898,7 +802,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -925,47 +828,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -975,7 +837,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1011,7 +872,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1066,23 +926,19 @@ jobs:
 "
 `;
 
-exports[`Github snapshot with custom runner 1`] = `
+exports[`Github snapshot with custom resource count limits 2`] = `
 "# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
 
-name: deploy
+name: resource-count
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch: {}
   pull_request:
     branches:
       - main
 jobs:
-  synth:
-    name: Synth CDK application
+  resource-count:
+    name: Count CloudFormation resources
     needs: []
-    runs-on: custom-runner
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
@@ -1096,8 +952,6 @@ jobs:
           package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -1106,14 +960,8 @@ jobs:
           role-session-name: GitHubAction
           aws-region: us-east-1
       - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: cloud-assembly
-          path: cdk.out/
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 400 --resource-limit 1000 --output-file resource-count-results.json --github-summary || true
       - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
         uses: actions/checkout@v6
         with:
           ref: \${{ github.event.pull_request.base.ref }}
@@ -1122,7 +970,6 @@ jobs:
           sparse-checkout-cone-mode: false
         continue-on-error: true
       - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |-
@@ -1153,6 +1000,51 @@ jobs:
             const existing = comments.find(c => c.body && c.body.includes(marker));
             if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
             else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
+"
+`;
+
+exports[`Github snapshot with custom runner 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: deploy
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+jobs:
+  synth:
+    name: Synth CDK application
+    needs: []
+    runs-on: custom-runner
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          package-manager-cache: "false"
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - run: yarn install --check-files --frozen-lockfile
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: synthRole
+          role-session-name: GitHubAction
+          aws-region: us-east-1
+      - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: cloud-assembly
+          path: cdk.out/
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -1162,7 +1054,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1198,9 +1089,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -1208,7 +1096,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -1235,47 +1122,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -1285,7 +1131,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1322,7 +1167,6 @@ jobs:
     env:
       CI: "true"
       TEST: me
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1527,9 +1371,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -1537,7 +1378,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -1564,47 +1404,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -1614,7 +1413,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1650,7 +1448,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1717,7 +1514,6 @@ jobs:
     env:
       CI: "true"
       TEST: me
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1841,9 +1637,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -1851,7 +1644,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -1878,47 +1670,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -1928,7 +1679,6 @@ jobs:
       contents: write
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -1967,7 +1717,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -2032,7 +1781,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -2171,9 +1919,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -2181,7 +1926,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -2208,47 +1952,6 @@ jobs:
         with:
           name: backend-cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -2258,7 +1961,6 @@ jobs:
       contents: write
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -2296,7 +1998,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -3077,9 +2778,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -3087,7 +2785,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -3114,47 +2811,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -3164,7 +2820,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -3201,7 +2856,6 @@ jobs:
     env:
       CI: "true"
       FOO: bar
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -3349,9 +3003,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -3359,7 +3010,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -3395,47 +3045,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -3445,7 +3054,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -3490,7 +3098,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -3565,7 +3172,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -4425,9 +4031,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -4435,7 +4038,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       packages: read
       id-token: write
     env:
@@ -4464,47 +4066,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -4515,7 +4076,6 @@ jobs:
       packages: write
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -4629,9 +4189,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -4639,7 +4196,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -4669,47 +4225,6 @@ jobs:
         with:
           name: backend-cloud-assembly
           path: packages/backend/cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'packages/backend/resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -4722,7 +4237,6 @@ jobs:
     defaults:
       run:
         working-directory: packages/backend
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -4761,7 +4275,6 @@ jobs:
     defaults:
       run:
         working-directory: packages/backend
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -4830,7 +4343,6 @@ jobs:
     defaults:
       run:
         working-directory: packages/backend
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -4894,9 +4406,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -4904,7 +4413,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -4935,47 +4443,6 @@ jobs:
         with:
           name: backend-cloud-assembly
           path: packages/backend/cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'packages/backend/resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -4988,7 +4455,6 @@ jobs:
     defaults:
       run:
         working-directory: packages/backend
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -5027,7 +4493,6 @@ jobs:
     defaults:
       run:
         working-directory: packages/backend
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -5091,9 +4556,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -5101,7 +4563,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -5128,47 +4589,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -5178,7 +4598,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -5214,7 +4633,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -5541,13 +4959,6 @@ on:
       - shared-libs/**
       - .github/workflows/deploy.yml
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
-    paths:
-      - packages/my-app/**
-      - shared-libs/**
-      - .github/workflows/deploy.yml
 jobs:
   synth:
     name: Synth CDK application
@@ -5555,7 +4966,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -5582,47 +4992,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -5632,7 +5001,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -5668,7 +5036,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -5735,12 +5102,6 @@ on:
       - packages/my-app/**
       - .github/workflows/deploy.yml
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
-    paths:
-      - packages/my-app/**
-      - .github/workflows/deploy.yml
 jobs:
   synth:
     name: Synth CDK application
@@ -5748,7 +5109,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
     env:
       CI: "true"
     steps:
@@ -5768,47 +5128,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -5818,7 +5137,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -5854,7 +5172,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6045,9 +5362,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -6055,7 +5369,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -6086,47 +5399,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -6136,7 +5408,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6176,7 +5447,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6246,9 +5516,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -6256,7 +5523,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -6285,47 +5551,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -6336,7 +5561,6 @@ jobs:
     env:
       CI: "true"
       FOO: bar
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6374,7 +5598,6 @@ jobs:
     env:
       CI: "true"
       FOO: bar
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6577,9 +5800,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -6587,7 +5807,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -6614,47 +5833,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -6664,7 +5842,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6700,7 +5877,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6755,21 +5931,17 @@ jobs:
 "
 `;
 
-exports[`Github snapshot with separate asset upload jobs 1`] = `
+exports[`Github snapshot with resource counting enabled (default) 2`] = `
 "# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
 
-name: deploy
+name: resource-count
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch: {}
   pull_request:
     branches:
       - main
 jobs:
-  synth:
-    name: Synth CDK application
+  resource-count:
+    name: Count CloudFormation resources
     needs: []
     runs-on: ubuntu-latest
     permissions:
@@ -6785,8 +5957,6 @@ jobs:
           package-manager-cache: "false"
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -6796,13 +5966,7 @@ jobs:
           aws-region: us-east-1
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: cloud-assembly
-          path: cdk.out/
       - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
         uses: actions/checkout@v6
         with:
           ref: \${{ github.event.pull_request.base.ref }}
@@ -6811,7 +5975,6 @@ jobs:
           sparse-checkout-cone-mode: false
         continue-on-error: true
       - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |-
@@ -6842,6 +6005,51 @@ jobs:
             const existing = comments.find(c => c.body && c.body.includes(marker));
             if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
             else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
+"
+`;
+
+exports[`Github snapshot with separate asset upload jobs 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+name: deploy
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+jobs:
+  synth:
+    name: Synth CDK application
+    needs: []
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          package-manager-cache: "false"
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - run: yarn install --check-files --frozen-lockfile
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: synthRole
+          role-session-name: GitHubAction
+          aws-region: us-east-1
+      - run: npx projen build
+      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: cloud-assembly
+          path: cdk.out/
   assetUpload-dev:
     name: Publish assets to AWS for stage dev
     needs: synth
@@ -6852,7 +6060,6 @@ jobs:
     environment: dev
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6886,7 +6093,6 @@ jobs:
     environment: prod
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6922,7 +6128,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -6988,7 +6193,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -7830,9 +7034,6 @@ on:
     branches:
       - main
   workflow_dispatch: {}
-  pull_request:
-    branches:
-      - main
 jobs:
   synth:
     name: Synth CDK application
@@ -7840,7 +7041,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
       id-token: write
     env:
       CI: "true"
@@ -7867,47 +7067,6 @@ jobs:
         with:
           name: cloud-assembly
           path: cdk.out/
-      - name: Download baseline resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
-        with:
-          ref: \${{ github.event.pull_request.base.ref }}
-          path: __baseline
-          sparse-checkout: resource-count-results.json
-          sparse-checkout-cone-mode: false
-        continue-on-error: true
-      - name: Post PR comment with resource counts
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |-
-            const fs = require('fs');
-            const resultsPath = 'resource-count-results.json';
-            const baselinePath = '__baseline/resource-count-results.json';
-            if (!fs.existsSync(resultsPath)) { console.log('No resource count results found'); return; }
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            let baseline = null;
-            try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8')); } } catch (e) { console.log('No baseline found'); }
-            const baselineMap = {};
-            if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }
-            let body = '## CloudFormation Resource Count\\n\\n';
-            body += '| Stack | Resources | Limit | Usage | Delta | Status |\\n';
-            body += '| --- | --- | --- | --- | --- | --- |\\n';
-            for (const stack of results.stacks) {
-              const prev = baselineMap[stack.stackName];
-              const delta = prev !== undefined ? stack.resourceCount - prev : null;
-              const deltaStr = delta !== null ? (delta > 0 ? \`+\${delta}\` : \`\${delta}\`) : 'N/A';
-              const status = stack.exceeded ? '🔴 Exceeded' : stack.warning ? '🟡 Warning' : '🟢 OK';
-              body += \`| \${stack.stackName} | \${stack.resourceCount} | \${stack.resourceLimit} | \${stack.percentUsed}% | \${deltaStr} | \${status} |\\n\`;
-            }
-            if (results.hasExceeded) { body += '\\n> **Error:** One or more stacks exceed the resource limit!\\n'; }
-            else if (results.hasWarnings) { body += '\\n> **Warning:** One or more stacks are approaching the resource limit.\\n'; }
-            const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });
-            const marker = '<!-- resource-count-comment -->';
-            body = marker + '\\n' + body;
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }
-            else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }
   assetUpload:
     name: Publish assets to AWS
     needs: synth
@@ -7917,7 +7076,6 @@ jobs:
       contents: read
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -7953,7 +7111,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -8019,7 +7176,6 @@ jobs:
       cancel-in-progress: false
     env:
       CI: "true"
-    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/setup-node@v6
         with:
