@@ -4,6 +4,7 @@ import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
 import { PipelineEngine } from '../engine';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep, StepSequence, PnpmSetupStep, CorepackSetupStep } from '../steps';
+import { ResourceCountStep } from './resource-count-step';
 import { VersioningConfig, VersioningSetup } from '../versioning';
 
 /**
@@ -240,6 +241,32 @@ export interface CDKPipelineOptions {
    * Versioning configuration
    */
   readonly versioning?: VersioningConfig;
+
+  /**
+   * Whether to enable resource counting after synth to track CloudFormation resource usage.
+   * When enabled, resources in each stack are counted and reported.
+   * On PRs/MRs, a comment is posted showing resource counts and deltas.
+   *
+   * @default true
+   */
+  readonly enableResourceCounting?: boolean;
+
+  /**
+   * The warning threshold for resource count. When a stack's resource count
+   * reaches this number, a warning is emitted.
+   *
+   * @default 450
+   */
+  readonly resourceCountWarningThreshold?: number;
+
+  /**
+   * The hard limit for resource count per stack. This should match the
+   * CloudFormation resource limit for the account (default 500, can be increased).
+   * Percentage calculations use this value as the denominator.
+   *
+   * @default 500
+   */
+  readonly resourceCountLimit?: number;
 }
 
 /**
@@ -393,6 +420,16 @@ export abstract class CDKPipeline extends Component {
       default:
         return cmd;
     }
+  }
+
+  protected provideResourceCountStep(): PipelineStep {
+    return new ResourceCountStep(this.project, {
+      cloudAssemblyDir: this.app.cdkConfig.cdkout,
+      warningThreshold: this.baseOptions.resourceCountWarningThreshold ?? 450,
+      resourceLimit: this.baseOptions.resourceCountLimit ?? 500,
+      outputFile: 'resource-count-results.json',
+      githubSummary: this.engineType() === PipelineEngine.GITHUB,
+    });
   }
 
   protected provideAssetUploadStep(stageName?: string): PipelineStep {

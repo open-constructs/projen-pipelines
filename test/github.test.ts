@@ -1177,3 +1177,131 @@ test('Github snapshot with explicit workingDirectory override', () => {
   expect(deployYml).toContain('path: apps/my-app/cdk.out/');
   expect(deployYml).toContain('path: apps/my-app/cdk-outputs-dev.json');
 });
+
+test('Github snapshot with resource counting enabled (default)', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deployYml = snapshot['.github/workflows/deploy.yml'];
+  expect(deployYml).toBeDefined();
+
+  // Should contain count-resources command
+  expect(deployYml).toContain('count-resources');
+
+  // Should have pull_request trigger
+  expect(deployYml).toContain('pull_request');
+
+  // Should have PR comment step
+  expect(deployYml).toContain('Post PR comment with resource counts');
+  expect(deployYml).toContain('actions/github-script@v7');
+
+  // Should have if condition on asset upload and deploy jobs to skip on PRs
+  expect(deployYml).toContain("github.event_name != 'pull_request'");
+
+  // Should have pull-requests write permission for PR comments
+  expect(deployYml).toContain('pull-requests: write');
+
+  expect(deployYml).toMatchSnapshot();
+});
+
+test('Github snapshot with resource counting disabled', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    enableResourceCounting: false,
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deployYml = snapshot['.github/workflows/deploy.yml'];
+  expect(deployYml).toBeDefined();
+
+  // Should NOT contain count-resources command
+  expect(deployYml).not.toContain('count-resources');
+
+  // Should NOT have pull_request trigger
+  expect(deployYml).not.toContain('pull_request');
+
+  // Should NOT have PR comment step
+  expect(deployYml).not.toContain('Post PR comment with resource counts');
+
+  // Should NOT have the if condition to skip PRs
+  expect(deployYml).not.toContain("github.event_name != 'pull_request'");
+
+  expect(deployYml).toMatchSnapshot();
+});
+
+test('Github snapshot with custom resource count limits', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GithubCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    resourceCountWarningThreshold: 400,
+    resourceCountLimit: 1000,
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const deployYml = snapshot['.github/workflows/deploy.yml'];
+  expect(deployYml).toBeDefined();
+
+  // Should contain custom threshold and limit values
+  expect(deployYml).toContain('--warning-threshold 400');
+  expect(deployYml).toContain('--resource-limit 1000');
+
+  expect(deployYml).toMatchSnapshot();
+});

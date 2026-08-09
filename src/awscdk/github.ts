@@ -60,7 +60,7 @@ export class GithubCDKPipeline extends CDKPipeline {
   public readonly needsVersionedArtifacts: boolean;
 
   /** The GitHub workflow associated with the pipeline. */
-  private deploymentWorkflow: GithubWorkflow;
+  private deploymentWorkflow!: GithubWorkflow;
   /** List of deployment stages for the pipeline. */
   private deploymentStages: string[] = [];
   /** The GitHub component used for adding workflows. */
@@ -92,16 +92,6 @@ export class GithubCDKPipeline extends CDKPipeline {
       throw new Error('GitHub component not found. For subprojects, ensure the root project has a GitHub component.');
     }
     this.gh = gh;
-
-    // Initialize the deployment workflow on GitHub.
-    this.deploymentWorkflow = this.gh.addWorkflow(`${this.namePrefix}deploy`);
-    this.deploymentWorkflow.on({
-      push: {
-        branches: [this.branchName],
-        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('deploy') },
-      },
-      workflowDispatch: {},
-    });
 
     // Determine if versioned artifacts are necessary.
     this.needsVersionedArtifacts = options.stages.find(s => s.manualApproval === true) !== undefined;
@@ -312,9 +302,15 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a synthesis job for the pipeline using GitHub Actions.
    */
   private createSynth(): void {
+    const enableResourceCounting = this.options.enableResourceCounting !== false;
+
     const steps: PipelineStep[] = [];
     steps.push(this.provideInstallStep());
     steps.push(this.provideSynthStep());
+
+    if (enableResourceCounting) {
+      steps.push(this.provideResourceCountStep());
+    }
 
     steps.push(new UploadArtifactStep(this.project, {
       name: `${this.namePrefix}cloud-assembly`,
@@ -322,6 +318,50 @@ export class GithubCDKPipeline extends CDKPipeline {
     }));
 
     const githubSteps = steps.map(s => s.toGithub());
+
+    // Build the PR comment steps for resource counting
+    const prCommentSteps: any[] = [];
+    if (enableResourceCounting) {
+      prCommentSteps.push({
+        'name': 'Download baseline resource counts',
+        'if': "github.event_name == 'pull_request'",
+        'uses': 'actions/checkout@v6',
+        'with': {
+          'ref': '${{ github.event.pull_request.base.ref }}',
+          'path': '__baseline',
+          'sparse-checkout': 'resource-count-results.json',
+          'sparse-checkout-cone-mode': false,
+        },
+        'continue-on-error': true,
+      },
+      {
+        name: 'Post PR comment with resource counts',
+        if: "github.event_name == 'pull_request'",
+        uses: 'actions/github-script@v7',
+        with: {
+          script: this.generatePrCommentScript(),
+        },
+      });
+    }
+
+    // Add pull_request trigger if resource counting is enabled
+    const workflowTriggers: any = {
+      push: {
+        branches: [this.branchName],
+        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('deploy') },
+      },
+      workflowDispatch: {},
+    };
+    if (enableResourceCounting) {
+      workflowTriggers.pullRequest = {
+        branches: [this.branchName],
+        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('deploy') },
+      };
+    }
+
+    // Re-create workflow triggers with pull_request if needed
+    this.deploymentWorkflow = this.gh.addWorkflow(`${this.namePrefix}deploy`);
+    this.deploymentWorkflow.on(workflowTriggers);
 
     this.deploymentWorkflow.addJob('synth', {
       name: 'Synth CDK application',
@@ -334,6 +374,7 @@ export class GithubCDKPipeline extends CDKPipeline {
       needs: [...githubSteps.flatMap(s => s.needs)],
       permissions: mergeJobPermissions({
         contents: JobPermission.READ,
+        ...enableResourceCounting && { pullRequests: JobPermission.WRITE },
       }, ...(githubSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
       tools: {
         node: {
@@ -349,6 +390,7 @@ export class GithubCDKPipeline extends CDKPipeline {
           },
         },
         ...githubSteps.flatMap(s => s.steps),
+        ...prCommentSteps,
       ],
     });
   }
@@ -357,6 +399,8 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a job to upload assets to AWS as part of the pipeline.
    */
   public createAssetUpload(stageName?: string, githubEnvironment?: string): void {
+    const enableResourceCounting = this.options.enableResourceCounting !== false;
+
     const steps = [
       new SimpleCommandStep(this.project, ['git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"']),
       new DownloadArtifactStep(this.project, {
@@ -375,6 +419,7 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     this.deploymentWorkflow.addJob(`assetUpload${stageName ? `-${stageName}` : ''}`, {
       name: `Publish assets to AWS${stageName ? ` for stage ${stageName}` : ''}`,
+      ...enableResourceCounting && { if: "github.event_name != 'pull_request'" },
       needs: ['synth', ...ghSteps.flatMap(s => s.needs)],
       runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
       ...this.jobDefaults() && { defaults: this.jobDefaults() },
@@ -483,6 +528,8 @@ export class GithubCDKPipeline extends CDKPipeline {
     stage: NamedStageOptions,
     useGithubEnvironmentsForAssetUpload?: boolean,
   ) {
+    const enableResourceCounting = this.options.enableResourceCounting !== false;
+
     const steps = [
       new DownloadArtifactStep(this.project, {
         name: `${this.namePrefix}cloud-assembly`,
@@ -500,6 +547,7 @@ export class GithubCDKPipeline extends CDKPipeline {
     // Add deployment to CI/CD workflow
     workflow.addJob(`deploy-${stage.name}`, {
       name: `Deploy stage ${stage.name} to AWS`,
+      ...enableResourceCounting && { if: "github.event_name != 'pull_request'" },
       ...this.options.useGithubEnvironments && {
         environment: stage.githubEnvironment ?? stage.name,
       },
@@ -588,5 +636,43 @@ export class GithubCDKPipeline extends CDKPipeline {
       });
 
     }
+  }
+
+  /**
+   * Generates the JavaScript code used by actions/github-script to post a PR comment
+   * with resource counts and deltas versus the target branch baseline.
+   */
+  private generatePrCommentScript(): string {
+    const resultsFile = this.workingDirectory ? `${this.workingDirectory}/resource-count-results.json` : 'resource-count-results.json';
+    const baselineFile = '__baseline/resource-count-results.json';
+    return [
+      'const fs = require(\'fs\');',
+      `const resultsPath = '${resultsFile}';`,
+      `const baselinePath = '${baselineFile}';`,
+      'if (!fs.existsSync(resultsPath)) { console.log(\'No resource count results found\'); return; }',
+      'const results = JSON.parse(fs.readFileSync(resultsPath, \'utf8\'));',
+      'let baseline = null;',
+      'try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, \'utf8\')); } } catch (e) { console.log(\'No baseline found\'); }',
+      'const baselineMap = {};',
+      'if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }',
+      'let body = \'## CloudFormation Resource Count\\n\\n\';',
+      'body += \'| Stack | Resources | Limit | Usage | Delta | Status |\\n\';',
+      'body += \'| --- | --- | --- | --- | --- | --- |\\n\';',
+      'for (const stack of results.stacks) {',
+      '  const prev = baselineMap[stack.stackName];',
+      '  const delta = prev !== undefined ? stack.resourceCount - prev : null;',
+      '  const deltaStr = delta !== null ? (delta > 0 ? `+${delta}` : `${delta}`) : \'N/A\';',
+      '  const status = stack.exceeded ? \'🔴 Exceeded\' : stack.warning ? \'🟡 Warning\' : \'🟢 OK\';',
+      '  body += `| ${stack.stackName} | ${stack.resourceCount} | ${stack.resourceLimit} | ${stack.percentUsed}% | ${deltaStr} | ${status} |\\n`;',
+      '}',
+      'if (results.hasExceeded) { body += \'\\n> **Error:** One or more stacks exceed the resource limit!\\n\'; }',
+      'else if (results.hasWarnings) { body += \'\\n> **Warning:** One or more stacks are approaching the resource limit.\\n\'; }',
+      'const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });',
+      'const marker = \'<!-- resource-count-comment -->\';',
+      'body = marker + \'\\n\' + body;',
+      'const existing = comments.find(c => c.body && c.body.includes(marker));',
+      'if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }',
+      'else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }',
+    ].join('\n');
   }
 }
