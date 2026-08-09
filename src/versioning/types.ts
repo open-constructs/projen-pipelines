@@ -1,6 +1,26 @@
 
 
-export type StageOverrides = { [stage: string]: VersioningConfig };
+export interface VersioningStageOverride {
+  /**
+   * Enable versioning feature
+   * @default - inherited from base config
+   */
+  readonly enabled?: boolean;
+
+  /**
+   * Primary versioning strategy
+   * @default - inherited from base config
+   */
+  readonly strategy?: IVersioningStrategy;
+
+  /**
+   * Output configuration
+   * @default - inherited from base config
+   */
+  readonly outputs?: VersioningOutputConfig;
+}
+
+export type StageOverrides = { [stage: string]: VersioningStageOverride };
 
 export interface VersioningConfig {
   /**

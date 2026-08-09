@@ -3766,7 +3766,7 @@ const customVersioningConfig: CustomVersioningConfig = { ... }
 | <code><a href="#projen-pipelines.CustomVersioningConfig.property.outputs">outputs</a></code> | <code><a href="#projen-pipelines.VersioningOutputConfig">VersioningOutputConfig</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CustomVersioningConfig.property.strategy">strategy</a></code> | <code><a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a></code> | *No description.* |
 | <code><a href="#projen-pipelines.CustomVersioningConfig.property.enabled">enabled</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#projen-pipelines.CustomVersioningConfig.property.stageOverrides">stageOverrides</a></code> | <code>{[ key: string ]: <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>}</code> | *No description.* |
+| <code><a href="#projen-pipelines.CustomVersioningConfig.property.stageOverrides">stageOverrides</a></code> | <code>{[ key: string ]: <a href="#projen-pipelines.VersioningStageOverride">VersioningStageOverride</a>}</code> | *No description.* |
 
 ---
 
@@ -3803,10 +3803,10 @@ public readonly enabled: boolean;
 ##### `stageOverrides`<sup>Optional</sup> <a name="stageOverrides" id="projen-pipelines.CustomVersioningConfig.property.stageOverrides"></a>
 
 ```typescript
-public readonly stageOverrides: {[ key: string ]: VersioningConfig};
+public readonly stageOverrides: {[ key: string ]: VersioningStageOverride};
 ```
 
-- *Type:* {[ key: string ]: <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>}
+- *Type:* {[ key: string ]: <a href="#projen-pipelines.VersioningStageOverride">VersioningStageOverride</a>}
 
 ---
 
@@ -6670,7 +6670,7 @@ const versioningConfig: VersioningConfig = { ... }
 | <code><a href="#projen-pipelines.VersioningConfig.property.enabled">enabled</a></code> | <code>boolean</code> | Enable versioning feature. |
 | <code><a href="#projen-pipelines.VersioningConfig.property.outputs">outputs</a></code> | <code><a href="#projen-pipelines.VersioningOutputConfig">VersioningOutputConfig</a></code> | Output configuration. |
 | <code><a href="#projen-pipelines.VersioningConfig.property.strategy">strategy</a></code> | <code><a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a></code> | Primary versioning strategy. |
-| <code><a href="#projen-pipelines.VersioningConfig.property.stageOverrides">stageOverrides</a></code> | <code>{[ key: string ]: <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>}</code> | Stage-specific overrides. |
+| <code><a href="#projen-pipelines.VersioningConfig.property.stageOverrides">stageOverrides</a></code> | <code>{[ key: string ]: <a href="#projen-pipelines.VersioningStageOverride">VersioningStageOverride</a>}</code> | Stage-specific overrides. |
 
 ---
 
@@ -6714,10 +6714,10 @@ Primary versioning strategy.
 ##### `stageOverrides`<sup>Optional</sup> <a name="stageOverrides" id="projen-pipelines.VersioningConfig.property.stageOverrides"></a>
 
 ```typescript
-public readonly stageOverrides: {[ key: string ]: VersioningConfig};
+public readonly stageOverrides: {[ key: string ]: VersioningStageOverride};
 ```
 
-- *Type:* {[ key: string ]: <a href="#projen-pipelines.VersioningConfig">VersioningConfig</a>}
+- *Type:* {[ key: string ]: <a href="#projen-pipelines.VersioningStageOverride">VersioningStageOverride</a>}
 
 Stage-specific overrides.
 
@@ -6765,6 +6765,65 @@ public readonly parameterStore: ParameterStoreConfig;
 - *Default:* false
 
 Output to SSM Parameter Store.
+
+---
+
+### VersioningStageOverride <a name="VersioningStageOverride" id="projen-pipelines.VersioningStageOverride"></a>
+
+#### Initializer <a name="Initializer" id="projen-pipelines.VersioningStageOverride.Initializer"></a>
+
+```typescript
+import { VersioningStageOverride } from 'projen-pipelines'
+
+const versioningStageOverride: VersioningStageOverride = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.VersioningStageOverride.property.enabled">enabled</a></code> | <code>boolean</code> | Enable versioning feature. |
+| <code><a href="#projen-pipelines.VersioningStageOverride.property.outputs">outputs</a></code> | <code><a href="#projen-pipelines.VersioningOutputConfig">VersioningOutputConfig</a></code> | Output configuration. |
+| <code><a href="#projen-pipelines.VersioningStageOverride.property.strategy">strategy</a></code> | <code><a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a></code> | Primary versioning strategy. |
+
+---
+
+##### `enabled`<sup>Optional</sup> <a name="enabled" id="projen-pipelines.VersioningStageOverride.property.enabled"></a>
+
+```typescript
+public readonly enabled: boolean;
+```
+
+- *Type:* boolean
+- *Default:* inherited from base config
+
+Enable versioning feature.
+
+---
+
+##### `outputs`<sup>Optional</sup> <a name="outputs" id="projen-pipelines.VersioningStageOverride.property.outputs"></a>
+
+```typescript
+public readonly outputs: VersioningOutputConfig;
+```
+
+- *Type:* <a href="#projen-pipelines.VersioningOutputConfig">VersioningOutputConfig</a>
+- *Default:* inherited from base config
+
+Output configuration.
+
+---
+
+##### `strategy`<sup>Optional</sup> <a name="strategy" id="projen-pipelines.VersioningStageOverride.property.strategy"></a>
+
+```typescript
+public readonly strategy: IVersioningStrategy;
+```
+
+- *Type:* <a href="#projen-pipelines.IVersioningStrategy">IVersioningStrategy</a>
+- *Default:* inherited from base config
+
+Primary versioning strategy.
 
 ---
 

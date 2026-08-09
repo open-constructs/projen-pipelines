@@ -125,8 +125,8 @@ describe('VersioningConfigUtils', () => {
       };
 
       const resolved = VersioningConfigUtils.resolveForStage(configWithOverrides, 'dev');
-      expect(resolved.strategy).toEqual(configWithOverrides.stageOverrides?.dev.strategy);
-      expect(resolved.outputs).toEqual(configWithOverrides.stageOverrides?.dev.outputs);
+      expect(resolved.strategy).toEqual(configWithOverrides.stageOverrides?.dev?.strategy);
+      expect(resolved.outputs).toEqual(configWithOverrides.stageOverrides?.dev?.outputs);
     });
 
   });

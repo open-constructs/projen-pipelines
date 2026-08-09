@@ -424,16 +424,10 @@ new GithubCDKPipeline(app, {
     stageOverrides: {
       dev: {
         strategy: VersioningStrategy.commitCount(),
-        outputs: VersioningOutputs.minimal()
+        outputs: VersioningOutputs.minimal(),
       },
-      prod: {
-        validation: {
-          requireTag: true,
-          tagPattern: /^v\d+\.\d+\.\d+$/
-        }
-      }
-    }
-  }
+    },
+  },
 });
 ```
 
