@@ -1829,6 +1829,199 @@ public readonly schedule: string;
 ---
 
 
+### GithubResourceCountPRWorkflow <a name="GithubResourceCountPRWorkflow" id="projen-pipelines.GithubResourceCountPRWorkflow"></a>
+
+A standalone Component that creates a GitHub Actions workflow to count CloudFormation resources on pull requests.
+
+It synthesizes the CDK app, counts resources, compares
+against a baseline from the target branch, and posts a PR comment with the results.
+
+This can be used independently or is automatically created by GithubCDKPipeline when
+`enableResourceCounting` is not set to false.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GithubResourceCountPRWorkflow.Initializer"></a>
+
+```typescript
+import { GithubResourceCountPRWorkflow } from 'projen-pipelines'
+
+new GithubResourceCountPRWorkflow(app: AwsCdkTypeScriptApp, options?: GithubResourceCountPRWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.Initializer.parameter.app">app</a></code> | <code>projen.awscdk.AwsCdkTypeScriptApp</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions">GithubResourceCountPRWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `app`<sup>Required</sup> <a name="app" id="projen-pipelines.GithubResourceCountPRWorkflow.Initializer.parameter.app"></a>
+
+- *Type:* projen.awscdk.AwsCdkTypeScriptApp
+
+---
+
+##### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.GithubResourceCountPRWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions">GithubResourceCountPRWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GithubResourceCountPRWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GithubResourceCountPRWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GithubResourceCountPRWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GithubResourceCountPRWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GithubResourceCountPRWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GithubResourceCountPRWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GithubResourceCountPRWorkflow.isConstruct"></a>
+
+```typescript
+import { GithubResourceCountPRWorkflow } from 'projen-pipelines'
+
+GithubResourceCountPRWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubResourceCountPRWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GithubResourceCountPRWorkflow.isComponent"></a>
+
+```typescript
+import { GithubResourceCountPRWorkflow } from 'projen-pipelines'
+
+GithubResourceCountPRWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubResourceCountPRWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GithubResourceCountPRWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubResourceCountPRWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+
 ### GitlabCDKPipeline <a name="GitlabCDKPipeline" id="projen-pipelines.GitlabCDKPipeline"></a>
 
 The GitlabCDKPipeline class extends CDKPipeline to provide a way to configure and execute AWS CDK deployment pipelines within GitLab CI/CD environments.
@@ -5172,6 +5365,292 @@ public readonly write: boolean;
 - *Default:* false
 
 Whether or not to grant the step write permissions to the registry.
+
+---
+
+### GithubResourceCountPRWorkflowOptions <a name="GithubResourceCountPRWorkflowOptions" id="projen-pipelines.GithubResourceCountPRWorkflowOptions"></a>
+
+Options for GithubResourceCountPRWorkflow.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.Initializer"></a>
+
+```typescript
+import { GithubResourceCountPRWorkflowOptions } from 'projen-pipelines'
+
+const githubResourceCountPRWorkflowOptions: GithubResourceCountPRWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.branchName">branchName</a></code> | <code>string</code> | The branch that pull requests target. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.cdkoutDir">cdkoutDir</a></code> | <code>string</code> | The CDK output directory (cloud assembly directory). |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.nodeVersion">nodeVersion</a></code> | <code>string</code> | The Node.js version to use in the workflow. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the workflow when changed. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name prefix for the workflow file and job names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | Commands to run after the synth step. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run after the synth step. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preBuildCommand">preBuildCommand</a></code> | <code>string</code> | A command to run before the build step, executed from the repository root. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preInstallCommands">preInstallCommands</a></code> | <code>string[]</code> | Commands to run before installing dependencies. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before installing dependencies. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | Commands to run before the synth step. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before the synth step. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.resourceCountLimit">resourceCountLimit</a></code> | <code>number</code> | The hard limit for resource count per stack. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.resourceCountWarningThreshold">resourceCountWarningThreshold</a></code> | <code>number</code> | The warning threshold for resource count. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | Runner tags to use to select GitHub Actions runners. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.synthJumpRoleArn">synthJumpRoleArn</a></code> | <code>string</code> | Jump role ARN to assume before the synth role. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.synthRoleArn">synthRoleArn</a></code> | <code>string</code> | IAM role ARN to assume before synth. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the workflow relative to the repository root. |
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+The branch that pull requests target.
+
+The workflow will trigger on PRs
+targeting this branch.
+
+---
+
+##### `cdkoutDir`<sup>Optional</sup> <a name="cdkoutDir" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.cdkoutDir"></a>
+
+```typescript
+public readonly cdkoutDir: string;
+```
+
+- *Type:* string
+- *Default:* uses the app's cdkConfig.cdkout
+
+The CDK output directory (cloud assembly directory).
+
+---
+
+##### `nodeVersion`<sup>Optional</sup> <a name="nodeVersion" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.nodeVersion"></a>
+
+```typescript
+public readonly nodeVersion: string;
+```
+
+- *Type:* string
+- *Default:* '20'
+
+The Node.js version to use in the workflow.
+
+---
+
+##### `paths`<sup>Optional</sup> <a name="paths" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.paths"></a>
+
+```typescript
+public readonly paths: string[];
+```
+
+- *Type:* string[]
+- *Default:* all paths trigger the workflow
+
+File path patterns that should trigger the workflow when changed.
+
+This is useful for monorepos where you only want to run the workflow
+when files in a specific subproject are modified.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name prefix for the workflow file and job names to prevent collisions in monorepos.
+
+---
+
+##### `postSynthCommands`<sup>Optional</sup> <a name="postSynthCommands" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.postSynthCommands"></a>
+
+```typescript
+public readonly postSynthCommands: string[];
+```
+
+- *Type:* string[]
+
+Commands to run after the synth step.
+
+---
+
+##### `postSynthSteps`<sup>Optional</sup> <a name="postSynthSteps" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.postSynthSteps"></a>
+
+```typescript
+public readonly postSynthSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run after the synth step.
+
+---
+
+##### `preBuildCommand`<sup>Optional</sup> <a name="preBuildCommand" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preBuildCommand"></a>
+
+```typescript
+public readonly preBuildCommand: string;
+```
+
+- *Type:* string
+- *Default:* no pre-build command
+
+A command to run before the build step, executed from the repository root.
+
+When a workingDirectory is set (monorepo subproject), the command is
+automatically wrapped to execute from the repository root.
+
+---
+
+##### `preInstallCommands`<sup>Optional</sup> <a name="preInstallCommands" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preInstallCommands"></a>
+
+```typescript
+public readonly preInstallCommands: string[];
+```
+
+- *Type:* string[]
+
+Commands to run before installing dependencies.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before installing dependencies.
+
+---
+
+##### `preSynthCommands`<sup>Optional</sup> <a name="preSynthCommands" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preSynthCommands"></a>
+
+```typescript
+public readonly preSynthCommands: string[];
+```
+
+- *Type:* string[]
+
+Commands to run before the synth step.
+
+---
+
+##### `preSynthSteps`<sup>Optional</sup> <a name="preSynthSteps" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preSynthSteps"></a>
+
+```typescript
+public readonly preSynthSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before the synth step.
+
+---
+
+##### `resourceCountLimit`<sup>Optional</sup> <a name="resourceCountLimit" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.resourceCountLimit"></a>
+
+```typescript
+public readonly resourceCountLimit: number;
+```
+
+- *Type:* number
+- *Default:* 500
+
+The hard limit for resource count per stack.
+
+This should match the
+CloudFormation resource limit for the account (default 500, can be increased).
+
+---
+
+##### `resourceCountWarningThreshold`<sup>Optional</sup> <a name="resourceCountWarningThreshold" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.resourceCountWarningThreshold"></a>
+
+```typescript
+public readonly resourceCountWarningThreshold: number;
+```
+
+- *Type:* number
+- *Default:* 450
+
+The warning threshold for resource count.
+
+When a stack's resource count
+reaches this number, a warning is emitted.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['ubuntu-latest']
+
+Runner tags to use to select GitHub Actions runners.
+
+---
+
+##### `synthJumpRoleArn`<sup>Optional</sup> <a name="synthJumpRoleArn" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.synthJumpRoleArn"></a>
+
+```typescript
+public readonly synthJumpRoleArn: string;
+```
+
+- *Type:* string
+- *Default:* no jump role
+
+Jump role ARN to assume before the synth role.
+
+---
+
+##### `synthRoleArn`<sup>Optional</sup> <a name="synthRoleArn" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.synthRoleArn"></a>
+
+```typescript
+public readonly synthRoleArn: string;
+```
+
+- *Type:* string
+- *Default:* no role assumption
+
+IAM role ARN to assume before synth.
+
+If set, the workflow will assume this
+role before running the build/synth step.
+
+---
+
+##### `workingDirectory`<sup>Optional</sup> <a name="workingDirectory" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.workingDirectory"></a>
+
+```typescript
+public readonly workingDirectory: string;
+```
+
+- *Type:* string
+- *Default:* repository root
+
+The working directory for the workflow relative to the repository root.
+
+When set, CI jobs will run commands in this directory and artifact paths
+will be prefixed accordingly.
 
 ---
 

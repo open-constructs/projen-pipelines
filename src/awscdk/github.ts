@@ -2,6 +2,7 @@ import { awscdk } from 'projen';
 import { GitHub, GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model';
 import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage, NamedStageOptions } from './base';
+import { GithubResourceCountPRWorkflow } from './github-resource-count-pr-workflow';
 import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep } from '../steps';
@@ -142,7 +143,26 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     // Create a separate PR workflow for resource counting if enabled
     if (this.baseOptions.enableResourceCounting !== false) {
-      this.createResourceCountPRWorkflow();
+      new GithubResourceCountPRWorkflow(app, {
+        branchName: this.branchName,
+        runnerTags: options.runnerTags,
+        nodeVersion: this.minNodeVersion,
+        resourceCountWarningThreshold: options.resourceCountWarningThreshold,
+        resourceCountLimit: options.resourceCountLimit,
+        paths: this.baseOptions.paths,
+        workingDirectory: this.workingDirectory,
+        cdkoutDir: this.app.cdkConfig.cdkout,
+        pipelineName: options.pipelineName ?? (app.parent ? app.name : undefined),
+        preInstallCommands: options.preInstallCommands,
+        preInstallSteps: options.preInstallSteps,
+        preSynthCommands: options.preSynthCommands,
+        preSynthSteps: options.preSynthSteps,
+        postSynthCommands: options.postSynthCommands,
+        postSynthSteps: options.postSynthSteps,
+        preBuildCommand: options.preBuildCommand,
+        synthRoleArn: options.iamRoleArns?.synth,
+        synthJumpRoleArn: options.iamRoleArns?.jump?.synth,
+      });
     }
   }
 
@@ -601,107 +621,4 @@ export class GithubCDKPipeline extends CDKPipeline {
     }
   }
 
-  /**
-   * Creates a separate workflow triggered on pull_request that synths, counts resources,
-   * downloads the baseline from the target branch, and posts a PR comment with deltas.
-   */
-  private createResourceCountPRWorkflow(): void {
-    const workflow = this.gh.addWorkflow(`${this.namePrefix}resource-count`);
-    workflow.on({
-      pullRequest: {
-        branches: [this.branchName],
-        ...this.baseOptions.paths && { paths: this.pathsWithWorkflowFile('resource-count') },
-      },
-    });
-
-    const steps: PipelineStep[] = [];
-    steps.push(this.provideInstallStep());
-    steps.push(this.provideSynthStep());
-    steps.push(this.provideResourceCountStep());
-
-    const githubSteps = steps.map(s => s.toGithub());
-
-    workflow.addJob('resource-count', {
-      name: 'Count CloudFormation resources',
-      runsOn: this.options.runnerTags ?? DEFAULT_RUNNER_TAGS,
-      ...this.jobDefaults() && { defaults: this.jobDefaults() },
-      env: {
-        CI: 'true',
-        ...githubSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
-      },
-      needs: [...githubSteps.flatMap(s => s.needs)],
-      permissions: mergeJobPermissions({
-        contents: JobPermission.READ,
-        pullRequests: JobPermission.WRITE,
-      }, ...(githubSteps.flatMap(s => s.permissions).filter(p => p != undefined) as JobPermissions[])),
-      tools: {
-        node: {
-          version: this.minNodeVersion ?? '20',
-        },
-      },
-      steps: [
-        {
-          name: 'Checkout',
-          uses: 'actions/checkout@v6',
-        },
-        ...githubSteps.flatMap(s => s.steps),
-        {
-          name: 'Download baseline resource counts',
-          uses: 'actions/checkout@v6',
-          with: {
-            'ref': '${{ github.event.pull_request.base.ref }}',
-            'path': '__baseline',
-            'sparse-checkout': 'resource-count-results.json',
-            'sparse-checkout-cone-mode': false,
-          },
-          continueOnError: true,
-        },
-        {
-          name: 'Post PR comment with resource counts',
-          uses: 'actions/github-script@v7',
-          with: {
-            script: this.generatePrCommentScript(),
-          },
-        },
-      ],
-    });
-  }
-
-  /**
-   * Generates the JavaScript code used by actions/github-script to post a PR comment
-   * with resource counts and deltas versus the target branch baseline.
-   */
-  private generatePrCommentScript(): string {
-    const resultsFile = this.workingDirectory ? `${this.workingDirectory}/resource-count-results.json` : 'resource-count-results.json';
-    const baselineFile = '__baseline/resource-count-results.json';
-    return [
-      'const fs = require(\'fs\');',
-      `const resultsPath = '${resultsFile}';`,
-      `const baselinePath = '${baselineFile}';`,
-      'if (!fs.existsSync(resultsPath)) { console.log(\'No resource count results found\'); return; }',
-      'const results = JSON.parse(fs.readFileSync(resultsPath, \'utf8\'));',
-      'let baseline = null;',
-      'try { if (fs.existsSync(baselinePath)) { baseline = JSON.parse(fs.readFileSync(baselinePath, \'utf8\')); } } catch (e) { console.log(\'No baseline found\'); }',
-      'const baselineMap = {};',
-      'if (baseline && baseline.stacks) { for (const s of baseline.stacks) { baselineMap[s.stackName] = s.resourceCount; } }',
-      'let body = \'## CloudFormation Resource Count\\n\\n\';',
-      'body += \'| Stack | Resources | Limit | Usage | Delta | Status |\\n\';',
-      'body += \'| --- | --- | --- | --- | --- | --- |\\n\';',
-      'for (const stack of results.stacks) {',
-      '  const prev = baselineMap[stack.stackName];',
-      '  const delta = prev !== undefined ? stack.resourceCount - prev : null;',
-      '  const deltaStr = delta !== null ? (delta > 0 ? `+${delta}` : `${delta}`) : \'N/A\';',
-      '  const status = stack.exceeded ? \'🔴 Exceeded\' : stack.warning ? \'🟡 Warning\' : \'🟢 OK\';',
-      '  body += `| ${stack.stackName} | ${stack.resourceCount} | ${stack.resourceLimit} | ${stack.percentUsed}% | ${deltaStr} | ${status} |\\n`;',
-      '}',
-      'if (results.hasExceeded) { body += \'\\n> **Error:** One or more stacks exceed the resource limit!\\n\'; }',
-      'else if (results.hasWarnings) { body += \'\\n> **Warning:** One or more stacks are approaching the resource limit.\\n\'; }',
-      'const { data: comments } = await github.rest.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number });',
-      'const marker = \'<!-- resource-count-comment -->\';',
-      'body = marker + \'\\n\' + body;',
-      'const existing = comments.find(c => c.body && c.body.includes(marker));',
-      'if (existing) { await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body }); }',
-      'else { await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body }); }',
-    ].join('\n');
-  }
 }
