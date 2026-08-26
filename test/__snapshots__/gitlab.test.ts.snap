@@ -249,7 +249,7 @@ exports[`Gitlab snapshot 2`] = `
       "^.+\\.[t]sx?$": [
         "ts-jest",
         {
-          "tsconfig": "tsconfig.dev.json",
+          "tsconfig": "test/tsconfig.json",
         },
       ],
     },
@@ -2309,7 +2309,7 @@ exports[`Gitlab snapshot with versioning enabled 3`] = `
       "^.+\\.[t]sx?$": [
         "ts-jest",
         {
-          "tsconfig": "tsconfig.dev.json",
+          "tsconfig": "test/tsconfig.json",
         },
       ],
     },
@@ -2364,6 +2364,7 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
   "env": {
     "PATH": "$(npx -c "node --print process.env.PATH")",
   },
+  "manifestVersion": 3,
   "tasks": {
     "build": {
       "description": "Full release build",
@@ -2402,22 +2403,35 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "clobber",
       "steps": [
         {
-          "exec": "git checkout -b scratch",
+          "execArgs": [
+            "git",
+            "checkout",
+            "-b",
+            "scratch",
+          ],
           "name": "save current HEAD in "scratch" branch",
         },
         {
-          "exec": "git checkout $BRANCH",
+          "exec": "git checkout "$BRANCH"",
         },
         {
-          "exec": "git fetch origin",
+          "execArgs": [
+            "git",
+            "fetch",
+            "origin",
+          ],
           "name": "fetch latest changes from origin",
         },
         {
-          "exec": "git reset --hard origin/$BRANCH",
+          "exec": "git reset --hard "origin/$BRANCH"",
           "name": "hard reset to origin commit",
         },
         {
-          "exec": "git clean -fdx",
+          "execArgs": [
+            "git",
+            "clean",
+            "-fdx",
+          ],
           "name": "clean all untracked files",
         },
         {
@@ -2442,7 +2456,10 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "default",
       "steps": [
         {
-          "exec": "node .projenrc.js",
+          "execArgs": [
+            "node",
+            ".projenrc.js",
+          ],
         },
       ],
     },
@@ -2499,7 +2516,18 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "eslint",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
+          "execArgs": [
+            "eslint",
+            "--ext",
+            ".ts,.tsx",
+            "--fix",
+            "--no-error-on-unmatched-pattern",
+            "$@",
+            "src",
+            "test",
+            "build-tools",
+            ".projenrc.js",
+          ],
           "receiveArgs": true,
         },
       ],
@@ -2594,7 +2622,10 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth",
+          "execArgs": [
+            "cdk",
+            "synth",
+          ],
         },
       ],
     },
@@ -2606,7 +2637,11 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth -q",
+          "execArgs": [
+            "cdk",
+            "synth",
+            "-q",
+          ],
         },
       ],
     },
@@ -2615,7 +2650,11 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "test",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "execArgs": [
+            "jest",
+            "--passWithNoTests",
+            "--updateSnapshot",
+          ],
           "receiveArgs": true,
         },
         {
@@ -2628,7 +2667,10 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "test:watch",
       "steps": [
         {
-          "exec": "jest --watch",
+          "execArgs": [
+            "jest",
+            "--watch",
+          ],
         },
       ],
     },
@@ -2640,13 +2682,45 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "execArgs": [
+            "npx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=minor",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          ],
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
+          "execArgs": [
+            "yarn",
+            "upgrade",
+            "@stylistic/eslint-plugin",
+            "@types/jest",
+            "@types/node",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "aws-cdk",
+            "cdk-assets",
+            "commit-and-tag-version",
+            "esbuild",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint",
+            "jest",
+            "jest-junit",
+            "projen",
+            "ts-jest",
+            "ts-node",
+            "typescript",
+            "aws-cdk-lib",
+            "constructs",
+          ],
         },
         {
           "exec": "npx projen",

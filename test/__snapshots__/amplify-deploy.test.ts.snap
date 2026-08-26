@@ -19,11 +19,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
@@ -31,6 +32,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -45,28 +47,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-prod:
     name: Deploy stage prod to AWS
     needs: assetUpload
@@ -82,30 +90,37 @@ jobs:
       AWS_REGION: us-east-1
       AWS_DEFAULT_REGION: us-east-1
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Extract Amplify App ID
+        id: extract_amplify_app_id
         env:
           ENVIRONMENT: prod
         run: AMPLIFY_APP_ID=$(jq -r '.MyStack.AmplifyAppId' cdk-outputs-prod.json) && echo "AMPLIFY_APP_ID=$AMPLIFY_APP_ID" >> $GITHUB_ENV
       - name: Deploy to Amplify
+        id: deploy_to_amplify
         run: |-
           #!/bin/bash -e
           echo "Checking for pending Amplify jobs..."
@@ -138,6 +153,7 @@ jobs:
             exit 1
           fi
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -164,6 +180,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
@@ -586,11 +603,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
@@ -598,6 +616,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -612,28 +631,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-production:
     name: Deploy stage production to AWS
     needs: assetUpload
@@ -649,28 +674,35 @@ jobs:
       AWS_REGION: ap-southeast-1
       AWS_DEFAULT_REGION: ap-southeast-1
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
           aws-region: ap-southeast-1
-      - run: npx projen deploy:production
+      - id: auto_511f1576
+        run: npx projen deploy:production
       - name: Set Amplify App ID
+        id: set_amplify_app_id
         run: echo "AMPLIFY_APP_ID=d123gtgt770s1x" >> $GITHUB_ENV
       - name: Deploy to Amplify
+        id: deploy_to_amplify
         run: |-
           #!/bin/bash -e
           echo "Checking for pending Amplify jobs..."
@@ -703,6 +735,7 @@ jobs:
             exit 1
           fi
       - name: Add CDK outputs to summary - production
+        id: add_cdk_outputs_to_summary_-_production
         run: |-
           if [ -f "cdk-outputs-production.json" ]; then
             echo "## CDK Stack Outputs - production" >> $GITHUB_STEP_SUMMARY
@@ -729,6 +762,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-production
@@ -755,11 +789,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
@@ -767,6 +802,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -781,30 +817,38 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
-      - run: npx projen bump
-      - run: npx projen release:push-assembly
+      - id: auto_91cef464
+        run: npx projen publish:assets
+      - id: auto_d3935e42
+        run: npx projen bump
+      - id: auto_2ddb62e9
+        run: npx projen release:push-assembly
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -820,30 +864,37 @@ jobs:
       AWS_REGION: eu-central-1
       AWS_DEFAULT_REGION: eu-central-1
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/DeploymentRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Extract Amplify App ID
+        id: extract_amplify_app_id
         env:
           ENVIRONMENT: dev
         run: AMPLIFY_APP_ID=$(jq -r '.DevStack.AmplifyAppId' cdk-outputs-dev.json) && echo "AMPLIFY_APP_ID=$AMPLIFY_APP_ID" >> $GITHUB_ENV
       - name: Deploy to Amplify
+        id: deploy_to_amplify
         run: |-
           #!/bin/bash -e
           echo "Checking for pending Amplify jobs..."
@@ -876,6 +927,7 @@ jobs:
             exit 1
           fi
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -902,6 +954,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev

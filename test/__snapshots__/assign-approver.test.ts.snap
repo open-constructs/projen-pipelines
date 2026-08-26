@@ -16,6 +16,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Assign approver based on author
+        id: assign_approver_based_on_author
         uses: actions/github-script@v8
         with:
           script: |-
@@ -66,6 +67,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Assign approver based on author
+        id: assign_approver_based_on_author
         uses: actions/github-script@v8
         with:
           script: |-

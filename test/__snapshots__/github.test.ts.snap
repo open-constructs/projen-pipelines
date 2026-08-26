@@ -20,16 +20,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -38,6 +41,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -52,37 +56,47 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets:my-dev
+      - id: auto_b0137f60
+        run: npx projen publish:assets:my-dev
       - name: AWS Credentials
+        id: aws_credentials_2
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodPublishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets:prod
-      - run: npx projen bump
-      - run: npx projen release:push-assembly
+      - id: auto_bb2dfb34
+        run: npx projen publish:assets:prod
+      - id: auto_d3935e42
+        run: npx projen bump
+      - id: auto_2ddb62e9
+        run: npx projen release:push-assembly
   deploy-my-dev:
     name: Deploy stage my-dev to AWS
     needs: assetUpload
@@ -96,26 +110,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:my-dev
+      - id: auto_709a0fbe
+        run: npx projen deploy:my-dev
       - name: Add CDK outputs to summary - my-dev
+        id: add_cdk_outputs_to_summary_-_my-dev
         run: |-
           if [ -f "cdk-outputs-my-dev.json" ]; then
             echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
@@ -142,6 +162,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-my-dev
@@ -228,23 +249,30 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
-      - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
-      - run: mv ./node_modules/@assembly/testapp cdk.out
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_c3b568fa
+        run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
+      - id: auto_2ff91681
+        run: mv ./node_modules/@assembly/testapp cdk.out
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -271,6 +299,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
@@ -340,7 +369,7 @@ exports[`Github snapshot 4`] = `
       "^.+\\.[t]sx?$": [
         "ts-jest",
         {
-          "tsconfig": "tsconfig.dev.json",
+          "tsconfig": "test/tsconfig.json",
         },
       ],
     },
@@ -393,6 +422,7 @@ exports[`Github snapshot 5`] = `
   "env": {
     "PATH": "$(npx -c "node --print process.env.PATH")",
   },
+  "manifestVersion": 3,
   "tasks": {
     "build": {
       "description": "Full release build",
@@ -443,22 +473,35 @@ exports[`Github snapshot 5`] = `
       "name": "clobber",
       "steps": [
         {
-          "exec": "git checkout -b scratch",
+          "execArgs": [
+            "git",
+            "checkout",
+            "-b",
+            "scratch",
+          ],
           "name": "save current HEAD in "scratch" branch",
         },
         {
-          "exec": "git checkout $BRANCH",
+          "exec": "git checkout "$BRANCH"",
         },
         {
-          "exec": "git fetch origin",
+          "execArgs": [
+            "git",
+            "fetch",
+            "origin",
+          ],
           "name": "fetch latest changes from origin",
         },
         {
-          "exec": "git reset --hard origin/$BRANCH",
+          "exec": "git reset --hard "origin/$BRANCH"",
           "name": "hard reset to origin commit",
         },
         {
-          "exec": "git clean -fdx",
+          "execArgs": [
+            "git",
+            "clean",
+            "-fdx",
+          ],
           "name": "clean all untracked files",
         },
         {
@@ -475,7 +518,10 @@ exports[`Github snapshot 5`] = `
       "name": "default",
       "steps": [
         {
-          "exec": "node .projenrc.js",
+          "execArgs": [
+            "node",
+            ".projenrc.js",
+          ],
         },
       ],
     },
@@ -532,7 +578,18 @@ exports[`Github snapshot 5`] = `
       "name": "eslint",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
+          "execArgs": [
+            "eslint",
+            "--ext",
+            ".ts,.tsx",
+            "--fix",
+            "--no-error-on-unmatched-pattern",
+            "$@",
+            "src",
+            "test",
+            "build-tools",
+            ".projenrc.js",
+          ],
           "receiveArgs": true,
         },
       ],
@@ -643,7 +700,10 @@ exports[`Github snapshot 5`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth",
+          "execArgs": [
+            "cdk",
+            "synth",
+          ],
         },
       ],
     },
@@ -655,7 +715,11 @@ exports[`Github snapshot 5`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth -q",
+          "execArgs": [
+            "cdk",
+            "synth",
+            "-q",
+          ],
         },
       ],
     },
@@ -664,7 +728,11 @@ exports[`Github snapshot 5`] = `
       "name": "test",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "execArgs": [
+            "jest",
+            "--passWithNoTests",
+            "--updateSnapshot",
+          ],
           "receiveArgs": true,
         },
         {
@@ -677,7 +745,10 @@ exports[`Github snapshot 5`] = `
       "name": "test:watch",
       "steps": [
         {
-          "exec": "jest --watch",
+          "execArgs": [
+            "jest",
+            "--watch",
+          ],
         },
       ],
     },
@@ -689,13 +760,45 @@ exports[`Github snapshot 5`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "execArgs": [
+            "npx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=minor",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          ],
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
+          "execArgs": [
+            "yarn",
+            "upgrade",
+            "@stylistic/eslint-plugin",
+            "@types/jest",
+            "@types/node",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "aws-cdk",
+            "cdk-assets",
+            "commit-and-tag-version",
+            "esbuild",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint",
+            "jest",
+            "jest-junit",
+            "projen",
+            "ts-jest",
+            "ts-node",
+            "typescript",
+            "aws-cdk-lib",
+            "constructs",
+          ],
         },
         {
           "exec": "npx projen",
@@ -729,16 +832,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: 22.0.0
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -747,6 +853,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -761,28 +868,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: 22.0.0
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
 "
 `;
 
@@ -1007,16 +1120,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -1025,6 +1141,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -1039,28 +1156,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
 "
 `;
 
@@ -1084,16 +1207,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -1102,6 +1228,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -1116,28 +1243,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-independent2:
     name: Deploy stage independent2 to AWS
     needs: assetUpload
@@ -1152,26 +1285,33 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-2
-      - run: npx projen deploy:independent2
-      - run: echo Post Deploy
+      - id: auto_dbc81cc3
+        run: npx projen deploy:independent2
+      - id: auto_0b28c2ff
+        run: echo Post Deploy
       - name: Add CDK outputs to summary - independent2
+        id: add_cdk_outputs_to_summary_-_independent2
         run: |-
           if [ -f "cdk-outputs-independent2.json" ]; then
             echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
@@ -1198,6 +1338,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent2
@@ -1226,36 +1367,46 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: AWS Credentials
+        id: aws_credentials_2
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole
           role-session-name: GitHubAction
           aws-region: eu-west-2
-      - run: npx projen diff:independent1
+      - id: auto_415c3680
+        run: npx projen diff:independent1
       - name: AWS Credentials
+        id: aws_credentials_3
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole
           role-session-name: GitHubAction
           aws-region: eu-west-2
-      - run: npx projen deploy:independent1
-      - run: echo Post Deploy
+      - id: auto_9246879d
+        run: npx projen deploy:independent1
+      - id: auto_0b28c2ff
+        run: echo Post Deploy
       - name: Add CDK outputs to summary - independent1
+        id: add_cdk_outputs_to_summary_-_independent1
         run: |-
           if [ -f "cdk-outputs-independent1.json" ]; then
             echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
@@ -1282,6 +1433,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent1
@@ -1366,16 +1518,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -1384,6 +1539,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -1398,28 +1554,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-stage1:
     name: Deploy stage stage1 to AWS
     needs: assetUpload
@@ -1433,26 +1595,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole1
           role-session-name: GitHubAction
           aws-region: eu-west-2
-      - run: npx projen deploy:stage1
+      - id: auto_5e09991f
+        run: npx projen deploy:stage1
       - name: Add CDK outputs to summary - stage1
+        id: add_cdk_outputs_to_summary_-_stage1
         run: |-
           if [ -f "cdk-outputs-stage1.json" ]; then
             echo "## CDK Stack Outputs - stage1" >> $GITHUB_STEP_SUMMARY
@@ -1479,6 +1647,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-stage1
@@ -1499,27 +1668,34 @@ jobs:
       CI: "true"
       TEST: me
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole2
           role-session-name: GitHubAction
           aws-region: us-central-2
-      - run: npx projen deploy:stage2
-      - run: echo Post Deploy
+      - id: auto_bc94b57b
+        run: npx projen deploy:stage2
+      - id: auto_0b28c2ff
+        run: echo Post Deploy
       - name: Add CDK outputs to summary - stage2
+        id: add_cdk_outputs_to_summary_-_stage2
         run: |-
           if [ -f "cdk-outputs-stage2.json" ]; then
             echo "## CDK Stack Outputs - stage2" >> $GITHUB_STEP_SUMMARY
@@ -1546,6 +1722,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-stage2
@@ -1632,16 +1809,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -1650,6 +1830,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -1664,30 +1845,38 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
-      - run: npx projen bump
-      - run: npx projen release:push-assembly
+      - id: auto_91cef464
+        run: npx projen publish:assets
+      - id: auto_d3935e42
+        run: npx projen bump
+      - id: auto_2ddb62e9
+        run: npx projen release:push-assembly
   deploy-my-dev:
     name: Deploy stage my-dev to AWS
     needs: assetUpload
@@ -1702,26 +1891,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:my-dev
+      - id: auto_709a0fbe
+        run: npx projen deploy:my-dev
       - name: Add CDK outputs to summary - my-dev
+        id: add_cdk_outputs_to_summary_-_my-dev
         run: |-
           if [ -f "cdk-outputs-my-dev.json" ]; then
             echo "## CDK Stack Outputs - my-dev" >> $GITHUB_STEP_SUMMARY
@@ -1748,6 +1943,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-my-dev
@@ -1766,26 +1962,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: independentRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:independent
+      - id: auto_a0e4ff78
+        run: npx projen deploy:independent
       - name: Add CDK outputs to summary - independent
+        id: add_cdk_outputs_to_summary_-_independent
         run: |-
           if [ -f "cdk-outputs-independent.json" ]; then
             echo "## CDK Stack Outputs - independent" >> $GITHUB_STEP_SUMMARY
@@ -1812,6 +2014,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent
@@ -1844,23 +2047,30 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
-      - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
-      - run: mv ./node_modules/@assembly/testapp cdk.out
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_c3b568fa
+        run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
+      - id: auto_2ff91681
+        run: mv ./node_modules/@assembly/testapp cdk.out
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -1887,6 +2097,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
@@ -1914,16 +2125,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -1932,6 +2146,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cloud-assembly
@@ -1946,30 +2161,38 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: backend-cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
-      - run: npx projen bump
-      - run: npx projen release:push-assembly
+      - id: auto_91cef464
+        run: npx projen publish:assets
+      - id: auto_d3935e42
+        run: npx projen bump
+      - id: auto_2ddb62e9
+        run: npx projen release:push-assembly
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -1983,26 +2206,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: backend-cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -2029,6 +2258,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-dev
@@ -2064,27 +2294,34 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: AWS Credentials
+        id: aws_credentials_2
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen deploy:feature
+      - id: auto_2b03998e
+        run: npx projen deploy:feature
       - name: Add CDK outputs to summary - feature
+        id: add_cdk_outputs_to_summary_-_feature
         run: |-
           if [ -f "cdk-outputs-feature.json" ]; then
             echo "## CDK Stack Outputs - feature" >> $GITHUB_STEP_SUMMARY
@@ -2111,6 +2348,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-feature
@@ -2144,26 +2382,32 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: AWS Credentials
+        id: aws_credentials_2
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen destroy:feature
+      - id: auto_646807e4
+        run: npx projen destroy:feature
 "
 `;
 
@@ -2191,23 +2435,30 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
-      - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
-      - run: mv ./node_modules/@assembly/testapp cdk.out
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_c3b568fa
+        run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
+      - id: auto_2ff91681
+        run: mv ./node_modules/@assembly/testapp cdk.out
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -2234,6 +2485,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-prod
@@ -2261,33 +2513,42 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: AWS Credentials
+        id: aws_credentials_2
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen diff:sandbox
+      - id: auto_a3d7af29
+        run: npx projen diff:sandbox
       - name: AWS Credentials
+        id: aws_credentials_3
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:sandbox
+      - id: auto_7c7c408e
+        run: npx projen deploy:sandbox
       - name: Add CDK outputs to summary - sandbox
+        id: add_cdk_outputs_to_summary_-_sandbox
         run: |-
           if [ -f "cdk-outputs-sandbox.json" ]; then
             echo "## CDK Stack Outputs - sandbox" >> $GITHUB_STEP_SUMMARY
@@ -2314,6 +2575,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-sandbox
@@ -2349,28 +2611,35 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: AWS Credentials
+        id: aws_credentials_2
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: featureRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen deploy:feature
+      - id: auto_2b03998e
+        run: npx projen deploy:feature
       - name: Add CDK outputs to summary - feature
+        id: add_cdk_outputs_to_summary_-_feature
         run: |-
           if [ -f "cdk-outputs-feature.json" ]; then
             echo "## CDK Stack Outputs - feature" >> $GITHUB_STEP_SUMMARY
@@ -2397,6 +2666,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-feature
@@ -2430,27 +2700,33 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: AWS Credentials
+        id: aws_credentials_2
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: featureRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen destroy:feature
+      - id: auto_646807e4
+        run: npx projen destroy:feature
 "
 `;
 
@@ -2460,6 +2736,7 @@ exports[`Github snapshot with feature stages 3`] = `
   "env": {
     "PATH": "$(npx -c "node --print process.env.PATH")",
   },
+  "manifestVersion": 3,
   "tasks": {
     "build": {
       "description": "Full release build",
@@ -2498,22 +2775,35 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "clobber",
       "steps": [
         {
-          "exec": "git checkout -b scratch",
+          "execArgs": [
+            "git",
+            "checkout",
+            "-b",
+            "scratch",
+          ],
           "name": "save current HEAD in "scratch" branch",
         },
         {
-          "exec": "git checkout $BRANCH",
+          "exec": "git checkout "$BRANCH"",
         },
         {
-          "exec": "git fetch origin",
+          "execArgs": [
+            "git",
+            "fetch",
+            "origin",
+          ],
           "name": "fetch latest changes from origin",
         },
         {
-          "exec": "git reset --hard origin/$BRANCH",
+          "exec": "git reset --hard "origin/$BRANCH"",
           "name": "hard reset to origin commit",
         },
         {
-          "exec": "git clean -fdx",
+          "execArgs": [
+            "git",
+            "clean",
+            "-fdx",
+          ],
           "name": "clean all untracked files",
         },
         {
@@ -2530,7 +2820,10 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "default",
       "steps": [
         {
-          "exec": "node .projenrc.js",
+          "execArgs": [
+            "node",
+            ".projenrc.js",
+          ],
         },
       ],
     },
@@ -2595,7 +2888,18 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "eslint",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
+          "execArgs": [
+            "eslint",
+            "--ext",
+            ".ts,.tsx",
+            "--fix",
+            "--no-error-on-unmatched-pattern",
+            "$@",
+            "src",
+            "test",
+            "build-tools",
+            ".projenrc.js",
+          ],
           "receiveArgs": true,
         },
       ],
@@ -2679,7 +2983,10 @@ exports[`Github snapshot with feature stages 3`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth",
+          "execArgs": [
+            "cdk",
+            "synth",
+          ],
         },
       ],
     },
@@ -2691,7 +2998,11 @@ exports[`Github snapshot with feature stages 3`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth -q",
+          "execArgs": [
+            "cdk",
+            "synth",
+            "-q",
+          ],
         },
       ],
     },
@@ -2700,7 +3011,11 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "test",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "execArgs": [
+            "jest",
+            "--passWithNoTests",
+            "--updateSnapshot",
+          ],
           "receiveArgs": true,
         },
         {
@@ -2713,7 +3028,10 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "test:watch",
       "steps": [
         {
-          "exec": "jest --watch",
+          "execArgs": [
+            "jest",
+            "--watch",
+          ],
         },
       ],
     },
@@ -2725,13 +3043,45 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "execArgs": [
+            "npx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=minor",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          ],
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
+          "execArgs": [
+            "yarn",
+            "upgrade",
+            "@stylistic/eslint-plugin",
+            "@types/jest",
+            "@types/node",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "aws-cdk",
+            "cdk-assets",
+            "commit-and-tag-version",
+            "esbuild",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint",
+            "jest",
+            "jest-junit",
+            "projen",
+            "ts-jest",
+            "ts-node",
+            "typescript",
+            "aws-cdk-lib",
+            "constructs",
+          ],
         },
         {
           "exec": "npx projen",
@@ -2773,16 +3123,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -2791,6 +3144,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -2805,28 +3159,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-independent2:
     name: Deploy stage independent2 to AWS
     needs: assetUpload
@@ -2841,26 +3201,33 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:independent2
-      - run: echo Post Deploy
+      - id: auto_dbc81cc3
+        run: npx projen deploy:independent2
+      - id: auto_0b28c2ff
+        run: echo Post Deploy
       - name: Add CDK outputs to summary - independent2
+        id: add_cdk_outputs_to_summary_-_independent2
         run: |-
           if [ -f "cdk-outputs-independent2.json" ]; then
             echo "## CDK Stack Outputs - independent2" >> $GITHUB_STEP_SUMMARY
@@ -2887,6 +3254,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent2
@@ -2915,36 +3283,46 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: AWS Credentials
+        id: aws_credentials_2
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen diff:independent1
+      - id: auto_415c3680
+        run: npx projen diff:independent1
       - name: AWS Credentials
+        id: aws_credentials_3
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: deployRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:independent1
-      - run: echo Post Deploy
+      - id: auto_9246879d
+        run: npx projen deploy:independent1
+      - id: auto_0b28c2ff
+        run: echo Post Deploy
       - name: Add CDK outputs to summary - independent1
+        id: add_cdk_outputs_to_summary_-_independent1
         run: |-
           if [ -f "cdk-outputs-independent1.json" ]; then
             echo "## CDK Stack Outputs - independent1" >> $GITHUB_STEP_SUMMARY
@@ -2971,6 +3349,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-independent1
@@ -2998,16 +3377,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: Assume Jump Role
+        id: assume_jump_role
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthJumpRole
@@ -3015,6 +3397,7 @@ jobs:
           aws-region: us-east-1
           role-skip-session-tagging: true
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -3025,6 +3408,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -3039,22 +3423,27 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: Assume Jump Role
+        id: assume_jump_role
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishJumpRole
@@ -3062,6 +3451,7 @@ jobs:
           aws-region: us-east-1
           role-skip-session-tagging: true
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
@@ -3069,7 +3459,8 @@ jobs:
           aws-region: us-east-1
           role-chaining: true
           role-skip-session-tagging: true
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -3083,19 +3474,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: Assume Jump Role
+        id: assume_jump_role
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devJumpRole
@@ -3103,6 +3498,7 @@ jobs:
           aws-region: eu-central-1
           role-skip-session-tagging: true
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
@@ -3110,8 +3506,10 @@ jobs:
           aws-region: eu-central-1
           role-chaining: true
           role-skip-session-tagging: true
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -3138,6 +3536,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -3157,19 +3556,23 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: Assume Jump Role
+        id: assume_jump_role
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodJumpRole
@@ -3177,6 +3580,7 @@ jobs:
           aws-region: eu-central-1
           role-skip-session-tagging: true
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
@@ -3184,8 +3588,10 @@ jobs:
           aws-region: eu-central-1
           role-chaining: true
           role-skip-session-tagging: true
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -3212,6 +3618,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
@@ -3517,7 +3924,7 @@ exports[`Github snapshot with jump roles 3`] = `
       "^.+\\.[t]sx?$": [
         "ts-jest",
         {
-          "tsconfig": "tsconfig.dev.json",
+          "tsconfig": "test/tsconfig.json",
         },
       ],
     },
@@ -3572,6 +3979,7 @@ exports[`Github snapshot with jump roles 4`] = `
   "env": {
     "PATH": "$(npx -c "node --print process.env.PATH")",
   },
+  "manifestVersion": 3,
   "tasks": {
     "build": {
       "description": "Full release build",
@@ -3610,22 +4018,35 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "clobber",
       "steps": [
         {
-          "exec": "git checkout -b scratch",
+          "execArgs": [
+            "git",
+            "checkout",
+            "-b",
+            "scratch",
+          ],
           "name": "save current HEAD in "scratch" branch",
         },
         {
-          "exec": "git checkout $BRANCH",
+          "exec": "git checkout "$BRANCH"",
         },
         {
-          "exec": "git fetch origin",
+          "execArgs": [
+            "git",
+            "fetch",
+            "origin",
+          ],
           "name": "fetch latest changes from origin",
         },
         {
-          "exec": "git reset --hard origin/$BRANCH",
+          "exec": "git reset --hard "origin/$BRANCH"",
           "name": "hard reset to origin commit",
         },
         {
-          "exec": "git clean -fdx",
+          "execArgs": [
+            "git",
+            "clean",
+            "-fdx",
+          ],
           "name": "clean all untracked files",
         },
         {
@@ -3650,7 +4071,10 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "default",
       "steps": [
         {
-          "exec": "node .projenrc.js",
+          "execArgs": [
+            "node",
+            ".projenrc.js",
+          ],
         },
       ],
     },
@@ -3707,7 +4131,18 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "eslint",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
+          "execArgs": [
+            "eslint",
+            "--ext",
+            ".ts,.tsx",
+            "--fix",
+            "--no-error-on-unmatched-pattern",
+            "$@",
+            "src",
+            "test",
+            "build-tools",
+            ".projenrc.js",
+          ],
           "receiveArgs": true,
         },
       ],
@@ -3802,7 +4237,10 @@ exports[`Github snapshot with jump roles 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth",
+          "execArgs": [
+            "cdk",
+            "synth",
+          ],
         },
       ],
     },
@@ -3814,7 +4252,11 @@ exports[`Github snapshot with jump roles 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth -q",
+          "execArgs": [
+            "cdk",
+            "synth",
+            "-q",
+          ],
         },
       ],
     },
@@ -3823,7 +4265,11 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "test",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "execArgs": [
+            "jest",
+            "--passWithNoTests",
+            "--updateSnapshot",
+          ],
           "receiveArgs": true,
         },
         {
@@ -3836,7 +4282,10 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "test:watch",
       "steps": [
         {
-          "exec": "jest --watch",
+          "execArgs": [
+            "jest",
+            "--watch",
+          ],
         },
       ],
     },
@@ -3848,13 +4297,45 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "execArgs": [
+            "npx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=minor",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          ],
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
+          "execArgs": [
+            "yarn",
+            "upgrade",
+            "@stylistic/eslint-plugin",
+            "@types/jest",
+            "@types/node",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "aws-cdk",
+            "cdk-assets",
+            "commit-and-tag-version",
+            "esbuild",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint",
+            "jest",
+            "jest-junit",
+            "projen",
+            "ts-jest",
+            "ts-node",
+            "typescript",
+            "aws-cdk-lib",
+            "constructs",
+          ],
         },
         {
           "exec": "npx projen",
@@ -4027,17 +4508,21 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_d422cd7a
+        run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -4046,6 +4531,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -4061,31 +4547,40 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_d422cd7a
+        run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
-      - run: npx projen bump
-      - run: npx projen release:push-assembly
+      - id: auto_91cef464
+        run: npx projen publish:assets
+      - id: auto_d3935e42
+        run: npx projen bump
+      - id: auto_2ddb62e9
+        run: npx projen release:push-assembly
 "
 `;
 
@@ -4114,23 +4609,31 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-      - run: yarn install --check-files --frozen-lockfile
-      - run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
-      - run: mv ./node_modules/@assembly/testapp cdk.out
+      - id: auto_d422cd7a
+        run: echo "GITHUB_TOKEN=\${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_c3b568fa
+        run: yarn add @assembly/testapp@\${{github.event.inputs.version}}
+      - id: auto_2ff91681
+        run: mv ./node_modules/@assembly/testapp cdk.out
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -4157,6 +4660,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
@@ -4187,16 +4691,19 @@ jobs:
       run:
         working-directory: packages/backend
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -4205,6 +4712,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cloud-assembly
@@ -4222,28 +4730,34 @@ jobs:
       run:
         working-directory: packages/backend
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: backend-cloud-assembly
           path: packages/backend/cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -4260,26 +4774,32 @@ jobs:
       run:
         working-directory: packages/backend
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: backend-cloud-assembly
           path: packages/backend/cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -4306,6 +4826,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-dev
@@ -4328,26 +4849,32 @@ jobs:
       run:
         working-directory: packages/backend
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: backend-cloud-assembly
           path: packages/backend/cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -4374,6 +4901,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-prod
@@ -4404,16 +4932,19 @@ jobs:
       run:
         working-directory: packages/backend
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -4423,6 +4954,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cloud-assembly
@@ -4440,28 +4972,34 @@ jobs:
       run:
         working-directory: packages/backend
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: backend-cloud-assembly
           path: packages/backend/cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -4478,26 +5016,32 @@ jobs:
       run:
         working-directory: packages/backend
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: backend-cloud-assembly
           path: packages/backend/cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -4524,6 +5068,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: backend-cdk-outputs-dev
@@ -4551,16 +5096,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -4569,6 +5117,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -4583,28 +5132,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -4618,26 +5173,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -4664,6 +5225,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -4677,6 +5239,7 @@ exports[`Github snapshot with multi stack 2`] = `
   "env": {
     "PATH": "$(npx -c "node --print process.env.PATH")",
   },
+  "manifestVersion": 3,
   "tasks": {
     "build": {
       "description": "Full release build",
@@ -4715,22 +5278,35 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "clobber",
       "steps": [
         {
-          "exec": "git checkout -b scratch",
+          "execArgs": [
+            "git",
+            "checkout",
+            "-b",
+            "scratch",
+          ],
           "name": "save current HEAD in "scratch" branch",
         },
         {
-          "exec": "git checkout $BRANCH",
+          "exec": "git checkout "$BRANCH"",
         },
         {
-          "exec": "git fetch origin",
+          "execArgs": [
+            "git",
+            "fetch",
+            "origin",
+          ],
           "name": "fetch latest changes from origin",
         },
         {
-          "exec": "git reset --hard origin/$BRANCH",
+          "exec": "git reset --hard "origin/$BRANCH"",
           "name": "hard reset to origin commit",
         },
         {
-          "exec": "git clean -fdx",
+          "execArgs": [
+            "git",
+            "clean",
+            "-fdx",
+          ],
           "name": "clean all untracked files",
         },
         {
@@ -4747,7 +5323,10 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "default",
       "steps": [
         {
-          "exec": "node .projenrc.js",
+          "execArgs": [
+            "node",
+            ".projenrc.js",
+          ],
         },
       ],
     },
@@ -4788,7 +5367,18 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "eslint",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
+          "execArgs": [
+            "eslint",
+            "--ext",
+            ".ts,.tsx",
+            "--fix",
+            "--no-error-on-unmatched-pattern",
+            "$@",
+            "src",
+            "test",
+            "build-tools",
+            ".projenrc.js",
+          ],
           "receiveArgs": true,
         },
       ],
@@ -4864,7 +5454,10 @@ exports[`Github snapshot with multi stack 2`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth",
+          "execArgs": [
+            "cdk",
+            "synth",
+          ],
         },
       ],
     },
@@ -4876,7 +5469,11 @@ exports[`Github snapshot with multi stack 2`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth -q",
+          "execArgs": [
+            "cdk",
+            "synth",
+            "-q",
+          ],
         },
       ],
     },
@@ -4885,7 +5482,11 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "test",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "execArgs": [
+            "jest",
+            "--passWithNoTests",
+            "--updateSnapshot",
+          ],
           "receiveArgs": true,
         },
         {
@@ -4898,7 +5499,10 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "test:watch",
       "steps": [
         {
-          "exec": "jest --watch",
+          "execArgs": [
+            "jest",
+            "--watch",
+          ],
         },
       ],
     },
@@ -4910,13 +5514,45 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "execArgs": [
+            "npx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=minor",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          ],
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
+          "execArgs": [
+            "yarn",
+            "upgrade",
+            "@stylistic/eslint-plugin",
+            "@types/jest",
+            "@types/node",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "aws-cdk",
+            "cdk-assets",
+            "commit-and-tag-version",
+            "esbuild",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint",
+            "jest",
+            "jest-junit",
+            "projen",
+            "ts-jest",
+            "ts-node",
+            "typescript",
+            "aws-cdk-lib",
+            "constructs",
+          ],
         },
         {
           "exec": "npx projen",
@@ -4954,16 +5590,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -4972,6 +5611,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -4986,28 +5626,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -5021,26 +5667,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -5067,6 +5719,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -5096,11 +5749,12 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
@@ -5108,6 +5762,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -5122,28 +5777,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: defaultRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -5157,26 +5818,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: defaultRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -5203,6 +5870,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -5241,22 +5909,28 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
-      - run: npx projen build
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: defaultRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:feature
+      - id: auto_2b03998e
+        run: npx projen deploy:feature
       - name: Add CDK outputs to summary - feature
+        id: add_cdk_outputs_to_summary_-_feature
         run: |-
           if [ -f "cdk-outputs-feature.json" ]; then
             echo "## CDK Stack Outputs - feature" >> $GITHUB_STEP_SUMMARY
@@ -5283,6 +5957,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-feature
@@ -5319,21 +5994,26 @@ jobs:
       BRANCH: \${{ github.head_ref }}
     if: github.event.action == 'closed' || (github.event.action == 'unlabeled' && github.event.label.name == 'feature-deployment')
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
-      - run: npx projen build
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: defaultRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen destroy:feature
+      - id: auto_646807e4
+        run: npx projen destroy:feature
 "
 `;
 
@@ -5357,20 +6037,24 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Setup pnpm
+        id: setup_pnpm
         uses: pnpm/action-setup@v4
         with:
           version: "9"
-      - run: pnpm i --frozen-lockfile
+      - id: auto_8a5a23ad
+        run: pnpm i --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -5379,6 +6063,7 @@ jobs:
       - run: pnpm exec projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -5393,32 +6078,39 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
       - name: Setup pnpm
+        id: setup_pnpm
         uses: pnpm/action-setup@v4
         with:
           version: "9"
-      - run: pnpm i --frozen-lockfile
+      - id: auto_8a5a23ad
+        run: pnpm i --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: pnpm exec projen publish:assets
+      - id: auto_873c510a
+        run: pnpm exec projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -5432,30 +6124,37 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
       - name: Setup pnpm
+        id: setup_pnpm
         uses: pnpm/action-setup@v4
         with:
           version: "9"
-      - run: pnpm i --frozen-lockfile
+      - id: auto_8a5a23ad
+        run: pnpm i --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: pnpm exec projen deploy:dev
+      - id: auto_54ffafda
+        run: pnpm exec projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -5482,6 +6181,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -5512,17 +6212,21 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: echo Login
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_8230baac
+        run: echo Login
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -5531,6 +6235,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -5546,29 +6251,36 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: echo Login
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_8230baac
+        run: echo Login
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-prod:
     name: Deploy stage prod to AWS
     needs: assetUpload
@@ -5583,26 +6295,33 @@ jobs:
       CI: "true"
       FOO: bar
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: echo Login
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_8230baac
+        run: echo Login
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -5629,6 +6348,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
@@ -5996,16 +6716,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -6014,6 +6737,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -6029,28 +6753,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devPublishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets:dev
+      - id: auto_15d4b0af
+        run: npx projen publish:assets:dev
   assetUpload-prod:
     name: Publish assets to AWS for stage prod
     needs: synth
@@ -6062,28 +6792,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodPublishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets:prod
+      - id: auto_bb2dfb34
+        run: npx projen publish:assets:prod
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload-dev
@@ -6097,26 +6833,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -6143,6 +6885,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -6162,26 +6905,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -6208,6 +6957,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
@@ -6513,7 +7263,7 @@ exports[`Github snapshot with separate asset upload jobs 3`] = `
       "^.+\\.[t]sx?$": [
         "ts-jest",
         {
-          "tsconfig": "tsconfig.dev.json",
+          "tsconfig": "test/tsconfig.json",
         },
       ],
     },
@@ -6568,6 +7318,7 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
   "env": {
     "PATH": "$(npx -c "node --print process.env.PATH")",
   },
+  "manifestVersion": 3,
   "tasks": {
     "build": {
       "description": "Full release build",
@@ -6606,22 +7357,35 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "clobber",
       "steps": [
         {
-          "exec": "git checkout -b scratch",
+          "execArgs": [
+            "git",
+            "checkout",
+            "-b",
+            "scratch",
+          ],
           "name": "save current HEAD in "scratch" branch",
         },
         {
-          "exec": "git checkout $BRANCH",
+          "exec": "git checkout "$BRANCH"",
         },
         {
-          "exec": "git fetch origin",
+          "execArgs": [
+            "git",
+            "fetch",
+            "origin",
+          ],
           "name": "fetch latest changes from origin",
         },
         {
-          "exec": "git reset --hard origin/$BRANCH",
+          "exec": "git reset --hard "origin/$BRANCH"",
           "name": "hard reset to origin commit",
         },
         {
-          "exec": "git clean -fdx",
+          "execArgs": [
+            "git",
+            "clean",
+            "-fdx",
+          ],
           "name": "clean all untracked files",
         },
         {
@@ -6646,7 +7410,10 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "default",
       "steps": [
         {
-          "exec": "node .projenrc.js",
+          "execArgs": [
+            "node",
+            ".projenrc.js",
+          ],
         },
       ],
     },
@@ -6703,7 +7470,18 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "eslint",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
+          "execArgs": [
+            "eslint",
+            "--ext",
+            ".ts,.tsx",
+            "--fix",
+            "--no-error-on-unmatched-pattern",
+            "$@",
+            "src",
+            "test",
+            "build-tools",
+            ".projenrc.js",
+          ],
           "receiveArgs": true,
         },
       ],
@@ -6798,7 +7576,10 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth",
+          "execArgs": [
+            "cdk",
+            "synth",
+          ],
         },
       ],
     },
@@ -6810,7 +7591,11 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth -q",
+          "execArgs": [
+            "cdk",
+            "synth",
+            "-q",
+          ],
         },
       ],
     },
@@ -6819,7 +7604,11 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "test",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "execArgs": [
+            "jest",
+            "--passWithNoTests",
+            "--updateSnapshot",
+          ],
           "receiveArgs": true,
         },
         {
@@ -6832,7 +7621,10 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "test:watch",
       "steps": [
         {
-          "exec": "jest --watch",
+          "execArgs": [
+            "jest",
+            "--watch",
+          ],
         },
       ],
     },
@@ -6844,13 +7636,45 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "execArgs": [
+            "npx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=minor",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          ],
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
+          "execArgs": [
+            "yarn",
+            "upgrade",
+            "@stylistic/eslint-plugin",
+            "@types/jest",
+            "@types/node",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "aws-cdk",
+            "cdk-assets",
+            "commit-and-tag-version",
+            "esbuild",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint",
+            "jest",
+            "jest-junit",
+            "projen",
+            "ts-jest",
+            "ts-node",
+            "typescript",
+            "aws-cdk-lib",
+            "constructs",
+          ],
         },
         {
           "exec": "npx projen",
@@ -7013,16 +7837,19 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
@@ -7031,6 +7858,7 @@ jobs:
       - run: npx projen build
       - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -7045,28 +7873,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -7080,26 +7914,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -7126,6 +7966,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -7145,26 +7986,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: prodRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:prod
+      - id: auto_9d7b06a1
+        run: npx projen deploy:prod
       - name: Add CDK outputs to summary - prod
+        id: add_cdk_outputs_to_summary_-_prod
         run: |-
           if [ -f "cdk-outputs-prod.json" ]; then
             echo "## CDK Stack Outputs - prod" >> $GITHUB_STEP_SUMMARY
@@ -7191,6 +8038,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-prod
@@ -7496,7 +8344,7 @@ exports[`Github snapshot with versioning enabled 3`] = `
       "^.+\\.[t]sx?$": [
         "ts-jest",
         {
-          "tsconfig": "tsconfig.dev.json",
+          "tsconfig": "test/tsconfig.json",
         },
       ],
     },
@@ -7551,6 +8399,7 @@ exports[`Github snapshot with versioning enabled 4`] = `
   "env": {
     "PATH": "$(npx -c "node --print process.env.PATH")",
   },
+  "manifestVersion": 3,
   "tasks": {
     "build": {
       "description": "Full release build",
@@ -7589,22 +8438,35 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "clobber",
       "steps": [
         {
-          "exec": "git checkout -b scratch",
+          "execArgs": [
+            "git",
+            "checkout",
+            "-b",
+            "scratch",
+          ],
           "name": "save current HEAD in "scratch" branch",
         },
         {
-          "exec": "git checkout $BRANCH",
+          "exec": "git checkout "$BRANCH"",
         },
         {
-          "exec": "git fetch origin",
+          "execArgs": [
+            "git",
+            "fetch",
+            "origin",
+          ],
           "name": "fetch latest changes from origin",
         },
         {
-          "exec": "git reset --hard origin/$BRANCH",
+          "exec": "git reset --hard "origin/$BRANCH"",
           "name": "hard reset to origin commit",
         },
         {
-          "exec": "git clean -fdx",
+          "execArgs": [
+            "git",
+            "clean",
+            "-fdx",
+          ],
           "name": "clean all untracked files",
         },
         {
@@ -7629,7 +8491,10 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "default",
       "steps": [
         {
-          "exec": "node .projenrc.js",
+          "execArgs": [
+            "node",
+            ".projenrc.js",
+          ],
         },
       ],
     },
@@ -7686,7 +8551,18 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "eslint",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
+          "execArgs": [
+            "eslint",
+            "--ext",
+            ".ts,.tsx",
+            "--fix",
+            "--no-error-on-unmatched-pattern",
+            "$@",
+            "src",
+            "test",
+            "build-tools",
+            ".projenrc.js",
+          ],
           "receiveArgs": true,
         },
       ],
@@ -7781,7 +8657,10 @@ exports[`Github snapshot with versioning enabled 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth",
+          "execArgs": [
+            "cdk",
+            "synth",
+          ],
         },
       ],
     },
@@ -7793,7 +8672,11 @@ exports[`Github snapshot with versioning enabled 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth -q",
+          "execArgs": [
+            "cdk",
+            "synth",
+            "-q",
+          ],
         },
       ],
     },
@@ -7802,7 +8685,11 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "test",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "execArgs": [
+            "jest",
+            "--passWithNoTests",
+            "--updateSnapshot",
+          ],
           "receiveArgs": true,
         },
         {
@@ -7815,7 +8702,10 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "test:watch",
       "steps": [
         {
-          "exec": "jest --watch",
+          "execArgs": [
+            "jest",
+            "--watch",
+          ],
         },
       ],
     },
@@ -7827,13 +8717,45 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "upgrade",
       "steps": [
         {
-          "exec": "npx npm-check-updates@20 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          "execArgs": [
+            "npx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=minor",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=@types/jest,@types/node,cdk-assets,commit-and-tag-version,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,projen,ts-jest,ts-node,typescript",
+          ],
         },
         {
           "exec": "yarn install --check-files",
         },
         {
-          "exec": "yarn upgrade @stylistic/eslint-plugin @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk cdk-assets commit-and-tag-version esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit projen ts-jest ts-node typescript aws-cdk-lib constructs",
+          "execArgs": [
+            "yarn",
+            "upgrade",
+            "@stylistic/eslint-plugin",
+            "@types/jest",
+            "@types/node",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "aws-cdk",
+            "cdk-assets",
+            "commit-and-tag-version",
+            "esbuild",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint",
+            "jest",
+            "jest-junit",
+            "projen",
+            "ts-jest",
+            "ts-node",
+            "typescript",
+            "aws-cdk-lib",
+            "constructs",
+          ],
         },
         {
           "exec": "npx projen",
