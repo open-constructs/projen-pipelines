@@ -14,15 +14,19 @@ jobs:
       contents: write
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
       - name: Install dependencies
+        id: install_dependencies
         run: npm install
       - name: build
+        id: build
         run: npx projen compile
       - name: Upload artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: integ-artifact
@@ -36,16 +40,21 @@ jobs:
     permissions: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: integ-artifact
       - name: Run yalc
+        id: run_yalc
         run: npx yalc publish
       - name: Add yalc
+        id: add_yalc
         run: cd integ/existing && npx yalc add projen-pipelines
       - name: Run Test
+        id: run_test
         run: cd integ/existing && npx yarn install
   test-npm-existing:
     needs: build
@@ -53,14 +62,19 @@ jobs:
     permissions: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: integ-artifact
       - name: Run yalc
+        id: run_yalc
         run: npx yalc publish
       - name: Add yalc
+        id: add_yalc
         run: cd integ/existing && npx yalc add projen-pipelines
       - name: Run Test
+        id: run_test
         run: cd integ/existing && npx npm install
