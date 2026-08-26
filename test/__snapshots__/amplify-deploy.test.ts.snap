@@ -28,9 +28,12 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -612,9 +615,12 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -798,9 +804,12 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7

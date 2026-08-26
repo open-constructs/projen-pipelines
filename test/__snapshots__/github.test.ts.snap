@@ -38,8 +38,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -850,8 +852,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -919,24 +923,30 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 400 --resource-limit 1000 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_d7f1d687
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 400 --resource-limit 1000 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -951,28 +961,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -986,26 +1002,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -1032,6 +1054,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -1059,22 +1082,28 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 400 --resource-limit 1000 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_d7f1d687
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 400 --resource-limit 1000 --output-file resource-count-results.json --github-summary || true
       - name: Post PR comment with resource counts
+        id: post_pr_comment_with_resource_counts
         uses: actions/github-script@v7
         with:
           script: |-
@@ -1138,8 +1167,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -1225,8 +1256,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -1536,8 +1569,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -1827,8 +1862,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -2143,8 +2180,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -3141,8 +3180,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -3405,8 +3446,10 @@ jobs:
           aws-region: us-east-1
           role-chaining: true
           role-skip-session-tagging: true
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -4528,8 +4571,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -4709,8 +4754,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -4950,9 +4997,12 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: cd $GITHUB_WORKSPACE && pnpm -r --filter backend^... run build
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_687992ed
+        run: cd $GITHUB_WORKSPACE && pnpm -r --filter backend^... run build
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -5114,8 +5164,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -5608,8 +5660,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -5758,9 +5812,12 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -6060,8 +6117,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: pnpm exec projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_0e9ec7c6
+        run: pnpm exec projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -6232,8 +6291,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -6376,23 +6437,28 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
+      - id: auto_6f3f6e71
+        run: npx projen build
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -6407,28 +6473,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -6442,26 +6514,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -6488,6 +6566,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -6515,24 +6594,30 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cloud-assembly
@@ -6547,28 +6632,34 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+      - id: auto_62fbdd49
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: publishRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen publish:assets
+      - id: auto_91cef464
+        run: npx projen publish:assets
   deploy-dev:
     name: Deploy stage dev to AWS
     needs: assetUpload
@@ -6582,26 +6673,32 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Download Artifact
+        id: download_artifact
         uses: actions/download-artifact@v8
         with:
           name: cloud-assembly
           path: cdk.out/
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: devRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen deploy:dev
+      - id: auto_f11d1030
+        run: npx projen deploy:dev
       - name: Add CDK outputs to summary - dev
+        id: add_cdk_outputs_to_summary_-_dev
         run: |-
           if [ -f "cdk-outputs-dev.json" ]; then
             echo "## CDK Stack Outputs - dev" >> $GITHUB_STEP_SUMMARY
@@ -6628,6 +6725,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
       - name: Upload Artifact
+        id: upload_artifact
         uses: actions/upload-artifact@v7
         with:
           name: cdk-outputs-dev
@@ -6655,22 +6753,28 @@ jobs:
     env:
       CI: "true"
     steps:
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version: "20"
-          package-manager-cache: "false"
+          package-manager-cache: false
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      - run: yarn install --check-files --frozen-lockfile
+      - id: auto_478e0edb
+        run: yarn install --check-files --frozen-lockfile
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Post PR comment with resource counts
+        id: post_pr_comment_with_resource_counts
         uses: actions/github-script@v7
         with:
           script: |-
@@ -6734,8 +6838,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
@@ -7855,8 +7961,10 @@ jobs:
           role-to-assume: synthRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen build
-      - run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
+      - id: auto_6f3f6e71
+        run: npx projen build
+      - id: auto_029c02c7
+        run: count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json --github-summary || true
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v7
