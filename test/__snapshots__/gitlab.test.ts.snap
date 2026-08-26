@@ -224,7 +224,7 @@ exports[`Gitlab snapshot 2`] = `
       "^.+\\.[t]sx?$": [
         "ts-jest",
         {
-          "tsconfig": "tsconfig.dev.json",
+          "tsconfig": "test/tsconfig.json",
         },
       ],
     },
@@ -1604,7 +1604,7 @@ export interface VersionInfo {
  */
 export function loadVersionInfo(): VersionInfo {
   try {
-    return JSON.parse(fs.readFileSync('~version.json', 'utf8'));
+    return JSON.parse(fs.readFileSync('.version.tmp.json', 'utf8'));
   } catch (error) {
     console.warn('Could not load version info, using fallback');
     return {
@@ -1851,7 +1851,7 @@ exports[`Gitlab snapshot with versioning enabled 3`] = `
       "^.+\\.[t]sx?$": [
         "ts-jest",
         {
-          "tsconfig": "tsconfig.dev.json",
+          "tsconfig": "test/tsconfig.json",
         },
       ],
     },
@@ -1906,6 +1906,7 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
   "env": {
     "PATH": "$(npx -c "node --print process.env.PATH")",
   },
+  "manifestVersion": 3,
   "tasks": {
     "build": {
       "description": "Full release build",
@@ -1944,22 +1945,35 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "clobber",
       "steps": [
         {
-          "exec": "git checkout -b scratch",
+          "execArgs": [
+            "git",
+            "checkout",
+            "-b",
+            "scratch",
+          ],
           "name": "save current HEAD in "scratch" branch",
         },
         {
-          "exec": "git checkout $BRANCH",
+          "exec": "git checkout "$BRANCH"",
         },
         {
-          "exec": "git fetch origin",
+          "execArgs": [
+            "git",
+            "fetch",
+            "origin",
+          ],
           "name": "fetch latest changes from origin",
         },
         {
-          "exec": "git reset --hard origin/$BRANCH",
+          "exec": "git reset --hard "origin/$BRANCH"",
           "name": "hard reset to origin commit",
         },
         {
-          "exec": "git clean -fdx",
+          "execArgs": [
+            "git",
+            "clean",
+            "-fdx",
+          ],
           "name": "clean all untracked files",
         },
         {
@@ -1984,7 +1998,10 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "default",
       "steps": [
         {
-          "exec": "node .projenrc.js",
+          "execArgs": [
+            "node",
+            ".projenrc.js",
+          ],
         },
       ],
     },
@@ -2041,7 +2058,18 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "eslint",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools .projenrc.js",
+          "execArgs": [
+            "eslint",
+            "--ext",
+            ".ts,.tsx",
+            "--fix",
+            "--no-error-on-unmatched-pattern",
+            "$@",
+            "src",
+            "test",
+            "build-tools",
+            ".projenrc.js",
+          ],
           "receiveArgs": true,
         },
       ],
@@ -2136,7 +2164,10 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth",
+          "execArgs": [
+            "cdk",
+            "synth",
+          ],
         },
       ],
     },
@@ -2148,7 +2179,11 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
           "exec": "rm -rf cdk.out",
         },
         {
-          "exec": "cdk synth -q",
+          "execArgs": [
+            "cdk",
+            "synth",
+            "-q",
+          ],
         },
       ],
     },
@@ -2157,7 +2192,11 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "test",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "execArgs": [
+            "jest",
+            "--passWithNoTests",
+            "--updateSnapshot",
+          ],
           "receiveArgs": true,
         },
         {
@@ -2170,7 +2209,10 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
       "name": "test:watch",
       "steps": [
         {
-          "exec": "jest --watch",
+          "execArgs": [
+            "jest",
+            "--watch",
+          ],
         },
       ],
     },
@@ -2265,7 +2307,7 @@ try {
   // Compute version
   const computer = new VersionComputer(strategy);
   computer.computeVersionInfo(context).then(versionInfo => {
-    fs.writeFileSync('~version.json', versionInfo.toJson());
+    fs.writeFileSync('.version.tmp.json', versionInfo.toJson());
     console.log('Version computed:', versionInfo.version, '(commit:', versionInfo.commitHashShort + ')');
   }).catch(error => {
     console.error('Error computing version:', error.message);
@@ -2280,7 +2322,7 @@ try {
       deployedBy: 'unknown',
       environment: 'unknown'
     };
-    fs.writeFileSync('~version.json', JSON.stringify(fallback, null, 2));
+    fs.writeFileSync('.version.tmp.json', JSON.stringify(fallback, null, 2));
   });
 } catch (e) {
   console.error('Error in version computation:', e.message);
@@ -2295,7 +2337,7 @@ try {
     deployedBy: 'unknown',
     environment: 'unknown'
   };
-  fs.writeFileSync('~version.json', JSON.stringify(fallback, null, 2));
+  fs.writeFileSync('.version.tmp.json', JSON.stringify(fallback, null, 2));
 }"",
         },
       ],
@@ -2323,7 +2365,7 @@ try {
       "name": "version:print",
       "steps": [
         {
-          "exec": "cat ~version.json",
+          "exec": "cat ./.version.tmp.json",
         },
       ],
     },

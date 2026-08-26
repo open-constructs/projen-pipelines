@@ -110,7 +110,7 @@ test('Bash snapshot with versioning enabled', () => {
   expect(snapshot['src/app.ts']).toMatchSnapshot();
   expect(snapshot['package.json']).toMatchSnapshot();
   expect(snapshot['.projen/tasks.json']).toMatchSnapshot();
-  expect(snapshot['.gitignore']).toContain('~version.json');
+  expect(snapshot['.gitignore']).toContain('.version.tmp.json');
 
   // Verify versioning code is generated in app.ts
   expect(snapshot['src/app.ts']).toContain('loadVersionInfo');
