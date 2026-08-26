@@ -497,19 +497,25 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Setup pnpm
+        id: setup_pnpm
         uses: pnpm/action-setup@v4
         with:
           version: "9"
       - name: Install dependencies
+        id: install_dependencies
         run: pnpm exec projen install:ci
-      - run: pnpm exec projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_9e6172b9
+        run: pnpm exec projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -542,17 +548,23 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Enable corepack
+        id: enable_corepack
         run: corepack enable
       - name: Install dependencies
+        id: install_dependencies
         run: yarn projen install:ci
-      - run: yarn projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_5d2bd473
+        run: yarn projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -586,21 +598,27 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_d920e41b
+        run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -622,21 +640,27 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::987654321098:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:prod 2>&1 | tee cdk-gc-output.txt
+      - id: auto_e4646dd0
+        run: npx projen gc:prod 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -670,21 +694,27 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_d920e41b
+        run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -706,21 +736,27 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::987654321098:role/GcRole
           role-session-name: GitHubAction
           aws-region: us-east-1
-      - run: npx projen gc:prod 2>&1 | tee cdk-gc-output.txt
+      - id: auto_e4646dd0
+        run: npx projen gc:prod 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -754,21 +790,27 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_d920e41b
+        run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -801,15 +843,20 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_d920e41b
+        run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -842,19 +889,25 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Setup pnpm
+        id: setup_pnpm
         uses: pnpm/action-setup@v4
         with:
           version: "9"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_d920e41b
+        run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -887,15 +940,20 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_d920e41b
+        run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -929,21 +987,27 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
       - name: AWS Credentials
+        id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::123456789012:role/GcRole
           role-session-name: GitHubAction
           aws-region: eu-central-1
-      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_d920e41b
+        run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -976,15 +1040,20 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_d920e41b
+        run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then
@@ -1017,15 +1086,20 @@ jobs:
     env: {}
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
       - name: Setup Node.js
+        id: setup_node_js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install dependencies
+        id: install_dependencies
         run: npx projen install:ci
-      - run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
+      - id: auto_d920e41b
+        run: npx projen gc:dev 2>&1 | tee cdk-gc-output.txt
       - name: Write to job summary
+        id: write_to_job_summary
         if: always()
         run: |-
           if [ -f cdk-gc-output.txt ]; then

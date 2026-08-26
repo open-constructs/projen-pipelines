@@ -807,8 +807,10 @@ new BashGarbageCollectionWorkflow(project: Project, options: BashGarbageCollecti
 | --- | --- |
 | <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
 | <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.postProjectCreation">postProjectCreation</a></code> | Called once, right after `postSynthesize()`, only when the project is created for the first time. |
 | <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.projectCreation">projectCreation</a></code> | Called once, right after `synthesize()`, only when the project is created for the first time. |
 | <code><a href="#projen-pipelines.BashGarbageCollectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 
 ---
@@ -842,6 +844,27 @@ The mixins to apply.
 
 ---
 
+##### `postProjectCreation` <a name="postProjectCreation" id="projen-pipelines.BashGarbageCollectionWorkflow.postProjectCreation"></a>
+
+```typescript
+public postProjectCreation(initProject: InitProject): void
+```
+
+Called once, right after `postSynthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+It is also skipped when post-synthesis steps are disabled, e.g. `--no-post` or `PROJEN_DISABLE_POST`.
+Use it for one-off setup that can be turned off by the user, like running a task to give the user immediate
+feedback on their new project. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.BashGarbageCollectionWorkflow.postProjectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
+
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.BashGarbageCollectionWorkflow.postSynthesize"></a>
 
 ```typescript
@@ -859,6 +882,25 @@ public preSynthesize(): void
 ```
 
 Called before synthesis.
+
+##### `projectCreation` <a name="projectCreation" id="projen-pipelines.BashGarbageCollectionWorkflow.projectCreation"></a>
+
+```typescript
+public projectCreation(initProject: InitProject): void
+```
+
+Called once, right after `synthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+Use it for deterministic, one-off file generation. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.BashGarbageCollectionWorkflow.projectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
 
 ##### `synthesize` <a name="synthesize" id="projen-pipelines.BashGarbageCollectionWorkflow.synthesize"></a>
 
@@ -1552,8 +1594,10 @@ new GarbageCollectionWorkflow(project: Project, options: GarbageCollectionWorkfl
 | --- | --- |
 | <code><a href="#projen-pipelines.GarbageCollectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
 | <code><a href="#projen-pipelines.GarbageCollectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.postProjectCreation">postProjectCreation</a></code> | Called once, right after `postSynthesize()`, only when the project is created for the first time. |
 | <code><a href="#projen-pipelines.GarbageCollectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GarbageCollectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GarbageCollectionWorkflow.projectCreation">projectCreation</a></code> | Called once, right after `synthesize()`, only when the project is created for the first time. |
 | <code><a href="#projen-pipelines.GarbageCollectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 
 ---
@@ -1587,6 +1631,27 @@ The mixins to apply.
 
 ---
 
+##### `postProjectCreation` <a name="postProjectCreation" id="projen-pipelines.GarbageCollectionWorkflow.postProjectCreation"></a>
+
+```typescript
+public postProjectCreation(initProject: InitProject): void
+```
+
+Called once, right after `postSynthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+It is also skipped when post-synthesis steps are disabled, e.g. `--no-post` or `PROJEN_DISABLE_POST`.
+Use it for one-off setup that can be turned off by the user, like running a task to give the user immediate
+feedback on their new project. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.GarbageCollectionWorkflow.postProjectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
+
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GarbageCollectionWorkflow.postSynthesize"></a>
 
 ```typescript
@@ -1604,6 +1669,25 @@ public preSynthesize(): void
 ```
 
 Called before synthesis.
+
+##### `projectCreation` <a name="projectCreation" id="projen-pipelines.GarbageCollectionWorkflow.projectCreation"></a>
+
+```typescript
+public projectCreation(initProject: InitProject): void
+```
+
+Called once, right after `synthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+Use it for deterministic, one-off file generation. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.GarbageCollectionWorkflow.projectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
 
 ##### `synthesize` <a name="synthesize" id="projen-pipelines.GarbageCollectionWorkflow.synthesize"></a>
 
@@ -2611,8 +2695,10 @@ new GitHubGarbageCollectionWorkflow(project: Project, options: GitHubGarbageColl
 | --- | --- |
 | <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
 | <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.postProjectCreation">postProjectCreation</a></code> | Called once, right after `postSynthesize()`, only when the project is created for the first time. |
 | <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.projectCreation">projectCreation</a></code> | Called once, right after `synthesize()`, only when the project is created for the first time. |
 | <code><a href="#projen-pipelines.GitHubGarbageCollectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 
 ---
@@ -2646,6 +2732,27 @@ The mixins to apply.
 
 ---
 
+##### `postProjectCreation` <a name="postProjectCreation" id="projen-pipelines.GitHubGarbageCollectionWorkflow.postProjectCreation"></a>
+
+```typescript
+public postProjectCreation(initProject: InitProject): void
+```
+
+Called once, right after `postSynthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+It is also skipped when post-synthesis steps are disabled, e.g. `--no-post` or `PROJEN_DISABLE_POST`.
+Use it for one-off setup that can be turned off by the user, like running a task to give the user immediate
+feedback on their new project. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.GitHubGarbageCollectionWorkflow.postProjectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
+
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitHubGarbageCollectionWorkflow.postSynthesize"></a>
 
 ```typescript
@@ -2663,6 +2770,25 @@ public preSynthesize(): void
 ```
 
 Called before synthesis.
+
+##### `projectCreation` <a name="projectCreation" id="projen-pipelines.GitHubGarbageCollectionWorkflow.projectCreation"></a>
+
+```typescript
+public projectCreation(initProject: InitProject): void
+```
+
+Called once, right after `synthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+Use it for deterministic, one-off file generation. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.GitHubGarbageCollectionWorkflow.projectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
 
 ##### `synthesize` <a name="synthesize" id="projen-pipelines.GitHubGarbageCollectionWorkflow.synthesize"></a>
 
@@ -3418,8 +3544,10 @@ new GitLabGarbageCollectionWorkflow(project: Project, options: GitLabGarbageColl
 | --- | --- |
 | <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
 | <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.postProjectCreation">postProjectCreation</a></code> | Called once, right after `postSynthesize()`, only when the project is created for the first time. |
 | <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
 | <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.projectCreation">projectCreation</a></code> | Called once, right after `synthesize()`, only when the project is created for the first time. |
 | <code><a href="#projen-pipelines.GitLabGarbageCollectionWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
 
 ---
@@ -3453,6 +3581,27 @@ The mixins to apply.
 
 ---
 
+##### `postProjectCreation` <a name="postProjectCreation" id="projen-pipelines.GitLabGarbageCollectionWorkflow.postProjectCreation"></a>
+
+```typescript
+public postProjectCreation(initProject: InitProject): void
+```
+
+Called once, right after `postSynthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+It is also skipped when post-synthesis steps are disabled, e.g. `--no-post` or `PROJEN_DISABLE_POST`.
+Use it for one-off setup that can be turned off by the user, like running a task to give the user immediate
+feedback on their new project. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.GitLabGarbageCollectionWorkflow.postProjectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
+
 ##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GitLabGarbageCollectionWorkflow.postSynthesize"></a>
 
 ```typescript
@@ -3470,6 +3619,25 @@ public preSynthesize(): void
 ```
 
 Called before synthesis.
+
+##### `projectCreation` <a name="projectCreation" id="projen-pipelines.GitLabGarbageCollectionWorkflow.projectCreation"></a>
+
+```typescript
+public projectCreation(initProject: InitProject): void
+```
+
+Called once, right after `synthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+Use it for deterministic, one-off file generation. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.GitLabGarbageCollectionWorkflow.projectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
 
 ##### `synthesize` <a name="synthesize" id="projen-pipelines.GitLabGarbageCollectionWorkflow.synthesize"></a>
 
