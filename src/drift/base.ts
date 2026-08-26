@@ -1,4 +1,6 @@
 import { Component, Project } from 'projen';
+import { NodePackageManager } from 'projen/lib/javascript';
+import { PipelineStep, PnpmSetupStep, CorepackSetupStep } from '../steps';
 
 export interface DriftDetectionStageOptions {
   /**
@@ -80,12 +82,25 @@ export interface DriftDetectionWorkflowOptions {
    * Drift detection configurations for different environments
    */
   readonly stages: DriftDetectionStageOptions[];
+
+  /**
+   * Additional steps to execute before installing dependencies.
+   * These steps are executed before the package manager setup and install command.
+   *
+   * Note: Package manager setup (e.g., PnpmSetupStep for pnpm or CorepackSetupStep
+   * for Yarn Berry) is automatically detected from the project and always included.
+   * Use this option for any additional pre-install steps you need.
+   *
+   * @default - no additional pre-install steps
+   */
+  readonly preInstallSteps?: PipelineStep[];
 }
 
 export abstract class DriftDetectionWorkflow extends Component {
   public readonly name: string;
   public readonly schedule: string;
   protected readonly stages: DriftDetectionStageOptions[];
+  protected readonly preInstallSteps: PipelineStep[];
 
   /** Prefix for workflow files and artifact names to prevent collisions in monorepos. */
   protected readonly namePrefix: string;
@@ -97,6 +112,34 @@ export abstract class DriftDetectionWorkflow extends Component {
     this.name = options.name ?? 'drift-detection';
     this.schedule = options.schedule ?? '0 0 * * *';
     this.stages = options.stages;
+    this.preInstallSteps = [
+      ...(options.preInstallSteps ?? []),
+      ...this.detectPackageManagerSteps(project),
+    ];
+  }
+
+  /**
+   * Detects the package manager from the project and returns appropriate setup steps.
+   * If the project is a NodeProject (has a `package` property), it inspects the
+   * packageManager to determine if pnpm or Yarn Berry setup is needed.
+   */
+  private detectPackageManagerSteps(project: Project): PipelineStep[] {
+    const pkg = (project as any).package;
+    if (!pkg || !pkg.packageManager) {
+      return [];
+    }
+
+    const steps: PipelineStep[] = [];
+
+    if (pkg.packageManager === NodePackageManager.PNPM) {
+      steps.push(new PnpmSetupStep(project, {
+        version: pkg.pnpmVersion,
+      }));
+    } else if (pkg.packageManager === NodePackageManager.YARN_BERRY) {
+      steps.push(new CorepackSetupStep(project));
+    }
+
+    return steps;
   }
 
 }

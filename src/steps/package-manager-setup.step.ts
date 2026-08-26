@@ -38,6 +38,21 @@ export class PnpmSetupStep extends PipelineStep {
       }],
     };
   }
+
+  public toGitlab(): GitlabStepConfig {
+    return {
+      extensions: [],
+      commands: [`npm install -g pnpm@${this.options.version ?? '9'}`],
+      needs: [],
+      env: {},
+    };
+  }
+
+  public toBash(): BashStepConfig {
+    return {
+      commands: [`npm install -g pnpm@${this.options.version ?? '9'}`],
+    };
+  }
 }
 
 /**
