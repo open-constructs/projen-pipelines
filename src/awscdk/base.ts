@@ -1,4 +1,4 @@
-import * as path from 'path';
+import * as path from 'node:path';
 import { Component, TextFile, awscdk } from 'projen';
 import { PROJEN_MARKER } from 'projen/lib/common';
 import { NodePackageManager } from 'projen/lib/javascript';
@@ -854,7 +854,7 @@ ${appCode}
 
     imports.push("import { CfnOutput } from 'aws-cdk-lib';");
     imports.push("import { StringParameter } from 'aws-cdk-lib/aws-ssm';");
-    imports.push("import * as fs from 'fs';");
+    imports.push("import * as fs from 'node:fs';");
 
     return imports.join('\n');
   }

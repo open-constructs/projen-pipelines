@@ -74,8 +74,8 @@ export class VersioningSetup {
     const strategyJson = JSON.stringify(this.config.strategy).replace(/"/g, '\\"');
 
     return `node -e "
-const fs = require('fs');
-const cp = require('child_process');
+const fs = require('node:fs');
+const cp = require('node:child_process');
 
 // Import versioning modules
 const { VersionComputer, VersioningStrategy } = require('projen-pipelines');

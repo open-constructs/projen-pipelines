@@ -1561,7 +1561,7 @@ exports[`Gitlab snapshot with versioning enabled 2`] = `
 import { App, AppProps, Stack, StackProps } from 'aws-cdk-lib';
 import { CfnOutput } from 'aws-cdk-lib';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
 const versioningConfig = {
   "enabled": true,
@@ -2283,8 +2283,8 @@ exports[`Gitlab snapshot with versioning enabled 4`] = `
         },
         {
           "exec": "node -e "
-const fs = require('fs');
-const cp = require('child_process');
+const fs = require('node:fs');
+const cp = require('node:child_process');
 
 // Import versioning modules
 const { VersionComputer, VersioningStrategy } = require('projen-pipelines');
