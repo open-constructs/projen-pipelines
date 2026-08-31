@@ -518,3 +518,78 @@ test('Gitlab snapshot with monorepo subproject and preBuildCommand', () => {
   // Should still have cd into working directory
   expect(gitlabCi).toContain('cd packages/backend');
 });
+
+test('Gitlab snapshot with resource counting enabled (default)', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GitlabCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const gitlabCi = snapshot['.gitlab-ci.yml'];
+  expect(gitlabCi).toBeDefined();
+
+  // Should contain count-resources command
+  expect(gitlabCi).toContain('count-resources');
+
+  // Should have MR comment logic
+  expect(gitlabCi).toContain('CI_MERGE_REQUEST_IID');
+
+  expect(gitlabCi).toMatchSnapshot();
+});
+
+test('Gitlab snapshot with resource counting disabled', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new GitlabCDKPipeline(p, {
+    iamRoleArns: {
+      synth: 'synthRole',
+      assetPublishing: 'publishRole',
+      deployment: {
+        dev: 'devRole',
+      },
+    },
+    enableResourceCounting: false,
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const gitlabCi = snapshot['.gitlab-ci.yml'];
+  expect(gitlabCi).toBeDefined();
+
+  // Should NOT contain count-resources command
+  expect(gitlabCi).not.toContain('count-resources');
+
+  // Should NOT have MR comment logic
+  expect(gitlabCi).not.toContain('CI_MERGE_REQUEST_IID');
+
+  expect(gitlabCi).toMatchSnapshot();
+});

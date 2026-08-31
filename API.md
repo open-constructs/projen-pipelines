@@ -2165,6 +2165,241 @@ public readonly schedule: string;
 ---
 
 
+### GithubResourceCountPRWorkflow <a name="GithubResourceCountPRWorkflow" id="projen-pipelines.GithubResourceCountPRWorkflow"></a>
+
+A standalone Component that creates a GitHub Actions workflow to count CloudFormation resources on pull requests.
+
+It synthesizes the CDK app, counts resources, compares
+against a baseline from the target branch, and posts a PR comment with the results.
+
+This can be used independently or is automatically created by GithubCDKPipeline when
+`enableResourceCounting` is not set to false.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.GithubResourceCountPRWorkflow.Initializer"></a>
+
+```typescript
+import { GithubResourceCountPRWorkflow } from 'projen-pipelines'
+
+new GithubResourceCountPRWorkflow(app: AwsCdkTypeScriptApp, options?: GithubResourceCountPRWorkflowOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.Initializer.parameter.app">app</a></code> | <code>projen.awscdk.AwsCdkTypeScriptApp</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions">GithubResourceCountPRWorkflowOptions</a></code> | *No description.* |
+
+---
+
+##### `app`<sup>Required</sup> <a name="app" id="projen-pipelines.GithubResourceCountPRWorkflow.Initializer.parameter.app"></a>
+
+- *Type:* projen.awscdk.AwsCdkTypeScriptApp
+
+---
+
+##### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.GithubResourceCountPRWorkflow.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions">GithubResourceCountPRWorkflowOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.with">with</a></code> | Applies one or more mixins to this construct. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.postProjectCreation">postProjectCreation</a></code> | Called once, right after `postSynthesize()`, only when the project is created for the first time. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.postSynthesize">postSynthesize</a></code> | Called after synthesis. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.preSynthesize">preSynthesize</a></code> | Called before synthesis. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.projectCreation">projectCreation</a></code> | Called once, right after `synthesize()`, only when the project is created for the first time. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.synthesize">synthesize</a></code> | Synthesizes files to the project output directory. |
+
+---
+
+##### `toString` <a name="toString" id="projen-pipelines.GithubResourceCountPRWorkflow.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `with` <a name="with" id="projen-pipelines.GithubResourceCountPRWorkflow.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="projen-pipelines.GithubResourceCountPRWorkflow.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
+
+##### `postProjectCreation` <a name="postProjectCreation" id="projen-pipelines.GithubResourceCountPRWorkflow.postProjectCreation"></a>
+
+```typescript
+public postProjectCreation(initProject: InitProject): void
+```
+
+Called once, right after `postSynthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+It is also skipped when post-synthesis steps are disabled, e.g. `--no-post` or `PROJEN_DISABLE_POST`.
+Use it for one-off setup that can be turned off by the user, like running a task to give the user immediate
+feedback on their new project. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.GithubResourceCountPRWorkflow.postProjectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
+
+##### `postSynthesize` <a name="postSynthesize" id="projen-pipelines.GithubResourceCountPRWorkflow.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after synthesis.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="projen-pipelines.GithubResourceCountPRWorkflow.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before synthesis.
+
+##### `projectCreation` <a name="projectCreation" id="projen-pipelines.GithubResourceCountPRWorkflow.projectCreation"></a>
+
+```typescript
+public projectCreation(initProject: InitProject): void
+```
+
+Called once, right after `synthesize()`, only when the project is created for the first time.
+
+It does not run on later `projen` invocations. It only fires for `projen new` (or `Projects.createProject`).
+Use it for deterministic, one-off file generation. Order across components is not guaranteed.
+
+###### `initProject`<sup>Required</sup> <a name="initProject" id="projen-pipelines.GithubResourceCountPRWorkflow.projectCreation.parameter.initProject"></a>
+
+- *Type:* projen.InitProject
+
+Details about how the project was created, e.g. its type and the original CLI args.
+
+---
+
+##### `synthesize` <a name="synthesize" id="projen-pipelines.GithubResourceCountPRWorkflow.synthesize"></a>
+
+```typescript
+public synthesize(): void
+```
+
+Synthesizes files to the project output directory.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.isComponent">isComponent</a></code> | Test whether the given construct is a component. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="projen-pipelines.GithubResourceCountPRWorkflow.isConstruct"></a>
+
+```typescript
+import { GithubResourceCountPRWorkflow } from 'projen-pipelines'
+
+GithubResourceCountPRWorkflow.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubResourceCountPRWorkflow.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isComponent` <a name="isComponent" id="projen-pipelines.GithubResourceCountPRWorkflow.isComponent"></a>
+
+```typescript
+import { GithubResourceCountPRWorkflow } from 'projen-pipelines'
+
+GithubResourceCountPRWorkflow.isComponent(x: any)
+```
+
+Test whether the given construct is a component.
+
+###### `x`<sup>Required</sup> <a name="x" id="projen-pipelines.GithubResourceCountPRWorkflow.isComponent.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflow.property.project">project</a></code> | <code>projen.Project</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="projen-pipelines.GithubResourceCountPRWorkflow.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.GithubResourceCountPRWorkflow.property.project"></a>
+
+```typescript
+public readonly project: Project;
+```
+
+- *Type:* projen.Project
+
+---
+
+
 ### GitlabCDKPipeline <a name="GitlabCDKPipeline" id="projen-pipelines.GitlabCDKPipeline"></a>
 
 The GitlabCDKPipeline class extends CDKPipeline to provide a way to configure and execute AWS CDK deployment pipelines within GitLab CI/CD environments.
@@ -3042,6 +3277,7 @@ const bashCDKPipelineOptions: BashCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.enableResourceCounting">enableResourceCounting</a></code> | <code>boolean</code> | Whether to enable resource counting after synth to track CloudFormation resource usage. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the pipeline when changed. |
@@ -3055,6 +3291,8 @@ const bashCDKPipelineOptions: BashCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.resourceCountLimit">resourceCountLimit</a></code> | <code>number</code> | The hard limit for resource count per stack. |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.resourceCountWarningThreshold">resourceCountWarningThreshold</a></code> | <code>number</code> | The warning threshold for resource count. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the pipeline relative to the repository root. |
@@ -3110,6 +3348,22 @@ public readonly deploySubStacks: boolean;
 If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack.
 
 You can use this to deploy CDk applications containing multiple stacks.
+
+---
+
+##### `enableResourceCounting`<sup>Optional</sup> <a name="enableResourceCounting" id="projen-pipelines.BashCDKPipelineOptions.property.enableResourceCounting"></a>
+
+```typescript
+public readonly enableResourceCounting: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to enable resource counting after synth to track CloudFormation resource usage.
+
+When enabled, resources in each stack are counted and reported.
+On PRs/MRs, a comment is posted showing resource counts and deltas.
 
 ---
 
@@ -3284,6 +3538,39 @@ public readonly preSynthSteps: PipelineStep[];
 ```
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `resourceCountLimit`<sup>Optional</sup> <a name="resourceCountLimit" id="projen-pipelines.BashCDKPipelineOptions.property.resourceCountLimit"></a>
+
+```typescript
+public readonly resourceCountLimit: number;
+```
+
+- *Type:* number
+- *Default:* 500
+
+The hard limit for resource count per stack.
+
+This should match the
+CloudFormation resource limit for the account (default 500, can be increased).
+Percentage calculations use this value as the denominator.
+
+---
+
+##### `resourceCountWarningThreshold`<sup>Optional</sup> <a name="resourceCountWarningThreshold" id="projen-pipelines.BashCDKPipelineOptions.property.resourceCountWarningThreshold"></a>
+
+```typescript
+public readonly resourceCountWarningThreshold: number;
+```
+
+- *Type:* number
+- *Default:* 450
+
+The warning threshold for resource count.
+
+When a stack's resource count
+reaches this number, a warning is emitted.
 
 ---
 
@@ -3561,6 +3848,7 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.enableResourceCounting">enableResourceCounting</a></code> | <code>boolean</code> | Whether to enable resource counting after synth to track CloudFormation resource usage. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the pipeline when changed. |
@@ -3574,6 +3862,8 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.resourceCountLimit">resourceCountLimit</a></code> | <code>number</code> | The hard limit for resource count per stack. |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.resourceCountWarningThreshold">resourceCountWarningThreshold</a></code> | <code>number</code> | The warning threshold for resource count. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the pipeline relative to the repository root. |
@@ -3629,6 +3919,22 @@ public readonly deploySubStacks: boolean;
 If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack.
 
 You can use this to deploy CDk applications containing multiple stacks.
+
+---
+
+##### `enableResourceCounting`<sup>Optional</sup> <a name="enableResourceCounting" id="projen-pipelines.CDKPipelineOptions.property.enableResourceCounting"></a>
+
+```typescript
+public readonly enableResourceCounting: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to enable resource counting after synth to track CloudFormation resource usage.
+
+When enabled, resources in each stack are counted and reported.
+On PRs/MRs, a comment is posted showing resource counts and deltas.
 
 ---
 
@@ -3803,6 +4109,39 @@ public readonly preSynthSteps: PipelineStep[];
 ```
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `resourceCountLimit`<sup>Optional</sup> <a name="resourceCountLimit" id="projen-pipelines.CDKPipelineOptions.property.resourceCountLimit"></a>
+
+```typescript
+public readonly resourceCountLimit: number;
+```
+
+- *Type:* number
+- *Default:* 500
+
+The hard limit for resource count per stack.
+
+This should match the
+CloudFormation resource limit for the account (default 500, can be increased).
+Percentage calculations use this value as the denominator.
+
+---
+
+##### `resourceCountWarningThreshold`<sup>Optional</sup> <a name="resourceCountWarningThreshold" id="projen-pipelines.CDKPipelineOptions.property.resourceCountWarningThreshold"></a>
+
+```typescript
+public readonly resourceCountWarningThreshold: number;
+```
+
+- *Type:* number
+- *Default:* 450
+
+The warning threshold for resource count.
+
+When a stack's resource count
+reaches this number, a warning is emitted.
 
 ---
 
@@ -4941,6 +5280,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.enableResourceCounting">enableResourceCounting</a></code> | <code>boolean</code> | Whether to enable resource counting after synth to track CloudFormation resource usage. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the pipeline when changed. |
@@ -4954,6 +5294,8 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.resourceCountLimit">resourceCountLimit</a></code> | <code>number</code> | The hard limit for resource count per stack. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.resourceCountWarningThreshold">resourceCountWarningThreshold</a></code> | <code>number</code> | The warning threshold for resource count. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the pipeline relative to the repository root. |
@@ -5013,6 +5355,22 @@ public readonly deploySubStacks: boolean;
 If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack.
 
 You can use this to deploy CDk applications containing multiple stacks.
+
+---
+
+##### `enableResourceCounting`<sup>Optional</sup> <a name="enableResourceCounting" id="projen-pipelines.GithubCDKPipelineOptions.property.enableResourceCounting"></a>
+
+```typescript
+public readonly enableResourceCounting: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to enable resource counting after synth to track CloudFormation resource usage.
+
+When enabled, resources in each stack are counted and reported.
+On PRs/MRs, a comment is posted showing resource counts and deltas.
 
 ---
 
@@ -5187,6 +5545,39 @@ public readonly preSynthSteps: PipelineStep[];
 ```
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `resourceCountLimit`<sup>Optional</sup> <a name="resourceCountLimit" id="projen-pipelines.GithubCDKPipelineOptions.property.resourceCountLimit"></a>
+
+```typescript
+public readonly resourceCountLimit: number;
+```
+
+- *Type:* number
+- *Default:* 500
+
+The hard limit for resource count per stack.
+
+This should match the
+CloudFormation resource limit for the account (default 500, can be increased).
+Percentage calculations use this value as the denominator.
+
+---
+
+##### `resourceCountWarningThreshold`<sup>Optional</sup> <a name="resourceCountWarningThreshold" id="projen-pipelines.GithubCDKPipelineOptions.property.resourceCountWarningThreshold"></a>
+
+```typescript
+public readonly resourceCountWarningThreshold: number;
+```
+
+- *Type:* number
+- *Default:* 450
+
+The warning threshold for resource count.
+
+When a stack's resource count
+reaches this number, a warning is emitted.
 
 ---
 
@@ -5436,6 +5827,292 @@ public readonly write: boolean;
 - *Default:* false
 
 Whether or not to grant the step write permissions to the registry.
+
+---
+
+### GithubResourceCountPRWorkflowOptions <a name="GithubResourceCountPRWorkflowOptions" id="projen-pipelines.GithubResourceCountPRWorkflowOptions"></a>
+
+Options for GithubResourceCountPRWorkflow.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.Initializer"></a>
+
+```typescript
+import { GithubResourceCountPRWorkflowOptions } from 'projen-pipelines'
+
+const githubResourceCountPRWorkflowOptions: GithubResourceCountPRWorkflowOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.branchName">branchName</a></code> | <code>string</code> | The branch that pull requests target. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.cdkoutDir">cdkoutDir</a></code> | <code>string</code> | The CDK output directory (cloud assembly directory). |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.nodeVersion">nodeVersion</a></code> | <code>string</code> | The Node.js version to use in the workflow. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the workflow when changed. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.pipelineName">pipelineName</a></code> | <code>string</code> | A unique name prefix for the workflow file and job names to prevent collisions in monorepos. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.postSynthCommands">postSynthCommands</a></code> | <code>string[]</code> | Commands to run after the synth step. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.postSynthSteps">postSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run after the synth step. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preBuildCommand">preBuildCommand</a></code> | <code>string</code> | A command to run before the build step, executed from the repository root. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preInstallCommands">preInstallCommands</a></code> | <code>string[]</code> | Commands to run before installing dependencies. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before installing dependencies. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | Commands to run before the synth step. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | Steps to run before the synth step. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.resourceCountLimit">resourceCountLimit</a></code> | <code>number</code> | The hard limit for resource count per stack. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.resourceCountWarningThreshold">resourceCountWarningThreshold</a></code> | <code>number</code> | The warning threshold for resource count. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.runnerTags">runnerTags</a></code> | <code>string[]</code> | Runner tags to use to select GitHub Actions runners. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.synthJumpRoleArn">synthJumpRoleArn</a></code> | <code>string</code> | Jump role ARN to assume before the synth role. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.synthRoleArn">synthRoleArn</a></code> | <code>string</code> | IAM role ARN to assume before synth. |
+| <code><a href="#projen-pipelines.GithubResourceCountPRWorkflowOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the workflow relative to the repository root. |
+
+---
+
+##### `branchName`<sup>Optional</sup> <a name="branchName" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.branchName"></a>
+
+```typescript
+public readonly branchName: string;
+```
+
+- *Type:* string
+- *Default:* 'main'
+
+The branch that pull requests target.
+
+The workflow will trigger on PRs
+targeting this branch.
+
+---
+
+##### `cdkoutDir`<sup>Optional</sup> <a name="cdkoutDir" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.cdkoutDir"></a>
+
+```typescript
+public readonly cdkoutDir: string;
+```
+
+- *Type:* string
+- *Default:* uses the app's cdkConfig.cdkout
+
+The CDK output directory (cloud assembly directory).
+
+---
+
+##### `nodeVersion`<sup>Optional</sup> <a name="nodeVersion" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.nodeVersion"></a>
+
+```typescript
+public readonly nodeVersion: string;
+```
+
+- *Type:* string
+- *Default:* '20'
+
+The Node.js version to use in the workflow.
+
+---
+
+##### `paths`<sup>Optional</sup> <a name="paths" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.paths"></a>
+
+```typescript
+public readonly paths: string[];
+```
+
+- *Type:* string[]
+- *Default:* all paths trigger the workflow
+
+File path patterns that should trigger the workflow when changed.
+
+This is useful for monorepos where you only want to run the workflow
+when files in a specific subproject are modified.
+
+---
+
+##### `pipelineName`<sup>Optional</sup> <a name="pipelineName" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.pipelineName"></a>
+
+```typescript
+public readonly pipelineName: string;
+```
+
+- *Type:* string
+- *Default:* no prefix
+
+A unique name prefix for the workflow file and job names to prevent collisions in monorepos.
+
+---
+
+##### `postSynthCommands`<sup>Optional</sup> <a name="postSynthCommands" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.postSynthCommands"></a>
+
+```typescript
+public readonly postSynthCommands: string[];
+```
+
+- *Type:* string[]
+
+Commands to run after the synth step.
+
+---
+
+##### `postSynthSteps`<sup>Optional</sup> <a name="postSynthSteps" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.postSynthSteps"></a>
+
+```typescript
+public readonly postSynthSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run after the synth step.
+
+---
+
+##### `preBuildCommand`<sup>Optional</sup> <a name="preBuildCommand" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preBuildCommand"></a>
+
+```typescript
+public readonly preBuildCommand: string;
+```
+
+- *Type:* string
+- *Default:* no pre-build command
+
+A command to run before the build step, executed from the repository root.
+
+When a workingDirectory is set (monorepo subproject), the command is
+automatically wrapped to execute from the repository root.
+
+---
+
+##### `preInstallCommands`<sup>Optional</sup> <a name="preInstallCommands" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preInstallCommands"></a>
+
+```typescript
+public readonly preInstallCommands: string[];
+```
+
+- *Type:* string[]
+
+Commands to run before installing dependencies.
+
+---
+
+##### `preInstallSteps`<sup>Optional</sup> <a name="preInstallSteps" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preInstallSteps"></a>
+
+```typescript
+public readonly preInstallSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before installing dependencies.
+
+---
+
+##### `preSynthCommands`<sup>Optional</sup> <a name="preSynthCommands" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preSynthCommands"></a>
+
+```typescript
+public readonly preSynthCommands: string[];
+```
+
+- *Type:* string[]
+
+Commands to run before the synth step.
+
+---
+
+##### `preSynthSteps`<sup>Optional</sup> <a name="preSynthSteps" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.preSynthSteps"></a>
+
+```typescript
+public readonly preSynthSteps: PipelineStep[];
+```
+
+- *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+Steps to run before the synth step.
+
+---
+
+##### `resourceCountLimit`<sup>Optional</sup> <a name="resourceCountLimit" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.resourceCountLimit"></a>
+
+```typescript
+public readonly resourceCountLimit: number;
+```
+
+- *Type:* number
+- *Default:* 500
+
+The hard limit for resource count per stack.
+
+This should match the
+CloudFormation resource limit for the account (default 500, can be increased).
+
+---
+
+##### `resourceCountWarningThreshold`<sup>Optional</sup> <a name="resourceCountWarningThreshold" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.resourceCountWarningThreshold"></a>
+
+```typescript
+public readonly resourceCountWarningThreshold: number;
+```
+
+- *Type:* number
+- *Default:* 450
+
+The warning threshold for resource count.
+
+When a stack's resource count
+reaches this number, a warning is emitted.
+
+---
+
+##### `runnerTags`<sup>Optional</sup> <a name="runnerTags" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.runnerTags"></a>
+
+```typescript
+public readonly runnerTags: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['ubuntu-latest']
+
+Runner tags to use to select GitHub Actions runners.
+
+---
+
+##### `synthJumpRoleArn`<sup>Optional</sup> <a name="synthJumpRoleArn" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.synthJumpRoleArn"></a>
+
+```typescript
+public readonly synthJumpRoleArn: string;
+```
+
+- *Type:* string
+- *Default:* no jump role
+
+Jump role ARN to assume before the synth role.
+
+---
+
+##### `synthRoleArn`<sup>Optional</sup> <a name="synthRoleArn" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.synthRoleArn"></a>
+
+```typescript
+public readonly synthRoleArn: string;
+```
+
+- *Type:* string
+- *Default:* no role assumption
+
+IAM role ARN to assume before synth.
+
+If set, the workflow will assume this
+role before running the build/synth step.
+
+---
+
+##### `workingDirectory`<sup>Optional</sup> <a name="workingDirectory" id="projen-pipelines.GithubResourceCountPRWorkflowOptions.property.workingDirectory"></a>
+
+```typescript
+public readonly workingDirectory: string;
+```
+
+- *Type:* string
+- *Default:* repository root
+
+The working directory for the workflow relative to the repository root.
+
+When set, CI jobs will run commands in this directory and artifact paths
+will be prefixed accordingly.
 
 ---
 
@@ -5698,6 +6375,7 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.enableResourceCounting">enableResourceCounting</a></code> | <code>boolean</code> | Whether to enable resource counting after synth to track CloudFormation resource usage. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.independentStages">independentStages</a></code> | <code><a href="#projen-pipelines.IndependentStage">IndependentStage</a>[]</code> | This specifies details for independent stages. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.paths">paths</a></code> | <code>string[]</code> | File path patterns that should trigger the pipeline when changed. |
@@ -5711,6 +6389,8 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preInstallSteps">preInstallSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preSynthCommands">preSynthCommands</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.preSynthSteps">preSynthSteps</a></code> | <code><a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]</code> | *No description.* |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.resourceCountLimit">resourceCountLimit</a></code> | <code>number</code> | The hard limit for resource count per stack. |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.resourceCountWarningThreshold">resourceCountWarningThreshold</a></code> | <code>number</code> | The warning threshold for resource count. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | This field is used to define a prefix for the AWS Stack resources created during the pipeline's operation. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.versioning">versioning</a></code> | <code><a href="#projen-pipelines.VersioningConfig">VersioningConfig</a></code> | Versioning configuration. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | The working directory for the pipeline relative to the repository root. |
@@ -5768,6 +6448,22 @@ public readonly deploySubStacks: boolean;
 If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack.
 
 You can use this to deploy CDk applications containing multiple stacks.
+
+---
+
+##### `enableResourceCounting`<sup>Optional</sup> <a name="enableResourceCounting" id="projen-pipelines.GitlabCDKPipelineOptions.property.enableResourceCounting"></a>
+
+```typescript
+public readonly enableResourceCounting: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to enable resource counting after synth to track CloudFormation resource usage.
+
+When enabled, resources in each stack are counted and reported.
+On PRs/MRs, a comment is posted showing resource counts and deltas.
 
 ---
 
@@ -5942,6 +6638,39 @@ public readonly preSynthSteps: PipelineStep[];
 ```
 
 - *Type:* <a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `resourceCountLimit`<sup>Optional</sup> <a name="resourceCountLimit" id="projen-pipelines.GitlabCDKPipelineOptions.property.resourceCountLimit"></a>
+
+```typescript
+public readonly resourceCountLimit: number;
+```
+
+- *Type:* number
+- *Default:* 500
+
+The hard limit for resource count per stack.
+
+This should match the
+CloudFormation resource limit for the account (default 500, can be increased).
+Percentage calculations use this value as the denominator.
+
+---
+
+##### `resourceCountWarningThreshold`<sup>Optional</sup> <a name="resourceCountWarningThreshold" id="projen-pipelines.GitlabCDKPipelineOptions.property.resourceCountWarningThreshold"></a>
+
+```typescript
+public readonly resourceCountWarningThreshold: number;
+```
+
+- *Type:* number
+- *Default:* 450
+
+The warning threshold for resource count.
+
+When a stack's resource count
+reaches this number, a warning is emitted.
 
 ---
 
@@ -6923,6 +7652,95 @@ public readonly version: string;
 The version of pnpm to install.
 
 If not provided, defaults to '9'.
+
+---
+
+### ResourceCountStepOptions <a name="ResourceCountStepOptions" id="projen-pipelines.ResourceCountStepOptions"></a>
+
+Options for the ResourceCountStep.
+
+#### Initializer <a name="Initializer" id="projen-pipelines.ResourceCountStepOptions.Initializer"></a>
+
+```typescript
+import { ResourceCountStepOptions } from 'projen-pipelines'
+
+const resourceCountStepOptions: ResourceCountStepOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ResourceCountStepOptions.property.cloudAssemblyDir">cloudAssemblyDir</a></code> | <code>string</code> | Path to the cloud assembly directory. |
+| <code><a href="#projen-pipelines.ResourceCountStepOptions.property.githubSummary">githubSummary</a></code> | <code>boolean</code> | Whether to write a GitHub Actions summary. |
+| <code><a href="#projen-pipelines.ResourceCountStepOptions.property.outputFile">outputFile</a></code> | <code>string</code> | Output file path for results JSON. |
+| <code><a href="#projen-pipelines.ResourceCountStepOptions.property.resourceLimit">resourceLimit</a></code> | <code>number</code> | Hard resource limit. |
+| <code><a href="#projen-pipelines.ResourceCountStepOptions.property.warningThreshold">warningThreshold</a></code> | <code>number</code> | Warning threshold for resource count. |
+
+---
+
+##### `cloudAssemblyDir`<sup>Optional</sup> <a name="cloudAssemblyDir" id="projen-pipelines.ResourceCountStepOptions.property.cloudAssemblyDir"></a>
+
+```typescript
+public readonly cloudAssemblyDir: string;
+```
+
+- *Type:* string
+- *Default:* 'cdk.out'
+
+Path to the cloud assembly directory.
+
+---
+
+##### `githubSummary`<sup>Optional</sup> <a name="githubSummary" id="projen-pipelines.ResourceCountStepOptions.property.githubSummary"></a>
+
+```typescript
+public readonly githubSummary: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Whether to write a GitHub Actions summary.
+
+---
+
+##### `outputFile`<sup>Optional</sup> <a name="outputFile" id="projen-pipelines.ResourceCountStepOptions.property.outputFile"></a>
+
+```typescript
+public readonly outputFile: string;
+```
+
+- *Type:* string
+- *Default:* 'resource-count-results.json'
+
+Output file path for results JSON.
+
+---
+
+##### `resourceLimit`<sup>Optional</sup> <a name="resourceLimit" id="projen-pipelines.ResourceCountStepOptions.property.resourceLimit"></a>
+
+```typescript
+public readonly resourceLimit: number;
+```
+
+- *Type:* number
+- *Default:* 500
+
+Hard resource limit.
+
+---
+
+##### `warningThreshold`<sup>Optional</sup> <a name="warningThreshold" id="projen-pipelines.ResourceCountStepOptions.property.warningThreshold"></a>
+
+```typescript
+public readonly warningThreshold: number;
+```
+
+- *Type:* number
+- *Default:* 450
+
+Warning threshold for resource count.
 
 ---
 
@@ -8599,6 +9417,102 @@ public toGitlab(): GitlabStepConfig
 ```
 
 Converts the step into a GitLab CI configuration.
+
+
+
+
+### ResourceCountStep <a name="ResourceCountStep" id="projen-pipelines.ResourceCountStep"></a>
+
+A pipeline step that runs the count-resources CLI to count CloudFormation resources in the synthesized cloud assembly.
+
+#### Initializers <a name="Initializers" id="projen-pipelines.ResourceCountStep.Initializer"></a>
+
+```typescript
+import { ResourceCountStep } from 'projen-pipelines'
+
+new ResourceCountStep(project: Project, options?: ResourceCountStepOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#projen-pipelines.ResourceCountStep.Initializer.parameter.project">project</a></code> | <code>projen.Project</code> | - The projen project reference. |
+| <code><a href="#projen-pipelines.ResourceCountStep.Initializer.parameter.options">options</a></code> | <code><a href="#projen-pipelines.ResourceCountStepOptions">ResourceCountStepOptions</a></code> | *No description.* |
+
+---
+
+##### `project`<sup>Required</sup> <a name="project" id="projen-pipelines.ResourceCountStep.Initializer.parameter.project"></a>
+
+- *Type:* projen.Project
+
+The projen project reference.
+
+---
+
+##### `options`<sup>Optional</sup> <a name="options" id="projen-pipelines.ResourceCountStep.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#projen-pipelines.ResourceCountStepOptions">ResourceCountStepOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#projen-pipelines.ResourceCountStep.toBash">toBash</a></code> | Converts the sequence of steps into a Bash script configuration. |
+| <code><a href="#projen-pipelines.ResourceCountStep.toGithub">toGithub</a></code> | Converts the sequence of steps into a GitHub Actions step configuration. |
+| <code><a href="#projen-pipelines.ResourceCountStep.toGitlab">toGitlab</a></code> | Converts the sequence of steps into a GitLab CI configuration. |
+| <code><a href="#projen-pipelines.ResourceCountStep.addSteps">addSteps</a></code> | *No description.* |
+| <code><a href="#projen-pipelines.ResourceCountStep.prependSteps">prependSteps</a></code> | *No description.* |
+
+---
+
+##### `toBash` <a name="toBash" id="projen-pipelines.ResourceCountStep.toBash"></a>
+
+```typescript
+public toBash(): BashStepConfig
+```
+
+Converts the sequence of steps into a Bash script configuration.
+
+##### `toGithub` <a name="toGithub" id="projen-pipelines.ResourceCountStep.toGithub"></a>
+
+```typescript
+public toGithub(): GithubStepConfig
+```
+
+Converts the sequence of steps into a GitHub Actions step configuration.
+
+##### `toGitlab` <a name="toGitlab" id="projen-pipelines.ResourceCountStep.toGitlab"></a>
+
+```typescript
+public toGitlab(): GitlabStepConfig
+```
+
+Converts the sequence of steps into a GitLab CI configuration.
+
+##### `addSteps` <a name="addSteps" id="projen-pipelines.ResourceCountStep.addSteps"></a>
+
+```typescript
+public addSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.ResourceCountStep.addSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
+
+##### `prependSteps` <a name="prependSteps" id="projen-pipelines.ResourceCountStep.prependSteps"></a>
+
+```typescript
+public prependSteps(steps: ...PipelineStep[]): void
+```
+
+###### `steps`<sup>Required</sup> <a name="steps" id="projen-pipelines.ResourceCountStep.prependSteps.parameter.steps"></a>
+
+- *Type:* ...<a href="#projen-pipelines.PipelineStep">PipelineStep</a>[]
+
+---
 
 
 

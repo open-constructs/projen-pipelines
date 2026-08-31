@@ -2,6 +2,7 @@ import { awscdk } from 'projen';
 import { GitHub, GithubWorkflow } from 'projen/lib/github';
 import { JobPermission, JobPermissions } from 'projen/lib/github/workflows-model';
 import { CdkDiffType, CDKPipeline, CDKPipelineOptions, DeploymentStage, IndependentStage, NamedStageOptions } from './base';
+import { GithubResourceCountPRWorkflow } from './github-resource-count-pr-workflow';
 import { PipelineEngine } from '../engine';
 import { mergeJobPermissions } from '../engines';
 import { AwsAssumeRoleStep, PipelineStep, ProjenScriptStep, SimpleCommandStep } from '../steps';
@@ -138,6 +139,30 @@ export class GithubCDKPipeline extends CDKPipeline {
     // Create feature workflows if feature stages are configured
     if (options.featureStages) {
       this.createFeatureWorkflows();
+    }
+
+    // Create a separate PR workflow for resource counting if enabled
+    if (this.baseOptions.enableResourceCounting !== false) {
+      new GithubResourceCountPRWorkflow(app, {
+        branchName: this.branchName,
+        runnerTags: options.runnerTags,
+        nodeVersion: this.minNodeVersion,
+        resourceCountWarningThreshold: options.resourceCountWarningThreshold,
+        resourceCountLimit: options.resourceCountLimit,
+        paths: this.baseOptions.paths,
+        workingDirectory: this.workingDirectory,
+        cdkoutDir: this.app.cdkConfig.cdkout,
+        pipelineName: options.pipelineName ?? (app.parent ? app.name : undefined),
+        preInstallCommands: options.preInstallCommands,
+        preInstallSteps: options.preInstallSteps,
+        preSynthCommands: options.preSynthCommands,
+        preSynthSteps: options.preSynthSteps,
+        postSynthCommands: options.postSynthCommands,
+        postSynthSteps: options.postSynthSteps,
+        preBuildCommand: options.preBuildCommand,
+        synthRoleArn: options.iamRoleArns?.synth,
+        synthJumpRoleArn: options.iamRoleArns?.jump?.synth,
+      });
     }
   }
 
@@ -312,9 +337,15 @@ export class GithubCDKPipeline extends CDKPipeline {
    * Creates a synthesis job for the pipeline using GitHub Actions.
    */
   private createSynth(): void {
+    const enableResourceCounting = this.options.enableResourceCounting !== false;
+
     const steps: PipelineStep[] = [];
     steps.push(this.provideInstallStep());
     steps.push(this.provideSynthStep());
+
+    if (enableResourceCounting) {
+      steps.push(this.provideResourceCountStep());
+    }
 
     steps.push(new UploadArtifactStep(this.project, {
       name: `${this.namePrefix}cloud-assembly`,
@@ -589,4 +620,5 @@ export class GithubCDKPipeline extends CDKPipeline {
 
     }
   }
+
 }

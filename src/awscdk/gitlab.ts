@@ -154,12 +154,24 @@ export class GitlabCDKPipeline extends CDKPipeline {
    * configured to be cached as artifacts.
    */
   protected createSynth(): void {
+    const enableResourceCounting = this.options.enableResourceCounting !== false;
+
     const steps: PipelineStep[] = [
       this.provideInstallStep(),
       this.provideSynthStep(),
     ];
 
+    if (enableResourceCounting) {
+      steps.push(this.provideResourceCountStep());
+    }
+
     const gitlabSteps = steps.map(s => s.toGitlab());
+
+    // Build the MR comment commands that will be appended after resource counting
+    const mrCommentCommands: string[] = [];
+    if (enableResourceCounting) {
+      mrCommentCommands.push(...this.generateMrCommentCommands());
+    }
 
     this.config.addStages('synth');
     this.config.addJobs({
@@ -168,7 +180,7 @@ export class GitlabCDKPipeline extends CDKPipeline {
         needs: gitlabSteps.flatMap(s => s.needs),
         stage: 'synth',
         tags: this.options.runnerTags?.synth ?? this.options.runnerTags?.default,
-        script: this.withWorkingDirectory(gitlabSteps.flatMap(s => s.commands)),
+        script: this.withWorkingDirectory([...gitlabSteps.flatMap(s => s.commands), ...mrCommentCommands]),
         variables: gitlabSteps.reduce((acc, step) => ({ ...acc, ...step.env }), {}),
       },
     });
@@ -311,5 +323,45 @@ export class GitlabCDKPipeline extends CDKPipeline {
     return PipelineEngine.GITLAB;
   }
 
+  /**
+   * Generates shell commands to post a merge request comment with resource counts.
+   * The comment is only posted when running in a merge request pipeline context.
+   *
+   * Uses CI_JOB_TOKEN for authentication, which requires the project setting
+   * "Allow GitLab CI job token to access this project's API" to be enabled.
+   * If CI_JOB_TOKEN lacks sufficient permissions for the Notes API, set a
+   * GITLAB_TOKEN project CI/CD variable with api scope as a fallback.
+   *
+   * NOTE: Delta tracking (comparing against target branch baseline) is not yet
+   * implemented for GitLab. This could be added in the future by fetching the
+   * baseline results file from the target branch via the GitLab API.
+   */
+  private generateMrCommentCommands(): string[] {
+    return [
+      'if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then',
+      '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"',
+      '  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed.',
+      '  MR_TOKEN="${GITLAB_TOKEN:-$CI_JOB_TOKEN}"',
+      '  COMMENT_BODY=$(node -e "',
+      '    const fs = require(\'fs\');',
+      '    const results = JSON.parse(fs.readFileSync(\'resource-count-results.json\', \'utf8\'));',
+      '    let body = \'## CloudFormation Resource Count\\n\\n\';',
+      '    body += \'| Stack | Resources | Limit | Usage | Status |\\n\';',
+      '    body += \'| --- | --- | --- | --- | --- |\\n\';',
+      '    for (const stack of results.stacks) {',
+      '      const status = stack.exceeded ? \'Exceeded\' : stack.warning ? \'Warning\' : \'OK\';',
+      '      body += \'| \' + stack.stackName + \' | \' + stack.resourceCount + \' | \' + stack.resourceLimit + \' | \' + stack.percentUsed + \'% | \' + status + \' |\\n\';',
+      '    }',
+      '    if (results.hasExceeded) { body += \'\\n> **Error:** One or more stacks exceed the resource limit!\\n\'; }',
+      '    else if (results.hasWarnings) { body += \'\\n> **Warning:** One or more stacks are approaching the resource limit.\\n\'; }',
+      '    console.log(JSON.stringify(body));',
+      '  ")',
+      '  curl --silent --request POST --header "PRIVATE-TOKEN: ${MR_TOKEN}" \\',
+      '    --header "Content-Type: application/json" \\',
+      '    --data "{\\"body\\": $COMMENT_BODY}" \\',
+      '    "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes" || true',
+      'fi',
+    ];
+  }
 }
 

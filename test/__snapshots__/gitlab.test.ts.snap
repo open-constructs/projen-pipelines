@@ -42,6 +42,30 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
   variables: {}
 publish_assets:
   extends:
@@ -313,6 +337,30 @@ backend-synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
   variables: {}
 backend-publish_assets:
   extends:
@@ -508,6 +556,30 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
   variables: {}
 publish_assets:
   extends:
@@ -635,6 +707,30 @@ backend-synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
   variables: {}
 backend-publish_assets:
   extends:
@@ -800,6 +896,30 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
   variables: {}
 publish_assets:
   extends:
@@ -975,6 +1095,30 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
   variables:
     FOO: bar
 publish_assets:
@@ -1049,6 +1193,246 @@ deploy-prod:
 "
 `;
 
+exports[`Gitlab snapshot with resource counting disabled 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+stages:
+  - synth
+  - publish_assets
+  - dev
+.artifacts_cdk:
+  artifacts:
+    when: on_success
+    expire_in: 30 days
+    name: CDK Assembly - $CI_JOB_NAME-$CI_COMMIT_REF_SLUG
+    untracked: false
+    paths:
+      - cdk.out
+.artifacts_cdkdeploy:
+  artifacts:
+    when: on_success
+    expire_in: 30 days
+    name: CDK Outputs - $CI_JOB_NAME-$CI_COMMIT_REF_SLUG
+    untracked: false
+    paths:
+      - cdk-outputs-*.json
+.aws_base:
+  image:
+    name: "image: jsii/superchain:1-buster-slim-node18"
+  id_tokens:
+    AWS_TOKEN:
+      aud: https://sts.amazonaws.com
+  variables:
+    CI: "true"
+synth:
+  extends:
+    - .aws_base
+    - .artifacts_cdk
+  needs: []
+  stage: synth
+  script:
+    - yarn install --check-files --frozen-lockfile
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen build
+  variables: {}
+publish_assets:
+  extends:
+    - .aws_base
+  stage: publish_assets
+  needs:
+    - job: synth
+      artifacts: true
+  script:
+    - yarn install --check-files --frozen-lockfile
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "publishRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen publish:assets
+  variables: {}
+diff-dev:
+  extends:
+    - .aws_base
+  stage: dev
+  only:
+    refs:
+      - main
+  needs:
+    - job: synth
+      artifacts: true
+    - job: publish_assets
+  script:
+    - yarn install --check-files --frozen-lockfile
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen diff:dev
+  variables:
+    AWS_REGION: eu-central-1
+deploy-dev:
+  extends:
+    - .aws_base
+    - .artifacts_cdkdeploy
+  stage: dev
+  only:
+    refs:
+      - main
+  needs:
+    - job: synth
+      artifacts: true
+    - job: publish_assets
+    - job: diff-dev
+  script:
+    - yarn install --check-files --frozen-lockfile
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen deploy:dev
+    - if [ -f "cdk-outputs-dev.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_dev[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - dev"'
+    - '  if [ -s "cdk-outputs-dev.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-dev.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_dev\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-dev.json"'
+    - fi
+  variables:
+    AWS_REGION: eu-central-1
+"
+`;
+
+exports[`Gitlab snapshot with resource counting enabled (default) 1`] = `
+"# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
+
+stages:
+  - synth
+  - publish_assets
+  - dev
+.artifacts_cdk:
+  artifacts:
+    when: on_success
+    expire_in: 30 days
+    name: CDK Assembly - $CI_JOB_NAME-$CI_COMMIT_REF_SLUG
+    untracked: false
+    paths:
+      - cdk.out
+.artifacts_cdkdeploy:
+  artifacts:
+    when: on_success
+    expire_in: 30 days
+    name: CDK Outputs - $CI_JOB_NAME-$CI_COMMIT_REF_SLUG
+    untracked: false
+    paths:
+      - cdk-outputs-*.json
+.aws_base:
+  image:
+    name: "image: jsii/superchain:1-buster-slim-node18"
+  id_tokens:
+    AWS_TOKEN:
+      aud: https://sts.amazonaws.com
+  variables:
+    CI: "true"
+synth:
+  extends:
+    - .aws_base
+    - .artifacts_cdk
+  needs: []
+  stage: synth
+  script:
+    - yarn install --check-files --frozen-lockfile
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
+  variables: {}
+publish_assets:
+  extends:
+    - .aws_base
+  stage: publish_assets
+  needs:
+    - job: synth
+      artifacts: true
+  script:
+    - yarn install --check-files --frozen-lockfile
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "publishRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen publish:assets
+  variables: {}
+diff-dev:
+  extends:
+    - .aws_base
+  stage: dev
+  only:
+    refs:
+      - main
+  needs:
+    - job: synth
+      artifacts: true
+    - job: publish_assets
+  script:
+    - yarn install --check-files --frozen-lockfile
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen diff:dev
+  variables:
+    AWS_REGION: eu-central-1
+deploy-dev:
+  extends:
+    - .aws_base
+    - .artifacts_cdkdeploy
+  stage: dev
+  only:
+    refs:
+      - main
+  needs:
+    - job: synth
+      artifacts: true
+    - job: publish_assets
+    - job: diff-dev
+  script:
+    - yarn install --check-files --frozen-lockfile
+    - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "devRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+    - npx projen deploy:dev
+    - if [ -f "cdk-outputs-dev.json" ]; then
+    - '  echo -e "\\e[0Ksection_start:\`date +%s\`:cdk_outputs_dev[collapsed=false]\\r\\e[0K📦 CDK Stack Outputs - dev"'
+    - '  if [ -s "cdk-outputs-dev.json" ]; then'
+    - '    echo ""'
+    - '    echo "Stack Outputs:"'
+    - '    echo "=============="'
+    - "    jq -r 'to_entries | .[] | \\"\\\\n📚 Stack: \\\\(.key)\\\\n\\" + (.value | to_entries | .[] | \\"  • \\\\(.key): \\\\(.value)\\")' \\"cdk-outputs-dev.json\\""
+    - '    echo ""'
+    - "  else"
+    - '    echo "No outputs found for this deployment."'
+    - "  fi"
+    - '  echo -e "\\e[0Ksection_end:\`date +%s\`:cdk_outputs_dev\\r\\e[0K"'
+    - else
+    - '  echo "⚠️ CDK outputs file not found: cdk-outputs-dev.json"'
+    - fi
+  variables:
+    AWS_REGION: eu-central-1
+"
+`;
+
 exports[`Gitlab snapshot with runner default tags 1`] = `
 "# ~~ Generated by projen. To modify, edit .projenrc.js and run "npx projen".
 
@@ -1093,6 +1477,30 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
   variables: {}
 publish_assets:
   extends:
@@ -1266,6 +1674,30 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
   variables: {}
 publish_assets:
   extends:
@@ -1437,6 +1869,30 @@ synth:
     - yarn install --check-files --frozen-lockfile
     - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(aws sts assume-role-with-web-identity --role-arn "synthRole" --role-session-name "GitLabRunner-\${CI_PROJECT_ID}-\${CI_PIPELINE_ID}}" --web-identity-token \${AWS_TOKEN} --duration-seconds 3600 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
     - npx projen build
+    - count-resources --cloud-assembly-dir cdk.out --warning-threshold 450 --resource-limit 500 --output-file resource-count-results.json || true
+    - if [ -n "$CI_MERGE_REQUEST_IID" ] && [ -f "resource-count-results.json" ]; then
+    - '  echo "Posting resource count comment to MR $CI_MERGE_REQUEST_IID"'
+    - "  # Uses CI_JOB_TOKEN by default. Override with GITLAB_TOKEN project variable if needed."
+    - '  MR_TOKEN="\${GITLAB_TOKEN:-$CI_JOB_TOKEN}"'
+    - '  COMMENT_BODY=$(node -e "'
+    - "    const fs = require('fs');"
+    - "    const results = JSON.parse(fs.readFileSync('resource-count-results.json', 'utf8'));"
+    - "    let body = '## CloudFormation Resource Count\\\\n\\\\n';"
+    - "    body += '| Stack | Resources | Limit | Usage | Status |\\\\n';"
+    - "    body += '| --- | --- | --- | --- | --- |\\\\n';"
+    - "    for (const stack of results.stacks) {"
+    - "      const status = stack.exceeded ? 'Exceeded' : stack.warning ? 'Warning' : 'OK';"
+    - "      body += '| ' + stack.stackName + ' | ' + stack.resourceCount + ' | ' + stack.resourceLimit + ' | ' + stack.percentUsed + '% | ' + status + ' |\\\\n';"
+    - "    }"
+    - "    if (results.hasExceeded) { body += '\\\\n> **Error:** One or more stacks exceed the resource limit!\\\\n'; }"
+    - "    else if (results.hasWarnings) { body += '\\\\n> **Warning:** One or more stacks are approaching the resource limit.\\\\n'; }"
+    - "    console.log(JSON.stringify(body));"
+    - '  ")'
+    - '  curl --silent --request POST --header "PRIVATE-TOKEN: \${MR_TOKEN}" \\'
+    - '    --header "Content-Type: application/json" \\'
+    - '    --data "{\\"body\\": $COMMENT_BODY}" \\'
+    - '    "\${CI_API_V4_URL}/projects/\${CI_PROJECT_ID}/merge_requests/\${CI_MERGE_REQUEST_IID}/notes" || true'
+    - fi
   variables: {}
 publish_assets:
   extends:
