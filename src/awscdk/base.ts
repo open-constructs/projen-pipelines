@@ -90,6 +90,17 @@ export interface NamedStageOptions extends StageOptions {
  */
 export interface StageOptions {
   readonly env: Environment;
+
+  /**
+   * Enable CloudFormation Express mode for this stage.
+   * Express mode accelerates deployments by completing when CloudFormation confirms
+   * resource configuration is applied, rather than waiting for extended stabilization checks.
+   * This can reduce deployment time by up to 4x.
+   *
+   * @see https://aws.amazon.com/blogs/aws/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/
+   * @default false
+   */
+  readonly cfnExpressMode?: boolean;
 }
 
 /**
@@ -686,8 +697,9 @@ ${appCode}
    */
   protected createPersonalStage() {
     const stackId = this.getCliStackPattern('personal');
+    const expressFlag = this.baseOptions.personalStage?.cfnExpressMode ? ' --express' : '';
     this.project.addTask('deploy:personal', {
-      exec: `cdk deploy --outputs-file cdk-outputs-personal.json ${stackId}`,
+      exec: `cdk deploy${expressFlag} --outputs-file cdk-outputs-personal.json ${stackId}`,
     });
     this.project.addTask('watch:personal', {
       exec: `cdk deploy --outputs-file cdk-outputs-personal.json --watch --hotswap ${stackId}`,
@@ -709,8 +721,9 @@ ${appCode}
    */
   protected createFeatureStage() {
     const stackId = this.getCliStackPattern('feature');
+    const expressFlag = this.baseOptions.featureStages?.cfnExpressMode ? ' --express' : '';
     this.project.addTask('deploy:feature', {
-      exec: `cdk --outputs-file cdk-outputs-feature.json --progress events --require-approval never deploy ${stackId}`,
+      exec: `cdk${expressFlag} --outputs-file cdk-outputs-feature.json --progress events --require-approval never deploy ${stackId}`,
     });
     this.project.addTask('diff:feature', {
       exec: `cdk diff ${stackId}`,
@@ -732,8 +745,9 @@ ${appCode}
    */
   protected createPipelineStage(stage: DeploymentStage) {
     const stackId = this.getCliStackPattern(stage.name);
+    const expressFlag = stage.cfnExpressMode ? ' --express' : '';
     this.project.addTask(`deploy:${stage.name}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout}${expressFlag} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,
     });
     this.project.addTask(`diff:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
@@ -758,8 +772,9 @@ ${appCode}
    */
   protected createIndependentStage(stage: IndependentStage) {
     const stackId = this.getCliStackPattern(stage.name);
+    const expressFlag = stage.cfnExpressMode ? ' --express' : '';
     this.project.addTask(`deploy:${stage.name}`, {
-      exec: `cdk --app ${this.app.cdkConfig.cdkout} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,
+      exec: `cdk --app ${this.app.cdkConfig.cdkout}${expressFlag} --outputs-file cdk-outputs-${stage.name}.json --progress events --require-approval never deploy ${stackId}`,
     });
     this.project.addTask(`diff:${stage.name}`, {
       exec: `cdk --app ${this.app.cdkConfig.cdkout} diff ${stackId}`,
