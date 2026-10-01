@@ -638,7 +638,7 @@ ${appCode}
     for (const stage of stages) {
       this.project.addTask(`publish:assets:${stage.name}`, {
         steps: [{
-          exec: `npx cdk publish-assets -a ${this.app.cdkConfig.cdkout}/${this.stackPrefix}${sep}${stage.name}.assets.json`,
+          exec: `npx cdk publish-assets -a ${this.app.cdkConfig.cdkout} ${this.stackPrefix}${sep}${stage.name} --unstable=publish-assets`,
         }],
       });
     }

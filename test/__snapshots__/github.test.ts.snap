@@ -663,7 +663,7 @@ exports[`Github snapshot 5`] = `
       "name": "publish:assets:my-dev",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-my-dev.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-my-dev --unstable=publish-assets",
         },
       ],
     },
@@ -671,7 +671,7 @@ exports[`Github snapshot 5`] = `
       "name": "publish:assets:prod",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-prod.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-prod --unstable=publish-assets",
         },
       ],
     },
@@ -2768,7 +2768,7 @@ exports[`Github snapshot with feature stages 3`] = `
       "name": "publish:assets:dev",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-dev.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-dev --unstable=publish-assets",
         },
       ],
     },
@@ -4012,7 +4012,7 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "publish:assets:dev",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-dev.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-dev --unstable=publish-assets",
         },
       ],
     },
@@ -4020,7 +4020,7 @@ exports[`Github snapshot with jump roles 4`] = `
       "name": "publish:assets:prod",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-prod.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-prod --unstable=publish-assets",
         },
       ],
     },
@@ -5237,7 +5237,7 @@ exports[`Github snapshot with multi stack 2`] = `
       "name": "publish:assets:dev",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-dev.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-dev --unstable=publish-assets",
         },
       ],
     },
@@ -7010,7 +7010,7 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "publish:assets:dev",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-dev.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-dev --unstable=publish-assets",
         },
       ],
     },
@@ -7018,7 +7018,7 @@ exports[`Github snapshot with separate asset upload jobs 4`] = `
       "name": "publish:assets:prod",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-prod.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-prod --unstable=publish-assets",
         },
       ],
     },
@@ -8089,7 +8089,7 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "publish:assets:dev",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-dev.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-dev --unstable=publish-assets",
         },
       ],
     },
@@ -8097,7 +8097,7 @@ exports[`Github snapshot with versioning enabled 4`] = `
       "name": "publish:assets:prod",
       "steps": [
         {
-          "exec": "npx cdk publish-assets -a cdk.out/testapp-prod.assets.json",
+          "exec": "npx cdk publish-assets -a cdk.out testapp-prod --unstable=publish-assets",
         },
       ],
     },
