@@ -375,7 +375,7 @@
             "--peer",
             "--no-deprecated",
             "--dep=dev,prod,peer,optional",
-            "--filter=@types/fs-extra,@types/jest,@types/node,eslint-import-resolver-typescript,eslint-plugin-import,fs-extra,jest,jsii-diff,jsii-pacmak,projen,ts-jest,ts-node,typescript,commit-and-tag-version"
+            "--filter=@types/fs-extra,@types/jest,@types/node,eslint-import-resolver-typescript,eslint-plugin-import,fs-extra,jest,jsii-diff,jsii-pacmak,projen,ts-jest,ts-node,tsx,typescript,commit-and-tag-version"
           ]
         },
         {
@@ -406,6 +406,7 @@
             "projen",
             "ts-jest",
             "ts-node",
+            "tsx",
             "typescript",
             "commit-and-tag-version"
           ]

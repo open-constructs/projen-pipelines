@@ -714,6 +714,28 @@ Using `yalc push` you can install the project locally to your local yalc package
 With `yalc add projen-pipelines` you can then use it in a local project.
 
 
+## Maintenance
+
+### Automated GitHub Actions pinning
+
+The GitHub Actions workflows that Projen Pipelines generates reference actions as string literals (e.g. `actions/checkout@v6`). Unlike hand-written workflow YAML, these literals are not tracked by Dependabot or Renovate, so their versions drift over time.
+
+A scheduled `update-actions` workflow keeps them current. It runs weekly (Monday 06:00 UTC) and on manual dispatch, pins each `uses: 'owner/repo@ref'` reference to the latest stable release commit SHA (preserving the tag as a trailing comment), regenerates the project, and opens a pull request with the result.
+
+Run the pinning script locally:
+
+```bash
+GH_TOKEN=$(gh auth token) npx tsx src/security/update-github-actions.ts src .projen .projenrc.ts
+```
+
+The script scans TypeScript, JSON, and YAML files for action references, resolves the latest non-prerelease tag to a full commit SHA via the GitHub Releases API, and rewrites the reference in place, for example:
+
+```
+uses: 'actions/checkout@v4' → uses: 'actions/checkout@3a743d2763e8a5612d57f4f72c252503030c571d' # v4
+```
+
+Pass `--include-prerelease` to also consider pre-release tags. To review a resulting PR, check that each SHA matches the tag shown in the trailing comment before merging — pinning to an immutable SHA is what closes the supply-chain gap.
+
 ## Future Plans
 
 * Move the project to the Open Construct Foundation for broader community involvement
