@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { copyFileSync, existsSync, readFileSync, writeFileSync, rmSync } from 'fs';
-import { join } from 'path';
+import { copyFileSync, existsSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
 // @ts-ignore
 import ctv from 'commit-and-tag-version';
 

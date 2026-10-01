@@ -127,7 +127,7 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
 
   private generateIssueCreationScript(stage: DriftDetectionStageOptions): string {
     return `
-const fs = require('fs');
+const fs = require('node:fs');
 const resultsFile = '${this.namePrefix}drift-results-${stage.name}.json';
 
 if (!fs.existsSync(resultsFile)) {
