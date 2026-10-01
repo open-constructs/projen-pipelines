@@ -240,6 +240,16 @@ export interface CDKPipelineOptions {
    * Versioning configuration
    */
   readonly versioning?: VersioningConfig;
+
+  /**
+   * The number of asset uploads the `cdk publish-assets` subcommand runs in
+   * parallel per stage. Passed through as `--concurrency`. Higher values speed
+   * up publishing for stacks with many assets at the cost of more concurrent
+   * uploads.
+   *
+   * @default - the CLI default (4)
+   */
+  readonly assetPublishingConcurrency?: number;
 }
 
 /**
@@ -273,7 +283,6 @@ export abstract class CDKPipeline extends Component {
     // Add development dependencies
     this.app.addDevDeps(
       'commit-and-tag-version',
-      'cdk-assets',
     );
     // this.app.addDeps(
     // );
@@ -636,10 +645,13 @@ ${appCode}
       sep = '';
     }
     // Task to publish the CDK assets to all accounts
+    const concurrencyFlag = this.baseOptions.assetPublishingConcurrency !== undefined
+      ? ` --concurrency ${this.baseOptions.assetPublishingConcurrency}`
+      : '';
     for (const stage of stages) {
       this.project.addTask(`publish:assets:${stage.name}`, {
         steps: [{
-          exec: `npx cdk-assets -p ${this.app.cdkConfig.cdkout}/${this.stackPrefix}${sep}${stage.name}.assets.json publish`,
+          exec: `npx cdk publish-assets -a ${this.app.cdkConfig.cdkout} ${this.stackPrefix}${sep}${stage.name} --unstable=publish-assets${concurrencyFlag}`,
         }],
       });
     }
