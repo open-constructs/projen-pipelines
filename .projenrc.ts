@@ -51,6 +51,7 @@ const project = new cdk.JsiiProject({
   bin: {
     'pipelines-release': 'lib/release.js',
     'detect-drift': 'lib/drift/detect-drift.js',
+    'revert-drift': 'lib/drift/revert-drift.js',
   },
   releaseToNpm: true,
   npmTrustedPublishing: true,

@@ -1,6 +1,6 @@
 import { TextFile, Project } from 'projen';
 import { DriftDetectionWorkflow, DriftDetectionWorkflowOptions, DriftDetectionStageOptions } from './base';
-import { DriftDetectionStep } from './step';
+import { DriftDetectionStep, DriftRemediationStep, DriftVerificationStep } from './step';
 
 export interface BashDriftDetectionWorkflowOptions extends DriftDetectionWorkflowOptions {
   /**
@@ -34,15 +34,24 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
       '',
       '# Parse command line arguments',
       'STAGE=""',
+      ...(this.hasRemediation ? ['AUTO_YES="false"'] : []),
       'while [[ $# -gt 0 ]]; do',
       '  case $1 in',
       '    --stage)',
       '      STAGE="$2"',
       '      shift 2',
       '      ;;',
+      ...(this.hasRemediation ? [
+        '    --yes)',
+        '      AUTO_YES="true"',
+        '      shift',
+        '      ;;',
+      ] : []),
       '    *)',
       '      echo "Unknown option: $1"',
-      '      echo "Usage: $0 [--stage STAGE_NAME]"',
+      ...(this.hasRemediation
+        ? ['      echo "Usage: $0 [--stage STAGE_NAME] [--yes]"']
+        : ['      echo "Usage: $0 [--stage STAGE_NAME]"']),
       '      exit 1',
       '      ;;',
       '  esac',
@@ -123,6 +132,29 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
       lines.push(...this.generateStageFunction(stage));
       lines.push('}');
       lines.push('');
+
+      const policy = this.remediationFor(stage);
+      if (policy !== 'off') {
+        lines.push(`# Remediation for stage: ${stage.name} (policy: ${policy})`);
+        lines.push(`run_remediation_${stage.name}() {`);
+        if (policy === 'manual') {
+          lines.push('  if [[ "$AUTO_YES" != "true" ]]; then');
+          lines.push(`    read -r -p "Revert drifted stacks in ${stage.name}? [y/N] " reply`);
+          lines.push('    if [[ ! "$reply" =~ ^[Yy]$ ]]; then');
+          lines.push('      echo "Skipping remediation."');
+          lines.push('      return 0');
+          lines.push('    fi');
+          lines.push('  fi');
+        }
+        lines.push(...this.generateRemediationFunction(stage));
+        lines.push('}');
+        lines.push('');
+        lines.push(`# Verification for stage: ${stage.name}`);
+        lines.push(`run_verify_${stage.name}() {`);
+        lines.push(...this.generateVerifyFunction(stage));
+        lines.push('}');
+        lines.push('');
+      }
     }
 
     // Add main execution logic
@@ -136,6 +168,10 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
     for (const stage of this.stages) {
       lines.push(`    ${stage.name})`);
       lines.push(`      run_stage_${stage.name} || FAILED_STAGES+=("${stage.name}")`);
+      if (this.remediationFor(stage) !== 'off') {
+        lines.push(`      run_remediation_${stage.name} || FAILED_STAGES+=("${stage.name}-remediation")`);
+        lines.push(`      run_verify_${stage.name} || FAILED_STAGES+=("${stage.name}-verify")`);
+      }
       lines.push('      ;;');
     }
 
@@ -153,6 +189,10 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
 
     for (const stage of this.stages) {
       lines.push(`  run_stage_${stage.name} || FAILED_STAGES+=("${stage.name}")`);
+      if (this.remediationFor(stage) !== 'off') {
+        lines.push(`  run_remediation_${stage.name} || FAILED_STAGES+=("${stage.name}-remediation")`);
+        lines.push(`  run_verify_${stage.name} || FAILED_STAGES+=("${stage.name}-verify")`);
+      }
     }
 
     lines.push('fi');
@@ -182,5 +222,19 @@ export class BashDriftDetectionWorkflow extends DriftDetectionWorkflow {
 
     // Indent all commands
     return stepConfig.commands.map(cmd => `  ${cmd}`);
+  }
+
+  private generateRemediationFunction(stage: DriftDetectionStageOptions): string[] {
+    const step = new DriftRemediationStep(this.project, {
+      ...stage,
+      includeResourceTypes: this.remediationOptions.includeResourceTypes,
+      excludeResourceTypes: this.remediationOptions.excludeResourceTypes,
+    });
+    return step.toBash().commands.map(cmd => `  ${cmd}`);
+  }
+
+  private generateVerifyFunction(stage: DriftDetectionStageOptions): string[] {
+    const step = new DriftVerificationStep(this.project, stage);
+    return step.toBash().commands.map(cmd => `  ${cmd}`);
   }
 }
