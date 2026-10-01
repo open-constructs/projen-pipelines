@@ -3040,6 +3040,7 @@ const bashCDKPipelineOptions: BashCDKPipelineOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
+| <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.assetPublishingConcurrency">assetPublishingConcurrency</a></code> | <code>number</code> | The number of asset uploads the `cdk publish-assets` subcommand runs in parallel per stage. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
 | <code><a href="#projen-pipelines.BashCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
@@ -3082,6 +3083,23 @@ public readonly stages: DeploymentStage[];
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]
 
 This field specifies a list of stages that should be deployed using a CI/CD pipeline.
+
+---
+
+##### `assetPublishingConcurrency`<sup>Optional</sup> <a name="assetPublishingConcurrency" id="projen-pipelines.BashCDKPipelineOptions.property.assetPublishingConcurrency"></a>
+
+```typescript
+public readonly assetPublishingConcurrency: number;
+```
+
+- *Type:* number
+- *Default:* the CLI default (4)
+
+The number of asset uploads the `cdk publish-assets` subcommand runs in parallel per stage.
+
+Passed through as `--concurrency`. Higher values speed
+up publishing for stacks with many assets at the cost of more concurrent
+uploads.
 
 ---
 
@@ -3559,6 +3577,7 @@ const cDKPipelineOptions: CDKPipelineOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
+| <code><a href="#projen-pipelines.CDKPipelineOptions.property.assetPublishingConcurrency">assetPublishingConcurrency</a></code> | <code>number</code> | The number of asset uploads the `cdk publish-assets` subcommand runs in parallel per stage. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
 | <code><a href="#projen-pipelines.CDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
@@ -3601,6 +3620,23 @@ public readonly stages: DeploymentStage[];
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]
 
 This field specifies a list of stages that should be deployed using a CI/CD pipeline.
+
+---
+
+##### `assetPublishingConcurrency`<sup>Optional</sup> <a name="assetPublishingConcurrency" id="projen-pipelines.CDKPipelineOptions.property.assetPublishingConcurrency"></a>
+
+```typescript
+public readonly assetPublishingConcurrency: number;
+```
+
+- *Type:* number
+- *Default:* the CLI default (4)
+
+The number of asset uploads the `cdk publish-assets` subcommand runs in parallel per stage.
+
+Passed through as `--concurrency`. Higher values speed
+up publishing for stacks with many assets at the cost of more concurrent
+uploads.
 
 ---
 
@@ -4939,6 +4975,7 @@ const githubCDKPipelineOptions: GithubCDKPipelineOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
+| <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.assetPublishingConcurrency">assetPublishingConcurrency</a></code> | <code>number</code> | The number of asset uploads the `cdk publish-assets` subcommand runs in parallel per stage. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
 | <code><a href="#projen-pipelines.GithubCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
@@ -4985,6 +5022,23 @@ public readonly stages: DeploymentStage[];
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]
 
 This field specifies a list of stages that should be deployed using a CI/CD pipeline.
+
+---
+
+##### `assetPublishingConcurrency`<sup>Optional</sup> <a name="assetPublishingConcurrency" id="projen-pipelines.GithubCDKPipelineOptions.property.assetPublishingConcurrency"></a>
+
+```typescript
+public readonly assetPublishingConcurrency: number;
+```
+
+- *Type:* number
+- *Default:* the CLI default (4)
+
+The number of asset uploads the `cdk publish-assets` subcommand runs in parallel per stage.
+
+Passed through as `--concurrency`. Higher values speed
+up publishing for stacks with many assets at the cost of more concurrent
+uploads.
 
 ---
 
@@ -5696,6 +5750,7 @@ const gitlabCDKPipelineOptions: GitlabCDKPipelineOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.iamRoleArns">iamRoleArns</a></code> | <code><a href="#projen-pipelines.IamRoleConfig">IamRoleConfig</a></code> | IAM config. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.stages">stages</a></code> | <code><a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]</code> | This field specifies a list of stages that should be deployed using a CI/CD pipeline. |
+| <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.assetPublishingConcurrency">assetPublishingConcurrency</a></code> | <code>number</code> | The number of asset uploads the `cdk publish-assets` subcommand runs in parallel per stage. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.branchName">branchName</a></code> | <code>string</code> | the name of the branch to deploy from. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.deploySubStacks">deploySubStacks</a></code> | <code>boolean</code> | If set to true all CDK actions will also include <stackName>/* to deploy/diff/destroy sub stacks of the main stack. |
 | <code><a href="#projen-pipelines.GitlabCDKPipelineOptions.property.featureStages">featureStages</a></code> | <code><a href="#projen-pipelines.StageOptions">StageOptions</a></code> | This specifies details for feature stages. |
@@ -5740,6 +5795,23 @@ public readonly stages: DeploymentStage[];
 - *Type:* <a href="#projen-pipelines.DeploymentStage">DeploymentStage</a>[]
 
 This field specifies a list of stages that should be deployed using a CI/CD pipeline.
+
+---
+
+##### `assetPublishingConcurrency`<sup>Optional</sup> <a name="assetPublishingConcurrency" id="projen-pipelines.GitlabCDKPipelineOptions.property.assetPublishingConcurrency"></a>
+
+```typescript
+public readonly assetPublishingConcurrency: number;
+```
+
+- *Type:* number
+- *Default:* the CLI default (4)
+
+The number of asset uploads the `cdk publish-assets` subcommand runs in parallel per stage.
+
+Passed through as `--concurrency`. Higher values speed
+up publishing for stacks with many assets at the cost of more concurrent
+uploads.
 
 ---
 

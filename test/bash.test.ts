@@ -196,3 +196,55 @@ test('Bash snapshot with monorepo subproject and preBuildCommand', () => {
   // preBuildCommand should run from repo root using a subshell
   expect(pipelineMd).toContain('(cd "$(git rev-parse --show-toplevel)" && pnpm -r --filter backend^... run build)');
 });
+
+
+test('Bash publish:assets command uses --concurrency when assetPublishingConcurrency is set', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new BashCDKPipeline(p, {
+    iamRoleArns: {},
+    assetPublishingConcurrency: 8,
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const tasks = snapshot['.projen/tasks.json'];
+  expect(tasks.tasks['publish:assets:dev'].steps[0].exec).toBe(
+    'npx cdk publish-assets -a cdk.out testapp-dev --unstable=publish-assets --concurrency 8',
+  );
+});
+
+test('Bash publish:assets command omits --concurrency by default', () => {
+  const p = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.132.0',
+    defaultReleaseBranch: 'main',
+    name: 'testapp',
+  });
+
+  new BashCDKPipeline(p, {
+    iamRoleArns: {},
+    stages: [{
+      name: 'dev',
+      env: {
+        account: '123456789012',
+        region: 'eu-central-1',
+      },
+    }],
+  });
+
+  const snapshot = synthSnapshot(p);
+  const tasks = snapshot['.projen/tasks.json'];
+  expect(tasks.tasks['publish:assets:dev'].steps[0].exec).toBe(
+    'npx cdk publish-assets -a cdk.out testapp-dev --unstable=publish-assets',
+  );
+});
