@@ -53,5 +53,6 @@ junit.xml
 .jsii
 !/API.md
 !/.github/workflows/integ.yml
+!/.github/workflows/update-actions.yml
 !/.github/workflows/assign-approver.yml
 !/.projenrc.ts
