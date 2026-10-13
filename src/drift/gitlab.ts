@@ -1,6 +1,6 @@
 import { gitlab, Project } from 'projen';
 import { DriftDetectionWorkflow, DriftDetectionWorkflowOptions } from './base';
-import { DriftDetectionStep } from './step';
+import { DriftDetectionStep, DriftRemediationStep, DriftVerificationStep } from './step';
 
 export interface GitLabDriftDetectionWorkflowOptions extends DriftDetectionWorkflowOptions {
   /**
@@ -30,6 +30,9 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
     });
 
     this.config.addStages('drift-detection', 'summary');
+    if (this.hasRemediation) {
+      this.config.addStages('remediation', 'verify');
+    }
 
     this.config.addJobs({
       [`.${this.namePrefix}drift-detection`]: {
@@ -76,6 +79,44 @@ export class GitLabDriftDetectionWorkflow extends DriftDetectionWorkflow {
           allowFailure: !stage.failOnDrift,
         },
       });
+
+      const policy = this.remediationFor(stage);
+      if (policy !== 'off') {
+        const remediateStep = new DriftRemediationStep(this.project, {
+          ...stage,
+          includeResourceTypes: this.remediationOptions.includeResourceTypes,
+          excludeResourceTypes: this.remediationOptions.excludeResourceTypes,
+        }).toGitlab();
+        const verifyStep = new DriftVerificationStep(this.project, stage).toGitlab();
+
+        this.config.addJobs({
+          [`${this.namePrefix}remediate:${stage.name}`]: {
+            stage: 'remediation',
+            tags: this.runnerTags,
+            image: { name: this.image },
+            needs: [jobName],
+            variables: { ...remediateStep.env },
+            script: remediateStep.commands,
+            // dotenv propagation so stage-specific credentials flow to verify.
+            artifacts: {
+              reports: { dotenv: [`drift-${stage.name}.env`] },
+              paths: [`drift-results-${stage.name}.json`],
+              expireIn: '1 week',
+              when: gitlab.CacheWhen.ALWAYS,
+            },
+            when: policy === 'manual' ? gitlab.JobWhen.MANUAL : gitlab.JobWhen.ON_SUCCESS,
+          },
+          [`${this.namePrefix}verify:${stage.name}`]: {
+            stage: 'verify',
+            tags: this.runnerTags,
+            image: { name: this.image },
+            needs: [`${this.namePrefix}remediate:${stage.name}`],
+            variables: { ...verifyStep.env },
+            script: verifyStep.commands,
+            when: gitlab.JobWhen.ON_SUCCESS,
+          },
+        });
+      }
     }
 
     // Add summary job
