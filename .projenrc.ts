@@ -20,6 +20,7 @@ const project = new cdk.JsiiProject({
     'constructs',
     'fs-extra',
     '@types/fs-extra',
+    'tsx',
   ],
   deps: [
     'commit-and-tag-version',
@@ -123,6 +124,69 @@ integWf?.addJobs({
       { name: 'Run yalc', run: 'npx yalc publish' },
       { name: 'Add yalc', run: 'cd integ/existing && npx yalc add projen-pipelines' },
       { name: 'Run Test', run: 'cd integ/existing && npx npm install' },
+    ],
+  },
+});
+
+// Automated pinning of GitHub Action references in generated workflows.
+// Generated `uses: 'owner/repo@ref'` literals are not tracked by Dependabot or
+// Renovate, so this scheduled workflow keeps them pinned to the latest stable
+// release SHA.
+const updateActionsWf = project.github?.addWorkflow('update-actions');
+updateActionsWf?.on({
+  schedule: [{ cron: '0 6 * * 1' }],
+  workflowDispatch: {},
+});
+updateActionsWf?.addJobs({
+  upgrade: {
+    runsOn: ['ubuntu-latest'],
+    permissions: { contents: JobPermission.READ },
+    env: { GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+    steps: [
+      { name: 'Checkout', uses: 'actions/checkout@v6' },
+      { name: 'Setup Node.js', uses: 'actions/setup-node@v6', with: { 'node-version': '20' } },
+      { name: 'Install dependencies', run: 'npm ci' },
+      {
+        name: 'Pin GitHub Actions',
+        run: 'npx tsx src/security/update-github-actions.ts src .projen .projenrc.ts',
+      },
+      { name: 'Regenerate project', run: 'npx projen' },
+      {
+        name: 'Create patch',
+        id: 'diff',
+        run: 'git diff --patch --exit-code > .repo.patch || echo "patch_created=true" >> $GITHUB_OUTPUT',
+      },
+      {
+        name: 'Upload patch',
+        if: "steps.diff.outputs.patch_created == 'true'",
+        uses: 'actions/upload-artifact@v7',
+        with: { name: 'repo.patch', path: '.repo.patch' },
+      },
+    ],
+  },
+  pr: {
+    runsOn: ['ubuntu-latest'],
+    needs: ['upgrade'],
+    permissions: { contents: JobPermission.WRITE, pullRequests: JobPermission.WRITE },
+    steps: [
+      { name: 'Checkout', uses: 'actions/checkout@v6' },
+      {
+        name: 'Download patch',
+        uses: 'actions/download-artifact@v8',
+        with: { name: 'repo.patch' },
+      },
+      { name: 'Apply patch', run: '[ -f .repo.patch ] && git apply .repo.patch || echo "No patch to apply"' },
+      {
+        name: 'Create Pull Request',
+        uses: 'peter-evans/create-pull-request@v7',
+        with: {
+          'token': '${{ secrets.PROJEN_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}',
+          'commit-message': 'chore: pin GitHub Actions to latest release SHAs',
+          'branch': 'auto/pin-github-actions',
+          'title': 'chore: pin GitHub Actions to latest release SHAs',
+          'body': 'Automated update of pinned GitHub Action references to their latest stable release commit SHAs.',
+        },
+      },
     ],
   },
 });
