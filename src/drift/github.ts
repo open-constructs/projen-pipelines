@@ -2,7 +2,7 @@ import { Project } from 'projen';
 import { GitHubProject, GithubWorkflow } from 'projen/lib/github';
 import { JobPermission } from 'projen/lib/github/workflows-model';
 import { DriftDetectionWorkflow, DriftDetectionWorkflowOptions, DriftDetectionStageOptions } from './base';
-import { DriftDetectionStep } from './step';
+import { DriftDetectionStep, DriftRemediationStep, DriftVerificationStep } from './step';
 
 export interface GitHubDriftDetectionWorkflowOptions extends DriftDetectionWorkflowOptions {
   /**
@@ -97,6 +97,11 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
           }] : []),
         ],
       });
+
+      const policy = this.remediationFor(stage);
+      if (policy !== 'off') {
+        this.addRemediationJobs(jobId, stage, policy);
+      }
     }
 
     // Add summary job
@@ -123,6 +128,75 @@ export class GitHubDriftDetectionWorkflow extends DriftDetectionWorkflow {
         ],
       });
     }
+  }
+
+  private addRemediationJobs(
+    detectJobId: string,
+    stage: DriftDetectionStageOptions,
+    policy: 'manual' | 'auto',
+  ): void {
+    const remediateJobId = `remediate-${stage.name}`.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    const verifyJobId = `verify-${stage.name}`.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
+    const remediateStep = new DriftRemediationStep(this.project, {
+      ...stage,
+      includeResourceTypes: this.remediationOptions.includeResourceTypes,
+      excludeResourceTypes: this.remediationOptions.excludeResourceTypes,
+    }).toGithub();
+
+    this.workflow.addJob(remediateJobId, {
+      name: `Drift Remediation - ${stage.name}`,
+      runsOn: ['ubuntu-latest'],
+      needs: [detectJobId],
+      // A `manual` policy is gated behind a deployment environment approval.
+      ...(policy === 'manual' ? { environment: `drift-remediation-${stage.name}` } : {}),
+      env: remediateStep.env,
+      permissions: {
+        contents: JobPermission.READ,
+        ...(remediateStep.permissions ?? {}),
+        ...this.permissions,
+      },
+      steps: [
+        { name: 'Checkout', uses: 'actions/checkout@v6' },
+        {
+          name: 'Setup Node.js',
+          uses: 'actions/setup-node@v6',
+          with: { 'node-version': '20' },
+        },
+        ...this.preInstallSteps.flatMap(step => step.toGithub().steps),
+        { name: 'Install dependencies', run: `${this.project.projenCommand} install:ci` },
+        {
+          name: 'Download drift results',
+          uses: 'actions/download-artifact@v8',
+          with: { name: `${this.namePrefix}drift-results-${stage.name}` },
+        },
+        ...remediateStep.steps,
+      ],
+    });
+
+    const verifyStep = new DriftVerificationStep(this.project, stage).toGithub();
+    this.workflow.addJob(verifyJobId, {
+      name: `Drift Verification - ${stage.name}`,
+      runsOn: ['ubuntu-latest'],
+      needs: [remediateJobId],
+      env: verifyStep.env,
+      permissions: {
+        contents: JobPermission.READ,
+        ...(verifyStep.permissions ?? {}),
+        ...this.permissions,
+      },
+      steps: [
+        { name: 'Checkout', uses: 'actions/checkout@v6' },
+        {
+          name: 'Setup Node.js',
+          uses: 'actions/setup-node@v6',
+          with: { 'node-version': '20' },
+        },
+        ...this.preInstallSteps.flatMap(step => step.toGithub().steps),
+        { name: 'Install dependencies', run: `${this.project.projenCommand} install:ci` },
+        ...verifyStep.steps,
+      ],
+    });
   }
 
   private generateIssueCreationScript(stage: DriftDetectionStageOptions): string {
