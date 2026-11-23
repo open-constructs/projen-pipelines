@@ -4,6 +4,8 @@
 
 ### AssignApprover <a name="AssignApprover" id="projen-pipelines.AssignApprover"></a>
 
+- *Implements:* constructs.IConstruct, constructs.IDependable
+
 #### Initializers <a name="Initializers" id="projen-pipelines.AssignApprover.Initializer"></a>
 
 ```typescript
@@ -230,6 +232,8 @@ public readonly project: Project;
 
 
 ### BashCDKPipeline <a name="BashCDKPipeline" id="projen-pipelines.BashCDKPipeline"></a>
+
+- *Implements:* constructs.IConstruct, constructs.IDependable
 
 #### Initializers <a name="Initializers" id="projen-pipelines.BashCDKPipeline.Initializer"></a>
 
@@ -520,6 +524,8 @@ public readonly stackPrefix: string;
 
 ### BashDriftDetectionWorkflow <a name="BashDriftDetectionWorkflow" id="projen-pipelines.BashDriftDetectionWorkflow"></a>
 
+- *Implements:* constructs.IConstruct, constructs.IDependable
+
 #### Initializers <a name="Initializers" id="projen-pipelines.BashDriftDetectionWorkflow.Initializer"></a>
 
 ```typescript
@@ -768,6 +774,8 @@ public readonly schedule: string;
 
 
 ### CDKPipeline <a name="CDKPipeline" id="projen-pipelines.CDKPipeline"></a>
+
+- *Implements:* constructs.IConstruct, constructs.IDependable
 
 The CDKPipeline class extends the Component class and sets up the necessary configuration for deploying AWS CDK (Cloud Development Kit) applications across multiple stages.
 
@@ -1062,6 +1070,8 @@ public readonly stackPrefix: string;
 
 ### DriftDetectionWorkflow <a name="DriftDetectionWorkflow" id="projen-pipelines.DriftDetectionWorkflow"></a>
 
+- *Implements:* constructs.IConstruct, constructs.IDependable
+
 #### Initializers <a name="Initializers" id="projen-pipelines.DriftDetectionWorkflow.Initializer"></a>
 
 ```typescript
@@ -1311,6 +1321,8 @@ public readonly schedule: string;
 
 ### GitHubAssignApprover <a name="GitHubAssignApprover" id="projen-pipelines.GitHubAssignApprover"></a>
 
+- *Implements:* constructs.IConstruct, constructs.IDependable
+
 #### Initializers <a name="Initializers" id="projen-pipelines.GitHubAssignApprover.Initializer"></a>
 
 ```typescript
@@ -1546,6 +1558,8 @@ public readonly project: Project;
 
 
 ### GithubCDKPipeline <a name="GithubCDKPipeline" id="projen-pipelines.GithubCDKPipeline"></a>
+
+- *Implements:* constructs.IConstruct, constructs.IDependable
 
 Implements a CDK Pipeline configured specifically for GitHub workflows.
 
@@ -1918,6 +1932,8 @@ Indicates if versioned artifacts are needed based on manual approval requirement
 
 ### GitHubDriftDetectionWorkflow <a name="GitHubDriftDetectionWorkflow" id="projen-pipelines.GitHubDriftDetectionWorkflow"></a>
 
+- *Implements:* constructs.IConstruct, constructs.IDependable
+
 #### Initializers <a name="Initializers" id="projen-pipelines.GitHubDriftDetectionWorkflow.Initializer"></a>
 
 ```typescript
@@ -2166,6 +2182,8 @@ public readonly schedule: string;
 
 
 ### GitlabCDKPipeline <a name="GitlabCDKPipeline" id="projen-pipelines.GitlabCDKPipeline"></a>
+
+- *Implements:* constructs.IConstruct, constructs.IDependable
 
 The GitlabCDKPipeline class extends CDKPipeline to provide a way to configure and execute AWS CDK deployment pipelines within GitLab CI/CD environments.
 
@@ -2524,6 +2542,8 @@ Currently set to false
 
 
 ### GitLabDriftDetectionWorkflow <a name="GitLabDriftDetectionWorkflow" id="projen-pipelines.GitLabDriftDetectionWorkflow"></a>
+
+- *Implements:* constructs.IConstruct, constructs.IDependable
 
 #### Initializers <a name="Initializers" id="projen-pipelines.GitLabDriftDetectionWorkflow.Initializer"></a>
 
