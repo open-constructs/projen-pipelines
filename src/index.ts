@@ -5,3 +5,4 @@ export * from './awscdk';
 export * from './assign-approver';
 export * from './drift';
 export * from './versioning';
+export * from './github-pages';
